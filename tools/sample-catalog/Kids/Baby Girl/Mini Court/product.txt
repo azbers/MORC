@@ -1,0 +1,7 @@
+Name: Mini Court
+Category: Sneakers
+Price: 2400
+Sizes: 20, 21, 22, 23
+Vendor cost: 1300
+Description: Soft leather court low for first steps.
+Stock: 20=4, 21=4, 22=3, 23=2

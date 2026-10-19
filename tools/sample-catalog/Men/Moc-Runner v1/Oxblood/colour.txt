@@ -1,0 +1,4 @@
+Hex: #4a1717
+Price: 4500
+Before price: 5200
+Stock: 40=2, 41=3, 42=4

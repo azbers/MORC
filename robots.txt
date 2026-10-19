@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /checkout.html
+Sitemap: https://morcsupply.pk/sitemap.xml
