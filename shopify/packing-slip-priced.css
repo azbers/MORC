@@ -91,3 +91,4 @@
 /* Keep the closing block together and fit a two item order on one A4 page. */
 @page { size: A4; margin: 10mm; }
 .ms tbody tr, .ms .totals, .ms .sign, .ms .foot { break-inside: avoid; page-break-inside: avoid; }
+.ms .foot { margin-top: 18px; border-top: 2px solid var(--ink); }
