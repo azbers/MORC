@@ -203,7 +203,7 @@
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     const { stockOf, onSale } = A();
     const sizes = p.sizes.filter((sz) => (v.stock || {})[sz] > 0);
-    const url = C.domain + '/product.html#' + p.id + '~' + v.id;
+    const url = A().absLink ? A().absLink('product', p.id + '~' + v.id) : C.domain + '/product.html#' + p.id + '~' + v.id;
     const details = [`M.O.R.C. ${p.name} / ${v.color}`, `Price: ${fmt(v.price)}${onSale(v) ? ` (was ${fmt(v.compareAt)})` : ''}`, `Typical retail: ${fmt(C.marketRetail)}+`, `I skipped ${fmt(saved)} of retail markup.`, p.description ? p.description.split('.')[0] + '.' : '', sizes.length ? `Sizes in stock: EU ${sizes.join(', ')}` : (stockOf(v) ? '' : 'Sold out right now'), 'Cash on Delivery across Pakistan.', url].filter(Boolean).join('\n');
     // the card is turned into a file as soon as it is drawn, so a tap can share it straight away
     let file = null, blob = null;

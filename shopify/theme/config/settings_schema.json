@@ -1,0 +1,88 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "M.O.R.C. Supply",
+    "theme_version": "1.0.0",
+    "theme_author": "M.O.R.C. Supply",
+    "theme_documentation_url": "https://github.com/azbers/MORC",
+    "theme_support_url": "https://github.com/azbers/MORC"
+  },
+  {
+    "name": "Store details",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Orders and support"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp",
+        "label": "WhatsApp order number",
+        "info": "Country code first, digits only, for example 923001234567. It is used only inside WhatsApp links and is never printed on the page.",
+        "default": "923055125974"
+      },
+      {
+        "type": "text",
+        "id": "support_email",
+        "label": "Support email",
+        "info": "Leave empty to use the store email."
+      },
+      {
+        "type": "text",
+        "id": "announcement",
+        "label": "Announcement bar text",
+        "info": "Shown first in the moving notice bar. Leave empty to hide."
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  },
+  {
+    "name": "Delivery and pricing",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "These numbers are what the shop shows. The real charge comes from Settings > Shipping and delivery and your discounts in the Shopify admin, so keep both the same."
+      },
+      {
+        "type": "number",
+        "id": "delivery_fee",
+        "label": "Delivery fee shown (Rs.)",
+        "default": 250
+      },
+      {
+        "type": "text",
+        "id": "delivery_days",
+        "label": "Delivery time shown",
+        "default": "2 to 6 working days"
+      },
+      {
+        "type": "number",
+        "id": "free_delivery_pairs",
+        "label": "Free delivery from this many pairs",
+        "default": 2
+      },
+      {
+        "type": "number",
+        "id": "market_retail",
+        "label": "Typical retail price for comparison (Rs.)",
+        "default": 12000
+      },
+      {
+        "type": "number",
+        "id": "low_stock_at",
+        "label": "Show low stock from this many pairs",
+        "default": 2
+      },
+      {
+        "type": "text",
+        "id": "currency_label",
+        "label": "Currency label",
+        "default": "Rs."
+      }
+    ]
+  }
+]

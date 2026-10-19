@@ -1,0 +1,48 @@
+{%- comment -%}
+  Plain content for search engines and for the first moment before the
+  storefront script draws the page. The script replaces it on every view it
+  draws; normal Shopify pages, search and 404 keep it.
+{%- endcomment -%}
+<div class="wrap morc-plain">
+{%- case template.name -%}
+  {%- when 'product' -%}
+    <h1>{{ product.title }}</h1>
+    <p>{{ product.price | money }}{% if product.compare_at_price > product.price %} <s>{{ product.compare_at_price | money }}</s>{% endif %}</p>
+    {%- if product.featured_image %}{{ product.featured_image | image_url: width: 900 | image_tag: loading: 'eager', alt: product.title }}{% endif %}
+    <div class="rte">{{ product.description }}</div>
+  {%- when 'collection' -%}
+    <h1>{{ collection.title }}</h1>
+    {%- paginate collection.products by 48 -%}
+    <ul>{% for p in collection.products %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
+    {%- endpaginate -%}
+  {%- when 'list-collections' -%}
+    <h1>Collections</h1>
+    <ul>{% for c in collections %}<li><a href="{{ c.url }}">{{ c.title }}</a></li>{% endfor %}</ul>
+  {%- when 'search' -%}
+    <section class="phero"><span class="eyebrow">Search</span><h1>{% if search.performed %}{{ search.results_count }} results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1></section>
+    <form action="{{ routes.search_url }}" method="get" class="track-one"><div class="f-ic"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Try black, derby, kids" aria-label="Search"></div><button class="btn volt" type="submit">Search</button></form>
+    {%- if search.performed -%}
+    <ul class="morc-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a></li>{% endfor %}</ul>
+    {%- endif -%}
+  {%- when '404' -%}
+    <section class="phero"><span class="eyebrow">404</span><h1>Not on the supply line.</h1><p class="aside">This page does not exist. The shop does.</p></section>
+    <p><a class="btn volt" href="{{ routes.all_products_collection_url }}">Shop all pairs <span class="arr">&rarr;</span></a></p>
+  {%- when 'page' -%}
+    <section class="phero"><span class="eyebrow">{{ shop.name }}</span><h1>{{ page.title }}</h1></section>
+    <div class="rte">{{ page.content }}</div>
+  {%- when 'blog' -%}
+    <section class="phero"><span class="eyebrow">Journal</span><h1>{{ blog.title }}</h1></section>
+    <ul class="morc-results">{% for a in blog.articles %}<li><a href="{{ a.url }}">{{ a.title }}</a> <span class="mute">{{ a.published_at | date: '%d %b %Y' }}</span></li>{% endfor %}</ul>
+  {%- when 'article' -%}
+    <section class="phero"><span class="eyebrow">{{ article.published_at | date: '%d %b %Y' }}</span><h1>{{ article.title }}</h1></section>
+    <div class="rte">{{ article.content }}</div>
+  {%- when 'cart' -%}
+    <h1>Your bag</h1>
+  {%- else -%}
+    <h1>{{ shop.name }}</h1>
+    <p>{{ shop.description }}</p>
+{%- endcase -%}
+</div>
+{% schema %}
+{ "name": "M.O.R.C. page", "settings": [] }
+{% endschema %}

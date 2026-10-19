@@ -6,11 +6,14 @@
 (function () {
   'use strict';
   const C = window.MORC_CONFIG;
+  // on Shopify (theme/snippets/morc-data.liquid) the catalog and settings come from the store itself
+  const SHOP = window.MORC_SHOPIFY || null;
   // the admin panel saves catalog edits in this browser; they replace the file catalog here
-  try { const saved = JSON.parse(localStorage.getItem('morc.catalog') || 'null'); if (Array.isArray(saved) && saved.length) window.MORC_PRODUCTS = saved; } catch (e) { /* storage blocked */ }
+  if (!SHOP) try { const saved = JSON.parse(localStorage.getItem('morc.catalog') || 'null'); if (Array.isArray(saved) && saved.length) window.MORC_PRODUCTS = saved; } catch (e) { /* storage blocked */ }
   // admin settings (Supply Control > Settings) override the file defaults
   C.fileWhatsapp = C.whatsapp;
-  try {
+  if (SHOP) C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, C.followUp || {});
+  else try {
     const st = JSON.parse(localStorage.getItem('morc.settings') || 'null') || {};
     if (st.whatsapp) C.whatsapp = st.whatsapp;
     if (st.supportEmail) C.supportEmail = st.supportEmail;
@@ -31,7 +34,7 @@
   const SPA = window.MORC_MODE === 'spa';
   // links in shares, flex cards and messages follow whatever domain the site is served from;
   // data.js domain is only the fallback for the single file preview
-  try { if (!SPA && /^https?:$/.test(location.protocol)) C.domain = (location.origin + location.pathname.replace(/\/[^/]*$/, '')).replace(/\/$/, ''); } catch (e) { /* keep data.js domain */ }
+  try { if (!SPA && !SHOP && /^https?:$/.test(location.protocol)) C.domain = (location.origin + location.pathname.replace(/\/[^/]*$/, '')).replace(/\/$/, ''); } catch (e) { /* keep data.js domain */ }
   const SHOE = window.MORC_SHOE;
   const app = document.getElementById('app');
 
@@ -42,12 +45,18 @@
   const fmt = (n) => C.currency + ' ' + Math.round(n).toLocaleString('en-US');
   const store = {
     get(k, d) { try { const v = localStorage.getItem('morc.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-    set(k, v) { try { localStorage.setItem('morc.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } }
+    set(k, v) { try { localStorage.setItem('morc.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } if (SHOP && SHOP.forward) SHOP.forward(k, v); }
   };
   const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', admin: 'admin.html' };
   function link(page, param) {
+    if (SHOP) return SHOP.link(page, param);
     if (SPA) return '#' + page + (param ? '.' + param : '');
     return pages[page] + (param ? '#' + param : '');
+  }
+  // full address of a page, for share links and messages
+  function absLink(page, param) {
+    if (SHOP) return C.domain + link(page, param);
+    return C.domain + '/' + pages[page] + (param ? '#' + param : '');
   }
   function current() {
     if (SPA) {
@@ -56,7 +65,7 @@
       const page = (i < 0 ? h : h.slice(0, i)) || 'home';
       return { page: pages[page] ? page : 'home', param: i < 0 ? '' : h.slice(i + 1) };
     }
-    return { page: document.body.dataset.page || 'home', param: decodeURIComponent(location.hash.slice(1)) };
+    return { page: document.body.dataset.page || 'home', param: decodeURIComponent(location.hash.slice(1)) || (SHOP && SHOP.param) || '' };
   }
 
   /* ---------------- catalog helpers ---------------- */
@@ -105,7 +114,8 @@
     const subtotal = lines.reduce((a, d) => a + d.total, 0);
     const before = lines.reduce((a, d) => a + d.was, 0);
     let discount = 0, couponErr = '', cp = null;
-    if (coupon) {
+    if (coupon && SHOP) { /* Shopify checks and applies the code at checkout */ }
+    else if (coupon) {
       cp = C.coupons[coupon];
       const used = cp && cp.limit ? store.get('orders', []).filter((o) => o.coupon === coupon && o.status !== 'Cancelled').length : 0;
       // codes made for one customer only count the pairs they were made for
@@ -748,7 +758,7 @@
       $('#stickyAdd').addEventListener('click', () => { if (need()) { $('.buy .sizes').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; } addToCart(p.id, v.id, size, qty); });
       $('#buyNow').addEventListener('click', () => { if (need()) return; if (addToCart(p.id, v.id, size, qty)) location.href = link('checkout'); });
       $('#wishB').addEventListener('click', () => { toggleWish(p.id); $('#wishB span').textContent = wish.includes(p.id) ? 'Liked' : 'Like'; });
-      $('#shareB').addEventListener('click', () => shareLink(C.domain + '/product.html#' + p.id + '~' + v.id, 'M.O.R.C. ' + p.name + ' / ' + v.color, `M.O.R.C. ${p.name} in ${v.color}, ${fmt(v.price)} with Cash on Delivery.`));
+      $('#shareB').addEventListener('click', () => shareLink(absLink('product', p.id + '~' + v.id), 'M.O.R.C. ' + p.name + ' / ' + v.color, `M.O.R.C. ${p.name} in ${v.color}, ${fmt(v.price)} with Cash on Delivery.`));
       $('#sgBtn').addEventListener('click', () => openModal('sizeGuide'));
       const sb = $('#stickyBuy'), bt = $('#add');
       const io = new IntersectionObserver(([en]) => sb.classList.toggle('on', !en.isIntersecting && en.boundingClientRect.top < 0));
@@ -779,7 +789,7 @@
       app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Bag / ${t.n} pair${t.n > 1 ? 's' : ''}</span><h1>Your bag.</h1><p class="aside">Prices are held for you, stock is not. Sizes go fast on drop week.</p></div></section>
       <div class="wrap"><div class="two cart-page"><div class="main">${freeMeter(t.n)}${t.lines.map((d) => lineHTML(d, true)).join('')}
         <a class="link" href="${link('shop')}" style="display:inline-block;margin-top:24px">Continue shopping</a></div>
-        <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout, Cash on Delivery <span class="arr">&rarr;</span></a><p class="form-note">Delivery fee is set by city at checkout.</p></aside></div></div>`;
+        <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout, Cash on Delivery <span class="arr">&rarr;</span></a><p class="form-note">One delivery fee for all of Pakistan, confirmed at checkout.</p></aside></div></div>`;
       bindLines(app); bindPromo(paint);
     }
     rerender = () => { paintCounts(); paint(); };
@@ -803,7 +813,7 @@
       if (coupon && !t.couponErr && b.textContent === 'Remove') { coupon = ''; saveCart(); cb(); toast('Code removed'); return; }
       coupon = $('#promo').value.trim().toUpperCase(); saveCart();
       const t2 = totals(); cb();
-      if (coupon && !t2.couponErr) toast(coupon + ' applied');
+      if (coupon && !t2.couponErr) toast(SHOP ? coupon + ' saved. It is applied at checkout' : coupon + ' applied');
     };
     b.addEventListener('click', apply);
     $('#promo').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); apply(); } });
@@ -1042,9 +1052,9 @@
       ['privacy', 'Privacy policy', `<p>We collect only what is needed to deliver your order and, if you ask for it, to message you.</p><ul>
         <li><b>What we collect.</b> Your name, mobile number, delivery address, city and, if you give it, your email address. If you choose WhatsApp updates on your liked pairs, we keep your number together with the pairs you liked. Reviews keep the name, city and photo you chose to share.</li>
         <li><b>Why.</b> To confirm and deliver orders, handle exchanges and refunds, answer your questions, and send messages you asked for.</li>
-        <li><b>Who we share it with.</b> Only the courier delivering your parcel receives your name, number and address. We never sell or rent your details.</li>
+        <li><b>Who we share it with.</b> ${SHOP ? 'Our store runs on Shopify, which holds order details on our behalf. Apart from Shopify, only' : 'Only'} the courier delivering your parcel receives your name, number and address. We never sell or rent your details.</li>
         <li><b>WhatsApp messages.</b> We message you about your order. Offers, price drops and restocks are sent only if you opted in. Reply STOP at any time and we stop.</li>
-        <li><b>Stored on your device.</b> Your bag, liked pairs and recent orders are saved in your own browser so they survive a refresh. Clearing your browser data removes them. We do not use advertising trackers.</li>
+        <li><b>Stored on your device.</b> Your bag, liked pairs and recent orders are saved in your own browser so they survive a refresh. Clearing your browser data removes them. ${SHOP ? 'Shopify sets the cookies the bag and checkout need, and basic store analytics.' : 'We do not use advertising trackers.'}</li>
         <li><b>Your choices.</b> Ask us to show, correct or delete the details we hold about you on ${wa} or at ${mail}.</li></ul>`],
       ['shipping', 'Shipping and delivery', `<ul>
         <li>We deliver to every city and town in Pakistan that our courier partners reach.</li>
@@ -1122,7 +1132,7 @@
     reveal();
     if (!(page === 'contract' && param)) window.scrollTo(0, 0);
   }
-  window.MORC_API = { C, P, ALL, SPA, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; } };
+  window.MORC_API = { C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; } };
   const EXT = window.MORC_EXT || { views: {}, hooks: {} };
   Object.assign(V, EXT.views);
   const hook = (name, arg) => (EXT.hooks[name] || []).forEach((fn) => fn(arg));

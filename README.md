@@ -2,6 +2,10 @@
 
 Static, dependency free storefront for M.O.R.C. Supply. Black ground, bone type, volt accents, crosshair grid, Space Grotesk, Inter and JetBrains Mono.
 
+## Shopify
+
+The store can run on Shopify, which then holds the products, stock, orders, admin and Cash on Delivery checkout. Read `shopify/SHOPIFY-SETUP.md`. The theme source is in `shopify/theme-src`. Build it with `node tools/shopify-theme.js`, and build the product import file with `node tools/shopify-csv.js`.
+
 ## Run it
 
 ```
