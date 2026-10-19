@@ -1,10 +1,10 @@
 /* M.O.R.C. Supply packing slip styles. Hosted in the store Files as morc-packing-slip.css */
-@font-face { font-family: 'MORC Display'; font-weight: 500; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-space-grotesk-500.woff2') format('woff2'); }
-@font-face { font-family: 'MORC Display'; font-weight: 700; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-space-grotesk-700.woff2') format('woff2'); }
-@font-face { font-family: 'MORC Mono'; font-weight: 400; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-jetbrains-mono-400.woff2') format('woff2'); }
-@font-face { font-family: 'MORC Mono'; font-weight: 700; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-jetbrains-mono-700.woff2') format('woff2'); }
-@font-face { font-family: 'MORC Body'; font-weight: 400; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-inter-400.woff2') format('woff2'); }
-@font-face { font-family: 'MORC Body'; font-weight: 600; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-inter-600.woff2') format('woff2'); }
+@font-face { font-family: 'MORC Display'; font-weight: 500; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-space-grotesk-500.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'MORC Display'; font-weight: 700; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-space-grotesk-700.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'MORC Mono'; font-weight: 400; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-jetbrains-mono-400.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'MORC Mono'; font-weight: 700; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-jetbrains-mono-700.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'MORC Body'; font-weight: 400; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-inter-400.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'MORC Body'; font-weight: 600; src: url('https://cdn.shopify.com/s/files/1/0837/0798/6174/files/morc-inter-600.woff2') format('woff2'); font-display: swap; }
 .ms { --ink: #080808; --bone: #EDEBE4; --mute: #6f6e68; --rule: #d9d7cf; --volt: #CCFF00;
       --display: 'MORC Display', 'Helvetica Neue', Arial, sans-serif;
       --mono: 'MORC Mono', Menlo, Consolas, monospace;
