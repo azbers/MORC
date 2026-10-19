@@ -1,0 +1,77 @@
+<!doctype html>
+{%- liquid
+  # which storefront view draws this address
+  assign morc_page = 'page'
+  assign morc_param = ''
+  case template.name
+    when 'index'
+      assign morc_page = 'home'
+    when 'product'
+      assign morc_page = 'product'
+      assign morc_param = product.handle
+    when 'collection'
+      assign morc_page = 'shop'
+      assign known = 'men,women,kids,sale,new' | split: ','
+      if known contains collection.handle
+        assign morc_param = collection.handle
+      endif
+    when 'list-collections'
+      assign morc_page = 'shop'
+    when 'cart'
+      assign morc_page = 'cart'
+    when 'page'
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies' | split: ','
+      for pair in views
+        assign kv = pair | split: ':'
+        if page.handle == kv[0]
+          assign morc_page = kv[1]
+        endif
+      endfor
+  endcase
+-%}
+<html lang="{{ request.locale.iso_code }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
+{%- if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
+<link rel="canonical" href="{{ canonical_url }}">
+<meta name="theme-color" content="#080808">
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:title" content="{{ page_title | escape }}">
+<meta property="og:description" content="{{ page_description | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+{%- if template.name == 'product' and product.featured_image %}
+<meta property="og:type" content="product">
+<meta property="og:image" content="https:{{ product.featured_image | image_url: width: 1200 }}">
+{%- else %}
+<meta property="og:type" content="website">
+{%- endif %}
+<meta property="og:locale" content="en_PK">
+<meta name="twitter:card" content="summary_large_image">
+{%- if settings.favicon %}
+<link rel="icon" href="{{ settings.favicon | image_url: width: 64 }}">
+{%- else %}
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23080808'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='16' fill='%23CCFF00' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+{%- endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+{{ 'styles.css' | asset_url | stylesheet_tag }}
+{{ 'morc-theme.css' | asset_url | stylesheet_tag }}
+{{ content_for_header }}
+</head>
+<body data-page="{{ morc_page }}">
+<main id="app" tabindex="-1">{{ content_for_layout }}</main>
+{% render 'morc-data', product: product, morc_param: morc_param %}
+<script src="{{ 'morc-shopify.js' | asset_url }}" defer></script>
+<script src="{{ 'shoe.js' | asset_url }}" defer></script>
+<script src="{{ 'icons.js' | asset_url }}" defer></script>
+<script src="{{ 'kicks.js' | asset_url }}" defer></script>
+<script src="{{ 'pile.js' | asset_url }}" defer></script>
+<script src="{{ 'polart.js' | asset_url }}" defer></script>
+<script src="{{ 'social.js' | asset_url }}" defer></script>
+<script src="{{ 'leads.js' | asset_url }}" defer></script>
+<script src="{{ 'alive.js' | asset_url }}" defer></script>
+<script src="{{ 'app.js' | asset_url }}" defer></script>
+</body>
+</html>
