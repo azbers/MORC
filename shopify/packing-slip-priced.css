@@ -16,8 +16,8 @@
 .ms .topbar { height: 10px; background: var(--ink); position: relative; }
 .ms .topbar i { position: absolute; right: 0; top: 0; width: 120px; height: 10px; background: var(--volt); }
 
-.ms .head { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; padding: 34px 0 30px; }
-.ms h1 { font-family: var(--display); font-weight: 700; font-size: 44px; line-height: .95; letter-spacing: -.02em; margin: 0 0 22px; text-transform: uppercase; }
+.ms .head { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; padding: 16px 0 14px; }
+.ms h1 { font-family: var(--display); font-weight: 700; font-size: 36px; line-height: .95; letter-spacing: -.02em; margin: 0 0 12px; text-transform: uppercase; }
 .ms h1 span { display: block; font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: .3em; color: var(--mute); margin-bottom: 10px; }
 .ms .meta { display: grid; grid-template-columns: 110px 1fr; row-gap: 6px; }
 .ms .meta dt { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); padding-top: 2px; }
@@ -31,19 +31,19 @@
 .ms .badge .r { flex: 1; display: flex; align-items: center; justify-content: center; background: #fff; }
 
 .ms .people { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); }
-.ms .people > div { display: grid; grid-template-columns: 90px 1fr; padding: 18px 0; }
+.ms .people > div { display: grid; grid-template-columns: 90px 1fr; padding: 12px 0; }
 .ms .people > div + div { border-left: 1px solid var(--rule); padding-left: 22px; }
 .ms .people h3 { margin: 0; font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; }
-.ms .people p { margin: 0; font-size: 12px; line-height: 1.6; }
+.ms .people p { margin: 0; font-size: 12px; line-height: 1.45; }
 .ms .people p b { font-family: var(--display); font-weight: 700; font-size: 14px; }
 
 .ms table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-.ms thead th { font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; text-align: left; padding: 12px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.ms thead th { font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; text-align: left; padding: 9px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
 .ms thead th.q { text-align: right; }
-.ms tbody td { padding: 16px 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
-.ms td.img { width: 96px; }
-.ms td.img .frame { width: 78px; height: 78px; background: #f1f0eb; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.ms td.img img { width: 78px; height: 78px; object-fit: cover; display: block; }
+.ms tbody td { padding: 10px 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.ms td.img { width: 80px; }
+.ms td.img .frame { width: 64px; height: 64px; background: #f1f0eb; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.ms td.img img { width: 64px; height: 64px; object-fit: cover; display: block; }
 .ms .name { font-family: var(--display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: -.005em; }
 .ms .opts { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
 .ms .opts span { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; border: 1px solid var(--ink); padding: 3px 7px; }
@@ -52,12 +52,12 @@
 .ms td.q b { font-family: var(--display); font-weight: 700; font-size: 22px; }
 .ms td.q small { font-family: var(--mono); font-size: 10px; margin-left: 2px; }
 
-.ms .notes { margin-top: 22px; display: grid; grid-template-columns: 90px 1fr; padding: 14px 16px; background: #f1f0eb; border-left: 4px solid var(--volt); }
+.ms .notes { margin-top: 14px; display: grid; grid-template-columns: 90px 1fr; padding: 10px 16px; background: #f1f0eb; border-left: 4px solid var(--volt); }
 .ms .notes h3 { margin: 0; font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; }
 .ms .notes p { margin: 0; }
 
-.ms .sign { margin-top: 34px; background: var(--ink); color: var(--bone); padding: 26px 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
-.ms .sign h2 { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.02; text-transform: uppercase; letter-spacing: -.01em; margin: 8px 0 10px; }
+.ms .sign { margin-top: 18px; background: var(--ink); color: var(--bone); padding: 18px 24px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+.ms .sign h2 { font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1.02; text-transform: uppercase; letter-spacing: -.01em; margin: 6px 0 8px; }
 .ms .sign h2 em { font-style: normal; color: var(--volt); }
 .ms .sign p { margin: 0; color: #bdbbb3; max-width: 400px; }
 .ms .sign .mono { color: #8b8a83; }
@@ -65,25 +65,29 @@
 .ms .tag b { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .3em; }
 .ms .tag span { display: block; font-family: var(--mono); font-size: 8px; letter-spacing: .24em; color: var(--volt); margin-top: 6px; }
 
-.ms .foot { text-align: center; padding: 28px 0 6px; }
+.ms .foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0 0; }
 .ms .foot .brand { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: .06em; }
 .ms .foot .brand small { font-family: var(--mono); font-weight: 400; font-size: 8px; letter-spacing: .3em; margin-left: 6px; color: var(--mute); }
-.ms .foot p { margin: 8px 0 0; color: var(--mute); }
-.ms .foot .rules { display: flex; justify-content: center; gap: 18px; margin-top: 14px; }
+.ms .foot p { margin: 0; font-size: 10px; color: var(--mute); }
+.ms .foot .rules { display: flex; justify-content: center; gap: 10px; margin-top: 0; }
 .ms .foot .rules span { font-family: var(--mono); font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase; }
 .ms .foot .rules i { font-style: normal; color: var(--mute); }
 .ms td.pr { font-family: var(--display); font-weight: 500; font-size: 13px; padding-left: 14px; }
 .ms td.pr s { color: var(--mute); font-size: 11px; }
 .ms td.pr strong { font-weight: 700; font-size: 14px; }
-.ms .totals { display: grid; grid-template-columns: 1fr 260px; gap: 22px; margin-top: 18px; align-items: stretch; }
+.ms .totals { display: grid; grid-template-columns: 1fr 260px; gap: 22px; margin-top: 14px; align-items: stretch; }
 .ms .sum { grid-column: 2; grid-row: 1; }
-.ms .sum div { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px solid var(--rule); }
+.ms .sum div { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; border-bottom: 1px solid var(--rule); }
 .ms .sum div span:first-child { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; padding-top: 2px; }
 .ms .sum .disc span:last-child { color: var(--ink); font-weight: 600; }
 .ms .sum .disc em { font-style: normal; background: var(--volt); padding: 1px 5px; letter-spacing: .12em; }
 .ms .sum .grand { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); margin-top: 4px; padding: 10px 0; }
 .ms .sum .grand span:last-child { font-family: var(--display); font-weight: 700; font-size: 20px; }
 .ms .sum .saved { border-bottom: 0; color: var(--mute); }
-.ms .cod { grid-column: 1; grid-row: 1; border: 2px solid var(--ink); padding: 16px 18px; display: flex; flex-direction: column; justify-content: center; }
-.ms .cod b { font-family: var(--display); font-weight: 700; font-size: 34px; line-height: 1; margin: 8px 0 8px; }
+.ms .cod { grid-column: 1; grid-row: 1; border: 2px solid var(--ink); padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; }
+.ms .cod b { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1; margin: 6px 0 6px; }
 .ms .cod small { color: var(--mute); font-size: 11px; }
+
+/* Keep the closing block together and fit a two item order on one A4 page. */
+@page { size: A4; margin: 10mm; }
+.ms tbody tr, .ms .totals, .ms .sign, .ms .foot { break-inside: avoid; page-break-inside: avoid; }
