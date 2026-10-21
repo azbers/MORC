@@ -188,6 +188,7 @@
         <a class="logo" href="${link('home')}" aria-label="M.O.R.C. Supply home">M.O.R.C.<small>SUPPLY</small></a>
         <div class="hdr-r">
           <a class="nav-a link-hide mono mute" href="${link('manifesto')}" data-nav="manifesto.">Manifesto</a>
+          <button class="icon-btn" id="themeBtn" aria-label="Switch to dark leather" aria-pressed="false">${ic('moon')}</button>
           <button class="icon-btn" id="searchBtn" aria-label="Search">${ic('search')}</button>
           <a class="icon-btn" href="${link('wishlist')}" aria-label="Liked pairs">${ic('heart')}<span class="dot-count" id="wishCount">0</span></a>
           <button class="icon-btn" id="bagBtn" aria-label="Open bag">${ic('bag')}<span class="dot-count" id="bagCount">0</span></button>
@@ -226,6 +227,19 @@
     $('#bagClose').addEventListener('click', closeBag);
     $('#scrim').addEventListener('click', closeBag);
     $('#searchBtn').addEventListener('click', () => openModal('search'));
+    // light leather is the default; the obsidian look stays one tap away and is remembered on this device
+    const paintTheme = () => {
+      const dark = document.documentElement.dataset.theme === 'dark', b = $('#themeBtn');
+      b.innerHTML = ic(dark ? 'sun' : 'moon'); b.setAttribute('aria-pressed', dark); b.setAttribute('aria-label', dark ? 'Switch to light leather' : 'Switch to dark leather');
+      const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#0c0907' : '#F5EEE4';
+    };
+    $('#themeBtn').addEventListener('click', () => {
+      const dark = document.documentElement.dataset.theme !== 'dark';
+      if (dark) document.documentElement.dataset.theme = 'dark'; else delete document.documentElement.dataset.theme;
+      try { localStorage.setItem('morc.theme', dark ? 'dark' : 'light'); } catch (e) { /* private mode */ }
+      paintTheme();
+    });
+    paintTheme();
     $$('.modal').forEach((m) => m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('on'); }));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeBag(); $$('.modal.on').forEach((m) => m.classList.remove('on')); } });
     $('#q').addEventListener('input', runSearch);
@@ -724,7 +738,7 @@
           <div class="acc">
             <details open><summary>Price transparency</summary><div class="in breakdown">
               <div class="stack" role="img" aria-label="Price breakdown">${bd.map((b) => `<i class="${b.cls}" style="width:${b.v / v.price * 100}%"></i>`).join('')}</div>
-              <div class="legend">${bd.map((b) => `<div><span class="sw ${b.cls}" style="background:${b.cls === 's1' ? 'var(--bone)' : b.cls === 's2' ? '#a9a8a1' : b.cls === 's3' ? '#5d5c57' : 'var(--volt)'}"></span><span>${b.k}</span><b>${fmt(b.v)}</b></div>`).join('')}
+              <div class="legend">${bd.map((b) => `<div><span class="sw ${b.cls}" style="background:${b.cls === 's1' ? 'var(--bone)' : b.cls === 's2' ? 'var(--stack-2)' : b.cls === 's3' ? 'var(--stack-3)' : 'var(--volt)'}"></span><span>${b.k}</span><b>${fmt(b.v)}</b></div>`).join('')}
                 <div class="tot"><span></span><span>You pay</span><b>${fmt(v.price)}</b></div>
                 <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${fmt(C.marketRetail)}+</b></div></div></div></details>
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved M.O.R.C. dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>

@@ -4,8 +4,8 @@
 .morc-plain img { max-width: 100%; height: auto; }
 .morc-plain ul { padding-left: 18px; }
 .morc-plain .rte { max-width: 760px; line-height: 1.7; }
-.morc-plain .rte a, .morc-results a { color: var(--volt, #CCFF00); }
+.morc-plain .rte a, .morc-results a { color: var(--signal, #8A4B22); }
 .morc-plain .phero { padding: 0; border: 0; }
 .morc-results { list-style: none; padding: 0; margin-top: 28px; display: grid; gap: 10px; }
 .morc-pass { min-height: 100vh; display: grid; align-content: center; gap: 24px; max-width: 560px; }
-.morc-pass .errors { color: var(--danger, #ff5a4f); }
+.morc-pass .errors { color: var(--danger, #B3261E); }
