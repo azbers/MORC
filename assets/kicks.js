@@ -61,7 +61,7 @@
   const colorsFor = (hex, accent) => {
     const dark = lum(hex) < 0.32;
     // dark pairs get a light outline so they read on the black site
-    return { upper: hex, sole: dark ? '#2a2927' : '#ffffff', accent: accent || '#CCFF00', line: dark ? '#cfccc3' : '#0b0b0b' };
+    return { upper: hex, sole: dark ? '#2a2927' : '#ffffff', accent: accent || '#C89B5E', line: dark ? '#cfccc3' : '#0b0b0b' };
   };
   window.MORC_KICKS = {
     kinds: Object.keys(K),

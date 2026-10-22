@@ -15,7 +15,7 @@ const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link 
 const THEME_BOOT = '<script>try{if(localStorage.getItem(\'morc.theme\')===\'dark\')document.documentElement.dataset.theme=\'dark\'}catch(e){}</script>';
 
 const PAGES = {
-  home: ['index.html', 'Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s, women\'s and kids leather shoes and sneakers from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.'],
+  home: ['index.html', 'Men\'s Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s leather shoes, sneakers and chelsea boots from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.'],
   shop: ['shop.html', 'Buy Leather Shoes & Sneakers Online in Pakistan | M.O.R.C. Supply', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.'],
   product: ['product.html', 'M.O.R.C. Moc-Runner v1 | Men\'s Black Leather Casual Shoes Price in Pakistan', 'Men\'s black leather casual shoes from Pakistani workshops at factory price, with Cash on Delivery in Pakistan.'],
   cart: ['cart.html', 'Your bag | M.O.R.C. Supply', 'Review your M.O.R.C. Supply bag.'],

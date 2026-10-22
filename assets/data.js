@@ -13,13 +13,15 @@ window.MORC_CONFIG = {
   marketRetail: 12000,                // typical mainstream retail price for comparable pairs
   freeDeliveryPairs: 2,               // delivery is free when the bag holds this many pairs
   /* One flat Cash on Delivery fee and timing for every city in Pakistan. Admin > Settings can change both. */
-  delivery: { fee: 250, days: '2 to 6 working days' },
+  delivery: { fee: 200, days: '2 to 6 working days' },
   /* Coupon rules. type: percent | flat. min: minimum subtotal in rupees. */
   coupons: {
     'SUPPLYLINE': { type: 'flat', value: 300, min: 0, label: 'Supply line access' },
     'DOUBLEUP': { type: 'percent', value: 10, min: 8000, label: '10% off two pairs or more' }
   },
-  audiences: ['Men', 'Women', 'Kids'],
+  /* Lines on sale right now. Products of other lines stay in the catalog below but are hidden
+     everywhere, and a line with no products is hidden too. To relaunch, add 'Women' and 'Kids' back. */
+  audiences: ['Men'],
   lowStockAt: 2,
   adminPasscode: 'supplyunit'          // preview lock only; a live store needs a server login
 };

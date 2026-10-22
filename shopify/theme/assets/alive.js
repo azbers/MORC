@@ -19,7 +19,7 @@
   function cursor() {
     if (!fine || reduce || document.getElementById('shoeCur') || !KX()) return;
     document.documentElement.classList.add('shoe-cursor');
-    const shoe = KX().svg('runner', { upper: '#EDEBE4', sole: '#ffffff', accent: '#CCFF00', line: '#0b0b0b' }, 'sc-svg');
+    const shoe = KX().svg('runner', { upper: '#EDEBE4', sole: '#ffffff', accent: '#B97A47', line: '#0b0b0b' }, 'sc-svg');
     document.body.insertAdjacentHTML('beforeend', `<div id="steps" aria-hidden="true"></div><div id="shoeCur" aria-hidden="true"><div class="sc-shoe">${shoe}</div></div>`);
     const el = document.getElementById('shoeCur'), inner = el.firstElementChild, steps = document.getElementById('steps');
     let x = 0, y = 0, face = 1, tilt = 0, want = 0, seen = false, raf = 0, lx = 0, ly = 0, dist = 0, foot = 1, lastStep = 0;

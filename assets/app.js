@@ -30,7 +30,15 @@
   C.normPhone = (v) => { let d = String(v || '').replace(/\D/g, ''); if (d.startsWith('0092')) d = d.slice(2); if (d.startsWith('03')) d = '92' + d.slice(1); else if (d.startsWith('3') && d.length === 10) d = '92' + d; return /^923\d{9}$/.test(d) ? d : null; };
   const ic = (n, c) => (window.MORC_ICON ? window.MORC_ICON(n, c) : '');
   const ALL = window.MORC_PRODUCTS;
-  const P = ALL.filter((p) => !p.hidden);
+  // only the lines on sale now (data.js audiences) reach the shop, and a line with no pairs is never shown
+  C.audiences = (C.audiences || ['Men']).filter((a) => ALL.some((p) => !p.hidden && p.audience === a));
+  const P = ALL.filter((p) => !p.hidden && C.audiences.includes(p.audience));
+  // with one line the shop is organised by style (Sneakers, Leather, Hybrids) instead of by audience
+  const ONE = C.audiences.length === 1 ? C.audiences[0] : null;
+  const CATS = [...new Set(P.map((p) => p.category))].sort((a, b) => P.filter((p) => p.category === b).length - P.filter((p) => p.category === a).length);
+  const catLabel = { Hybrids: 'Casual', Leather: 'Leather shoes' };
+  const lineOf = (p) => ONE ? p.category : p.audience;
+  const lineKey = (p) => lineOf(p).toLowerCase();
   const SPA = window.MORC_MODE === 'spa';
   // links in shares, flex cards and messages follow whatever domain the site is served from;
   // data.js domain is only the fallback for the single file preview
@@ -78,6 +86,7 @@
   const anySale = (p) => p.variants.some(onSale);
   const maxPct = (p) => Math.max(...p.variants.map(pct));
   const audienceLabel = (p) => p.group ? p.audience + ' / ' + p.group : p.audience;
+  const lineName = (k) => catLabel[k] || k;
   function visual(p, v, opts) {
     opts = opts || {};
     if (v.images && v.images.length) {
@@ -174,16 +183,18 @@
   }
 
   /* ---------------- chrome ---------------- */
-  const navItems = [['shop', '', 'Shop all'], ['shop', 'men', 'Men'], ['shop', 'women', 'Women'], ['shop', 'kids', 'Kids'], ['shop', 'sale', 'Sale'], ['feed', '', 'Feed'], ['manifesto', '', 'Manifesto'], ['contract', '', 'Contract']];
+  const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
+  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['shop', 'sale', 'Sale'], ['feed', '', 'Feed'], ['manifesto', '', 'Manifesto'], ['contract', '', 'Contract']]);
+  const NAV_TOP = navItems.length - 2;
   function chrome() {
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery nationwide', 'Delivery to every city in Pakistan', 'Free delivery on two pairs', 'Same local craft. Zero retail markup', 'At least 5% of profit to verified charity', 'Join the WhatsApp alert list']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
     document.body.insertAdjacentHTML('afterbegin', `
-      <div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
+      ${hideDefs()}<div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
       <a class="sr-skip" href="#app" style="position:absolute;left:-999px">Skip to content</a>
       <div class="ticker" aria-label="Store notices"><div class="ticker-track">${tk}</div></div>
       <header class="hdr"><div class="wrap">
-        <nav class="nav" aria-label="Primary">${navItems.slice(0, 6).map(([pg, pr, t]) => `<a href="${link(pg, pr)}" data-nav="${pg}.${pr}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${pr === 'sale' ? '<i aria-hidden="true"></i>' : ''}${t}</a>`).join('')}</nav>
+        <nav class="nav" aria-label="Primary">${navItems.slice(0, NAV_TOP).map(([pg, pr, t]) => `<a href="${link(pg, pr)}" data-nav="${pg}.${pr}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${pr === 'sale' ? '<i aria-hidden="true"></i>' : ''}${t}</a>`).join('')}</nav>
         <button class="menu-btn" aria-label="Menu" aria-expanded="false" id="menuBtn"><span></span><span></span></button>
         <a class="logo" href="${link('home')}" aria-label="M.O.R.C. Supply home">M.O.R.C.<small>SUPPLY</small></a>
         <div class="hdr-r">
@@ -198,9 +209,9 @@
     document.body.insertAdjacentHTML('beforeend', `
       <footer class="ftr"><div class="wrap">
         <div class="ftr-brand"><a class="logo" href="${link('home')}">M.O.R.C.<small>SUPPLY</small></a>
-          <p>An independent curator house and supply network. Premium Pakistani footwear at true factory pricing, sealed with our own hardware.</p>
+          <p>${ONE === 'Men' ? 'Men\'s leather shoes and sneakers from Pakistani workshops, at factory price, sealed with our own hardware.' : 'An independent curator house and supply network. Premium Pakistani footwear at true factory pricing, sealed with our own hardware.'}</p>
           <a class="link" href="${link('list')}">Join the WhatsApp alert list</a></div>
-        <div class="ftr-col"><h4>Shop</h4><a href="${link('shop', 'men')}">Men</a><a href="${link('shop', 'women')}">Women</a><a href="${link('shop', 'kids')}">Kids</a><a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
+        <div class="ftr-col"><h4>Shop${ONE ? ' ' + esc(ONE) : ''}</h4>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h4>Help</h4><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
         <div class="ftr-col"><h4>House</h4><a href="${link('manifesto')}">Manifesto</a><a href="${link('contract')}">Operational contract</a><a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h4>Reach</h4><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum M.O.R.C. Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Delivering across Pakistan</span></div>
@@ -215,7 +226,7 @@
       </aside>
       <div class="modal" id="search" role="dialog" aria-label="Search"><div class="panel">
         <div class="field-label"><span>Search the supply line</span><button class="x-btn" data-close>Close</button></div>
-        <div class="inline-field"><input id="q" type="search" placeholder="Try black, derby, kids, sale" autocomplete="off"><button data-close>Esc</button></div>
+        <div class="inline-field"><input id="q" type="search" placeholder="Try black, derby, chelsea, sale" autocomplete="off"><button data-close>Esc</button></div>
         <div id="qres" class="mini-items" style="border:0"></div></div></div>
       <div class="modal" id="sizeGuide" role="dialog" aria-label="Size guide"><div class="panel">
         <div class="field-label"><span>Size guide</span><button class="x-btn" data-close>Close</button></div>${sizeTable()}
@@ -246,8 +257,10 @@
     paintCounts();
   }
   function sizeTable() {
-    const rows = [[20, 12.5], [21, 13], [22, 13.5], [23, 14.5], [24, 15], [25, 15.5], [36, 22.5], [37, 23.5], [38, 24], [39, 25], [40, 25.5], [41, 26.5], [42, 27], [43, 28], [44, 28.5], [45, 29.5]];
-    return `<div style="overflow-x:auto"><table class="size-table"><thead><tr><th>EU</th><th>Foot length</th><th>UK</th><th>Range</th></tr></thead><tbody>${rows.map(([eu, cm]) => `<tr><td>${eu}</td><td>${cm} cm</td><td>${eu >= 36 ? (eu - 33.5).toFixed(1).replace('.0', '') : (eu - 16.5).toFixed(1).replace('.0', '') + ' C'}</td><td>${eu < 30 ? 'Kids' : eu < 40 ? 'Women' : 'Men'}</td></tr>`).join('')}</tbody></table></div>`;
+    const sold = new Set(P.flatMap((p) => p.sizes));
+    const rows = [[20, 12.5], [21, 13], [22, 13.5], [23, 14.5], [24, 15], [25, 15.5], [36, 22.5], [37, 23.5], [38, 24], [39, 25], [40, 25.5], [41, 26.5], [42, 27], [43, 28], [44, 28.5], [45, 29.5]].filter(([eu]) => sold.has(eu));
+    const range = (eu) => eu < 30 ? 'Kids' : eu < 40 ? 'Women' : 'Men';
+    return `<div style="overflow-x:auto"><table class="size-table"><thead><tr><th>EU</th><th>Foot length</th><th>UK</th>${ONE ? '' : '<th>Range</th>'}</tr></thead><tbody>${rows.map(([eu, cm]) => `<tr><td>${eu}</td><td>${cm} cm</td><td>${eu >= 36 ? (eu - 33.5).toFixed(1).replace('.0', '') : (eu - 16.5).toFixed(1).replace('.0', '') + ' C'}</td>${ONE ? '' : `<td>${range(eu)}</td>`}</tr>`).join('')}</tbody></table></div>`;
   }
   function openModal(id) { const m = $('#' + id); m.classList.add('on'); const i = $('input', m); if (i) setTimeout(() => i.focus(), 50); }
   function runSearch() {
@@ -354,19 +367,27 @@
   let rerender = () => { paintCounts(); };
 
   /* ---------------- shared blocks ---------------- */
-  // hanging swing tag for marked down pairs
+  // marked down pairs carry a tag cut from a hide, hung on a leather thong through a brass eyelet;
+  // the shape, grain and stitching live once in #hideDefs (chrome) and every tag reuses them
+  const HIDE = 'M38 10C46 14 52 8 60 9C68 8 75 14 83 10C91 6 97 3 102 9C107 14 101 22 106 28C111 34 118 35 117 45C116 55 106 57 106 67C106 77 116 81 114 93C112 104 101 101 97 109C93 117 99 122 88 122C78 122 72 115 60 115C48 115 41 122 31 121C21 120 28 115 23 108C19 100 8 104 6 92C4 80 14 76 14 66C14 56 4 54 3 44C2 34 10 34 15 28C20 22 13 13 18 8C24 2 30 6 38 10Z';
+  const hideDefs = () => `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <radialGradient id="hideFill" cx="42%" cy="34%" r="78%"><stop offset="0" stop-color="#D49A62"/><stop offset=".55" stop-color="#B7773F"/><stop offset="1" stop-color="#8A5128"/></radialGradient>
+    <filter id="hideGrain" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="7" result="n"/><feDiffuseLighting in="n" surfaceScale="1.3" lighting-color="#fff" result="l"><feDistantLight azimuth="235" elevation="58"/></feDiffuseLighting><feComposite in="l" in2="SourceGraphic" operator="in"/></filter>
+    <path id="hideShape" d="${HIDE}"/></defs></svg>`;
   function priceTag(v) {
-    return `<span class="ptag" aria-label="${pct(v)} percent off, save ${fmt(v.compareAt - v.price)}"><i class="ptag-str" aria-hidden="true"></i><span class="ptag-b"><i class="ptag-h" aria-hidden="true"></i><b>&minus;${pct(v)}%</b><small>Save ${fmt(v.compareAt - v.price)}</small><i class="ptag-bc" aria-hidden="true"></i></span></span>`;
+    return `<span class="ptag" aria-label="${pct(v)} percent off, save ${fmt(v.compareAt - v.price)}"><svg class="ptag-thong" viewBox="0 0 40 70" aria-hidden="true"><path d="M20 0C20 28 11 40 13 56C14 65 26 65 27 56C29 40 20 28 20 0" fill="none" stroke="#4A2A18" stroke-width="3.4" stroke-linecap="round"/><path d="M20 0C20 28 11 40 13 56" fill="none" stroke="#A36A3C" stroke-width="1.1" stroke-linecap="round" opacity=".85"/></svg>
+      <span class="ptag-b"><svg class="ptag-hide" viewBox="0 0 120 124" aria-hidden="true"><use href="#hideShape" fill="url(#hideFill)" stroke="#5A3420" stroke-width="1.6"/><use href="#hideShape" filter="url(#hideGrain)" class="ptag-grain"/><use href="#hideShape" fill="none" stroke="#F3DCC0" stroke-opacity=".55" stroke-width=".9" stroke-dasharray="2.6 2.2" transform="translate(60 64) scale(.86) translate(-60 -64)"/><circle cx="60" cy="22" r="5.4" fill="#C9A063" stroke="#6B4A22" stroke-width="1.2"/><circle cx="60" cy="22" r="2.8" fill="#2B1A12"/></svg>
+      <b>&minus;${pct(v)}%</b><small>Save ${fmt(v.compareAt - v.price)}</small><em>Sale</em></span></span>`;
   }
   function card(p, i, vSel) {
     const v = vSel || p.variants[0];
     const sz = p.sizes.map((s) => { const n = (v.stock || {})[s] || 0; return `<button class="size" data-s="${s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-pressed="false" aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('');
-    const tag = onSale(v) ? '' : `<span class="chip ${p.tag === 'Limited' ? 'v' : ''}">${esc(p.tag)}</span>`;
+    const tag = onSale(v) || /^drop/i.test(p.tag || '') ? '' : `<span class="chip ${p.tag === 'Limited' ? 'v' : ''}">${esc(p.tag)}</span>`;
     const ratio = v.price / C.marketRetail * 100;
     const low = stockOf(v) <= 6 && stockOf(v) > 0;
     return `<article class="card" data-pid="${p.id}" data-vid="${v.id}">
       <a class="card-media" href="${link('product', p.id + '~' + v.id)}" aria-label="${esc(p.name)} ${esc(v.color)}">
-        ${onSale(v) ? priceTag(v) : `<span class="tag">${tag}</span>`}<span class="idx">${String(i + 1).padStart(2, '0')} / ${esc(p.audience).toUpperCase()}</span>
+        ${onSale(v) ? priceTag(v) : `<span class="tag">${tag}</span>`}<span class="idx">${String(i + 1).padStart(2, '0')} / ${esc(lineName(lineOf(p))).toUpperCase()}</span>
         <span class="layer rn">${visual(p, v)}</span><span class="layer bp">${visual(p, v, { mode: 'blueprint' })}</span></a>
       <div class="card-body">
         <div class="card-top"><h3><a href="${link('product', p.id + '~' + v.id)}">${esc(p.name)}</a></h3><span class="price">${fmt(v.price)}</span></div>
@@ -417,7 +438,7 @@
     return `<form class="alert-form" novalidate>
       <div class="f"><label for="al-wa${compact ? 'c' : ''}">WhatsApp number</label><input id="al-wa${compact ? 'c' : ''}" name="wa" inputmode="tel" placeholder="03XX XXXXXXX" autocomplete="tel"><span class="err"></span></div>
       ${compact ? '' : `<div class="f-row"><div class="f"><label for="al-name">Name</label><input id="al-name" name="name" autocomplete="name"></div><div class="f"><label for="al-email">Email (optional)</label><input id="al-email" name="email" type="email" autocomplete="email"><span class="err"></span></div></div>
-      <div class="f"><label>I shop for</label><div class="filters">${C.audiences.map((a) => `<button type="button" class="fbtn" aria-pressed="false" data-int="${a}">${a}</button>`).join('')}</div></div>
+      ${C.audiences.length < 2 ? '' : `<div class="f"><label>I shop for</label><div class="filters">${C.audiences.map((a) => `<button type="button" class="fbtn" aria-pressed="false" data-int="${a}">${a}</button>`).join('')}</div></div>`}
       <div class="f"><label>Channels</label>
         <label class="chk"><input type="checkbox" name="cwa" checked> WhatsApp drop and discount alerts</label>
         <label class="chk"><input type="checkbox" name="cem"> Email</label>
@@ -451,17 +472,19 @@
   const V = {};
 
   V.home = function () {
-    setMeta('Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s, women\'s and kids leather shoes and sneakers from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.',
+    setMeta(ONE === 'Men' ? 'Men\'s Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply' : 'Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers and chelsea boots' : 'Men\'s, women\'s and kids leather shoes and sneakers') + ' from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.',
       { '@context': 'https://schema.org', '@type': 'ShoeStore', name: 'M.O.R.C. Supply', url: C.domain, description: 'Curated premium Pakistani footwear at factory direct pricing.', areaServed: ['Pakistan'], paymentAccepted: 'Cash on Delivery', currenciesAccepted: 'PKR' });
     const hero = prod('moc-runner-v1'), hv = hero.variants[0];
     const bd = breakdown(hero, hv);
-    const drop = P.filter((p) => p.audience === 'Men').slice(0, 8);
+    const drop = P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 8);
+    const lines = ONE ? CATS.map((c) => ({ key: c, ps: P.filter((p) => p.category === c) })) : C.audiences.map((a) => ({ key: a, ps: P.filter((p) => p.audience === a) }));
+    const nWord = ['One', 'Two', 'Three', 'Four', 'Five', 'Six'][lines.length - 1] || lines.length;
     const sale = P.filter(anySale);
     const W = (n) => (n / C.marketRetail * 100).toFixed(1) + '%';
     app.innerHTML = `
     <section class="hero" id="hero"><div class="hero-light"></div><div class="wrap">
-      <div class="hero-meta"><span class="mono live"><span class="dot"></span>Drop 01 / live now</span><span class="mono">Curated wholesale hub / Pakistan</span><span class="mono">EU 40 to 45 / COD nationwide</span></div>
-      <h1><span class="row"><span>Same local craft.</span></span><span class="row"><span class="ghost">Zero retail</span> <span>markup.</span><sup>M.O.R.C.</sup></span></h1>
+      <div class="hero-meta"><span class="mono live"><span class="dot"></span>Drop 01 / live now</span><span class="mono">${ONE === 'Men' ? 'Men\'s leather shoes' : 'Curated supply house'} / Pakistan</span><span class="mono">EU 40 to 45 / COD nationwide</span></div>
+      <h1><span class="row"><span>Same local craft.</span></span><span class="row"><span class="ghost">Zero retail</span> <span>markup.</span></span></h1>
       <div class="hero-side">
         <p><strong>The Moc-Runner v1.</strong> The pair big labels buy from the same benches, re-laced and sealed by us, sold at what it costs plus a fair margin.</p>
         <div class="hero-cta"><a class="btn volt" href="${link('product', hero.id)}">Shop the Moc-Runner, ${fmt(hv.price)} <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('shop')}">All drops</a></div>
@@ -482,8 +505,8 @@
 
     <div id="ext-stories"></div>
     <section class="sheet x"><div class="wrap">
-      ${head('Shop by line', 'Three lines. One standard.', `<a class="link" href="${link('shop')}">Shop all</a>`)}
-      <div class="lines">${C.audiences.map((a, i) => lineCard(a, i)).join('')}</div>
+      ${head(ONE ? 'Shop by style' : 'Shop by line', `${nWord} ${ONE ? 'style' : 'line'}${lines.length === 1 ? '' : 's'}. One standard.`, `<a class="link" href="${link('shop')}">Shop all</a>`)}
+      <div class="lines">${lines.map((l, i) => lineCard(l, i)).join('')}</div>
     </div></section>
 
     <section class="sheet x" id="drop"><div class="wrap">
@@ -561,28 +584,37 @@
   ];
 
   /* ---- shop ---- */
-  const presets = { men: { aud: 'Men' }, women: { aud: 'Women' }, kids: { aud: 'Kids' }, sale: { sale: true }, new: { sort: 'new' } };
+  const presets = { sale: { sale: true }, new: { sort: 'new' } };
+  C.audiences.forEach((a) => { presets[a.toLowerCase()] = { aud: a }; });
+  if (ONE) CATS.forEach((c) => { presets[c.toLowerCase()] = { cat: c }; });
   V.shop = function (param) {
     const pre = presets[param] || {};
-    const F = { aud: pre.aud || 'All', group: 'All', cat: 'All', colors: [], size: null, price: 'all', sale: !!pre.sale, instock: false, sort: pre.sort || 'featured', q: '' };
-    const title = pre.aud ? pre.aud : pre.sale ? 'Sale' : pre.sort ? 'New in' : 'All drops';
+    const F = { aud: pre.aud || 'All', group: 'All', cat: pre.cat || 'All', colors: [], size: null, price: 'all', sale: !!pre.sale, instock: false, sort: pre.sort || 'featured', q: '' };
+    const title = pre.cat ? lineName(pre.cat) : pre.aud ? pre.aud : pre.sale ? 'Sale' : pre.sort ? 'New in' : ONE ? 'All ' + ONE.toLowerCase() : 'All drops';
     // titles follow how Pakistani shoppers search: product type, audience, "price in Pakistan" / "online in Pakistan"
     const SEO = {
       Men: ["Men's Leather Shoes & Sneakers Price in Pakistan", "Men's leather shoes, sneakers, loafers and boots at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
       Women: ["Women's Sneakers & Leather Shoes in Pakistan", "Women's sneakers and leather shoes at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
       Kids: ['Kids Shoes Online in Pakistan', 'Kids and baby leather shoes and sneakers online in Pakistan at factory price. Cash on Delivery to every city.'],
       Sale: ['Shoes Sale in Pakistan | Leather Shoes & Sneakers', 'Leather shoes and sneakers on sale in Pakistan. Real price drops on factory priced pairs, with Cash on Delivery to every city.'],
-      'New in': ["New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers at M.O.R.C. Supply, at factory price with Cash on Delivery across Pakistan.'],
-      'All drops': ['Buy Leather Shoes & Sneakers Online in Pakistan', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.']
-    }[title];
+      'New in': [ONE === 'Men' ? "New Arrivals | Men's Shoes in Pakistan" : "New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers at M.O.R.C. Supply, at factory price with Cash on Delivery across Pakistan.'],
+      'All drops': ['Buy Leather Shoes & Sneakers Online in Pakistan', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.'],
+      'All men': ["Buy Men's Shoes Online in Pakistan | Leather Shoes & Sneakers", "Buy men's leather shoes, sneakers and chelsea boots online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city."],
+      Sneakers: ["Men's Sneakers Price in Pakistan", "Men's leather and streetwear sneakers at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
+      'Leather shoes': ["Men's Leather Shoes Price in Pakistan | Derby & Chelsea Boots", "Men's full grain leather derby shoes and chelsea boots at factory price in Pakistan. Cash on Delivery to every city."],
+      Casual: ["Men's Casual Leather Shoes Price in Pakistan", "Men's casual leather shoes, moc toe runners and slip ons at factory price in Pakistan. Cash on Delivery to every city."]
+    }[title] || [title + ' | Shoes in Pakistan', 'Shoes at factory price with Cash on Delivery across Pakistan.'];
     setMeta(`${SEO[0]} | M.O.R.C. Supply`, SEO[1]);
     const colorFam = (c) => c.split('/')[0].trim().replace(/^(Triple|Black Full Grain|Black Waxed|Black Nappa)$/i, 'Black').replace(/^Triple Black$/i, 'Black');
     const allColors = [...new Set(P.flatMap((p) => p.variants.map((v) => colorFam(v.color))))];
     const hexOf = (c) => { for (const p of P) for (const v of p.variants) if (colorFam(v.color) === c) return v.hex || '#333'; return '#333'; };
-    const set = P.filter((p) => (!pre.aud || p.audience === pre.aud) && (!pre.sale || anySale(p)));
+    const set = P.filter((p) => (!pre.aud || p.audience === pre.aud) && (!pre.cat || p.category === pre.cat) && (!pre.sale || anySale(p)));
     const vs = set.flatMap((p) => p.variants.filter((v) => !pre.sale || onSale(v)).map((v) => [p, v]));
     const HERO = {
-      all: ['Drop 01 / every pair on the line', 'Every price here is the workshop price, plus our hardware, packaging and a fair margin. Nothing for a logo.'],
+      all: [ONE === 'Men' ? 'Drop 01 / every men\'s pair' : 'Drop 01 / every pair on the line', 'Every price here is the workshop price, plus our hardware, packaging and a fair margin. Nothing for a logo.'],
+      sneakers: ['Style 01 / Sneakers', 'Court lows, trainers and high tops in real leather, with soles bonded and pull tested before they are sealed.'],
+      leather: ['Style 02 / Leather shoes', 'Full grain derby shoes and waxed chelsea boots. The pairs you wear when it matters, without the label tax.'],
+      hybrids: ['Style 03 / Casual', 'Moc toe runners and slip ons. Leather comfort for the whole day, priced at what they cost plus a fair margin.'],
       men: ['Line 01 / Men', 'Built heavy. Priced honest. Leather and rubber from the same benches the big labels use.'],
       women: ['Line 02 / Women', 'Clean lines on a narrower last. No logo tax, no influencer tax.'],
       kids: ['Line 03 / Kids', 'First steps in real leather, at a price that makes sense when they outgrow it in six months.'],
@@ -600,14 +632,14 @@
     app.innerHTML = `
       <section class="shero shero-${hk}">
         <div class="shero-bg" aria-hidden="true"><div class="shero-mq">${(title + ' + ').repeat(8)}</div></div>
-        <div class="wrap"><div class="crumbs"><a href="${link('home')}">Home</a><span>/</span><span>Shop</span>${pre.aud || pre.sale || pre.sort ? `<span>/</span><span>${title}</span>` : ''}</div>
+        <div class="wrap"><div class="crumbs"><a href="${link('home')}">Home</a><span>/</span><span>Shop</span>${pre.aud || pre.cat || pre.sale || pre.sort ? `<span>/</span><span>${title}</span>` : ''}</div>
           <div class="shero-grid"><div class="shero-t"><span class="eyebrow">${HERO[hk][0]}</span><h1 class="split" aria-label="${esc(title)}">${letters(title)}</h1><p>${HERO[hk][1]}</p></div>
           <div class="shero-stats">${stats.map(([k, n, suf, money]) => `<div><span class="mono">${k}</span><b class="num">${money ? C.currency + ' ' : ''}${typeof n === 'number' ? `<span data-count="${n}">${n.toLocaleString('en-US')}</span>` : n}${suf}</b></div>`).join('')}</div></div></div>
         ${parade.length ? `<div class="parade" aria-hidden="true"><div class="parade-track">${parade.map(([p, v], i) => `<a class="pd" href="${link('product', p.id + '~' + v.id)}" tabindex="-1" style="--d:${(i % 5) * -0.7}s">${visual(p, v)}${pre.sale ? `<em>&minus;${pct(v)}%</em>` : ''}</a>`).join('')}</div></div>` : ''}
       </section>
       <section><div class="wrap">
         <div class="toolbar">
-          <div class="filters" id="fAud">${['All'].concat(C.audiences).map((a) => `<button class="fbtn" data-aud="${a}" aria-pressed="${F.aud === a}">${a}</button>`).join('')}</div>
+          ${ONE ? `<div class="filters" id="fAud">${['All'].concat(CATS).map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${F.cat === c}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div>` : `<div class="filters" id="fAud">${['All'].concat(C.audiences).map((a) => `<button class="fbtn" data-aud="${a}" aria-pressed="${F.aud === a}">${a}</button>`).join('')}</div>`}
           <div class="tool-r"><button class="fbtn" id="fToggle" aria-expanded="false">${ic('sliders')}Filters <span id="fN"></span></button>
             <label class="sr" for="sort" style="position:absolute;left:-999px">Sort</label><select class="select" id="sort">
             ${[['featured', 'Featured'], ['new', 'Newest'], ['low', 'Price, low to high'], ['high', 'Price, high to low'], ['saving', 'Biggest saving']].map(([v, t]) => `<option value="${v}" ${F.sort === v ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
@@ -616,7 +648,7 @@
           <aside class="fpanel" id="fpanel">
             <div class="fgrp"><span class="field-label"><span>${ic('search')}Search</span></span><input class="finput" id="fq" type="search" placeholder="Name, colour, style"></div>
             <div class="fgrp" id="gGroup"></div>
-            <div class="fgrp"><span class="field-label"><span>${ic('tag')}Style</span></span><div class="filters">${['All', ...new Set(P.map((p) => p.category))].map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${c === 'All'}">${c}</button>`).join('')}</div></div>
+            <div class="fgrp"><span class="field-label"><span>${ic('tag')}Style</span></span><div class="filters">${['All', ...CATS].map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${c === F.cat}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('spark')}Colour</span></span><div class="filters cols">${allColors.map((c) => `<button class="fbtn col-chip" data-col="${esc(c)}" aria-pressed="false" style="--c:${esc(hexOf(c))}"><span class="cc-i">${window.MORC_KICKS ? window.MORC_KICKS.svg('runner', window.MORC_KICKS.colorsFor(hexOf(c))) : ''}</span>${esc(c)}</button>`).join('')}</div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('ruler')}Size (EU)</span></span><div class="sizes" id="fSizes"></div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('cash')}Price</span></span><div class="filters">${[['all', 'Any'], ['u4', 'Under 4,000'], ['4to5', '4,000 to 5,000'], ['o5', 'Over 5,000']].map(([v, t]) => `<button class="fbtn" data-pr="${v}" aria-pressed="${v === 'all'}">${t}</button>`).join('')}</div></div>
@@ -660,7 +692,7 @@
       const chips = [];
       if (F.aud !== 'All') chips.push(['aud', F.aud]);
       if (F.group !== 'All') chips.push(['group', F.group]);
-      if (F.cat !== 'All') chips.push(['cat', F.cat]);
+      if (F.cat !== 'All') chips.push(['cat', lineName(F.cat)]);
       F.colors.forEach((c) => chips.push(['col', c]));
       if (F.size) chips.push(['size', 'EU ' + F.size]);
       if (F.price !== 'all') chips.push(['price', $(`[data-pr="${F.price}"]`).textContent]);
@@ -719,17 +751,17 @@
       const views = v.images && v.images.length ? v.images.map((_, i) => ({ l: 'Photo ' + (i + 1), h: visual(p, v, { index: i }) })) : [{ l: 'Side', h: visual(p, v, { index: 0 }) }, { l: 'Blueprint', h: visual(p, v, { mode: 'blueprint' }), grid: true }, { l: 'Lacing', h: v.images && v.images[1] ? visual(p, v, { index: 1 }) : visual(p, v, { viewBox: '200 70 220 150' }) }, { l: 'Hardware', h: v.images && v.images[2] ? visual(p, v, { index: 2 }) : visual(p, v, { mode: 'blueprint', viewBox: '220 90 160 110' }), grid: true }];
       if (view >= views.length) view = 0;
       const st = v.stock || {};
-      const related = P.filter((x) => x.id !== p.id && x.audience === p.audience).slice(0, 4);
+      const related = P.filter((x) => x.id !== p.id && x.audience === p.audience).sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 4);
       const recent = store.get('recent', []).filter((x) => x !== p.id).map(prod).filter(Boolean).slice(0, 4);
       app.innerHTML = `
-      <div class="wrap"><div class="crumbs" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', p.audience.toLowerCase())}">${esc(p.audience)}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></div>
+      <div class="wrap"><div class="crumbs" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></div>
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(p.category)}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div></div>
+          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div></div>
           <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}" aria-label="${x.l} view">${x.h}</button>`).join('')}</div>
         </div>
         <div class="buy">
-          <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(p.category)} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
+          <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
             <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>`}</div>
             <p class="blurb">${esc(p.description)}</p></div>
           <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.MORC_KICKS ? window.MORC_KICKS.svg(window.MORC_KICKS.kindOf(p), window.MORC_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
@@ -756,7 +788,7 @@
         </div>
       </div></div>
       <div id="ext-reviews"></div>
-      ${related.length ? `<section class="sheet x"><div class="wrap">${head('Complete the rotation', 'More from ' + esc(p.audience) + '.')}<div class="grid">${related.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
+      ${related.length ? `<section class="sheet x"><div class="wrap">${head('Complete the rotation', ONE ? 'More pairs like this.' : 'More from ' + esc(p.audience) + '.')}<div class="grid">${related.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
       ${recent.length ? `<section class="sheet x"><div class="wrap">${head('Recently viewed', 'Still thinking?')}<div class="grid">${recent.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
       <div class="sticky-buy" id="stickyBuy"><div><b>${esc(p.name)}</b><span class="mono mute">${esc(v.color)} / ${fmt(v.price)}</span></div><button class="btn volt" id="stickyAdd">${size ? 'Add EU ' + size : 'Choose size'}</button></div>`;
       bind();
@@ -994,14 +1026,14 @@
 
   /* ---- manifesto ---- */
   // home "Shop by line" card: one pair at rest, the line fans out on hover with honest price tags
-  function lineCard(a, i) {
-    const ps = P.filter((p) => p.audience === a);
-    const pairs = ps.length ? [[ps[0], ps[0].variants[0]]] : []; // one hero pair per line keeps every card as clean as Kids
-    const tag = { Men: 'Built heavy. Priced honest.', Women: 'Clean lines. No logo tax.', Kids: 'Real leather for small feet.' }[a] || 'Curated, not overpriced.';
+  function lineCard(l, i) {
+    const ps = l.ps, a = lineName(l.key);
+    const pairs = ps.length ? [[ps[0], ps[0].variants[0]]] : []; // one hero pair per line keeps every card clean
+    const tag = { Men: 'Built heavy. Priced honest.', Women: 'Clean lines. No logo tax.', Kids: 'Real leather for small feet.', Sneakers: 'Leather and rubber, bonded and pull tested.', Leather: 'Full grain. No label tax.', Hybrids: 'All day leather comfort.' }[l.key] || 'Curated, not overpriced.';
     const from = ps.length ? Math.min(...ps.map(minPrice)) : 0;
-    return `<a class="line-card" href="${link('shop', a.toLowerCase())}" style="--n:${pairs.length}">
-      <span class="lc-badge">${ps.length} style${ps.length === 1 ? '' : 's'}</span><span class="lc-no mono">Line 0${i + 1} / M.O.R.C.</span>
-      <span class="lc-big" aria-hidden="true">${esc(a)}</span>
+    return `<a class="line-card" href="${link('shop', l.key.toLowerCase())}" style="--n:${pairs.length}">
+      <span class="lc-badge">${ps.length} style${ps.length === 1 ? '' : 's'}</span><span class="lc-no mono">${ONE ? 'Style' : 'Line'} 0${i + 1} / M.O.R.C.</span>
+      <span class="lc-big" aria-hidden="true" style="--len:${(ONE ? l.key.replace('Hybrids', 'Casual') : a).length}">${esc(ONE ? l.key.replace('Hybrids', 'Casual') : a)}</span>
       <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Workshop pair / M.O.R.C. sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em><s>${fmt(C.marketRetail)}+</s></span>` : ''}</span>`).join('')}</span>
       <span class="lc-foot"><span class="lc-t">${esc(a)}</span><span class="lc-line">${tag} From ${fmt(from)}.</span></span>
       <span class="lc-cta">Shop ${esc(a.toLowerCase())} ${ic('arrow')}</span>
