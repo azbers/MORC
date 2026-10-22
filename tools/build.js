@@ -12,15 +12,17 @@ const C = sandbox.window.MORC_CONFIG;
 
 const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">';
 
+const THEME_BOOT = '<script>try{if(localStorage.getItem(\'morc.theme\')===\'dark\')document.documentElement.dataset.theme=\'dark\'}catch(e){}</script>';
+
 const PAGES = {
-  home: ['index.html', 'M.O.R.C. Supply | Premium Streetwear Kicks & Sneakers at Wholesale Prices', 'Skip the retail markup. M.O.R.C. brings you high-quality, locally produced streetwear sneakers, boots, and casual shoes directly from Pakistan’s top manufacturers at factory rates.'],
-  shop: ['shop.html', 'Shop All Drops | M.O.R.C. Supply Pakistan', 'Shop premium Pakistani sneakers and leather shoes at wholesale pricing. Filter by line, size, colour and price. Cash on Delivery across Pakistan.'],
-  product: ['product.html', 'M.O.R.C. Moc-Runner v1 | Mens Black Leather Casual Shoes Pakistan', 'Premium local leather shoes at factory direct pricing with Cash on Delivery in Pakistan.'],
+  home: ['index.html', 'Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s, women\'s and kids leather shoes and sneakers from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.'],
+  shop: ['shop.html', 'Buy Leather Shoes & Sneakers Online in Pakistan | M.O.R.C. Supply', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.'],
+  product: ['product.html', 'M.O.R.C. Moc-Runner v1 | Men\'s Black Leather Casual Shoes Price in Pakistan', 'Men\'s black leather casual shoes from Pakistani workshops at factory price, with Cash on Delivery in Pakistan.'],
   cart: ['cart.html', 'Your bag | M.O.R.C. Supply', 'Review your M.O.R.C. Supply bag.'],
   checkout: ['checkout.html', 'Checkout | M.O.R.C. Supply', 'Cash on Delivery checkout for M.O.R.C. Supply.'],
   order: ['order.html', 'Order placed | M.O.R.C. Supply', 'Your M.O.R.C. Supply order.'],
-  manifesto: ['manifesto.html', 'About M.O.R.C. Supply | Affordable Luxury Sneakers & Footwear Pakistan', 'The truth behind the sneaker industry. M.O.R.C. brings you premium local leather shoes and streetwear kicks directly from the manufacturers at true factory wholesale rates.'],
-  contract: ['contract.html', 'Operational Contract | Delivery, COD and Exchanges | M.O.R.C. Supply', 'Delivery across Pakistan, Cash on Delivery terms, exchanges and size guide.'],
+  manifesto: ['manifesto.html', 'About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.'],
+  contract: ['contract.html', 'Delivery, Cash on Delivery & Exchanges in Pakistan | M.O.R.C. Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.'],
   track: ['track.html', 'Track your order | M.O.R.C. Supply', 'Track a M.O.R.C. Supply Cash on Delivery order.'],
   wishlist: ['wishlist.html', 'Wishlist | M.O.R.C. Supply', 'Your saved M.O.R.C. Supply pairs.'],
   list: ['list.html', 'Join the alert list | M.O.R.C. Supply', 'Get M.O.R.C. Supply drops, restocks and discounts first on WhatsApp.'],
@@ -42,7 +44,8 @@ function page(key) {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${title}</title>
 <meta name="description" content="${desc}">
-<meta name="theme-color" content="#080808">
+<meta name="theme-color" content="#F5EEE4">
+${THEME_BOOT}
 ${NOINDEX.includes(key) ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${C.domain}/${file === 'index.html' ? '' : file}">`}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="M.O.R.C. Supply">
@@ -51,7 +54,7 @@ ${NOINDEX.includes(key) ? '<meta name="robots" content="noindex">' : `<link rel=
 <meta property="og:url" content="${C.domain}/${file === 'index.html' ? '' : file}">
 <meta property="og:locale" content="en_PK">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23080808'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='16' fill='%23CCFF00' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232A1C14'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='16' fill='%23F5EEE4' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 ${FONTS}
 <link rel="stylesheet" href="assets/styles.css">
 </head>
@@ -72,12 +75,15 @@ fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nDisallow: /check
 // single file preview: everything inlined, hash routing
 const inline = (f) => fs.readFileSync(path.join(root, f), 'utf8').replace(/<\/script/gi, '<\\/script');
 const js = ['assets/data.js', 'assets/shoe.js'].concat(OPTIONAL.filter((f) => fs.existsSync(path.join(root, f))), ['assets/app.js']);
+// the stylesheet points at the leather tiles next to it; the one file preview carries them inline
+const inlineTiles = (css) => css.replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'dist/preview.html'), `<title>M.O.R.C. Supply</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${PAGES.home[2]}">
 ${FONTS}
-<style>${fs.readFileSync(path.join(root, 'assets/styles.css'), 'utf8')}</style>
+${THEME_BOOT}
+<style>${inlineTiles(fs.readFileSync(path.join(root, 'assets/styles.css'), 'utf8'))}</style>
 <main id="app" tabindex="-1"></main>
 <script>window.MORC_MODE = 'spa';</script>
 ${js.map((f) => `<script>${inline(f)}</script>`).join('\n')}
