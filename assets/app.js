@@ -176,7 +176,7 @@
   /* ---------------- chrome ---------------- */
   const navItems = [['shop', '', 'Shop all'], ['shop', 'men', 'Men'], ['shop', 'women', 'Women'], ['shop', 'kids', 'Kids'], ['shop', 'sale', 'Sale'], ['feed', '', 'Feed'], ['manifesto', '', 'Manifesto'], ['contract', '', 'Contract']];
   function chrome() {
-    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery nationwide', 'Delivery to every city in Pakistan', 'Free delivery on two pairs', 'Same local craft. Zero retail markup', 'Join the WhatsApp alert list']);
+    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery nationwide', 'Delivery to every city in Pakistan', 'Free delivery on two pairs', 'Same local craft. Zero retail markup', 'At least 5% of profit to verified charity', 'Join the WhatsApp alert list']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
     document.body.insertAdjacentHTML('afterbegin', `
       <div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
@@ -188,6 +188,7 @@
         <a class="logo" href="${link('home')}" aria-label="M.O.R.C. Supply home">M.O.R.C.<small>SUPPLY</small></a>
         <div class="hdr-r">
           <a class="nav-a link-hide mono mute" href="${link('manifesto')}" data-nav="manifesto.">Manifesto</a>
+          <button class="icon-btn" id="themeBtn" aria-label="Switch to dark leather" aria-pressed="false">${ic('moon')}</button>
           <button class="icon-btn" id="searchBtn" aria-label="Search">${ic('search')}</button>
           <a class="icon-btn" href="${link('wishlist')}" aria-label="Liked pairs">${ic('heart')}<span class="dot-count" id="wishCount">0</span></a>
           <button class="icon-btn" id="bagBtn" aria-label="Open bag">${ic('bag')}<span class="dot-count" id="bagCount">0</span></button>
@@ -226,6 +227,19 @@
     $('#bagClose').addEventListener('click', closeBag);
     $('#scrim').addEventListener('click', closeBag);
     $('#searchBtn').addEventListener('click', () => openModal('search'));
+    // light leather is the default; the obsidian look stays one tap away and is remembered on this device
+    const paintTheme = () => {
+      const dark = document.documentElement.dataset.theme === 'dark', b = $('#themeBtn');
+      b.innerHTML = ic(dark ? 'sun' : 'moon'); b.setAttribute('aria-pressed', dark); b.setAttribute('aria-label', dark ? 'Switch to light leather' : 'Switch to dark leather');
+      const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#0c0907' : '#F5EEE4';
+    };
+    $('#themeBtn').addEventListener('click', () => {
+      const dark = document.documentElement.dataset.theme !== 'dark';
+      if (dark) document.documentElement.dataset.theme = 'dark'; else delete document.documentElement.dataset.theme;
+      try { localStorage.setItem('morc.theme', dark ? 'dark' : 'light'); } catch (e) { /* private mode */ }
+      paintTheme();
+    });
+    paintTheme();
     $$('.modal').forEach((m) => m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('on'); }));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeBag(); $$('.modal.on').forEach((m) => m.classList.remove('on')); } });
     $('#q').addEventListener('input', runSearch);
@@ -437,7 +451,7 @@
   const V = {};
 
   V.home = function () {
-    setMeta('M.O.R.C. Supply | Premium Streetwear Kicks & Sneakers at Wholesale Prices', 'Skip the retail markup. M.O.R.C. brings you high-quality, locally produced streetwear sneakers, boots, and casual shoes directly from Pakistan’s top manufacturers at factory rates.',
+    setMeta('Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s, women\'s and kids leather shoes and sneakers from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.',
       { '@context': 'https://schema.org', '@type': 'ShoeStore', name: 'M.O.R.C. Supply', url: C.domain, description: 'Curated premium Pakistani footwear at factory direct pricing.', areaServed: ['Pakistan'], paymentAccepted: 'Cash on Delivery', currenciesAccepted: 'PKR' });
     const hero = prod('moc-runner-v1'), hv = hero.variants[0];
     const bd = breakdown(hero, hv);
@@ -552,7 +566,16 @@
     const pre = presets[param] || {};
     const F = { aud: pre.aud || 'All', group: 'All', cat: 'All', colors: [], size: null, price: 'all', sale: !!pre.sale, instock: false, sort: pre.sort || 'featured', q: '' };
     const title = pre.aud ? pre.aud : pre.sale ? 'Sale' : pre.sort ? 'New in' : 'All drops';
-    setMeta(`${title} | M.O.R.C. Supply Pakistan`, `Shop ${title.toLowerCase()} at M.O.R.C. Supply. Premium Pakistani sneakers and leather shoes at wholesale pricing with Cash on Delivery in Islamabad, Lahore and Karachi.`);
+    // titles follow how Pakistani shoppers search: product type, audience, "price in Pakistan" / "online in Pakistan"
+    const SEO = {
+      Men: ["Men's Leather Shoes & Sneakers Price in Pakistan", "Men's leather shoes, sneakers, loafers and boots at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
+      Women: ["Women's Sneakers & Leather Shoes in Pakistan", "Women's sneakers and leather shoes at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
+      Kids: ['Kids Shoes Online in Pakistan', 'Kids and baby leather shoes and sneakers online in Pakistan at factory price. Cash on Delivery to every city.'],
+      Sale: ['Shoes Sale in Pakistan | Leather Shoes & Sneakers', 'Leather shoes and sneakers on sale in Pakistan. Real price drops on factory priced pairs, with Cash on Delivery to every city.'],
+      'New in': ["New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers at M.O.R.C. Supply, at factory price with Cash on Delivery across Pakistan.'],
+      'All drops': ['Buy Leather Shoes & Sneakers Online in Pakistan', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.']
+    }[title];
+    setMeta(`${SEO[0]} | M.O.R.C. Supply`, SEO[1]);
     const colorFam = (c) => c.split('/')[0].trim().replace(/^(Triple|Black Full Grain|Black Waxed|Black Nappa)$/i, 'Black').replace(/^Triple Black$/i, 'Black');
     const allColors = [...new Set(P.flatMap((p) => p.variants.map((v) => colorFam(v.color))))];
     const hexOf = (c) => { for (const p of P) for (const v of p.variants) if (colorFam(v.color) === c) return v.hex || '#333'; return '#333'; };
@@ -724,7 +747,7 @@
           <div class="acc">
             <details open><summary>Price transparency</summary><div class="in breakdown">
               <div class="stack" role="img" aria-label="Price breakdown">${bd.map((b) => `<i class="${b.cls}" style="width:${b.v / v.price * 100}%"></i>`).join('')}</div>
-              <div class="legend">${bd.map((b) => `<div><span class="sw ${b.cls}" style="background:${b.cls === 's1' ? 'var(--bone)' : b.cls === 's2' ? '#a9a8a1' : b.cls === 's3' ? '#5d5c57' : 'var(--volt)'}"></span><span>${b.k}</span><b>${fmt(b.v)}</b></div>`).join('')}
+              <div class="legend">${bd.map((b) => `<div><span class="sw ${b.cls}" style="background:${b.cls === 's1' ? 'var(--bone)' : b.cls === 's2' ? 'var(--stack-2)' : b.cls === 's3' ? 'var(--stack-3)' : 'var(--volt)'}"></span><span>${b.k}</span><b>${fmt(b.v)}</b></div>`).join('')}
                 <div class="tot"><span></span><span>You pay</span><b>${fmt(v.price)}</b></div>
                 <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${fmt(C.marketRetail)}+</b></div></div></div></details>
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved M.O.R.C. dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
@@ -995,10 +1018,10 @@
       </div></div></section>`;
   }
   V.manifesto = function () {
-    setMeta('About M.O.R.C. Supply | Affordable Luxury Sneakers & Footwear Pakistan', 'The truth behind the sneaker industry. M.O.R.C. brings you premium local leather shoes and streetwear kicks directly from the manufacturers at true factory wholesale rates.');
+    setMeta('About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">M.O.R.C. Supply Unit</span><h1>The manifesto: Drop 01.</h1><p class="aside">Read it once. Then look at what you paid for your last pair.</p></div></section>
       <div class="wrap"><div class="manifesto">
-        <nav class="rail"><a href="#m1" data-jump="m1">01 The problem with the system</a><a href="#m2" data-jump="m2">02 The curation model</a><a href="#m3" data-jump="m3">03 Built for the street</a></nav>
+        <nav class="rail"><a href="#m1" data-jump="m1">01 The problem with the system</a><a href="#m2" data-jump="m2">02 The curation model</a><a href="#m3" data-jump="m3">03 Built for the street</a><a href="#m4" data-jump="m4">04 Our charity pledge</a></nav>
         <div class="body">
           <div class="mblock" id="m1"><span class="eyebrow">01</span><h2>The Problem With the System</h2>
             <p class="big">Most footwear brands don't make shoes anymore. They make hype.</p>
@@ -1013,6 +1036,11 @@
             <p class="big">We make premium footwear accessible to the subculture. No gatekeeping. No artificial scarcity.</p>
             <p class="verdict">Welcome to the Supply Line.</p>
             <a class="btn volt" href="${link('shop')}" style="justify-self:start">Access the supply line, shop all drops <span class="arr">&rarr;</span></a></div>
+          <div class="mblock" id="m4"><span class="eyebrow">04</span><h2>Our Charity Pledge</h2>
+            <p class="big">At least 5% of our profit goes to charity, from every pair we sell.</p>
+            <p>We set aside a minimum of 5% of the profit we make, not of the price you pay, and give it only to verified and genuine cases of need. We check every case ourselves before we give. It is not a marketing budget and it is never added to your price.</p>
+            <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
+            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
         </div></div></div>
       ${kitSection()}
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for M.O.R.C. Supply.</p></div>`;
@@ -1080,7 +1108,7 @@
 
   /* ---- contract ---- */
   V.contract = function (param) {
-    setMeta('Operational Contract | Delivery, COD and Exchanges | M.O.R.C. Supply', 'M.O.R.C. Supply delivery across Pakistan, Cash on Delivery terms, exchanges, defects and size guide.');
+    setMeta('Delivery, Cash on Delivery & Exchanges in Pakistan | M.O.R.C. Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.');
     const faq = [
       ['Are these original branded shoes?', 'No, and we never claim they are. They are unbranded pairs from the same Pakistani workshops many labels buy from. You get the build without the logo or its markup.'],
       ['Can I open the parcel before paying?', 'This depends on the courier, and most do not allow it. Record a short unboxing video. If anything is wrong, send it to us on WhatsApp and the defect and exchange terms apply.'],
