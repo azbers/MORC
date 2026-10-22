@@ -451,7 +451,7 @@
   const V = {};
 
   V.home = function () {
-    setMeta('M.O.R.C. Supply | Premium Streetwear Kicks & Sneakers at Wholesale Prices', 'Skip the retail markup. M.O.R.C. brings you high-quality, locally produced streetwear sneakers, boots, and casual shoes directly from Pakistan’s top manufacturers at factory rates.',
+    setMeta('Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s, women\'s and kids leather shoes and sneakers from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.',
       { '@context': 'https://schema.org', '@type': 'ShoeStore', name: 'M.O.R.C. Supply', url: C.domain, description: 'Curated premium Pakistani footwear at factory direct pricing.', areaServed: ['Pakistan'], paymentAccepted: 'Cash on Delivery', currenciesAccepted: 'PKR' });
     const hero = prod('moc-runner-v1'), hv = hero.variants[0];
     const bd = breakdown(hero, hv);
@@ -566,7 +566,16 @@
     const pre = presets[param] || {};
     const F = { aud: pre.aud || 'All', group: 'All', cat: 'All', colors: [], size: null, price: 'all', sale: !!pre.sale, instock: false, sort: pre.sort || 'featured', q: '' };
     const title = pre.aud ? pre.aud : pre.sale ? 'Sale' : pre.sort ? 'New in' : 'All drops';
-    setMeta(`${title} | M.O.R.C. Supply Pakistan`, `Shop ${title.toLowerCase()} at M.O.R.C. Supply. Premium Pakistani sneakers and leather shoes at wholesale pricing with Cash on Delivery in Islamabad, Lahore and Karachi.`);
+    // titles follow how Pakistani shoppers search: product type, audience, "price in Pakistan" / "online in Pakistan"
+    const SEO = {
+      Men: ["Men's Leather Shoes & Sneakers Price in Pakistan", "Men's leather shoes, sneakers, loafers and boots at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
+      Women: ["Women's Sneakers & Leather Shoes in Pakistan", "Women's sneakers and leather shoes at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
+      Kids: ['Kids Shoes Online in Pakistan', 'Kids and baby leather shoes and sneakers online in Pakistan at factory price. Cash on Delivery to every city.'],
+      Sale: ['Shoes Sale in Pakistan | Leather Shoes & Sneakers', 'Leather shoes and sneakers on sale in Pakistan. Real price drops on factory priced pairs, with Cash on Delivery to every city.'],
+      'New in': ["New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers at M.O.R.C. Supply, at factory price with Cash on Delivery across Pakistan.'],
+      'All drops': ['Buy Leather Shoes & Sneakers Online in Pakistan', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.']
+    }[title];
+    setMeta(`${SEO[0]} | M.O.R.C. Supply`, SEO[1]);
     const colorFam = (c) => c.split('/')[0].trim().replace(/^(Triple|Black Full Grain|Black Waxed|Black Nappa)$/i, 'Black').replace(/^Triple Black$/i, 'Black');
     const allColors = [...new Set(P.flatMap((p) => p.variants.map((v) => colorFam(v.color))))];
     const hexOf = (c) => { for (const p of P) for (const v of p.variants) if (colorFam(v.color) === c) return v.hex || '#333'; return '#333'; };
@@ -1009,7 +1018,7 @@
       </div></div></section>`;
   }
   V.manifesto = function () {
-    setMeta('About M.O.R.C. Supply | Affordable Luxury Sneakers & Footwear Pakistan', 'The truth behind the sneaker industry. M.O.R.C. brings you premium local leather shoes and streetwear kicks directly from the manufacturers at true factory wholesale rates.');
+    setMeta('About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">M.O.R.C. Supply Unit</span><h1>The manifesto: Drop 01.</h1><p class="aside">Read it once. Then look at what you paid for your last pair.</p></div></section>
       <div class="wrap"><div class="manifesto">
         <nav class="rail"><a href="#m1" data-jump="m1">01 The problem with the system</a><a href="#m2" data-jump="m2">02 The curation model</a><a href="#m3" data-jump="m3">03 Built for the street</a></nav>
@@ -1094,7 +1103,7 @@
 
   /* ---- contract ---- */
   V.contract = function (param) {
-    setMeta('Operational Contract | Delivery, COD and Exchanges | M.O.R.C. Supply', 'M.O.R.C. Supply delivery across Pakistan, Cash on Delivery terms, exchanges, defects and size guide.');
+    setMeta('Delivery, Cash on Delivery & Exchanges in Pakistan | M.O.R.C. Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.');
     const faq = [
       ['Are these original branded shoes?', 'No, and we never claim they are. They are unbranded pairs from the same Pakistani workshops many labels buy from. You get the build without the logo or its markup.'],
       ['Can I open the parcel before paying?', 'This depends on the courier, and most do not allow it. Record a short unboxing video. If anything is wrong, send it to us on WhatsApp and the defect and exchange terms apply.'],

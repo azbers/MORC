@@ -15,14 +15,14 @@ const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link 
 const THEME_BOOT = '<script>try{if(localStorage.getItem(\'morc.theme\')===\'dark\')document.documentElement.dataset.theme=\'dark\'}catch(e){}</script>';
 
 const PAGES = {
-  home: ['index.html', 'M.O.R.C. Supply | Premium Streetwear Kicks & Sneakers at Wholesale Prices', 'Skip the retail markup. M.O.R.C. brings you high-quality, locally produced streetwear sneakers, boots, and casual shoes directly from Pakistan’s top manufacturers at factory rates.'],
-  shop: ['shop.html', 'Shop All Drops | M.O.R.C. Supply Pakistan', 'Shop premium Pakistani sneakers and leather shoes at wholesale pricing. Filter by line, size, colour and price. Cash on Delivery across Pakistan.'],
-  product: ['product.html', 'M.O.R.C. Moc-Runner v1 | Mens Black Leather Casual Shoes Pakistan', 'Premium local leather shoes at factory direct pricing with Cash on Delivery in Pakistan.'],
+  home: ['index.html', 'Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', 'Men\'s, women\'s and kids leather shoes and sneakers from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.'],
+  shop: ['shop.html', 'Buy Leather Shoes & Sneakers Online in Pakistan | M.O.R.C. Supply', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.'],
+  product: ['product.html', 'M.O.R.C. Moc-Runner v1 | Men\'s Black Leather Casual Shoes Price in Pakistan', 'Men\'s black leather casual shoes from Pakistani workshops at factory price, with Cash on Delivery in Pakistan.'],
   cart: ['cart.html', 'Your bag | M.O.R.C. Supply', 'Review your M.O.R.C. Supply bag.'],
   checkout: ['checkout.html', 'Checkout | M.O.R.C. Supply', 'Cash on Delivery checkout for M.O.R.C. Supply.'],
   order: ['order.html', 'Order placed | M.O.R.C. Supply', 'Your M.O.R.C. Supply order.'],
-  manifesto: ['manifesto.html', 'About M.O.R.C. Supply | Affordable Luxury Sneakers & Footwear Pakistan', 'The truth behind the sneaker industry. M.O.R.C. brings you premium local leather shoes and streetwear kicks directly from the manufacturers at true factory wholesale rates.'],
-  contract: ['contract.html', 'Operational Contract | Delivery, COD and Exchanges | M.O.R.C. Supply', 'Delivery across Pakistan, Cash on Delivery terms, exchanges and size guide.'],
+  manifesto: ['manifesto.html', 'About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.'],
+  contract: ['contract.html', 'Delivery, Cash on Delivery & Exchanges in Pakistan | M.O.R.C. Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.'],
   track: ['track.html', 'Track your order | M.O.R.C. Supply', 'Track a M.O.R.C. Supply Cash on Delivery order.'],
   wishlist: ['wishlist.html', 'Wishlist | M.O.R.C. Supply', 'Your saved M.O.R.C. Supply pairs.'],
   list: ['list.html', 'Join the alert list | M.O.R.C. Supply', 'Get M.O.R.C. Supply drops, restocks and discounts first on WhatsApp.'],
