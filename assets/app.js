@@ -176,7 +176,7 @@
   /* ---------------- chrome ---------------- */
   const navItems = [['shop', '', 'Shop all'], ['shop', 'men', 'Men'], ['shop', 'women', 'Women'], ['shop', 'kids', 'Kids'], ['shop', 'sale', 'Sale'], ['feed', '', 'Feed'], ['manifesto', '', 'Manifesto'], ['contract', '', 'Contract']];
   function chrome() {
-    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery nationwide', 'Delivery to every city in Pakistan', 'Free delivery on two pairs', 'Same local craft. Zero retail markup', 'Join the WhatsApp alert list']);
+    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery nationwide', 'Delivery to every city in Pakistan', 'Free delivery on two pairs', 'Same local craft. Zero retail markup', 'At least 5% of profit to verified charity', 'Join the WhatsApp alert list']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
     document.body.insertAdjacentHTML('afterbegin', `
       <div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
@@ -1021,7 +1021,7 @@
     setMeta('About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">M.O.R.C. Supply Unit</span><h1>The manifesto: Drop 01.</h1><p class="aside">Read it once. Then look at what you paid for your last pair.</p></div></section>
       <div class="wrap"><div class="manifesto">
-        <nav class="rail"><a href="#m1" data-jump="m1">01 The problem with the system</a><a href="#m2" data-jump="m2">02 The curation model</a><a href="#m3" data-jump="m3">03 Built for the street</a></nav>
+        <nav class="rail"><a href="#m1" data-jump="m1">01 The problem with the system</a><a href="#m2" data-jump="m2">02 The curation model</a><a href="#m3" data-jump="m3">03 Built for the street</a><a href="#m4" data-jump="m4">04 Our charity pledge</a></nav>
         <div class="body">
           <div class="mblock" id="m1"><span class="eyebrow">01</span><h2>The Problem With the System</h2>
             <p class="big">Most footwear brands don't make shoes anymore. They make hype.</p>
@@ -1036,6 +1036,11 @@
             <p class="big">We make premium footwear accessible to the subculture. No gatekeeping. No artificial scarcity.</p>
             <p class="verdict">Welcome to the Supply Line.</p>
             <a class="btn volt" href="${link('shop')}" style="justify-self:start">Access the supply line, shop all drops <span class="arr">&rarr;</span></a></div>
+          <div class="mblock" id="m4"><span class="eyebrow">04</span><h2>Our Charity Pledge</h2>
+            <p class="big">At least 5% of our profit goes to charity, from every pair we sell.</p>
+            <p>We set aside a minimum of 5% of the profit we make, not of the price you pay, and give it only to verified and genuine cases of need. We check every case ourselves before we give. It is not a marketing budget and it is never added to your price.</p>
+            <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
+            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
         </div></div></div>
       ${kitSection()}
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for M.O.R.C. Supply.</p></div>`;

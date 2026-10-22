@@ -589,6 +589,9 @@ legend span { color: var(--signal); }
 .mblock p { font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; color: var(--text-2); max-width: 60ch; }
 .mblock p.big { font: 500 clamp(26px, 3.2vw, 44px)/1.15 var(--display); letter-spacing: -.025em; color: var(--bone); }
 .mblock .verdict { font: 700 clamp(44px, 7vw, 112px)/.9 var(--display); letter-spacing: -.05em; color: var(--signal); text-transform: uppercase; }
+.hadith { margin: 0; padding: 18px 0 18px 22px; border-left: 3px solid var(--signal); display: grid; gap: 8px; }
+.hadith p { font: 500 clamp(22px, 2.6vw, 34px)/1.2 var(--display) !important; letter-spacing: -.02em; color: var(--bone) !important; }
+.hadith cite { font: 400 11px/1.4 var(--mono); font-style: normal; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
 .pillars { display: grid; gap: 0; border-top: 1px solid var(--line); }
 .pillars div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line); }
 .pillars b { font: 500 20px/1.2 var(--display); }
