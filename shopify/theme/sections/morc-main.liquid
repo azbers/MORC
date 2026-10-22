@@ -20,7 +20,7 @@
     <ul>{% for c in collections %}<li><a href="{{ c.url }}">{{ c.title }}</a></li>{% endfor %}</ul>
   {%- when 'search' -%}
     <section class="phero"><span class="eyebrow">Search</span><h1>{% if search.performed %}{{ search.results_count }} results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1></section>
-    <form action="{{ routes.search_url }}" method="get" class="track-one"><div class="f-ic"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Try black, derby, kids" aria-label="Search"></div><button class="btn volt" type="submit">Search</button></form>
+    <form action="{{ routes.search_url }}" method="get" class="track-one"><div class="f-ic"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Try black, derby, chelsea" aria-label="Search"></div><button class="btn volt" type="submit">Search</button></form>
     {%- if search.performed -%}
     <ul class="morc-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a></li>{% endfor %}</ul>
     {%- endif -%}

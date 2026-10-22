@@ -15,7 +15,7 @@ window.MORC_CONFIG = {
   freeDeliveryPairs: {{ settings.free_delivery_pairs | default: 2 }},
   delivery: { fee: {{ settings.delivery_fee | default: 0 }}, days: {{ settings.delivery_days | default: '' | json }} },
   coupons: {},
-  audiences: ['Men', 'Women', 'Kids'],
+  audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
   announce: {{ settings.announcement | default: '' | json }}
 };

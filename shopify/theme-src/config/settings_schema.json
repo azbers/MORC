@@ -41,6 +41,18 @@
     ]
   },
   {
+    "name": "Lines on sale",
+    "settings": [
+      {
+        "type": "text",
+        "id": "lines",
+        "label": "Lines shown in the shop",
+        "default": "Men",
+        "info": "Comma separated: Men, Women, Kids. Products tagged with a line not listed here stay in Shopify but are hidden from the shop. A line with no products is hidden too."
+      }
+    ]
+  },
+  {
     "name": "Delivery and pricing",
     "settings": [
       {
@@ -51,7 +63,7 @@
         "type": "number",
         "id": "delivery_fee",
         "label": "Delivery fee shown (Rs.)",
-        "default": 250
+        "default": 200
       },
       {
         "type": "text",
