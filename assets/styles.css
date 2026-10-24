@@ -222,6 +222,19 @@ main, header, footer, .ticker { position: relative; z-index: 1; }
 .hero h1 .row > span { display: inline-block; animation: rise 1.1s var(--ease) both; }
 .hero h1 .row:nth-child(2) > span { animation-delay: .08s; }
 .hero h1 .ghost { color: transparent; -webkit-text-stroke: 1px var(--bone); }
+.hero h1.magic .row > span { animation: none; }
+.hero h1 .mw { white-space: nowrap; }
+.hero h1 .mg { display: inline-block; text-align: center; }
+.hero h1.typing .mg { opacity: 0; filter: blur(10px); transform: translateY(.18em); }
+.hero h1.typing .mg.on { opacity: .6; filter: blur(2.5px); color: var(--signal); transform: translateY(.06em); }
+.hero h1.typing .ghost .mg.on { color: transparent; -webkit-text-stroke-color: var(--signal); }
+.hero h1.typing .mg.set { opacity: 1; filter: none; transform: none; color: inherit; -webkit-text-stroke-color: inherit; transition: opacity .45s var(--ease), filter .6s var(--ease), transform .6s var(--ease), color .8s; }
+/* a saddle stitch runs under the headline once the letters have settled */
+.hero h1 .stitch { display: block; width: min(100%, 8.6em); height: 3px; margin-top: .14em; background: repeating-linear-gradient(90deg, var(--cognac) 0 14px, transparent 14px 22px); border-radius: 2px; transform: scaleX(0); transform-origin: left; opacity: .9; }
+.hero h1.typed .stitch, .hero h1:not(.magic) .stitch { transform: scaleX(1); transition: transform 1.4s cubic-bezier(.6, .1, .2, 1); }
+@media (prefers-reduced-motion: reduce) { .hero h1 .stitch { transform: none; } }
+/* the hero pair turns toward the pointer or the tilt of the phone */
+.hero-stage { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .6s var(--ease); transform-style: preserve-3d; }
 .hero h1 sup { font: 400 12px/1 var(--mono); letter-spacing: .14em; color: var(--signal); vertical-align: top; position: relative; top: 1.2em; margin-left: 10px; }
 @keyframes rise { from { transform: translateY(105%); } }
 .hero-stage { grid-column: 4 / -1; position: relative; margin-top: clamp(-90px, -6vw, -30px); aspect-ratio: 16 / 8.6; max-width: 100%; cursor: crosshair; }
@@ -1414,7 +1427,7 @@ select option { background: var(--ink-2); color: var(--bone); }
 .ptag-b em { margin-top: 3px; font: 600 calc(var(--tw) * .072)/1 var(--mono); font-style: normal; letter-spacing: .32em; text-transform: uppercase; padding: 2px 0 0 .32em; border-top: 1px solid rgba(62, 34, 16, .35); }
 .card:hover .ptag { animation: tagswing 1.1s cubic-bezier(.3, 1.6, .5, 1) both; }
 .gal-main .ptag { left: auto; right: 28px; --tw: 128px; }
-@media (max-width: 600px) { .ptag { --tw: 84px; left: 14px; } .gal-main .ptag { --tw: 104px; right: 16px; } }
+@media (max-width: 600px) { .ptag { --tw: 58px; left: 10px; } .ptag-b em { display: none; } .gal-main .ptag { --tw: 92px; right: 14px; } .gal-main .ptag-b em { display: block; } }
 @keyframes tagsway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 @keyframes tagswing { 0% { transform: rotate(0); } 30% { transform: rotate(12deg); } 55% { transform: rotate(-7deg); } 78% { transform: rotate(3deg); } 100% { transform: rotate(0); } }
 @media (prefers-reduced-motion: reduce) { .ptag, .card:hover .ptag { animation: none; } }

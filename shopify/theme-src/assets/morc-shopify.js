@@ -135,20 +135,24 @@
   EXT.views.order = function () { location.replace(S.routes.account); };
   EXT.views.track = function (param) {
     const A = window.MORC_API; const esc = A.esc;
-    A.setMeta('Track your order | M.O.R.C. Supply', 'Track a M.O.R.C. Supply Cash on Delivery order.');
-    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair.</h1><p class="aside">Your order confirmation message has a link to your order page. It shows every update and the courier tracking link once the parcel is dispatched.</p></div></section>
+    A.setMeta('Track your order | M.O.R.C. Supply', 'Track a M.O.R.C. Supply Cash on Delivery order with your order number, phone number or email. No account or password needed.');
+    // Shopify only opens an order to someone who proves it is theirs, so the quickest path with no sign in is our
+    // own team on WhatsApp; the private order link from the confirmation message and a one time code stay as options
+    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair.</h1><p class="aside">Type your order number, phone number or email. No account and no password needed.</p></div></section>
       <div class="wrap" style="padding-block:40px 96px">
-        <div class="tcard"><div class="tcour"><div><span class="mono mute">Your orders</span><p>Sign in with the email or phone number you used at checkout to see all your orders, their status and the live courier link.</p></div><a class="btn volt" href="${esc(S.routes.account)}">Open my orders <span class="arr">&rarr;</span></a></div></div>
-        <form class="track-one" id="tf" novalidate style="margin-top:28px">
-          <div class="f-ic"><input id="tq" placeholder="Order number, for example #1001" autocomplete="off" aria-label="Order number"></div>
-          <button class="btn ghost" type="submit">Ask on WhatsApp</button></form>
-        <p class="form-note">No account? Type your order number and we will reply on WhatsApp with the status and courier link.</p></div>`;
-    const tf = document.getElementById('tf');
-    if (param) document.getElementById('tq').value = param;
+        <form class="track-one" id="tf" novalidate>
+          <div class="f-ic"><input id="tq" placeholder="#1001, 03XX XXXXXXX or you@email.com" autocomplete="off" aria-label="Order number, phone number or email"></div>
+          <button class="btn volt" type="submit">Track my order</button></form>
+        <p class="form-note">This opens WhatsApp with your details filled in. A person from our team replies with the status and the courier link.</p>
+        <div class="tcard" style="margin-top:28px"><div class="tcour"><div><span class="mono mute">Prefer to check yourself?</span><p>Your order confirmation email and message carry a private link to your order page, with every update and the courier link. Lost it? Open your orders with a one time code sent to your email, no password.</p></div><a class="btn ghost" href="${esc(S.routes.account)}">Open my orders <span class="arr">&rarr;</span></a></div></div></div>`;
+    const tf = document.getElementById('tf'), tq = document.getElementById('tq');
+    if (param) tq.value = param;
     tf.addEventListener('submit', (e) => {
       e.preventDefault();
-      const q = document.getElementById('tq').value.trim();
-      window.open('https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent('Assalam o Alaikum M.O.R.C. Supply, please share the status of my order ' + q), '_blank', 'noopener');
+      const q = tq.value.trim();
+      if (!q) { tq.focus(); A.toast('Type your order number, phone or email'); return; }
+      const kind = /@/.test(q) ? 'email' : C.normPhone(q) ? 'phone number' : 'order number';
+      window.open('https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent('Assalam o Alaikum M.O.R.C. Supply, please share the status of my order. My ' + kind + ': ' + q), '_blank', 'noopener');
     });
   };
 })();
