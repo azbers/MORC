@@ -34,6 +34,8 @@
 
   function toProduct(r) {
     const tags = r.tags || [];
+    // images whose alt text starts with "Drawing:" exist only so cart and checkout show a picture; the storefront draws those pairs live
+    r = Object.assign({}, r, { images: (r.images || []).filter((im) => !/^drawing:/i.test(im.alt || '')) });
     const oi = (re) => r.options.findIndex((o) => re.test(o.name));
     const ci = oi(/colou?r/i), si = oi(/size/i);
     const opt = (v, i) => (i < 0 ? '' : v.options[i]);
