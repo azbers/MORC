@@ -483,7 +483,7 @@
     const W = (n) => (n / C.marketRetail * 100).toFixed(1) + '%';
     app.innerHTML = `
     <section class="hero" id="hero"><div class="hero-light"></div><div class="wrap">
-      <h1 class="magic" aria-label="Same local craft. Zero retail markup."><span class="row" aria-hidden="true"><span>Same local craft.</span></span><span class="row" aria-hidden="true"><span class="ghost">Zero retail</span> <span>markup.</span></span><i class="stitch" aria-hidden="true"></i></h1>
+      <h1 class="magic" aria-label="Same local craft. Zero retail markup."><span class="row" aria-hidden="true"><span>Same local craft.</span></span><span class="row" aria-hidden="true"><span class="ghost">Zero retail</span> <span>markup.</span></span></h1>
       <div class="hero-side">
         <p><strong>The Moc-Runner v1.</strong> The pair big labels buy from the same benches, re-laced and sealed by us, sold at what it costs plus a fair margin.</p>
         <div class="hero-cta"><a class="btn volt" href="${link('product', hero.id)}">Shop the Moc-Runner, ${fmt(hv.price)} <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('shop')}">All drops</a></div>
@@ -529,6 +529,7 @@
 
     <section class="sheet x"><div class="wrap">
       ${head('The curation filter', 'Five steps between the workshop and your door.')}
+      <div class="van-road" aria-hidden="true"><div class="van">${VAN}</div></div>
       <div class="steps">${[['Sourced', 'We visit vendor hubs in Lahore, Sialkot and Karachi and buy finished pairs at factory rate.'], ['Vetted', 'Stitching, leather grain, sole bond and comfort are checked pair by pair. Most samples fail.'], ['Re-laced', 'Factory laces come out. Thick matte black cotton goes in, with the engraved dubrae.'], ['Sealed', 'The rubber Supply Unit seal is clipped to the top eyelet. Boxed with tissue and the manifest card.'], ['Dispatched', 'We call to confirm, then hand it to the courier within 24 hours. You pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
@@ -568,6 +569,19 @@
     bindCards(app); bindAnat(app); bindSignup(app);
   };
 
+  // the delivery van is itself a sneaker, in house colours, with the day's parcels strapped to the heel
+  const VAN = `<svg viewBox="0 0 170 92" focusable="false">
+    <g class="van-dust"><circle cx="6" cy="76" r="3"/><circle cx="-4" cy="72" r="2.2"/><circle cx="-12" cy="77" r="1.6"/></g>
+    <g class="van-load"><rect x="30" y="6" width="26" height="20" rx="1.5" fill="#C89B5E" stroke="#6B4A22"/><path d="M43 6v20M30 13h26" stroke="#8A4B22" stroke-width="1.6"/><rect x="58" y="12" width="22" height="16" rx="1.5" fill="#D9B07A" stroke="#6B4A22"/><path d="M69 12v16" stroke="#8A4B22" stroke-width="1.6"/><rect x="36" y="-10" width="18" height="15" rx="1.5" fill="#B97A47" stroke="#6B4A22"/><path d="M45 -10v15" stroke="#6B3F25" stroke-width="1.4"/><path d="M28 28h56" stroke="#2A1C14" stroke-width="2.2" stroke-linecap="round"/></g>
+    <path d="M14 66C12 46 18 30 34 30H76C90 30 96 20 106 20H116C125 20 128 29 132 35C145 39 158 47 158 60V66Z" fill="#2A1C14"/>
+    <path d="M106 20C112 26 118 30 132 35" fill="none" stroke="#B97A47" stroke-width="2"/>
+    <path d="M100 30l10 4M97 36l12 4M94 42l12 4" stroke="#F5EEE4" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 54C40 48 70 48 92 54" fill="none" stroke="#F5EEE4" stroke-opacity=".35" stroke-dasharray="3 3"/>
+    <text x="30" y="47" fill="#F5EEE4" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" letter-spacing="1">M.O.R.C.</text>
+    <rect x="8" y="64" width="154" height="9" rx="4.5" fill="#F5EEE4" stroke="#2A1C14" stroke-width="1.4"/>
+    <g class="van-wheel" style="transform-origin:42px 76px"><circle cx="42" cy="76" r="10" fill="#1A120D"/><circle cx="42" cy="76" r="4" fill="#C89B5E"/><path d="M42 67v18M33 76h18" stroke="#3A2418" stroke-width="2"/></g>
+    <g class="van-wheel" style="transform-origin:130px 76px"><circle cx="130" cy="76" r="10" fill="#1A120D"/><circle cx="130" cy="76" r="4" fill="#C89B5E"/><path d="M130 67v18M121 76h18" stroke="#3A2418" stroke-width="2"/></g>
+  </svg>`;
   const ANAT = [
     { t: 'Full grain leather upper', d: 'Pebbled full grain hide, not split leather with a printed surface. We bend every upper at the flex point to check for cracking before it is accepted.', x: 46, y: 57 },
     { t: 'Moc toe hand stitching', d: 'Double needle stitch with tight, even spacing. Wavy or skipped stitches are an instant reject at our QA table.', x: 71, y: 53 },
@@ -576,37 +590,27 @@
     { t: 'Supply Unit seal', d: 'A matte black rubber zip tie tag on the top eyelet. Cut it off and the pair is yours. Leave it on and it says you are in the network.', x: 36.5, y: 56 },
     { t: 'Dual density sole', d: 'Rubber outsole bonded to a softer midsole. We pull test the bond at the toe and heel. Glue gaps mean the pair goes back to the vendor.', x: 56, y: 75 }
   ];
-  // the headline writes itself: every letter flickers through the alphabet and settles, pressed into the hide
+  // the headline is written out slowly, one line after another, by a small shoe used as a pen
   function magicType(h) {
     if (!h || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const G = 'ABCDEFGHJKLNOPRSTUVXYZ23456789'; // no W or M, which are wider than most letters
-    const cells = [], words = [];
-    $$('.row > span', h).forEach((w) => {
-      const txt = w.textContent; w.textContent = ''; words.push([w, txt]);
-      // letters of one word stay together, so a line only ever breaks where it does in the final text
-      txt.split(/( )/).forEach((part) => {
-        if (part === ' ' || !part) { w.appendChild(document.createTextNode(part)); return; }
-        const wd = document.createElement('span'); wd.className = 'mw';
-        [...part].forEach((ch) => { const c = document.createElement('span'); c.className = 'mg'; c.textContent = ch; wd.appendChild(c); cells.push(c); });
-        w.appendChild(wd);
+    const K = window.MORC_KICKS;
+    const pen = K ? K.svg('runner', { upper: '#2A1C14', sole: '#F5EEE4', accent: '#B97A47', line: '#F5EEE4' }) : '';
+    const rows = $$('.row', h);
+    rows.forEach((r) => { const ink = document.createElement('span'); ink.className = 'ink'; while (r.firstChild) ink.appendChild(r.firstChild); r.appendChild(ink); });
+    h.classList.add('writing');
+    const go = () => {
+      if (h.dataset.w) return; h.dataset.w = '1';
+      let at = 0;
+      rows.forEach((r) => {
+        const ink = $('.ink', r), w = ink.offsetWidth, dur = Math.max(1.1, w / 520);
+        r.insertAdjacentHTML('beforeend', `<i class="pen" aria-hidden="true">${pen}</i>`);
+        r.style.setProperty('--w', w + 'px'); r.style.setProperty('--d', dur + 's'); r.style.setProperty('--at', at + 's');
+        at += dur + .15;
       });
-    });
-    h.classList.add('typing');
-    let t0 = 0;
-    // fix each cell to its final width (in the real font) so the line never jumps while letters change
-    const start = () => { if (t0) return; cells.forEach((c) => { c.style.width = c.getBoundingClientRect().width + 'px'; c.dataset.ch = c.textContent; }); t0 = performance.now(); requestAnimationFrame(tick); };
-    const tick = (t) => {
-      let busy = false;
-      cells.forEach((c, i) => {
-        if (c.classList.contains('set')) return;
-        if (t - t0 > 260 + i * 42) { c.textContent = c.dataset.ch; c.classList.add('set'); return; }
-        busy = true;
-        if (t - t0 > i * 18) { c.classList.add('on'); c.textContent = G[(Math.random() * G.length) | 0]; }
-      });
-      // once settled, hand the words back as plain text so the type keeps its kerning
-      if (busy) requestAnimationFrame(tick); else { words.forEach(([w, txt]) => { w.textContent = txt; }); h.classList.remove('typing'); h.classList.add('typed'); }
+      h.classList.add('go');
+      setTimeout(() => { h.classList.remove('writing', 'go'); h.classList.add('written'); $$('.pen', h).forEach((p) => p.remove()); }, at * 1000 + 700);
     };
-    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(start); setTimeout(start, 700); } else start();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 700); } else go();
   }
   function bindAnat(root) {
     const pick = (i) => {
@@ -778,11 +782,78 @@
   };
 
   /* ---- product ---- */
+  /* 360 view: with eight or more photos of a colour the photos become a drag spin; otherwise the drawn
+     profile is stacked into a solid and turned on a leather turntable, pausing at the side and three quarter angles */
+  function spin360(p, v) {
+    const imgs = v.images || [], seq = imgs.length >= 8;
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prevFocus = document.activeElement;
+    $$('.spin').forEach((x) => x.remove());
+    const N = 14, layer = (i) => `<div class="sl${i === 0 ? ' face' : i === N - 1 ? ' face back' : ''}" data-l="${i}">${visual(p, v, { index: 0 })}</div>`;
+    document.body.insertAdjacentHTML('beforeend', `<div class="spin" id="spin360" role="dialog" aria-modal="true" aria-label="360 degree view of ${esc(p.name)} in ${esc(v.color)}">
+      <div class="spin-in">
+        <div class="spin-h"><div><span class="eyebrow">360&deg; view</span><h2>${esc(p.name)} <span>${esc(v.color)}</span></h2></div><button class="spin-x" type="button" aria-label="Close the 360 view">&times;</button></div>
+        <div class="spin-stage${seq ? ' seq' : ''}" id="spinStage">
+          <span class="spin-light" aria-hidden="true"></span>
+          <div class="spin-turn"><span class="spin-disc" aria-hidden="true"></span><div class="spin-obj" id="spinObj">${seq ? `<img src="${esc(imgs[0])}" alt="${esc(p.name + ' ' + v.color)}" draggable="false">` : Array.from({ length: N }, (_, i) => layer(i)).join('')}</div></div>
+          <span class="spin-shadow" aria-hidden="true"></span>
+        </div>
+        <div class="spin-f"><span class="mono spin-deg" id="spinDeg">000&deg;</span><span class="spin-hint mono">Drag to turn the pair</span><button class="btn ghost spin-play" type="button" id="spinPlay">${calm ? 'Turn' : 'Pause'}</button></div>
+        <p class="spin-note">${seq ? 'Built from ' + imgs.length + ' photos of this colour.' : 'Turned from the drawn side profile of this pair, so the toe and heel views are an impression rather than photos.'}</p>
+      </div></div>`);
+    const el = $('#spin360'), obj = $('#spinObj'), stage = $('#spinStage'), deg = $('#spinDeg'), play = $('#spinPlay');
+    document.documentElement.classList.add('spin-open');
+    requestAnimationFrame(() => el.classList.add('on'));
+    if (seq) imgs.forEach((src) => { const im = new Image(); im.src = src; });
+    const depth = () => { const d = obj.offsetWidth * 0.13; $$('.sl', obj).forEach((l) => { const i = +l.dataset.l; l.style.transform = `translateZ(${(i / (N - 1) - 0.5) * d}px)`; }); };
+    if (!seq) depth();
+    let ang = 0, tilt = -10, auto = !calm, raf = 0, from = 0, to = 0, t0 = 0, dwell = 0, k = 0, drag = null, resume = 0;
+    const STEPS = [55, 125, 55, 125];
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const draw = () => {
+      const a = ((ang % 360) + 360) % 360;
+      deg.textContent = String(Math.round(a)).padStart(3, '0') + '°';
+      if (seq) { const f = Math.round(a / 360 * imgs.length) % imgs.length; const im = $('img', obj); if (im.dataset.f !== String(f)) { im.dataset.f = f; im.src = imgs[f]; } }
+      else obj.style.transform = `rotateX(${tilt}deg) rotateY(${ang}deg)`;
+      stage.style.setProperty('--ang', ang + 'deg');
+    };
+    const tick = (now) => {
+      if (auto && !drag) {
+        if (!t0) { t0 = now; from = ang; to = ang + STEPS[k % STEPS.length]; }
+        const t = Math.min(1, (now - t0) / 1700);
+        ang = from + (to - from) * ease(t);
+        tilt = -10 - 5 * Math.sin(ang * Math.PI / 180);
+        if (t >= 1) { if (!dwell) dwell = now; if (now - dwell > 1300) { k++; t0 = 0; dwell = 0; } }
+      }
+      draw();
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    const setAuto = (on) => { auto = on; t0 = 0; dwell = 0; play.textContent = on ? 'Pause' : 'Turn'; };
+    play.addEventListener('click', () => setAuto(!auto));
+    stage.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, a: ang }; clearTimeout(resume); stage.setPointerCapture(e.pointerId); stage.classList.add('dragging'); });
+    stage.addEventListener('pointermove', (e) => { if (!drag) return; ang = drag.a + (e.clientX - drag.x) * 0.45; });
+    const up = () => { if (!drag) return; drag = null; stage.classList.remove('dragging'); t0 = 0; dwell = 0; if (auto) { auto = false; resume = setTimeout(() => setAuto(true), 2600); } };
+    stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+    const key = (e) => { if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') { setAuto(false); ang -= 15; } if (e.key === 'ArrowRight') { setAuto(false); ang += 15; } };
+    const onResize = () => { if (!seq) depth(); };
+    function close() {
+      el.classList.remove('on'); cancelAnimationFrame(raf); clearTimeout(resume);
+      document.removeEventListener('keydown', key); removeEventListener('resize', onResize);
+      document.documentElement.classList.remove('spin-open');
+      setTimeout(() => el.remove(), 350);
+      if (prevFocus && prevFocus.focus) prevFocus.focus();
+    }
+    document.addEventListener('keydown', key); addEventListener('resize', onResize);
+    $('.spin-x', el).addEventListener('click', close);
+    el.addEventListener('click', (e) => { if (e.target === el) close(); });
+    setTimeout(() => $('.spin-x', el).focus(), 60);
+  }
   V.product = function (param) {
     const [pid, vid] = (param || '').split('~');
     const p = prod(pid) || P[0];
     let v = variant(p, vid);
-    let size = null, qty = 1, view = 0;
+    let size = null, qty = 1, view = 0, views = [];
     pushRecent(p.id);
     const meta = () => setMeta(p.seo ? p.seo.title : `M.O.R.C. ${p.name} | ${v.color}`, p.seo ? p.seo.description : p.description, {
       '@context': 'https://schema.org', '@type': 'ProductGroup', name: 'M.O.R.C. ' + p.name, description: p.description, brand: { '@type': 'Brand', name: 'M.O.R.C. Supply' }, productGroupID: p.id, variesBy: ['https://schema.org/color', 'https://schema.org/size'],
@@ -791,7 +862,7 @@
     function paint() {
       meta();
       const bd = breakdown(p, v);
-      const views = v.images && v.images.length ? v.images.map((_, i) => ({ l: 'Photo ' + (i + 1), h: visual(p, v, { index: i }) })) : [{ l: 'Side', h: visual(p, v, { index: 0 }) }, { l: 'Blueprint', h: visual(p, v, { mode: 'blueprint' }), grid: true }, { l: 'Lacing', h: v.images && v.images[1] ? visual(p, v, { index: 1 }) : visual(p, v, { viewBox: '200 70 220 150' }) }, { l: 'Hardware', h: v.images && v.images[2] ? visual(p, v, { index: 2 }) : visual(p, v, { mode: 'blueprint', viewBox: '220 90 160 110' }), grid: true }];
+      views = v.images && v.images.length ? v.images.map((_, i) => ({ l: 'Photo ' + (i + 1), h: visual(p, v, { index: i }) })) : [{ l: 'Side', h: visual(p, v, { index: 0 }) }, { l: 'Blueprint', h: visual(p, v, { mode: 'blueprint' }), grid: true }, { l: 'Lacing', h: v.images && v.images[1] ? visual(p, v, { index: 1 }) : visual(p, v, { viewBox: '200 70 220 150' }) }, { l: 'Hardware', h: v.images && v.images[2] ? visual(p, v, { index: 2 }) : visual(p, v, { mode: 'blueprint', viewBox: '220 90 160 110' }), grid: true }];
       if (view >= views.length) view = 0;
       const st = v.stock || {};
       const related = P.filter((x) => x.id !== p.id && x.audience === p.audience).sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 4);
@@ -800,7 +871,7 @@
       <div class="wrap"><div class="crumbs" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></div>
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div></div>
+          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}<button class="gal-360" id="spinB" type="button" aria-label="Open the 360 degree view"><span class="g3-ring" aria-hidden="true"></span>360&deg; view</button></div>
           <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}" aria-label="${x.l} view">${x.h}</button>`).join('')}</div>
         </div>
         <div class="buy">
@@ -839,9 +910,40 @@
     function bind() {
       bindCards(app);
       hook('pdp', { p, v });
-      $$('[data-view]').forEach((b) => b.addEventListener('click', () => { view = +b.dataset.view; paint(); }));
       const g = $('#galMain'), z = $('#zoom');
-      g.addEventListener('pointermove', (e) => { const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
+      // swap the photo in place, with a short slide in the direction of travel, instead of repainting the page
+      const show = (i, dir) => {
+        if (i === view) return;
+        view = (i + views.length) % views.length;
+        z.innerHTML = views[view].h;
+        g.classList.toggle('grid-bg', !!views[view].grid);
+        $('.corner.tl', g).textContent = views[view].l;
+        $('.corner.br', g).textContent = String(view + 1).padStart(2, '0') + ' / ' + String(views.length).padStart(2, '0');
+        $$('[data-view]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.view === view));
+        const k = z.firstElementChild;
+        if (k && k.animate) k.animate([{ opacity: 0, transform: `translateX(${(dir || 1) * 6}%)` }, { opacity: 1, transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      };
+      $$('[data-view]').forEach((b) => b.addEventListener('click', () => show(+b.dataset.view, +b.dataset.view > view ? 1 : -1)));
+      // resting the mouse near the far left or right edge turns to the previous or next photo on its own
+      let edge = 0, edgeT = 0;
+      const setEdge = (d) => {
+        if (d === edge) return;
+        edge = d; clearTimeout(edgeT);
+        g.classList.toggle('edge-l', d < 0); g.classList.toggle('edge-r', d > 0);
+        const step = (wait) => { edgeT = setTimeout(() => { if (!edge) return; show(view + edge, edge); step(1300); }, wait); };
+        if (d) step(380);
+      };
+      g.addEventListener('pointermove', (e) => {
+        if (views.length > 1 && e.pointerType === 'mouse') {
+          const x = (e.clientX - g.getBoundingClientRect().left) / g.offsetWidth;
+          const d = x < 0.14 ? -1 : x > 0.86 ? 1 : 0;
+          setEdge(d);
+          if (d) { z.style.transform = ''; g.classList.remove('zooming'); return; }
+        }
+      });
+      g.addEventListener('pointerleave', () => setEdge(0));
+      $('#spinB').addEventListener('click', (e) => { e.stopPropagation(); spin360(p, v); });
+      g.addEventListener('pointermove', (e) => { if (edge || e.target.closest('.gal-360')) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
       g.addEventListener('pointerleave', () => { z.style.transform = ''; g.classList.remove('zooming'); });
       $$('.vsw').forEach((b) => b.addEventListener('click', () => { v = variant(p, b.dataset.v); size = null; qty = 1; history.replaceState(null, '', SPA ? link('product', p.id + '~' + v.id) : '#' + p.id + '~' + v.id); paint(); }));
       $$('.buy .size').forEach((b) => b.addEventListener('click', () => {
@@ -928,6 +1030,7 @@
           <div class="f-row"><div class="f"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required><span class="err"></span></div>
           <div class="f"><label for="phone">Mobile number</label><input id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="03XX XXXXXXX" required><span class="err"></span></div></div>
           <div class="f"><label for="email">Email (optional, for the receipt)</label><input id="email" name="email" type="email" autocomplete="email"><span class="err"></span></div>
+          <fieldset class="via"><legend>Confirm my order and send updates by</legend><div class="via-opts">${[['whatsapp', 'WhatsApp'], ['call', 'Phone call'], ['email', 'Email']].map(([k, l], i) => `<label class="via-o"><input type="radio" name="via" value="${k}" ${i ? '' : 'checked'}><span>${ic(k === 'whatsapp' ? 'whatsapp' : k === 'call' ? 'phone' : 'mail')}${l}</span></label>`).join('')}</div></fieldset>
           <label class="chk"><input type="checkbox" name="waUpdates" checked> Send order updates on WhatsApp to this number</label>
           <label class="chk"><input type="checkbox" name="optin"> Also add me to the drop and discount alert list</label>
         </fieldset>
@@ -964,7 +1067,7 @@
       err('name', f.name.value.trim().length < 3 ? 'Enter your full name.' : '');
       const ph = f.phone.value.replace(/[^\d+]/g, '');
       err('phone', /^(\+?92|0)?3\d{9}$/.test(ph) ? '' : 'Enter a Pakistani mobile number, for example 0300 1234567.');
-      err('email', f.email.value && !/^\S+@\S+\.\S+$/.test(f.email.value) ? 'Check the email address.' : '');
+      err('email', f.email.value && !/^\S+@\S+\.\S+$/.test(f.email.value) ? 'Check the email address.' : f.via.value === 'email' && !f.email.value.trim() ? 'Add your email, or choose WhatsApp or a phone call above.' : '');
       err('city', f.city.value.trim().length > 1 ? '' : 'Enter your city or town.');
       err('area', f.area.value.trim() ? '' : 'Enter the area or sector.');
       err('address', f.address.value.trim().length < 6 ? 'Enter the house and street.' : '');
@@ -973,7 +1076,7 @@
       if (!ok) { const b = $('.f.bad'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
       const t = totals(f.city.value);
       const id = 'MORC-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.floor(Math.random() * 90 + 10);
-      const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), waUpdates: f.waUpdates.checked },
+      const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), via: f.via.value, waUpdates: f.waUpdates.checked },
         address: { city: f.city.value.trim(), area: f.area.value.trim(), address: f.address.value.trim(), landmark: f.landmark.value.trim(), postal: f.postal.value.trim(), note: f.note.value.trim() },
         items: t.lines.map((d) => ({ pid: d.p.id, name: d.p.name, color: d.v.color, size: d.l.size, qty: d.l.qty, price: d.v.price })),
         subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: 'Cash on Delivery' };

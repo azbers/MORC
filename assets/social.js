@@ -346,7 +346,7 @@
     });
     document.getElementById('app').innerHTML = `<div class="feed" id="feed">${reels.map((r, i) => r.text
       ? `<section class="reel txt"><div class="reel-in">${r.text.map((t, j) => `<p class="${j % 2 ? 'volt' : ''}" style="animation-delay:${j * .25}s">${esc(t)}</p>`).join('')}<span class="mono mute">Swipe up</span></div></section>`
-      : `<section class="reel" data-i="${i}" style="--glow:${esc(r.v.hex || '#333')}"><div class="reel-stage"><div class="layer rn float">${visual(r.p, r.v)}</div><div class="layer scan">${visual(r.p, r.v, { mode: 'blueprint' })}</div></div>
+      : `<section class="reel" data-i="${i}" style="--glow:${esc(r.v.hex || '#333')}"><a class="reel-stage" href="${link('product', r.p.id + '~' + r.v.id)}" aria-label="Open ${esc(r.p.name)} in ${esc(r.v.color)}"><div class="layer rn float">${visual(r.p, r.v)}</div><div class="layer scan">${visual(r.p, r.v, { mode: 'blueprint' })}</div><span class="reel-peek mono">View the pair <span class="arr">&rarr;</span></span></a>
         <div class="reel-cap"><span class="mono"><b>@morc.supply</b> / ${esc(r.p.audience)}${r.p.group ? ' / ' + esc(r.p.group) : ''}</span>
           <h2>${esc(r.p.name)}</h2><p>${esc(r.v.color)}${r.p.description ? '. ' + esc(r.p.description.split('.')[0]) + '.' : ''}</p>
           <span class="mono mute">#MORCsupply #${esc(r.p.category)} #ValueFlex</span>
@@ -378,7 +378,7 @@
     $$('.reel[data-i]').forEach((sec) => {
       let last = 0;
       sec.addEventListener('pointerup', (e) => {
-        if (e.target.closest('a,button')) return;
+        if (e.target.closest('a:not(.reel-stage),button')) return;
         const now = Date.now();
         if (now - last < 320) {
           const sr = sec.getBoundingClientRect(); const x = e.clientX - sr.left; const y = e.clientY - sr.top;
@@ -386,6 +386,16 @@
           sec.appendChild(big); setTimeout(() => big.remove(), 900); burst(sec, x, y);
           setLike($('[data-like]', sec), true); last = 0;
         } else last = now;
+      });
+    });
+    // one tap on the pair opens its page; a second tap within the double tap window keeps it a like instead
+    $$('.reel-stage').forEach((a) => {
+      let wait = 0;
+      a.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        if (wait) { clearTimeout(wait); wait = 0; return; }
+        wait = setTimeout(() => { wait = 0; location.href = a.href; }, 330);
       });
     });
     $$('[data-flex]').forEach((b) => b.addEventListener('click', () => { const r = reels[+b.dataset.flex]; flexCard(r.p, r.v); }));
