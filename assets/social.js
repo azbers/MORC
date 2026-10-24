@@ -74,20 +74,20 @@
     if (card) {
       const top = s.list.slice().sort((x, y) => (y.helpful || 0) - (x.helpful || 0) || y.rating - x.rating).slice(0, 2);
       const ago = (t) => { const d = Math.max(0, Math.round((Date.now() - new Date(t)) / 864e5)); return d < 1 ? 'Today' : d < 14 ? d + ' day' + (d > 1 ? 's' : '') + ' ago' : d < 60 ? Math.round(d / 7) + ' weeks ago' : Math.round(d / 30) + ' months ago'; };
-      card.innerHTML = `<div class="rvcard">${s.n ? `<div class="rvc-h">${stars(s.avg)}<b>${s.avg.toFixed(1)}</b><span>${s.n} approved review${s.n > 1 ? 's' : ''}</span><a href="#reviews" data-jump="reviews">See all</a></div>
+      card.innerHTML = `<div class="rvcard">${s.n ? `<div class="rvc-h">${stars(s.avg)}<b>${s.avg.toFixed(1)}</b><span>${s.n} fit note${s.n > 1 ? 's' : ''}</span><a href="#reviews" data-jump="reviews">See all</a></div>
         ${top.map((r) => `<div class="rvc-r"><p>${esc(r.body)}</p><span class="rvc-m"><b>${esc(r.name)}</b>${r.verified ? `<span class="ok">${window.MORC_ICON ? window.MORC_ICON('check') : ''}Verified purchase</span>` : ''}<span>${ago(r.at)}</span></span></div>`).join('')}`
-        : `<div class="rvc-h"><span>No reviews yet. Bought this pair?</span><a href="#reviews" data-jump="reviews">Write the first one</a></div>`}</div>`;
+        : `<div class="rvc-h"><span>Fresh off the bench. Wearing this pair?</span><a href="#reviews" data-jump="reviews">Leave the first fit note</a></div>`}</div>`;
     }
     const fitTotal = s.fit.small + s.fit.true + s.fit.large;
     const fitPos = fitTotal ? ((s.fit.large - s.fit.small) / fitTotal) * 50 + 50 : 50;
     box.innerHTML = `<section class="sheet x" id="reviews"><div class="wrap">
-      ${head('Field reports', s.n ? 'What the network says.' : 'No reports yet.', `<button class="btn ghost" id="wrBtn">Write a review</button>`)}
+      ${head('Fit notes', s.n ? 'What wearers say.' : 'Fresh off the bench.', `<button class="btn ghost" id="wrBtn">Leave a fit note</button>`)}
       <div class="rv-grid">
         <div class="rv-sum">
-          ${s.n ? `<div class="rv-avg"><span class="big num">${s.avg.toFixed(1)}</span><div>${stars(s.avg, 'lg')}<span class="mono mute">${s.n} approved review${s.n > 1 ? 's' : ''}</span></div></div>
+          ${s.n ? `<div class="rv-avg"><span class="big num">${s.avg.toFixed(1)}</span><div>${stars(s.avg, 'lg')}<span class="mono mute">${s.n} fit note${s.n > 1 ? 's' : ''}</span></div></div>
           <div class="rv-dist">${s.dist.map((c, i) => `<button class="rv-row" data-f="${5 - i}"><span class="mono">${5 - i} ★</span><span class="minibar"><i style="width:${s.n ? c / s.n * 100 : 0}%"></i></span><span class="mono mute num">${c}</span></button>`).join('')}</div>
           <div class="rv-fit"><span class="mono mute">Fit</span><div class="fit-track"><i style="left:${fitPos}%"></i></div><div class="fit-l mono"><span>Runs small</span><span>True to size</span><span>Runs large</span></div></div>`
-          : `<p class="mute">Bought this pair? Tell the network how it wears. Every review is read by the M.O.R.C. team before it goes live, good or bad.</p>`}
+          : `<p class="mute">This pair has just landed, so its first fit notes are still to come. Wearing it? Tell us how it fits, how it feels after a full day, and add a photo if you like. A real person on our team reads every note before it goes live, good or bad.</p>`}
         </div>
         <div class="rv-list">
           <form class="rv-form" id="rvForm" hidden novalidate></form>
@@ -111,7 +111,7 @@
         <div class="rv-meta mono"><span>${esc(r.name)}${r.city ? ', ' + esc(r.city) : ''}</span>${r.verified ? '<span class="volt">Verified buyer</span>' : ''}${r.size ? `<span>EU ${esc(r.size)}</span>` : ''}${r.fit ? `<span>${{ small: 'Runs small', true: 'True to size', large: 'Runs large' }[r.fit]}</span>` : ''}
           <button class="rm" data-help="${r.id}" ${voted.includes(r.id) ? 'disabled' : ''}>Helpful (${r.helpful || 0})</button></div>
         ${r.reply ? `<div class="rv-reply"><span class="mono volt">M.O.R.C. replied</span><p>${esc(r.reply)}</p></div>` : ''}
-      </article>`).join('') || (s.n ? '<p class="mute">No reviews match this filter.</p>' : '');
+      </article>`).join('') || (s.n ? '<p class="mute">No fit notes match this filter.</p>' : '');
       $$('[data-help]').forEach((b) => b.addEventListener('click', () => {
         const all = R.all(); const r = all.find((x) => x.id === b.dataset.help); if (!r) return;
         r.helpful = (r.helpful || 0) + 1; R.save(all); store.set('voted', store.get('voted', []).concat(r.id)); paintList();
@@ -254,7 +254,7 @@
       { id: 'drop01', label: 'Drop 01', cover: men[0], slides: men.map((p) => ({ p, v: p.variants[0], kicker: 'Drop 01 / ' + p.category, title: p.name, sub: p.variants[0].color + ' / ' + fmt(p.variants[0].price) })) },
       { id: 'flex', label: 'Value flex', text: 'Rs', icon: 'cash', slides: [{ big: fmt(C.marketRetail) + '+', kicker: 'Mainstream retail', title: 'Logo. Hype. Markup.', strike: true }, { big: fmt(men[0].variants[0].price), kicker: 'M.O.R.C. price', title: 'Same benches. Same leather.', volt: true }, { big: fmt(C.marketRetail - men[0].variants[0].price), kicker: 'You keep', title: 'Spend it on the fit.' }] },
       { id: 'unbox', label: 'Unboxing', text: 'Box', icon: 'box', slides: [{ kit: 'box', kicker: 'Unboxing / 01', title: 'Matte black corrugated box.' }, { kit: 'tissue', kicker: 'Unboxing / 02', title: 'Grid tissue. First tear.' }, { kit: 'card', kicker: 'Unboxing / 03', title: 'The manifest card.' }, { kit: 'hw', kicker: 'Unboxing / 04', title: 'Dubrae and the Supply Unit seal.' }] },
-      { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Sourced', 'Workshop rate, paid at the bench.'], ['Vetted', 'Stitch, grain, bond, comfort. Most fail.'], ['Re-laced', 'Matte cotton in. Factory laces out.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 48 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
+      { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Sourced', 'Workshop rate, paid at the bench.'], ['Vetted', 'Stitch, grain, bond, comfort. Most fail.'], ['Re-laced', 'Matte cotton in. Factory laces out.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 24 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
     ];
     if (sale.length) sets.splice(1, 0, { id: 'cuts', label: 'Price cuts', cover: sale[0][0], coverV: sale[0][1], slides: sale.map(([p, v]) => ({ p, v, kicker: 'Price cut / ' + pct(v) + '% off', title: p.name, sub: fmt(v.price) + ' / was ' + fmt(v.compareAt) })) });
     sets.push({ id: 'new', label: 'New in', cover: fresh[0], slides: fresh.map((p) => ({ p, v: p.variants[0], kicker: 'New in / ' + p.audience + (p.group ? ' / ' + p.group : ''), title: p.name, sub: fmt(p.variants[0].price) })) });

@@ -16,7 +16,15 @@ const SHARED = ['styles.css', 'app.js', 'shoe.js', 'icons.js', 'kicks.js', 'pile
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.cpSync(src, out, { recursive: true });
-for (const f of SHARED) fs.copyFileSync(path.join(root, 'assets', f), path.join(out, 'assets', f));
+// scripts and styles ship minified when esbuild is installed (npm i -g esbuild); without it they ship as written
+let esbuild = null;
+try { esbuild = require('esbuild'); } catch (e) { console.log('esbuild not found, theme assets are copied unminified'); }
+for (const f of SHARED) {
+  const from = path.join(root, 'assets', f), to = path.join(out, 'assets', f);
+  if (esbuild && /\.(js|css)$/.test(f)) fs.writeFileSync(to, esbuild.transformSync(fs.readFileSync(from, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code);
+  else fs.copyFileSync(from, to);
+}
+if (esbuild) for (const f of ['morc-shopify.js', 'morc-theme.css']) { const p = path.join(out, 'assets', f); fs.writeFileSync(p, esbuild.transformSync(fs.readFileSync(p, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code); }
 fs.rmSync(zip, { force: true });
 execFileSync('zip', ['-qr', zip, 'assets', 'config', 'layout', 'locales', 'sections', 'snippets', 'templates'], { cwd: out });
 console.log('theme in', path.relative(root, out), 'and', path.relative(root, zip), (fs.statSync(zip).size / 1024).toFixed(0) + ' KB');

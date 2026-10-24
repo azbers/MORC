@@ -483,12 +483,11 @@
     const W = (n) => (n / C.marketRetail * 100).toFixed(1) + '%';
     app.innerHTML = `
     <section class="hero" id="hero"><div class="hero-light"></div><div class="wrap">
-      <div class="hero-meta"><span class="mono live"><span class="dot"></span>Drop 01 / live now</span><span class="mono">${ONE === 'Men' ? 'Men\'s leather shoes' : 'Curated supply house'} / Pakistan</span><span class="mono">EU 40 to 45 / COD nationwide</span></div>
-      <h1><span class="row"><span>Same local craft.</span></span><span class="row"><span class="ghost">Zero retail</span> <span>markup.</span></span></h1>
+      <h1 class="magic" aria-label="Same local craft. Zero retail markup."><span class="row" aria-hidden="true"><span>Same local craft.</span></span><span class="row" aria-hidden="true"><span class="ghost">Zero retail</span> <span>markup.</span></span><i class="stitch" aria-hidden="true"></i></h1>
       <div class="hero-side">
         <p><strong>The Moc-Runner v1.</strong> The pair big labels buy from the same benches, re-laced and sealed by us, sold at what it costs plus a fair margin.</p>
         <div class="hero-cta"><a class="btn volt" href="${link('product', hero.id)}">Shop the Moc-Runner, ${fmt(hv.price)} <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('shop')}">All drops</a></div>
-        <span class="hint">Move your cursor over the pair to strip the markup</span>
+        <span class="hint">${!matchMedia('(pointer: coarse)').matches ? 'Move your cursor over the pair to strip the markup' : window.DeviceOrientationEvent && DeviceOrientationEvent.requestPermission ? 'Tap the pair, then tilt your phone' : 'Tilt your phone to turn the pair'}</span>
       </div>
       <div class="hero-stage" id="stage" aria-label="Moc-Runner v1, move the pointer to x-ray the construction">
         <div class="layer float">${visual(hero, hv)}</div>
@@ -530,7 +529,7 @@
 
     <section class="sheet x"><div class="wrap">
       ${head('The curation filter', 'Five steps between the workshop and your door.')}
-      <div class="steps">${[['Sourced', 'We visit vendor hubs in Lahore, Sialkot and Karachi and buy finished pairs at factory rate.'], ['Vetted', 'Stitching, leather grain, sole bond and comfort are checked pair by pair. Most samples fail.'], ['Re-laced', 'Factory laces come out. Thick matte black cotton goes in, with the engraved dubrae.'], ['Sealed', 'The rubber Supply Unit seal is clipped to the top eyelet. Boxed with tissue and the manifest card.'], ['Dispatched', 'We call to confirm, then hand it to the courier within 48 hours. You pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+      <div class="steps">${[['Sourced', 'We visit vendor hubs in Lahore, Sialkot and Karachi and buy finished pairs at factory rate.'], ['Vetted', 'Stitching, leather grain, sole bond and comfort are checked pair by pair. Most samples fail.'], ['Re-laced', 'Factory laces come out. Thick matte black cotton goes in, with the engraved dubrae.'], ['Sealed', 'The rubber Supply Unit seal is clipped to the top eyelet. Boxed with tissue and the manifest card.'], ['Dispatched', 'We call to confirm, then hand it to the courier within 24 hours. You pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
     <section class="sheet x"><div class="wrap">
@@ -552,7 +551,19 @@
       hero_.querySelector('.hero-light').style.setProperty('--mx', (pt.clientX - hr.left) + 'px');
       hero_.querySelector('.hero-light').style.setProperty('--my', (pt.clientY - hr.top) + 'px');
     };
-    st.addEventListener('pointermove', mv); st.addEventListener('pointerenter', () => st.classList.add('lens')); st.addEventListener('pointerleave', () => st.classList.remove('lens'));
+    st.addEventListener('pointermove', mv); st.addEventListener('pointerenter', () => st.classList.add('lens')); st.addEventListener('pointerleave', () => { st.classList.remove('lens'); tilt(0, 0); });
+    // the pair turns toward the pointer (or the tilt of the phone), so it reads as an object, not a drawing
+    const tilt = (x, y) => { st.style.setProperty('--ry', (x * 16).toFixed(2) + 'deg'); st.style.setProperty('--rx', (-y * 10).toFixed(2) + 'deg'); };
+    st.addEventListener('pointermove', (e) => { const r = st.getBoundingClientRect(); tilt((e.clientX - r.left) / r.width - .5, (e.clientY - r.top) / r.height - .5); });
+    if (window.DeviceOrientationEvent && matchMedia('(pointer: coarse)').matches) {
+      const onTilt = (e) => { if (e.gamma == null) return; tilt(Math.max(-1, Math.min(1, e.gamma / 30)) / 2, Math.max(-1, Math.min(1, (e.beta - 40) / 30)) / 2); };
+      window.addEventListener('deviceorientation', onTilt);
+      // iPhone asks once before a page may read the tilt
+      if (DeviceOrientationEvent.requestPermission) st.addEventListener('click', () => DeviceOrientationEvent.requestPermission().catch(() => {}), { once: true });
+      const stop = () => { window.removeEventListener('deviceorientation', onTilt); window.removeEventListener('hashchange', stop); };
+      window.addEventListener('hashchange', stop);
+    }
+    magicType($('h1.magic', hero_));
     hero_.addEventListener('pointermove', (e) => { const hr = hero_.getBoundingClientRect(); const l = hero_.querySelector('.hero-light'); l.style.setProperty('--mx', (e.clientX - hr.left) + 'px'); l.style.setProperty('--my', (e.clientY - hr.top) + 'px'); });
     bindCards(app); bindAnat(app); bindSignup(app);
   };
@@ -565,6 +576,38 @@
     { t: 'Supply Unit seal', d: 'A matte black rubber zip tie tag on the top eyelet. Cut it off and the pair is yours. Leave it on and it says you are in the network.', x: 36.5, y: 56 },
     { t: 'Dual density sole', d: 'Rubber outsole bonded to a softer midsole. We pull test the bond at the toe and heel. Glue gaps mean the pair goes back to the vendor.', x: 56, y: 75 }
   ];
+  // the headline writes itself: every letter flickers through the alphabet and settles, pressed into the hide
+  function magicType(h) {
+    if (!h || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const G = 'ABCDEFGHJKLNOPRSTUVXYZ23456789'; // no W or M, which are wider than most letters
+    const cells = [], words = [];
+    $$('.row > span', h).forEach((w) => {
+      const txt = w.textContent; w.textContent = ''; words.push([w, txt]);
+      // letters of one word stay together, so a line only ever breaks where it does in the final text
+      txt.split(/( )/).forEach((part) => {
+        if (part === ' ' || !part) { w.appendChild(document.createTextNode(part)); return; }
+        const wd = document.createElement('span'); wd.className = 'mw';
+        [...part].forEach((ch) => { const c = document.createElement('span'); c.className = 'mg'; c.textContent = ch; wd.appendChild(c); cells.push(c); });
+        w.appendChild(wd);
+      });
+    });
+    h.classList.add('typing');
+    let t0 = 0;
+    // fix each cell to its final width (in the real font) so the line never jumps while letters change
+    const start = () => { if (t0) return; cells.forEach((c) => { c.style.width = c.getBoundingClientRect().width + 'px'; c.dataset.ch = c.textContent; }); t0 = performance.now(); requestAnimationFrame(tick); };
+    const tick = (t) => {
+      let busy = false;
+      cells.forEach((c, i) => {
+        if (c.classList.contains('set')) return;
+        if (t - t0 > 260 + i * 42) { c.textContent = c.dataset.ch; c.classList.add('set'); return; }
+        busy = true;
+        if (t - t0 > i * 18) { c.classList.add('on'); c.textContent = G[(Math.random() * G.length) | 0]; }
+      });
+      // once settled, hand the words back as plain text so the type keeps its kerning
+      if (busy) requestAnimationFrame(tick); else { words.forEach(([w, txt]) => { w.textContent = txt; }); h.classList.remove('typing'); h.classList.add('typed'); }
+    };
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(start); setTimeout(start, 700); } else start();
+  }
   function bindAnat(root) {
     const pick = (i) => {
       $$('.hs', root).forEach((h) => h.setAttribute('aria-pressed', h.dataset.hs == i));
@@ -575,7 +618,7 @@
   }
   const PK_CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Peshawar', 'Quetta', 'Gujranwala', 'Sialkot', 'Hyderabad', 'Bahawalpur', 'Sargodha', 'Sukkur', 'Abbottabad', 'Mardan', 'Gujrat', 'Sheikhupura', 'Jhelum', 'Sahiwal', 'Okara', 'Rahim Yar Khan', 'Dera Ghazi Khan', 'Larkana', 'Mirpur', 'Muzaffarabad', 'Gilgit', 'Skardu', 'Swat', 'Gwadar'];
   const CONTRACT = [
-    ['Dispatch', 'Within 48 hours', 'We call or WhatsApp to confirm every COD order, then hand it to the courier within two working days.'],
+    ['Dispatch', 'Within 24 hours', 'We call or WhatsApp to confirm every COD order, then hand it to the courier within 24 hours.'],
     ['Delivery', 'All of Pakistan', 'Every city and town the courier reaches, in ' + C.delivery.days + ' after dispatch.'],
     ['Payment', 'Cash on Delivery', 'Pay the rider when the box arrives. No card, no advance, no wallet needed.'],
     ['Delivery fee', fmt(C.delivery.fee) + ', or free', 'One flat fee for every city. Free on ' + C.freeDeliveryPairs + ' pairs or more.'],
@@ -772,10 +815,10 @@
             <button class="btn volt pill-add" id="add">${ic('bag')}<span>${size ? 'Add to bag, ' + fmt(v.price * qty) : 'Select a size'}</span></button>
             <button class="btn ghost block" id="buyNow">Buy now, pay on delivery</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
-          <ul class="trust"><li>Dispatch in 48 hours</li><li>7 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
+          <ul class="trust"><li>Dispatch in 24 hours</li><li>7 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
           <div id="ext-rvcard"></div>
           <div class="specs"><h4>Specs</h4><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
-          <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 48 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
+          <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
           <div class="acc">
             <details open><summary>Price transparency</summary><div class="in breakdown">
               <div class="stack" role="img" aria-label="Price breakdown">${bd.map((b) => `<i class="${b.cls}" style="width:${b.v / v.price * 100}%"></i>`).join('')}</div>
@@ -879,7 +922,7 @@
     setMeta('Checkout | M.O.R.C. Supply', 'Cash on Delivery checkout for M.O.R.C. Supply. Delivery to every city in Pakistan.');
     if (!cart.length) { location.replace(link('cart')); if (SPA) route(); return; }
     const draft = store.get('draft', {});
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Checkout / Cash on Delivery</span><h1>Seal the order.</h1><p class="aside">No card, no advance. We confirm by call or WhatsApp, then dispatch within 48 hours.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Checkout / Cash on Delivery</span><h1>Seal the order.</h1><p class="aside">No card, no advance. We confirm by call or WhatsApp, then dispatch within 24 hours.</p></div></section>
       <div class="wrap"><form class="two" id="co" novalidate><div class="main">
         <fieldset><legend><span>01</span> Contact</legend>
           <div class="f-row"><div class="f"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required><span class="err"></span></div>
@@ -958,7 +1001,7 @@
         <div class="timeline">
           <div class="on"><span class="n">01</span><div><b>Order placed</b><p>${new Date(o.at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</p></div></div>
           <div><span class="n">02</span><div><b>Confirmation call or WhatsApp</b><p>We confirm the size and address on ${esc(o.customer.phone)} before anything ships.</p></div></div>
-          <div><span class="n">03</span><div><b>Sealed and dispatched</b><p>Within 48 hours of confirmation. Tracking number sent on WhatsApp.</p></div></div>
+          <div><span class="n">03</span><div><b>Sealed and dispatched</b><p>Within 24 hours of confirmation. Tracking number sent on WhatsApp.</p></div></div>
           <div><span class="n">04</span><div><b>Delivered, pay ${fmt(o.total)} in cash</b><p>${esc(o.address.address)}, ${esc(o.address.area)}, ${esc(o.address.city)}</p></div></div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn volt" href="https://wa.me/${C.whatsapp}?text=${encodeURIComponent(waText(o))}" target="_blank" rel="noopener">Confirm on WhatsApp now <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('track', o.id)}">Track this order</a><a class="btn ghost" href="${link('shop')}">Keep shopping</a></div>
@@ -1039,16 +1082,6 @@
       <span class="lc-cta">Shop ${esc(a.toLowerCase())} ${ic('arrow')}</span>
     </a>`;
   }
-  function kitSection() {
-    return `    <section class="sheet" id="kit"><div class="wrap">
-      ${head('The deconstructed drop', 'We brand the experience, never the leather.', '', 'Printing a logo on a vendor shoe adds cost you would pay for. So every pair ships in the same M.O.R.C. suite instead.')}
-      <div class="kit">
-        <div class="kit-cell"><div class="top"><span class="mono mute">A / Box</span><span class="mono volt">01</span></div><div class="kit-art"><div class="box3d"><div class="lid"><b>M.O.R.C.</b></div><div class="side"></div><div class="side2"></div></div></div><div><h3>Matte black corrugated box</h3><p>Heavy double wall board. Nothing on the lid but a blind debossed M.O.R.C.</p></div></div>
-        <div class="kit-cell"><div class="top"><span class="mono mute">B / Tissue</span><span class="mono volt">02</span></div><div class="kit-art"><div class="tissue"></div></div><div><h3>Grid tissue wrap</h3><p>Black tissue printed with a repeating white architectural grid. The first thing you tear.</p></div></div>
-        <div class="kit-cell"><div class="top"><span class="mono mute">C / Card</span><span class="mono volt">03</span></div><div class="kit-art"><div class="mcard"><b>M.O.R.C.</b><p>This pair came from the same benches the big labels use. You paid for leather, labour and a fair margin. Nothing else.</p><i>MANIFEST / DROP 01</i></div></div><div><h3>The manifest card</h3><p>Heavyweight soft touch stock. Our anti markup philosophy, printed and signed.</p></div></div>
-        <div class="kit-cell"><div class="top"><span class="mono mute">D / Hardware</span><span class="mono volt">04</span></div><div class="kit-art"><div class="hw"><div class="dubrae">M.O.R.C.</div><div class="ziptag"><div class="strap"></div><div class="plate">M.O.R.C.<br>SUPPLY UNIT</div></div></div></div><div><h3>Laces, dubrae and seal</h3><p>Factory laces swapped for thick matte black cotton. Laser engraved metal dubrae on the bottom row. Rubber seal on the top eyelet.</p></div></div>
-      </div></div></section>`;
-  }
   V.manifesto = function () {
     setMeta('About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">M.O.R.C. Supply Unit</span><h1>The manifesto: Drop 01.</h1><p class="aside">Read it once. Then look at what you paid for your last pair.</p></div></section>
@@ -1074,7 +1107,6 @@
             <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
             <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
         </div></div></div>
-      ${kitSection()}
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for M.O.R.C. Supply.</p></div>`;
   };
 
@@ -1118,7 +1150,7 @@
         <li><b>Your choices.</b> Ask us to show, correct or delete the details we hold about you on ${wa} or at ${mail}.</li></ul>`],
       ['shipping', 'Shipping and delivery', `<ul>
         <li>We deliver to every city and town in Pakistan that our courier partners reach.</li>
-        <li>Orders are confirmed, inspected, sealed and handed to the courier within two working days of confirmation.</li>
+        <li>Orders are confirmed, inspected, sealed and handed to the courier within 24 hours of confirmation.</li>
         <li>Delivery usually takes ${esc(C.delivery.days)} after dispatch. Remote areas and public holidays can take longer.</li>
         <li>The delivery fee is ${fmt(C.delivery.fee)} for any city, and free on ${C.freeDeliveryPairs} pairs or more.</li>
         <li>At dispatch you receive the courier name, tracking number and live tracking link on WhatsApp. They also show on the <a class="link" href="${link('track')}">Track order</a> page.</li></ul>`],
@@ -1152,7 +1184,7 @@
       <div class="wrap"><div class="terms">
         <nav><a href="#dispatch" data-jump="dispatch">01 Dispatch</a><a href="#delivery" data-jump="delivery">02 Delivery</a><a href="#cod" data-jump="cod">03 Cash on Delivery</a><a href="#exchanges" data-jump="exchanges">04 Exchanges</a><a href="#defects" data-jump="defects">05 Defects</a><a href="#sizing" data-jump="sizing">06 Size guide</a><a href="#faq" data-jump="faq">07 FAQ</a></nav>
         <div class="body">
-          <section class="clause" id="dispatch"><span class="no">01 / Dispatch</span><div class="c"><h2>Confirmed, then out within 48 hours.</h2><p>Every order is confirmed by phone call or WhatsApp before it ships. Once confirmed, the pair is inspected, re-laced, sealed and handed to the courier within two working days. Orders confirmed on Sunday or a public holiday dispatch the next working day.</p></div></section>
+          <section class="clause" id="dispatch"><span class="no">01 / Dispatch</span><div class="c"><h2>Confirmed, then out within 24 hours.</h2><p>Every order is confirmed by phone call or WhatsApp before it ships. Once confirmed, the pair is inspected, re-laced, sealed and handed to the courier within 24 hours. Orders confirmed on Sunday or a public holiday dispatch the next working day.</p></div></section>
           <section class="clause" id="delivery"><span class="no">02 / Delivery</span><div class="c"><h2>Every city in Pakistan. One flat fee.</h2>
             <div class="city-grid"><div><b>Where</b><span>Every city and town our courier reaches</span></div><div><b>How long</b><span>${C.delivery.days} after dispatch</span></div><div><b>Fee</b><span>${fmt(C.delivery.fee)} / free on ${C.freeDeliveryPairs}+ pairs</span></div></div>
             <p>Your courier name, tracking number and live tracking link arrive on WhatsApp at dispatch, and show on the <a class="link" href="${link('track')}">Track order</a> page.</p></div></section>
