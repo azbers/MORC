@@ -8,8 +8,8 @@ window.DAUR_CONFIG = {
   brand: 'DAUR Supply',
   domain: 'https://daursupply.com',
   currency: 'Rs.',
-  whatsapp: '923055125974',          // order line, country code first, digits only. Admin > Settings can override it
-  supportEmail: 'supply@daursupply.com',
+  whatsapp: '923199628735',          // order line, country code first, digits only. Admin > Settings can override it
+  supportEmail: 'daursupply@gmail.com',
   marketRetail: 12000,                // typical mainstream retail price for comparable pairs
   freeDeliveryPairs: 2,               // delivery is free when the bag holds this many pairs
   /* One flat Cash on Delivery fee and timing for every city in Pakistan. Admin > Settings can change both. */

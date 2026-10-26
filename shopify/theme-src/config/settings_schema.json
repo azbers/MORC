@@ -19,7 +19,7 @@
         "id": "whatsapp",
         "label": "WhatsApp order number",
         "info": "Country code first, digits only, for example 923001234567. It is used only inside WhatsApp links and is never printed on the page.",
-        "default": "923055125974"
+        "default": "923199628735"
       },
       {
         "type": "text",
