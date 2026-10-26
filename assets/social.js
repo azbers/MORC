@@ -258,7 +258,20 @@
     ];
     if (sale.length) sets.splice(1, 0, { id: 'cuts', label: 'Price cuts', cover: sale[0][0], coverV: sale[0][1], slides: sale.map(([p, v]) => ({ p, v, kicker: 'Price cut / ' + pct(v) + '% off', title: p.name, sub: fmt(v.price) + ' / was ' + fmt(v.compareAt) })) });
     sets.push({ id: 'new', label: 'New in', cover: fresh[0], slides: fresh.map((p) => ({ p, v: p.variants[0], kicker: 'New in / ' + p.audience + (p.group ? ' / ' + p.group : ''), title: p.name, sub: fmt(p.variants[0].price) })) });
-    return sets;
+    // every product added in the last 7 days gets a status of its own: each colour, with up to 3 photos per colour
+    const age = (d) => (Date.now() - new Date(d + 'T00:00:00').getTime()) / 864e5;
+    const added = P.filter((p) => p.createdAt && age(p.createdAt) <= 7).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
+    const own = added.map((p) => ({ id: 'p-' + p.id + '-' + p.createdAt, label: 'Just landed', cover: p,
+      slides: p.variants.flatMap((v) => {
+        const base = { p, v, kicker: 'Just landed / ' + v.color, title: p.name, sub: fmt(v.price) + (v.compareAt ? ' / was ' + fmt(v.compareAt) : '') };
+        return v.images.length ? v.images.slice(0, 3).map((img) => Object.assign({ img }, base)) : [base];
+      }) }));
+    // statuses written in Shopify as posts in the "status" blog: shown for 14 days, or until removed when tagged pin
+    const posts = (window.DAUR_STATUSES || []).filter((a) => (a.tags || []).some((t) => /^pin$/i.test(t)) || age(a.date) <= 14);
+    const linkOf = (a) => { const t = (a.tags || []).find((x) => /^link:/i.test(x)); return t ? t.slice(5).trim() : null; };
+    const latest = posts.length ? [{ id: 'st-' + posts.map((a) => a.id).join('-'), label: 'Latest', img: (posts.find((a) => a.image) || {}).image, text: 'New', icon: 'bag',
+      slides: posts.map((a) => ({ img: a.image, kicker: 'DAUR Supply / ' + a.date, title: a.title, sub: a.text, href: linkOf(a), big: a.image ? null : 'DAUR' })) }] : [];
+    return latest.concat(own, sets);
   }
   const KIT = {
     box: '<div class="box3d"><div class="lid"><b>DAUR</b></div><div class="side"></div><div class="side2"></div></div>',
@@ -268,11 +281,11 @@
   };
   on('after', ({ page }) => {
     if (page !== 'home') return;
-    const { $, $$, visual, store } = A();
+    const { $, $$, visual, store, esc } = A();
     const slot = $('#ext-stories'); if (!slot) return;
     const sets = storySets();
     const seen = store.get('seen', []);
-    slot.innerHTML = `<div class="stories wrap" aria-label="Stories">${sets.map((s, i) => `<button class="story ${seen.includes(s.id) ? 'seen' : ''}" data-set="${i}"><span class="ring-o"><span class="ring-i">${s.cover ? visual(s.cover, s.coverV || s.cover.variants[0]) : (s.icon && window.DAUR_ICON ? `<i class="st-ic">${window.DAUR_ICON(s.icon)}</i>` : `<b>${s.text}</b>`)}</span></span><span class="mono">${s.label}</span></button>`).join('')}</div>`;
+    slot.innerHTML = `<div class="stories wrap" aria-label="Stories">${sets.map((s, i) => `<button class="story ${seen.includes(s.id) ? 'seen' : ''}" data-set="${i}"><span class="ring-o"><span class="ring-i">${s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy">` : s.cover ? visual(s.cover, s.coverV || s.cover.variants[0]) : (s.icon && window.DAUR_ICON ? `<i class="st-ic">${window.DAUR_ICON(s.icon)}</i>` : `<b>${s.text}</b>`)}</span></span><span class="mono">${s.label}</span></button>`).join('')}</div>`;
     $$('[data-set]', slot).forEach((b) => b.addEventListener('click', () => openStories(sets, +b.dataset.set)));
     // fit wall
     const wall = $('#ext-fitwall');
@@ -293,16 +306,17 @@
     const markSeen = () => { const s = store.get('seen', []); if (!s.includes(sets[si].id)) { s.push(sets[si].id); store.set('seen', s); } };
     function slideHTML(sl) {
       let art = '';
-      if (sl.p) art = `<div class="sv-art float">${visual(sl.p, sl.v)}</div>`;
+      if (sl.img) art = `<div class="sv-art photo"><img src="${esc(sl.img)}" alt="${esc(sl.title || '')}"></div>`;
+      else if (sl.p) art = `<div class="sv-art float">${visual(sl.p, sl.v)}</div>`;
       else if (sl.kit) art = `<div class="sv-art kit-art">${KIT[sl.kit]}</div>`;
       else if (sl.big) art = `<div class="sv-big ${sl.volt ? 'volt' : ''} ${sl.strike ? 'strike' : ''}">${esc(sl.big)}</div>`;
-      return `${art}<div class="sv-copy"><span class="mono volt">${esc(sl.kicker || '')}</span><h3>${esc(sl.title || '')}</h3>${sl.sub ? `<p class="mono">${esc(sl.sub)}</p>` : ''}${sl.p ? `<a class="btn volt" href="${link('product', sl.p.id + '~' + sl.v.id)}">Shop this pair <span class="arr">&rarr;</span></a>` : ''}</div>`;
+      return `${art}<div class="sv-copy"><span class="mono volt">${esc(sl.kicker || '')}</span><h3>${esc(sl.title || '')}</h3>${sl.sub ? `<p class="mono">${esc(sl.sub)}</p>` : ''}${sl.p ? `<a class="btn volt" href="${link('product', sl.p.id + '~' + sl.v.id)}">Shop this pair <span class="arr">&rarr;</span></a>` : sl.href ? `<a class="btn volt" href="${esc(sl.href)}">Take a look <span class="arr">&rarr;</span></a>` : ''}</div>`;
     }
     function paint() {
       const set = sets[si], sl = set.slides[i];
       markSeen();
       el.innerHTML = `<div class="sv-frame"><div class="sv-bars">${set.slides.map((_, k) => `<span><i style="width:${k < i ? 100 : 0}%"></i></span>`).join('')}</div>
-        <div class="sv-top"><span class="sv-av">M</span><b>daursupply</b><span class="mono mute">${esc(set.label)}</span><button class="x-btn" data-x aria-label="Close stories">Close</button></div>
+        <div class="sv-top"><span class="sv-av">D</span><b>daursupply</b><span class="mono mute">${esc(set.label)}</span><button class="x-btn" data-x aria-label="Close stories">Close</button></div>
         <div class="sv-body">${slideHTML(sl)}</div>
         <button class="sv-tap l" data-prev aria-label="Previous"></button><button class="sv-tap r" data-next aria-label="Next"></button></div>`;
       el.querySelector('[data-x]').onclick = close;

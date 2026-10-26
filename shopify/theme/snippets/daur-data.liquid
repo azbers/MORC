@@ -2,7 +2,8 @@
   Prints the store settings and every active product for the storefront script.
   assets/daur-shopify.js turns this into the catalog. Product tags carry what
   Shopify has no field for: Men | Women | Kids, group:, badge:, silhouette:,
-  swatch:<colour>=<hex> and cost:<vendor>/<kit>/<logistics>.
+  swatch:<colour>=<hex>, sole:<colour>=<hex> and cost:<vendor>/<kit>/<logistics>.
+  Posts in the blog with the handle "status" become the statuses on the home page.
 {%- endcomment -%}
 <script>
 window.DAUR_CONFIG = {
@@ -19,6 +20,11 @@ window.DAUR_CONFIG = {
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
   announce: {{ settings.announcement | default: '' | json }}
 };
+window.DAUR_STATUSES = [
+{%- for a in blogs['status'].articles limit: 12 -%}
+  { "id": {{ a.id | json }}, "title": {{ a.title | json }}, "text": {{ a.excerpt_or_content | strip_html | strip | truncate: 160 | json }}, "image": {% if a.image %}{{ a.image | image_url: width: 1080 | json }}{% else %}null{% endif %}, "date": {{ a.published_at | date: '%Y-%m-%d' | json }}, "tags": {{ a.tags | json }} }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },

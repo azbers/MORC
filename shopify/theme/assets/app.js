@@ -220,11 +220,11 @@
           <div class="specs"><h4>Specs</h4><dl>${Object.entries(t.specs||{}).map(([k,L])=>`<div><dt>${c(k)}</dt><dd>${c(L)}</dd></div>`).join("")}<div><dt>Colour</dt><dd>${c(i.color)}</dd></div><div><dt>Code</dt><dd class="mono">${c(t.id+"-"+i.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${S("box")}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${S("pin")}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${S("truck")}<span class="k">Arrives in</span><span class="v">${m.delivery.days}</span></div></div>
           <div class="acc">
-            <details open><summary>Price transparency</summary><div class="in breakdown">
+            ${t.cost?`<details open><summary>Price transparency</summary><div class="in breakdown">
               <div class="stack" role="img" aria-label="Price breakdown">${v.map(k=>`<i class="${k.cls}" style="width:${k.v/i.price*100}%"></i>`).join("")}</div>
               <div class="legend">${v.map(k=>`<div><span class="sw ${k.cls}" style="background:${k.cls==="s1"?"var(--bone)":k.cls==="s2"?"var(--stack-2)":k.cls==="s3"?"var(--stack-3)":"var(--volt)"}"></span><span>${k.k}</span><b>${g(k.v)}</b></div>`).join("")}
                 <div class="tot"><span></span><span>You pay</span><b>${g(i.price)}</b></div>
-                <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${g(m.marketRetail)}+</b></div></div></div></details>
+                <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${g(m.marketRetail)}+</b></div></div></div></details>`:""}
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
             <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Seven day size exchange on unworn pairs with the seal attached. <a class="link" href="${b("contract")}">Full contract</a></p></div></details>
           </div>

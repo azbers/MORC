@@ -18,7 +18,8 @@
     const c = [n >> 16, (n >> 8) & 255, n & 255].map((x) => Math.max(0, Math.min(255, Math.round(f < 0 ? x * (1 + f) : x + (255 - x) * f))));
     return '#' + c.map((x) => x.toString(16).padStart(2, '0')).join('');
   }
-  const palette = (hex) => ({ upper: hex, panel: shade(hex, -0.25), sole: '#0c0c0c', stitch: shade(hex, 0.45), lace: shade(hex, -0.5) });
+  // sole:<colour>=<hex> sets the outsole colour (gum, grey, white); the rest follows from the upper colour
+  const palette = (hex, sole) => ({ upper: hex, panel: shade(hex, -0.25), apron: shade(hex, -0.12), pipe: shade(hex, 0.7), tassel: shade(hex, -0.18), sole: sole || '#0c0c0c', stitch: shade(hex, 0.45), lace: shade(hex, -0.5) });
 
   // description paragraphs stay the description; a list of "Label: value" lines becomes the specifications
   function splitBody(html) {
@@ -42,7 +43,11 @@
     const sizeOf = (v) => { const m = String(opt(v, si) || 'One').match(/\d+(\.\d+)?/); return m ? +m[0] : opt(v, si); };
     const colours = ci < 0 ? ['Standard'] : r.options[ci].values;
     const swatch = {};
-    tags.forEach((t) => { const m = t.match(/^swatch:(.+)=(#[0-9a-f]{3,8})$/i); if (m) swatch[m[1].trim().toLowerCase()] = m[2]; });
+    const soles = {};
+    tags.forEach((t) => {
+      const m = t.match(/^(swatch|sole):(.+)=(#[0-9a-f]{3,8})$/i);
+      if (m) (m[1].toLowerCase() === 'sole' ? soles : swatch)[m[2].trim().toLowerCase()] = m[3];
+    });
     const cost = (tagVal(tags, 'cost') || '').split('/').map(Number);
     const sizes = [];
     r.variants.forEach((v) => { const s = sizeOf(v); if (!sizes.includes(s)) sizes.push(s); });
@@ -60,7 +65,7 @@
       });
       const first = vs[0] || {};
       const hex = swatch[colour.toLowerCase()] || '#222222';
-      return { id: handleize(colour), color: colour, hex, price: first.price / 100, compareAt: first.cap && first.cap > first.price ? first.cap / 100 : null, stock, sid, palette: palette(hex), images: imgs.map((im) => im.src) };
+      return { id: handleize(colour), color: colour, hex, price: first.price / 100, compareAt: first.cap && first.cap > first.price ? first.cap / 100 : null, stock, sid, palette: palette(hex, soles[colour.toLowerCase()]), images: imgs.map((im) => im.src) };
     });
     // photos tied to no colour go to every colour that has none of its own
     const loose = r.images.filter((im) => !claimed.has(im.src)).map((im) => im.src);
@@ -68,7 +73,7 @@
     const body = splitBody(r.body);
     const audience = ['Men', 'Women', 'Kids'].find((a) => tags.some((t) => t.toLowerCase() === a.toLowerCase())) || 'Men';
     return {
-      id: r.handle, name: r.title.replace(/^M\.O\.R\.C\.\s*/i, ''), audience, group: tagVal(tags, 'group'), category: r.type || 'Footwear',
+      id: r.handle, name: r.title.replace(/^(DAUR|M\.O\.R\.C\.)\s+/i, ''), audience, group: tagVal(tags, 'group'), category: r.type || 'Footwear',
       silhouette: tagVal(tags, 'silhouette') || 'runner', tag: tagVal(tags, 'badge') || 'Drop 01', createdAt: r.created, sizes,
       description: body.description, specs: body.specs, cost: cost.length === 3 && cost.every((n) => !isNaN(n)) ? { vendor: cost[0], kit: cost[1], logistics: cost[2] } : null,
       seo: r.seo || null, variants

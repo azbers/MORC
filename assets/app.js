@@ -892,11 +892,11 @@
           <div class="specs"><h4>Specs</h4><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
           <div class="acc">
-            <details open><summary>Price transparency</summary><div class="in breakdown">
+            ${p.cost ? `<details open><summary>Price transparency</summary><div class="in breakdown">
               <div class="stack" role="img" aria-label="Price breakdown">${bd.map((b) => `<i class="${b.cls}" style="width:${b.v / v.price * 100}%"></i>`).join('')}</div>
               <div class="legend">${bd.map((b) => `<div><span class="sw ${b.cls}" style="background:${b.cls === 's1' ? 'var(--bone)' : b.cls === 's2' ? 'var(--stack-2)' : b.cls === 's3' ? 'var(--stack-3)' : 'var(--volt)'}"></span><span>${b.k}</span><b>${fmt(b.v)}</b></div>`).join('')}
                 <div class="tot"><span></span><span>You pay</span><b>${fmt(v.price)}</b></div>
-                <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${fmt(C.marketRetail)}+</b></div></div></div></details>
+                <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${fmt(C.marketRetail)}+</b></div></div></div></details>` : ''}
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
             <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Seven day size exchange on unworn pairs with the seal attached. <a class="link" href="${link('contract')}">Full contract</a></p></div></details>
           </div>

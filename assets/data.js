@@ -734,5 +734,98 @@ window.DAUR_PRODUCTS = [
         "images": []
       }
     ]
+  },
+  {
+    "id": "saddle-tassel",
+    "name": "Saddle Tassel",
+    "audience": "Men",
+    "group": null,
+    "category": "Hybrids",
+    "silhouette": "loafer",
+    "tag": "New",
+    "createdAt": "2026-10-26",
+    "sizes": [
+      40,
+      41,
+      42,
+      43,
+      44,
+      45
+    ],
+    "description": "A slip on tassel loafer that keeps things easy. The upper is a fine diagonal twill with a soft brushed apron over the toe, edged in pale piping so the shape reads from across the room. A saddle strap crosses the instep and ties off in a knotted tassel pair. Underneath, a flexible gum sole with a brick tread keeps every step light. Wear it with chinos, linen trousers or a crisp shalwar kameez, no socks required.",
+    "specs": {
+      "Upper": "Diagonal twill with a brushed apron",
+      "Details": "Saddle strap, knotted tassel pair, piped apron edge",
+      "Footbed": "Cushioned, stitched heel lining",
+      "Sole": "Flexible gum sole, brick tread",
+      "Style": "Slip on, no laces",
+      "Origin": "Pakistani workshop"
+    },
+    "cost": null,
+    "seo": {
+      "title": "DAUR Saddle Tassel | Men's Tassel Loafers Price in Pakistan",
+      "description": "The DAUR Saddle Tassel: a men's slip on tassel loafer in sand or black, with a gum sole, at factory price with Cash on Delivery across Pakistan."
+    },
+    "variants": [
+      {
+        "id": "sand",
+        "color": "Sand",
+        "hex": "#CDB697",
+        "price": 3900,
+        "compareAt": null,
+        "stock": {
+          "40": 2,
+          "41": 3,
+          "42": 4,
+          "43": 4,
+          "44": 2,
+          "45": 1
+        },
+        "palette": {
+          "upper": "#CDB697",
+          "panel": "#C2A988",
+          "apron": "#B79E80",
+          "pipe": "#F0E4D2",
+          "tassel": "#B39878",
+          "sole": "#C9965C",
+          "stitch": "#8E7558",
+          "lace": "#B39878"
+        },
+        "images": []
+      },
+      {
+        "id": "black",
+        "color": "Black",
+        "hex": "#1C1C1D",
+        "price": 3900,
+        "compareAt": null,
+        "stock": {
+          "40": 1,
+          "41": 2,
+          "42": 3,
+          "43": 3,
+          "44": 2,
+          "45": 1
+        },
+        "palette": {
+          "upper": "#1C1C1D",
+          "panel": "#18181A",
+          "apron": "#141415",
+          "pipe": "#2C2C2E",
+          "tassel": "#141415",
+          "sole": "#9AA3A6",
+          "stitch": "#4A4A4C",
+          "lace": "#141415"
+        },
+        "images": []
+      }
+    ]
   }
+];
+
+/* Statuses for the home page story rail. On Shopify these come from posts in the
+   blog with the handle "status": title, image, summary, tags pin and link:/path.
+   New products get a status of their own automatically for 7 days. */
+window.DAUR_STATUSES = window.DAUR_STATUSES || [
+  { "id": "free-two", "title": "Free delivery on 2 pairs", "text": "Order any two pairs and delivery is free, to every city in Pakistan. Pay cash at your door.", "image": null, "date": "2026-10-26", "tags": ["pin", "link:shop.html"] }
 ];

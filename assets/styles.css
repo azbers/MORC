@@ -194,7 +194,7 @@ main, header, footer, .ticker { position: relative; z-index: 1; }
 .logo { font: 700 19px/1 var(--display); letter-spacing: .06em; display: inline-flex; align-items: flex-end; gap: 9px; justify-self: center; color: var(--bone); }
 .logo .wm { display: block; height: 19px; width: auto; }
 .logo small { font: 500 8.5px/1 var(--mono); letter-spacing: .26em; color: var(--mute); padding-bottom: 1px; }
-.nav { display: flex; gap: 28px; }
+.nav { display: flex; gap: clamp(14px, 1.6vw, 28px); padding-right: 18px; }
 .nav a { font: 400 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); transition: color .25s; position: relative; padding: 6px 0; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--bone); }
 .nav a[aria-current="page"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--signal); }
