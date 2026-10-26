@@ -1,17 +1,17 @@
-/* M.O.R.C. motion layer. Everything here is decoration on top of a working
+/* DAUR motion layer. Everything here is decoration on top of a working
    store: a shoe cursor that faces the way it travels, the falling shoe pile
    above the footer, the liquid fill on the footer letters, scroll progress,
    card tilt, magnetic buttons and counters. Respects reduced motion and only
    swaps the cursor on devices with a real mouse. */
 (function () {
   'use strict';
-  const EXT = window.MORC_EXT = window.MORC_EXT || { views: {}, hooks: {} };
+  const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   EXT.hooks = EXT.hooks || {};
   const on = (name, fn) => { (EXT.hooks[name] = EXT.hooks[name] || []).push(fn); };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(pointer: fine)').matches;
 
-  const KX = () => window.MORC_KICKS;
+  const KX = () => window.DAUR_KICKS;
   // a sneaker sole print, heel at the left, toe at the right
   const PRINT = '<svg viewBox="0 0 30 12" aria-hidden="true"><path d="M2 6c0-2.4 1.6-4 4-4 2.2 0 3.4 1.2 3.4 4S8.2 10 6 10C3.6 10 2 8.4 2 6zM12 6c0-2.8 2.6-4.4 7-4.4 5.2 0 9 1.8 9 4.4s-3.8 4.4-9 4.4c-4.4 0-7-1.6-7-4.4z"/><path d="M15 4v4M18.4 3.6v4.8M21.8 3.8v4.4M25 4.6v2.8M4.4 4.4v3.2M7 4.2v3.6" class="tr"/></svg>';
 
@@ -66,12 +66,12 @@
     // the pairs land on the big footer letters themselves, so no extra band of page is needed
     big.insertAdjacentHTML('beforebegin', '<div class="pit" id="pit" aria-hidden="true"><canvas></canvas></div>');
     const box = big, cv = document.querySelector('#pit canvas'), cx = cv.getContext('2d');
-    const prods = (window.MORC_API ? window.MORC_API.P : window.MORC_PRODUCTS) || [];
+    const prods = (window.DAUR_API ? window.DAUR_API.P : window.DAUR_PRODUCTS) || [];
     const looks = [];
     prods.forEach((p) => p.variants.forEach((v) => looks.push({ kind: KX().kindOf(p), hex: v.hex || '#777' })));
     ['#CCFF00', '#EDEBE4', '#ff3b5c', '#2b4a7a', '#d8a3ad', '#a8794f'].forEach((h, i) => looks.push({ kind: KX().kinds[i % KX().kinds.length], hex: h }));
     // pre render every look once as an image
-    const own = (window.MORC_PILE || []).map((x) => { const img = new Image(); img.src = x.src; img.r = x.r; return img; });
+    const own = (window.DAUR_PILE || []).map((x) => { const img = new Image(); img.src = x.src; img.r = x.r; return img; });
     const sprites = own.length ? own : looks.map((l) => {
       const accent = l.hex.toLowerCase() === '#ccff00' ? '#0b0b0b' : '#CCFF00';
       const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(KX().svg(l.kind, KX().colorsFor(l.hex, accent)).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="80" '));
@@ -176,7 +176,7 @@
     if (!big || big.dataset.split) return;
     big.dataset.split = 1;
     big.innerHTML = [...big.textContent].map((c, i) => `<span class="fb-ch${c === '.' ? ' dot' : ''}" style="--i:${i}">${c}</span>`).join('');
-    big.removeAttribute('aria-hidden'); big.setAttribute('role', 'img'); big.setAttribute('aria-label', 'M.O.R.C.');
+    big.removeAttribute('aria-hidden'); big.setAttribute('role', 'img'); big.setAttribute('aria-label', 'DAUR');
     big.querySelectorAll('.fb-ch').forEach((ch) => {
       ch.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') ch.classList.add('on'); });
       ch.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') ch.classList.remove('on'); });

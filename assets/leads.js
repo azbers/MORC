@@ -1,15 +1,15 @@
-/* M.O.R.C. liked pair follow ups. When a visitor has liked pairs, has not
+/* DAUR liked pair follow ups. When a visitor has liked pairs, has not
    ordered on this device and is about to leave, a small sheet asks for a
    WhatsApp number so the team can message them about those pairs only:
    a reminder, a price drop, or a personal code made in Admin > Follow ups.
    Leads are kept in this browser until a backend stores them centrally. */
 (function () {
   'use strict';
-  const A = () => window.MORC_API;
-  const EXT = window.MORC_EXT = window.MORC_EXT || { views: {}, hooks: {} };
+  const A = () => window.DAUR_API;
+  const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   EXT.hooks = EXT.hooks || {};
   const on = (name, fn) => { (EXT.hooks[name] = EXT.hooks[name] || []).push(fn); };
-  const ic = (n) => (window.MORC_ICON ? window.MORC_ICON(n) : '');
+  const ic = (n) => (window.DAUR_ICON ? window.DAUR_ICON(n) : '');
   const QUIET = ['checkout', 'order', 'admin'];
   let page = '', armed = false, shown = false, timer = 0;
 
@@ -68,7 +68,7 @@
       if (!wa) { f.querySelector('.err').textContent = 'Enter a Pakistani mobile number, for example 0300 1234567.'; return; }
       if (!f.ok.checked) { f.querySelector('.err').textContent = 'Tick the box so we are allowed to message you.'; return; }
       L.save(wa, { source: reason });
-      f.innerHTML = `<div class="lead-done">${ic('check')}<h3>Done. We are watching them for you.</h3><p>You will hear from M.O.R.C. Supply on WhatsApp about your liked pairs only.</p><button type="button" class="btn ghost" data-close>Keep browsing</button></div>`;
+      f.innerHTML = `<div class="lead-done">${ic('check')}<h3>Done. We are watching them for you.</h3><p>You will hear from DAUR Supply on WhatsApp about your liked pairs only.</p><button type="button" class="btn ghost" data-close>Keep browsing</button></div>`;
       toast('WhatsApp updates on for your liked pairs');
     });
     setTimeout(() => { const i = f.querySelector('input[name="wa"]'); if (i && matchMedia('(pointer: fine)').matches) i.focus(); }, 300);

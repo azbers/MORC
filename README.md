@@ -1,6 +1,6 @@
-# M.O.R.C. Supply storefront
+# DAUR Supply storefront
 
-Static, dependency free storefront for M.O.R.C. Supply. Black ground, bone type, volt accents, crosshair grid, Space Grotesk, Inter and JetBrains Mono.
+Static, dependency free storefront for DAUR Supply. Black ground, bone type, volt accents, crosshair grid, Space Grotesk, Inter and JetBrains Mono.
 
 ## Shopify
 
@@ -9,7 +9,7 @@ The store can run on Shopify, which then holds the products, stock, orders, admi
 ## Run it
 
 ```
-cd morc-site
+cd daur-site
 node tools/build.js          # regenerates the pages and dist/preview.html
 python3 -m http.server 8765  # then open http://localhost:8765
 ```

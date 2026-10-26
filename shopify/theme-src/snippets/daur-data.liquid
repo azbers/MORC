@@ -1,11 +1,11 @@
 {%- comment -%}
   Prints the store settings and every active product for the storefront script.
-  assets/morc-shopify.js turns this into the catalog. Product tags carry what
+  assets/daur-shopify.js turns this into the catalog. Product tags carry what
   Shopify has no field for: Men | Women | Kids, group:, badge:, silhouette:,
   swatch:<colour>=<hex> and cost:<vendor>/<kit>/<logistics>.
 {%- endcomment -%}
 <script>
-window.MORC_CONFIG = {
+window.DAUR_CONFIG = {
   brand: {{ shop.name | json }},
   domain: {{ request.origin | json }},
   currency: {{ settings.currency_label | default: 'Rs.' | json }},
@@ -19,8 +19,8 @@ window.MORC_CONFIG = {
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
   announce: {{ settings.announcement | default: '' | json }}
 };
-window.MORC_SHOPIFY = {
-  param: {{ morc_param | json }},
+window.DAUR_SHOPIFY = {
+  param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },
   raw: [
 {%- paginate collections.all.products by 250 -%}

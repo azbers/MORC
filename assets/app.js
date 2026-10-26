@@ -1,20 +1,20 @@
-/* M.O.R.C. Supply storefront.
+/* DAUR Supply storefront.
    Runs as separate HTML pages (data-page on <body>) or as a single file
-   preview (window.MORC_MODE = 'spa', routes in the URL hash).
+   preview (window.DAUR_MODE = 'spa', routes in the URL hash).
    Without a backend, the bag, wishlist, orders and alert sign ups are kept
    in this browser's storage. See README.md for the production setup. */
 (function () {
   'use strict';
-  const C = window.MORC_CONFIG;
-  // on Shopify (theme/snippets/morc-data.liquid) the catalog and settings come from the store itself
-  const SHOP = window.MORC_SHOPIFY || null;
+  const C = window.DAUR_CONFIG;
+  // on Shopify (theme/snippets/daur-data.liquid) the catalog and settings come from the store itself
+  const SHOP = window.DAUR_SHOPIFY || null;
   // the admin panel saves catalog edits in this browser; they replace the file catalog here
-  if (!SHOP) try { const saved = JSON.parse(localStorage.getItem('morc.catalog') || 'null'); if (Array.isArray(saved) && saved.length) window.MORC_PRODUCTS = saved; } catch (e) { /* storage blocked */ }
+  if (!SHOP) try { const saved = JSON.parse(localStorage.getItem('daur.catalog') || 'null'); if (Array.isArray(saved) && saved.length) window.DAUR_PRODUCTS = saved; } catch (e) { /* storage blocked */ }
   // admin settings (Supply Control > Settings) override the file defaults
   C.fileWhatsapp = C.whatsapp;
   if (SHOP) C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, C.followUp || {});
   else try {
-    const st = JSON.parse(localStorage.getItem('morc.settings') || 'null') || {};
+    const st = JSON.parse(localStorage.getItem('daur.settings') || 'null') || {};
     if (st.whatsapp) C.whatsapp = st.whatsapp;
     if (st.supportEmail) C.supportEmail = st.supportEmail;
     if (st.lowStockAt != null) C.lowStockAt = +st.lowStockAt;
@@ -23,13 +23,13 @@
     if (st.deliveryDays) C.delivery.days = st.deliveryDays;
     C.announce = st.announce || '';
     C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, st.followUp || {});
-    const cps = JSON.parse(localStorage.getItem('morc.coupons') || 'null');
+    const cps = JSON.parse(localStorage.getItem('daur.coupons') || 'null');
     if (cps && typeof cps === 'object') C.coupons = cps; // Admin > Discounts manages the codes
   } catch (e) { /* storage blocked */ }
   // Pakistani mobile numbers in one shape: 923XXXXXXXXX
   C.normPhone = (v) => { let d = String(v || '').replace(/\D/g, ''); if (d.startsWith('0092')) d = d.slice(2); if (d.startsWith('03')) d = '92' + d.slice(1); else if (d.startsWith('3') && d.length === 10) d = '92' + d; return /^923\d{9}$/.test(d) ? d : null; };
-  const ic = (n, c) => (window.MORC_ICON ? window.MORC_ICON(n, c) : '');
-  const ALL = window.MORC_PRODUCTS;
+  const ic = (n, c) => (window.DAUR_ICON ? window.DAUR_ICON(n, c) : '');
+  const ALL = window.DAUR_PRODUCTS;
   // only the lines on sale now (data.js audiences) reach the shop, and a line with no pairs is never shown
   C.audiences = (C.audiences || ['Men']).filter((a) => ALL.some((p) => !p.hidden && p.audience === a));
   const P = ALL.filter((p) => !p.hidden && C.audiences.includes(p.audience));
@@ -39,11 +39,11 @@
   const catLabel = { Hybrids: 'Casual', Leather: 'Leather shoes' };
   const lineOf = (p) => ONE ? p.category : p.audience;
   const lineKey = (p) => lineOf(p).toLowerCase();
-  const SPA = window.MORC_MODE === 'spa';
+  const SPA = window.DAUR_MODE === 'spa';
   // links in shares, flex cards and messages follow whatever domain the site is served from;
   // data.js domain is only the fallback for the single file preview
   try { if (!SPA && !SHOP && /^https?:$/.test(location.protocol)) C.domain = (location.origin + location.pathname.replace(/\/[^/]*$/, '')).replace(/\/$/, ''); } catch (e) { /* keep data.js domain */ }
-  const SHOE = window.MORC_SHOE;
+  const SHOE = window.DAUR_SHOE;
   const app = document.getElementById('app');
 
   /* ---------------- utilities ---------------- */
@@ -52,8 +52,8 @@
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const fmt = (n) => C.currency + ' ' + Math.round(n).toLocaleString('en-US');
   const store = {
-    get(k, d) { try { const v = localStorage.getItem('morc.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-    set(k, v) { try { localStorage.setItem('morc.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } if (SHOP && SHOP.forward) SHOP.forward(k, v); }
+    get(k, d) { try { const v = localStorage.getItem('daur.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('daur.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } if (SHOP && SHOP.forward) SHOP.forward(k, v); }
   };
   const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', admin: 'admin.html' };
   function link(page, param) {
@@ -103,7 +103,7 @@
       { k: 'Vendor price, paid at the workshop', v: c.vendor, cls: 's1' },
       { k: 'Laces, dubrae, seal, box, tissue, card', v: c.kit, cls: 's2' },
       { k: 'QA, courier, COD handling', v: c.logistics, cls: 's3' },
-      { k: 'M.O.R.C. margin', v: margin, cls: 's4' }
+      { k: 'DAUR margin', v: margin, cls: 's4' }
     ];
   }
 
@@ -189,6 +189,7 @@
   function chrome() {
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery nationwide', 'Delivery to every city in Pakistan', 'Free delivery on two pairs', 'Same local craft. Zero retail markup', 'At least 5% of profit to verified charity', 'Join the WhatsApp alert list']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
+    const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
     document.body.insertAdjacentHTML('afterbegin', `
       ${hideDefs()}<div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
       <a class="sr-skip" href="#app" style="position:absolute;left:-999px">Skip to content</a>
@@ -196,7 +197,7 @@
       <header class="hdr"><div class="wrap">
         <nav class="nav" aria-label="Primary">${navItems.slice(0, NAV_TOP).map(([pg, pr, t]) => `<a href="${link(pg, pr)}" data-nav="${pg}.${pr}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${pr === 'sale' ? '<i aria-hidden="true"></i>' : ''}${t}</a>`).join('')}</nav>
         <button class="menu-btn" aria-label="Menu" aria-expanded="false" id="menuBtn"><span></span><span></span></button>
-        <a class="logo" href="${link('home')}" aria-label="M.O.R.C. Supply home">M.O.R.C.<small>SUPPLY</small></a>
+        <a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>
         <div class="hdr-r">
           <a class="nav-a link-hide mono mute" href="${link('manifesto')}" data-nav="manifesto.">Manifesto</a>
           <button class="icon-btn" id="themeBtn" aria-label="Switch to dark leather" aria-pressed="false">${ic('moon')}</button>
@@ -208,15 +209,15 @@
       <nav class="mnav" aria-label="Mobile">${navItems.concat([['track', '', 'Track order'], ['list', '', 'Alert list']]).map(([pg, pr, t], i) => `<a href="${link(pg, pr)}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${t}<span>0${i + 1}</span></a>`).join('')}</nav>`);
     document.body.insertAdjacentHTML('beforeend', `
       <footer class="ftr"><div class="wrap">
-        <div class="ftr-brand"><a class="logo" href="${link('home')}">M.O.R.C.<small>SUPPLY</small></a>
+        <div class="ftr-brand"><a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>
           <p>${ONE === 'Men' ? 'Men\'s leather shoes and sneakers from Pakistani workshops, at factory price, sealed with our own hardware.' : 'An independent curator house and supply network. Premium Pakistani footwear at true factory pricing, sealed with our own hardware.'}</p>
           <a class="link" href="${link('list')}">Join the WhatsApp alert list</a></div>
         <div class="ftr-col"><h4>Shop${ONE ? ' ' + esc(ONE) : ''}</h4>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h4>Help</h4><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
         <div class="ftr-col"><h4>House</h4><a href="${link('manifesto')}">Manifesto</a><a href="${link('contract')}">Operational contract</a><a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
-        <div class="ftr-col"><h4>Reach</h4><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum M.O.R.C. Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Delivering across Pakistan</span></div>
-        <div class="ftr-big" aria-hidden="true">M.O.R.C.</div>
-        <div class="ftr-base"><span>&copy; 2026 M.O.R.C. Supply. Curated in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Same local craft. Zero retail markup.</span></div>
+        <div class="ftr-col"><h4>Reach</h4><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Delivering across Pakistan</span></div>
+        <div class="ftr-big" aria-hidden="true">DAUR</div>
+        <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Curated in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Same local craft. Zero retail markup.</span></div>
       </div></footer>
       <div class="scrim" id="scrim"></div>
       <aside class="drawer" id="drawer" aria-label="Bag" aria-hidden="true">
@@ -247,7 +248,7 @@
     $('#themeBtn').addEventListener('click', () => {
       const dark = document.documentElement.dataset.theme !== 'dark';
       if (dark) document.documentElement.dataset.theme = 'dark'; else delete document.documentElement.dataset.theme;
-      try { localStorage.setItem('morc.theme', dark ? 'dark' : 'light'); } catch (e) { /* private mode */ }
+      try { localStorage.setItem('daur.theme', dark ? 'dark' : 'light'); } catch (e) { /* private mode */ }
       paintTheme();
     });
     paintTheme();
@@ -391,7 +392,7 @@
         <span class="layer rn">${visual(p, v)}</span><span class="layer bp">${visual(p, v, { mode: 'blueprint' })}</span></a>
       <div class="card-body">
         <div class="card-top"><h3><a href="${link('product', p.id + '~' + v.id)}">${esc(p.name)}</a></h3><span class="price">${fmt(v.price)}</span></div>
-        ${window.MORC_EXT && window.MORC_EXT.cardExtra ? window.MORC_EXT.cardExtra(p) : ''}
+        ${window.DAUR_EXT && window.DAUR_EXT.cardExtra ? window.DAUR_EXT.cardExtra(p) : ''}
         <div class="card-sub"><span>${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span>` : `<span class="was">Retail <span class="strike">${Math.round(C.marketRetail).toLocaleString('en-US')}+</span></span>`}</div>
         <div class="swatches">${p.variants.map((x) => `<button class="sw-b" style="--c:${x.hex}" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}<span class="mono mute" style="font-size:10px">${p.variants.length} colour${p.variants.length > 1 ? 's' : ''}</span></div>
         <div class="minibar" title="Our price against typical retail"><i class="v" style="width:${ratio}%"></i></div>
@@ -472,8 +473,8 @@
   const V = {};
 
   V.home = function () {
-    setMeta(ONE === 'Men' ? 'Men\'s Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply' : 'Leather Shoes & Sneakers in Pakistan at Factory Price | M.O.R.C. Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers and chelsea boots' : 'Men\'s, women\'s and kids leather shoes and sneakers') + ' from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.',
-      { '@context': 'https://schema.org', '@type': 'ShoeStore', name: 'M.O.R.C. Supply', url: C.domain, description: 'Curated premium Pakistani footwear at factory direct pricing.', areaServed: ['Pakistan'], paymentAccepted: 'Cash on Delivery', currenciesAccepted: 'PKR' });
+    setMeta(ONE === 'Men' ? 'Men\'s Leather Shoes & Sneakers in Pakistan at Factory Price | DAUR Supply' : 'Leather Shoes & Sneakers in Pakistan at Factory Price | DAUR Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers and chelsea boots' : 'Men\'s, women\'s and kids leather shoes and sneakers') + ' from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.',
+      { '@context': 'https://schema.org', '@type': 'ShoeStore', name: 'DAUR Supply', url: C.domain, description: 'Curated premium Pakistani footwear at factory direct pricing.', areaServed: ['Pakistan'], paymentAccepted: 'Cash on Delivery', currenciesAccepted: 'PKR' });
     const hero = prod('moc-runner-v1'), hv = hero.variants[0];
     const bd = breakdown(hero, hv);
     const drop = P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 8);
@@ -496,7 +497,7 @@
       </div>
       <div class="hero-foot">
         <div><span class="k">Vendor price</span><span class="v num">${fmt(hero.cost.vendor)}</span></div>
-        <div><span class="k">M.O.R.C. price</span><span class="v num volt">${fmt(hv.price)}</span></div>
+        <div><span class="k">DAUR price</span><span class="v num volt">${fmt(hv.price)}</span></div>
         <div><span class="k">Typical retail</span><span class="v num strike">${fmt(C.marketRetail)}+</span></div>
         <div><span class="k">You keep</span><span class="v num">${fmt(C.marketRetail - hv.price)}</span></div>
       </div>
@@ -514,7 +515,7 @@
     </div></section>
 
     <section class="sheet x" id="anatomy"><div class="wrap">
-      ${head('Curated, not overpriced', 'What you are paying for. And what you are not.', '', 'Tap a point on the drawing. Every M.O.R.C. pair passes the same six checks before it is sealed.')}
+      ${head('Curated, not overpriced', 'What you are paying for. And what you are not.', '', 'Tap a point on the drawing. Every DAUR pair passes the same six checks before it is sealed.')}
       <div class="anat"><div class="anat-fig"><div class="svgbox">${visual(hero, hv, { mode: 'blueprint' })}${ANAT.map((a, i) => `<button class="hs" style="left:${a.x}%;top:${a.y}%" data-hs="${i}" aria-pressed="${i === 0}" aria-label="${esc(a.t)}"><span>${i + 1}</span></button>`).join('')}</div></div>
         <div class="anat-list">${ANAT.map((a, i) => `<div class="anat-item ${i === 0 ? 'open' : ''}" data-ai="${i}"><button aria-expanded="${i === 0}"><span class="n">0${i + 1}</span><span class="t">${esc(a.t)}</span><span class="pm">+</span></button><div class="d"><div><p>${esc(a.d)}</p></div></div></div>`).join('')}</div></div>
     </div></section>
@@ -577,7 +578,7 @@
     <path d="M106 20C112 26 118 30 132 35" fill="none" stroke="#B97A47" stroke-width="2"/>
     <path d="M100 30l10 4M97 36l12 4M94 42l12 4" stroke="#F5EEE4" stroke-width="2" stroke-linecap="round"/>
     <path d="M22 54C40 48 70 48 92 54" fill="none" stroke="#F5EEE4" stroke-opacity=".35" stroke-dasharray="3 3"/>
-    <text x="30" y="47" fill="#F5EEE4" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" letter-spacing="1">M.O.R.C.</text>
+    <text x="30" y="47" fill="#F5EEE4" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" letter-spacing="1">DAUR</text>
     <rect x="8" y="64" width="154" height="9" rx="4.5" fill="#F5EEE4" stroke="#2A1C14" stroke-width="1.4"/>
     <g class="van-wheel" style="transform-origin:42px 76px"><circle cx="42" cy="76" r="10" fill="#1A120D"/><circle cx="42" cy="76" r="4" fill="#C89B5E"/><path d="M42 67v18M33 76h18" stroke="#3A2418" stroke-width="2"/></g>
     <g class="van-wheel" style="transform-origin:130px 76px"><circle cx="130" cy="76" r="10" fill="#1A120D"/><circle cx="130" cy="76" r="4" fill="#C89B5E"/><path d="M130 67v18M121 76h18" stroke="#3A2418" stroke-width="2"/></g>
@@ -586,14 +587,14 @@
     { t: 'Full grain leather upper', d: 'Pebbled full grain hide, not split leather with a printed surface. We bend every upper at the flex point to check for cracking before it is accepted.', x: 46, y: 57 },
     { t: 'Moc toe hand stitching', d: 'Double needle stitch with tight, even spacing. Wavy or skipped stitches are an instant reject at our QA table.', x: 71, y: 53 },
     { t: 'Re-laced in matte cotton', d: 'Thin factory laces are replaced with thick matte black woven cotton. It is the first thing you notice and the cheapest upgrade a shoe can get.', x: 39.5, y: 35.5 },
-    { t: 'Engraved dubrae', d: 'A laser engraved M.O.R.C. metal tag threaded onto the bottom lace row. The only place our name touches the shoe.', x: 48, y: 44 },
+    { t: 'Engraved dubrae', d: 'A laser engraved DAUR metal tag threaded onto the bottom lace row. The only place our name touches the shoe.', x: 48, y: 44 },
     { t: 'Supply Unit seal', d: 'A matte black rubber zip tie tag on the top eyelet. Cut it off and the pair is yours. Leave it on and it says you are in the network.', x: 36.5, y: 56 },
     { t: 'Dual density sole', d: 'Rubber outsole bonded to a softer midsole. We pull test the bond at the toe and heel. Glue gaps mean the pair goes back to the vendor.', x: 56, y: 75 }
   ];
   // the headline is written out slowly, one line after another, by a small shoe used as a pen
   function magicType(h) {
     if (!h || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const K = window.MORC_KICKS;
+    const K = window.DAUR_KICKS;
     const pen = K ? K.svg('runner', { upper: '#2A1C14', sole: '#F5EEE4', accent: '#B97A47', line: '#F5EEE4' }) : '';
     const rows = $$('.row', h);
     rows.forEach((r) => { const ink = document.createElement('span'); ink.className = 'ink'; while (r.firstChild) ink.appendChild(r.firstChild); r.appendChild(ink); });
@@ -644,14 +645,14 @@
       Women: ["Women's Sneakers & Leather Shoes in Pakistan", "Women's sneakers and leather shoes at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
       Kids: ['Kids Shoes Online in Pakistan', 'Kids and baby leather shoes and sneakers online in Pakistan at factory price. Cash on Delivery to every city.'],
       Sale: ['Shoes Sale in Pakistan | Leather Shoes & Sneakers', 'Leather shoes and sneakers on sale in Pakistan. Real price drops on factory priced pairs, with Cash on Delivery to every city.'],
-      'New in': [ONE === 'Men' ? "New Arrivals | Men's Shoes in Pakistan" : "New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers at M.O.R.C. Supply, at factory price with Cash on Delivery across Pakistan.'],
+      'New in': [ONE === 'Men' ? "New Arrivals | Men's Shoes in Pakistan" : "New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers at DAUR Supply, at factory price with Cash on Delivery across Pakistan.'],
       'All drops': ['Buy Leather Shoes & Sneakers Online in Pakistan', 'Buy leather shoes and sneakers online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city.'],
       'All men': ["Buy Men's Shoes Online in Pakistan | Leather Shoes & Sneakers", "Buy men's leather shoes, sneakers and chelsea boots online in Pakistan at factory price. Filter by style, size, colour and price. Cash on Delivery to every city."],
       Sneakers: ["Men's Sneakers Price in Pakistan", "Men's leather and streetwear sneakers at factory price in Pakistan. Cash on Delivery to every city, free delivery on 2 pairs."],
       'Leather shoes': ["Men's Leather Shoes Price in Pakistan | Derby & Chelsea Boots", "Men's full grain leather derby shoes and chelsea boots at factory price in Pakistan. Cash on Delivery to every city."],
       Casual: ["Men's Casual Leather Shoes Price in Pakistan", "Men's casual leather shoes, moc toe runners and slip ons at factory price in Pakistan. Cash on Delivery to every city."]
     }[title] || [title + ' | Shoes in Pakistan', 'Shoes at factory price with Cash on Delivery across Pakistan.'];
-    setMeta(`${SEO[0]} | M.O.R.C. Supply`, SEO[1]);
+    setMeta(`${SEO[0]} | DAUR Supply`, SEO[1]);
     const colorFam = (c) => c.split('/')[0].trim().replace(/^(Triple|Black Full Grain|Black Waxed|Black Nappa)$/i, 'Black').replace(/^Triple Black$/i, 'Black');
     const allColors = [...new Set(P.flatMap((p) => p.variants.map((v) => colorFam(v.color))))];
     const hexOf = (c) => { for (const p of P) for (const v of p.variants) if (colorFam(v.color) === c) return v.hex || '#333'; return '#333'; };
@@ -696,7 +697,7 @@
             <div class="fgrp"><span class="field-label"><span>${ic('search')}Search</span></span><input class="finput" id="fq" type="search" placeholder="Name, colour, style"></div>
             <div class="fgrp" id="gGroup"></div>
             <div class="fgrp"><span class="field-label"><span>${ic('tag')}Style</span></span><div class="filters">${['All', ...CATS].map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${c === F.cat}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div></div>
-            <div class="fgrp"><span class="field-label"><span>${ic('spark')}Colour</span></span><div class="filters cols">${allColors.map((c) => `<button class="fbtn col-chip" data-col="${esc(c)}" aria-pressed="false" style="--c:${esc(hexOf(c))}"><span class="cc-i">${window.MORC_KICKS ? window.MORC_KICKS.svg('runner', window.MORC_KICKS.colorsFor(hexOf(c))) : ''}</span>${esc(c)}</button>`).join('')}</div></div>
+            <div class="fgrp"><span class="field-label"><span>${ic('spark')}Colour</span></span><div class="filters cols">${allColors.map((c) => `<button class="fbtn col-chip" data-col="${esc(c)}" aria-pressed="false" style="--c:${esc(hexOf(c))}"><span class="cc-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg('runner', window.DAUR_KICKS.colorsFor(hexOf(c))) : ''}</span>${esc(c)}</button>`).join('')}</div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('ruler')}Size (EU)</span></span><div class="sizes" id="fSizes"></div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('cash')}Price</span></span><div class="filters">${[['all', 'Any'], ['u4', 'Under 4,000'], ['4to5', '4,000 to 5,000'], ['o5', 'Over 5,000']].map(([v, t]) => `<button class="fbtn" data-pr="${v}" aria-pressed="${v === 'all'}">${t}</button>`).join('')}</div></div>
             <div class="fgrp"><label class="chk"><input type="checkbox" id="fSale" ${F.sale ? 'checked' : ''}> On sale only</label><label class="chk"><input type="checkbox" id="fStock"> In stock in my size</label></div>
@@ -855,9 +856,9 @@
     let v = variant(p, vid);
     let size = null, qty = 1, view = 0, views = [];
     pushRecent(p.id);
-    const meta = () => setMeta(p.seo ? p.seo.title : `M.O.R.C. ${p.name} | ${v.color}`, p.seo ? p.seo.description : p.description, {
-      '@context': 'https://schema.org', '@type': 'ProductGroup', name: 'M.O.R.C. ' + p.name, description: p.description, brand: { '@type': 'Brand', name: 'M.O.R.C. Supply' }, productGroupID: p.id, variesBy: ['https://schema.org/color', 'https://schema.org/size'],
-      hasVariant: p.variants.map((x) => ({ '@type': 'Product', name: `M.O.R.C. ${p.name} ${x.color}`, color: x.color, sku: p.id + '-' + x.id, offers: { '@type': 'Offer', priceCurrency: 'PKR', price: x.price, availability: stockOf(x) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: C.domain + '/product.html#' + p.id + '~' + x.id } }))
+    const meta = () => setMeta(p.seo ? p.seo.title : `DAUR ${p.name} | ${v.color}`, p.seo ? p.seo.description : p.description, {
+      '@context': 'https://schema.org', '@type': 'ProductGroup', name: 'DAUR ' + p.name, description: p.description, brand: { '@type': 'Brand', name: 'DAUR Supply' }, productGroupID: p.id, variesBy: ['https://schema.org/color', 'https://schema.org/size'],
+      hasVariant: p.variants.map((x) => ({ '@type': 'Product', name: `DAUR ${p.name} ${x.color}`, color: x.color, sku: p.id + '-' + x.id, offers: { '@type': 'Offer', priceCurrency: 'PKR', price: x.price, availability: stockOf(x) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: C.domain + '/product.html#' + p.id + '~' + x.id } }))
     });
     function paint() {
       meta();
@@ -878,7 +879,7 @@
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
             <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>`}</div>
             <p class="blurb">${esc(p.description)}</p></div>
-          <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.MORC_KICKS ? window.MORC_KICKS.svg(window.MORC_KICKS.kindOf(p), window.MORC_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
+          <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg(window.DAUR_KICKS.kindOf(p), window.DAUR_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
           <div><div class="field-label strong"><span>Select size / EU ${size || ''}</span><button id="sgBtn">${ic('ruler')}Size guide</button></div>
             <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'data-out="1"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}${n && n <= C.lowStockAt ? `<small>${n} LEFT</small>` : ''}${n ? '' : '<small style="color:var(--dim)">NOTIFY</small>'}</button>`; }).join('')}</div>
             <div id="notify"></div></div>
@@ -896,7 +897,7 @@
               <div class="legend">${bd.map((b) => `<div><span class="sw ${b.cls}" style="background:${b.cls === 's1' ? 'var(--bone)' : b.cls === 's2' ? 'var(--stack-2)' : b.cls === 's3' ? 'var(--stack-3)' : 'var(--volt)'}"></span><span>${b.k}</span><b>${fmt(b.v)}</b></div>`).join('')}
                 <div class="tot"><span></span><span>You pay</span><b>${fmt(v.price)}</b></div>
                 <div class="ret"><span></span><span>Typical retail for the same build</span><b class="strike">${fmt(C.marketRetail)}+</b></div></div></div></details>
-            <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved M.O.R.C. dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
+            <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
             <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Seven day size exchange on unworn pairs with the seal attached. <a class="link" href="${link('contract')}">Full contract</a></p></div></details>
           </div>
         </div>
@@ -958,7 +959,7 @@
       $('#stickyAdd').addEventListener('click', () => { if (need()) { $('.buy .sizes').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; } addToCart(p.id, v.id, size, qty); });
       $('#buyNow').addEventListener('click', () => { if (need()) return; if (addToCart(p.id, v.id, size, qty)) location.href = link('checkout'); });
       $('#wishB').addEventListener('click', () => { toggleWish(p.id); $('#wishB span').textContent = wish.includes(p.id) ? 'Liked' : 'Like'; });
-      $('#shareB').addEventListener('click', () => shareLink(absLink('product', p.id + '~' + v.id), 'M.O.R.C. ' + p.name + ' / ' + v.color, `M.O.R.C. ${p.name} in ${v.color}, ${fmt(v.price)} with Cash on Delivery.`));
+      $('#shareB').addEventListener('click', () => shareLink(absLink('product', p.id + '~' + v.id), 'DAUR ' + p.name + ' / ' + v.color, `DAUR ${p.name} in ${v.color}, ${fmt(v.price)} with Cash on Delivery.`));
       $('#sgBtn').addEventListener('click', () => openModal('sizeGuide'));
       const sb = $('#stickyBuy'), bt = $('#add');
       const io = new IntersectionObserver(([en]) => sb.classList.toggle('on', !en.isIntersecting && en.boundingClientRect.top < 0));
@@ -979,7 +980,7 @@
 
   /* ---- cart ---- */
   V.cart = function () {
-    setMeta('Your bag | M.O.R.C. Supply', 'Review your M.O.R.C. Supply bag. Cash on Delivery across Pakistan.');
+    setMeta('Your bag | DAUR Supply', 'Review your DAUR Supply bag. Cash on Delivery across Pakistan.');
     function paint() {
       const t = totals();
       if (!t.lines.length) {
@@ -1021,7 +1022,7 @@
 
   /* ---- checkout ---- */
   V.checkout = function () {
-    setMeta('Checkout | M.O.R.C. Supply', 'Cash on Delivery checkout for M.O.R.C. Supply. Delivery to every city in Pakistan.');
+    setMeta('Checkout | DAUR Supply', 'Cash on Delivery checkout for DAUR Supply. Delivery to every city in Pakistan.');
     if (!cart.length) { location.replace(link('cart')); if (SPA) route(); return; }
     const draft = store.get('draft', {});
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Checkout / Cash on Delivery</span><h1>Seal the order.</h1><p class="aside">No card, no advance. We confirm by call or WhatsApp, then dispatch within 24 hours.</p></div></section>
@@ -1075,7 +1076,7 @@
       if (ok && tc.discount && tc.cp.phone && C.normPhone(ph) !== tc.cp.phone) err('phone', 'Code ' + coupon + ' was made for a different WhatsApp number. Use that number or remove the code.');
       if (!ok) { const b = $('.f.bad'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
       const t = totals(f.city.value);
-      const id = 'MORC-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.floor(Math.random() * 90 + 10);
+      const id = 'DAUR-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.floor(Math.random() * 90 + 10);
       const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), via: f.via.value, waUpdates: f.waUpdates.checked },
         address: { city: f.city.value.trim(), area: f.area.value.trim(), address: f.address.value.trim(), landmark: f.landmark.value.trim(), postal: f.postal.value.trim(), note: f.note.value.trim() },
         items: t.lines.map((d) => ({ pid: d.p.id, name: d.p.name, color: d.v.color, size: d.l.size, qty: d.l.qty, price: d.v.price })),
@@ -1096,7 +1097,7 @@
   }
   V.order = function (param) {
     const o = store.get('orders', []).find((x) => x.id === param);
-    setMeta('Order placed | M.O.R.C. Supply', 'Your M.O.R.C. Supply order is confirmed.');
+    setMeta('Order placed | DAUR Supply', 'Your DAUR Supply order is confirmed.');
     if (!o) { app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Order</span><h1>Not found.</h1><p class="aside">That order is not stored on this device. <a class="link" href="${link('track')}">Track an order</a></p></div></section>`; return; }
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Order received</span><h1>You are in the network.</h1><p class="aside">Thank you, ${esc(o.customer.name.split(' ')[0])}. Keep your order number.</p></div></section>
       <div class="wrap"><div class="confirm"><div class="main">
@@ -1117,10 +1118,10 @@
 
   /* ---- track ---- */
   V.track = function (param) {
-    setMeta('Track your order | M.O.R.C. Supply', 'Track a M.O.R.C. Supply Cash on Delivery order with your order number or mobile number.');
+    setMeta('Track your order | DAUR Supply', 'Track a DAUR Supply Cash on Delivery order with your order number or mobile number.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair.</h1><p class="aside">Type your order number or the mobile number you ordered with. Either one is enough.</p></div></section>
       <div class="wrap" style="padding-block:40px 96px"><form class="track-one" id="tf" novalidate>
-        <div class="f-ic">${ic('search')}<input id="tq" placeholder="MORC-XXXXXXX or 03XX XXXXXXX" autocomplete="off" aria-label="Order number or mobile number"></div>
+        <div class="f-ic">${ic('search')}<input id="tq" placeholder="DAUR-XXXXXXX or 03XX XXXXXXX" autocomplete="off" aria-label="Order number or mobile number"></div>
         <button class="btn volt" type="submit">Track</button></form><div id="tres"></div></div>`;
     const STEPS = ['Placed', 'Confirmed', 'Dispatched', 'Out for delivery', 'Delivered'];
     const when = (d) => new Date(d).toLocaleString('en-PK', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
@@ -1137,16 +1138,16 @@
           <p class="mute">Subtotal ${fmt(o.subtotal)}${o.discount ? `, code ${esc(o.coupon)} minus ${fmt(o.discount)}` : ''}, delivery ${o.delivery ? fmt(o.delivery) : 'free'}</p></div>
           <div><span class="mono mute">Delivering to</span><p>${esc(o.customer.name)}<br>${esc(o.address.address)}, ${esc(o.address.area)}, ${esc(o.address.city)}</p>
           ${hist.length ? `<span class="mono mute">Updates</span><ul class="thist">${hist.map((h) => `<li><b>${esc(h.status)}</b>${h.note ? ' / ' + esc(h.note) : ''}<small>${when(h.at)}</small></li>`).join('')}</ul>` : ''}
-          <a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum M.O.R.C. Supply, I have a question about order ' + o.id)}">Ask about this order on WhatsApp</a></div></div>
+          <a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about order ' + o.id)}">Ask about this order on WhatsApp</a></div></div>
       </article>`;
     };
     const run = (q) => {
       q = (q || '').trim(); if (!q) { $('#tres').innerHTML = ''; return; }
       const all = store.get('orders', []);
       const phone = /^[+\d\s-]+$/.test(q) ? C.normPhone(q) : null;
-      const hits = phone ? all.filter((o) => C.normPhone(o.customer.phone) === phone) : all.filter((o) => o.id === q.toUpperCase().replace(/\s/g, '') || o.id === 'MORC-' + q.toUpperCase().replace(/^MORC-?/, ''));
+      const hits = phone ? all.filter((o) => C.normPhone(o.customer.phone) === phone) : all.filter((o) => o.id === q.toUpperCase().replace(/\s/g, '') || o.id === 'DAUR-' + q.toUpperCase().replace(/^DAUR-?/, ''));
       $('#tres').innerHTML = hits.length ? `<p class="mono mute" style="margin:26px 0 14px">${hits.length} order${hits.length > 1 ? 's' : ''} found</p>` + hits.map(cardOf).join('')
-        : `<div class="note-box" style="margin-top:24px">${phone || /^\d/.test(q) ? 'No orders found for that mobile number.' : 'No order found with that number.'} Orders are matched on the device they were placed from until the store goes live with its order system. <a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum M.O.R.C. Supply, please share the status of my order: ' + q)}">Ask on WhatsApp</a></div>`;
+        : `<div class="note-box" style="margin-top:24px">${phone || /^\d/.test(q) ? 'No orders found for that mobile number.' : 'No order found with that number.'} Orders are matched on the device they were placed from until the store goes live with its order system. <a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, please share the status of my order: ' + q)}">Ask on WhatsApp</a></div>`;
     };
     $('#tf').addEventListener('submit', (e) => { e.preventDefault(); run($('#tq').value); });
     if (param) { $('#tq').value = param; run(param); }
@@ -1154,7 +1155,7 @@
 
   /* ---- wishlist ---- */
   V.wishlist = function () {
-    setMeta('Liked pairs | M.O.R.C. Supply', 'The M.O.R.C. Supply pairs you liked.');
+    setMeta('Liked pairs | DAUR Supply', 'The DAUR Supply pairs you liked.');
     const ps = wish.map(prod).filter(Boolean);
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Liked / ${ps.length}</span><h1>Liked pairs.</h1><p class="aside">Saved on this device. Join the alert list to hear when a saved pair drops in price.</p></div></section>
       <div class="wrap" style="padding-block:32px 96px">${ps.length ? `<div class="grid">${ps.map((p, i) => card(p, i)).join('')}</div>` : `<div class="empty"><span class="mono">Nothing saved yet</span><a class="btn ghost" href="${link('shop')}">Browse the catalog</a></div>`}</div>`;
@@ -1163,7 +1164,7 @@
 
   /* ---- alert list ---- */
   V.list = function () {
-    setMeta('Join the alert list | M.O.R.C. Supply', 'Get M.O.R.C. Supply drops, restocks and discounts first on WhatsApp, with optional email and SMS.');
+    setMeta('Join the alert list | DAUR Supply', 'Get DAUR Supply drops, restocks and discounts first on WhatsApp, with optional email and SMS.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Alert list</span><h1>First access.</h1><p class="aside">Drops, restocks and price cuts land on WhatsApp before they hit the shop.</p></div></section>
       <div class="wrap"><div class="two"><div class="main">${signupBlock(false)}</div>
       <aside class="side"><span class="mono mute">What you get</span><ul class="inbox"><li>Drop announcements a few hours before the public</li><li>Price cut alerts on pairs in your line</li><li>Restock messages for sold out sizes</li><li>No spam. One message per event. Reply STOP to leave.</li></ul></aside></div></div>`;
@@ -1178,16 +1179,16 @@
     const tag = { Men: 'Built heavy. Priced honest.', Women: 'Clean lines. No logo tax.', Kids: 'Real leather for small feet.', Sneakers: 'Leather and rubber, bonded and pull tested.', Leather: 'Full grain. No label tax.', Hybrids: 'All day leather comfort.' }[l.key] || 'Curated, not overpriced.';
     const from = ps.length ? Math.min(...ps.map(minPrice)) : 0;
     return `<a class="line-card" href="${link('shop', l.key.toLowerCase())}" style="--n:${pairs.length}">
-      <span class="lc-badge">${ps.length} style${ps.length === 1 ? '' : 's'}</span><span class="lc-no mono">${ONE ? 'Style' : 'Line'} 0${i + 1} / M.O.R.C.</span>
+      <span class="lc-badge">${ps.length} style${ps.length === 1 ? '' : 's'}</span><span class="lc-no mono">${ONE ? 'Style' : 'Line'} 0${i + 1} / DAUR</span>
       <span class="lc-big" aria-hidden="true" style="--len:${(ONE ? l.key.replace('Hybrids', 'Casual') : a).length}">${esc(ONE ? l.key.replace('Hybrids', 'Casual') : a)}</span>
-      <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Workshop pair / M.O.R.C. sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em><s>${fmt(C.marketRetail)}+</s></span>` : ''}</span>`).join('')}</span>
+      <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Workshop pair / DAUR sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em><s>${fmt(C.marketRetail)}+</s></span>` : ''}</span>`).join('')}</span>
       <span class="lc-foot"><span class="lc-t">${esc(a)}</span><span class="lc-line">${tag} From ${fmt(from)}.</span></span>
       <span class="lc-cta">Shop ${esc(a.toLowerCase())} ${ic('arrow')}</span>
     </a>`;
   }
   V.manifesto = function () {
-    setMeta('About M.O.R.C. Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how M.O.R.C. sells the same local leather shoes and sneakers straight from the workshops at factory price.');
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">M.O.R.C. Supply Unit</span><h1>The manifesto: Drop 01.</h1><p class="aside">Read it once. Then look at what you paid for your last pair.</p></div></section>
+    setMeta('About DAUR Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how DAUR sells the same local leather shoes and sneakers straight from the workshops at factory price.');
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">DAUR Supply Unit</span><h1>The manifesto: Drop 01.</h1><p class="aside">Read it once. Then look at what you paid for your last pair.</p></div></section>
       <div class="wrap"><div class="manifesto">
         <nav class="rail"><a href="#m1" data-jump="m1">01 The problem with the system</a><a href="#m2" data-jump="m2">02 The curation model</a><a href="#m3" data-jump="m3">03 Built for the street</a><a href="#m4" data-jump="m4">04 Our charity pledge</a></nav>
         <div class="body">
@@ -1196,11 +1197,11 @@
             <p>They source high-quality pairs directly from Pakistan’s raw industrial and artisan hubs for a fraction of the price, print a global logo on the insole, wrap it in synthetic influencer marketing, and sell it back to you at a 400% retail markup. You aren't paying for the leather, the comfort, or the craftsmanship. You are paying for their marketing budget.</p>
             <p class="verdict">We think that is a scam.</p></div>
           <div class="mblock" id="m2"><span class="eyebrow">02</span><h2>The Curation Model</h2>
-            <p class="big">M.O.R.C. is not a traditional shoe company. We are an independent curator house and supply network.</p>
+            <p class="big">DAUR is not a traditional shoe company. We are an independent curator house and supply network.</p>
             <p>Our team bypasses the retail middleman completely. We hit the pavement, vet local industrial hubs, and source premium, well-crafted, unbranded footwear directly from top-tier local vendors. If a shoe doesn’t meet our strict standards for comfort, stitching, and durability, it never enters the catalog.</p>
             <p>We don't waste capital altering the shoe itself just to add an unnecessary logo that drives up manufacturing costs. Instead, we secure the pairs, run them through rigorous quality assurance, add our signature external hardware, and drop them to you at true wholesale factory pricing.</p></div>
           <div class="mblock" id="m3"><span class="eyebrow">03</span><h2>Built for the Street. Priced for the People.</h2>
-            <div class="pillars"><div><b>Zero Influencer Tax</b><p>We don't send free pairs to celebrities and make you foot the bill.</p></div><div><b>Zero Hype Markups</b><p>Our pricing reflects the raw cost of materials and fair local labor. Nothing more.</p></div><div><b>Unified Quality Suite</b><p>Every curated pair drops inside our premium, minimalist packaging network with custom M.O.R.C. utility hardware.</p></div></div>
+            <div class="pillars"><div><b>Zero Influencer Tax</b><p>We don't send free pairs to celebrities and make you foot the bill.</p></div><div><b>Zero Hype Markups</b><p>Our pricing reflects the raw cost of materials and fair local labor. Nothing more.</p></div><div><b>Unified Quality Suite</b><p>Every curated pair drops inside our premium, minimalist packaging network with custom DAUR utility hardware.</p></div></div>
             <p class="big">We make premium footwear accessible to the subculture. No gatekeeping. No artificial scarcity.</p>
             <p class="verdict">Welcome to the Supply Line.</p>
             <a class="btn volt" href="${link('shop')}" style="justify-self:start">Access the supply line, shop all drops <span class="arr">&rarr;</span></a></div>
@@ -1210,19 +1211,19 @@
             <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
             <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
         </div></div></div>
-      <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for M.O.R.C. Supply.</p></div>`;
+      <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for DAUR Supply.</p></div>`;
   };
 
   /* ---- policies ---- */
   // moving side art built from the owner's icons (assets/polart.js); empty when that file is absent
   const CITY = [['Karachi', 31, 85], ['Quetta', 30, 50], ['Multan', 58, 57], ['Lahore', 76, 50], ['Islamabad', 69, 29], ['Peshawar', 58, 24]];
   function polArt(kind) {
-    const A = window.MORC_POLART; if (!A) return '';
+    const A = window.DAUR_POLART; if (!A) return '';
     const L = (src, cls) => `<img class="pl ${cls}" src="${src}" alt="" draggable="false">`;
     const map = (pins) => `<div class="pa-map">${L(A.mapFill, 'fill')}${L(A.map, 'line')}
       <svg class="pa-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${CITY.map(([, x, y]) => x + ',' + y).join(' ')}"/></svg>
       ${(pins || CITY).map(([n, x, y], i) => `<span class="pa-dot" style="left:${x}%;top:${y}%;--d:${i * 0.35}s"><i></i><em>${n}</em></span>`).join('')}</div>`;
-    const van = `<div class="pa-van">${L(A.vanLines, 'vl')}${L(A.vanBody, 'vb')}<b class="vt">M.O.R.C.<small>SUPPLY</small></b></div>`;
+    const van = `<div class="pa-van">${L(A.vanLines, 'vl')}${L(A.vanBody, 'vb')}<b class="vt">DAUR<small>SUPPLY</small></b></div>`;
     if (kind === 'shipping') return `<figure class="pa pa-ship" aria-hidden="true">${map()}${van}<figcaption>Every city in Pakistan</figcaption></figure>`;
     if (kind === 'refunds') return `<figure class="pa pa-ref" aria-hidden="true"><div class="pa-sq">${L(A.refCard, 'rc')}${L(A.refArrow, 'ra')}</div><figcaption>7 day exchange / 30 day defects</figcaption></figure>`;
     if (kind === 'cod') return `<figure class="pa pa-cod" aria-hidden="true"><div class="pa-sq">${L(A.codRest, 'cr')}${L(A.codArrows, 'ca')}</div><figcaption>Pay the rider at your door</figcaption></figure>`;
@@ -1230,12 +1231,12 @@
     return '';
   }
   V.policies = function (param) {
-    setMeta('Terms, Privacy and Refund Policy | M.O.R.C. Supply', 'M.O.R.C. Supply terms of service, privacy policy, shipping, Cash on Delivery, returns, exchanges and refunds for orders across Pakistan.');
+    setMeta('Terms, Privacy and Refund Policy | DAUR Supply', 'DAUR Supply terms of service, privacy policy, shipping, Cash on Delivery, returns, exchanges and refunds for orders across Pakistan.');
     const mail = `<a class="link" href="mailto:${esc(C.supportEmail)}">${esc(C.supportEmail)}</a>`;
     const wa = `<a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}">WhatsApp</a>`;
     const S = [
       ['terms', 'Terms of service', `<p>These terms apply to every order placed on this website. By placing an order you agree to them.</p><ul>
-        <li><b>Who we are.</b> M.O.R.C. Supply curates and sells unbranded footwear made by independent workshops in Pakistan. We do not sell, and never claim to sell, products of other brands.</li>
+        <li><b>Who we are.</b> DAUR Supply curates and sells unbranded footwear made by independent workshops in Pakistan. We do not sell, and never claim to sell, products of other brands.</li>
         <li><b>Orders.</b> An order is a request to buy. It becomes a contract once we confirm it with you by phone call or WhatsApp. We may decline or cancel an order if stock runs out, the price shown was clearly wrong, the details cannot be confirmed, or the order looks fraudulent. If that happens you pay nothing.</li>
         <li><b>Prices.</b> All prices are in Pakistani rupees and include our packaging and hardware. The delivery fee is shown at checkout. The price you pay is the total on your confirmation.</li>
         <li><b>Product details.</b> We describe and picture every pair as accurately as we can. Leather is natural, so small differences in grain and shade from one pair to the next are normal and are not defects.</li>
@@ -1275,7 +1276,7 @@
 
   /* ---- contract ---- */
   V.contract = function (param) {
-    setMeta('Delivery, Cash on Delivery & Exchanges in Pakistan | M.O.R.C. Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.');
+    setMeta('Delivery, Cash on Delivery & Exchanges in Pakistan | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.');
     const faq = [
       ['Are these original branded shoes?', 'No, and we never claim they are. They are unbranded pairs from the same Pakistani workshops many labels buy from. You get the build without the logo or its markup.'],
       ['Can I open the parcel before paying?', 'This depends on the courier, and most do not allow it. Record a short unboxing video. If anything is wrong, send it to us on WhatsApp and the defect and exchange terms apply.'],
@@ -1327,8 +1328,8 @@
     reveal();
     if (!(page === 'contract' && param)) window.scrollTo(0, 0);
   }
-  window.MORC_API = { C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; } };
-  const EXT = window.MORC_EXT || { views: {}, hooks: {} };
+  window.DAUR_API = { C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; } };
+  const EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   Object.assign(V, EXT.views);
   const hook = (name, arg) => (EXT.hooks[name] || []).forEach((fn) => fn(arg));
   chrome();
@@ -1345,5 +1346,5 @@
     const t = document.getElementById(j.dataset.jump);
     if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  window.addEventListener('storage', (e) => { if (e.key === 'morc.cart') { cart = store.get('cart', []); paintCounts(); } });
+  window.addEventListener('storage', (e) => { if (e.key === 'daur.cart') { cart = store.get('cart', []); paintCounts(); } });
 })();

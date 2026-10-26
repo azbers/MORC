@@ -1,5 +1,5 @@
-/* M.O.R.C. icon set. 24px grid, 1.5 stroke, inherits currentColor.
-   Usage: MORC_ICON('heart') or MORC_ICON('heart', 'extra-class'). */
+/* DAUR icon set. 24px grid, 1.5 stroke, inherits currentColor.
+   Usage: DAUR_ICON('heart') or DAUR_ICON('heart', 'extra-class'). */
 (function () {
   const S = (d, extra) => `<svg class="ic${extra ? ' ' + extra : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${d}</svg>`;
   const P = {
@@ -47,6 +47,6 @@
     play: '<path d="M8 5.5v13l10.5-6.5L8 5.5z"/>',
     flame: '<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.8 3.4-5.4 3.4-9.3 2.7 1.4 4.6 4 4.6 6.6.9-.5 1.6-1.6 1.7-2.8 1.8 1.6 3.3 3.6 3.3 5.9 0 3.4-2.6 5.8-6.5 5.8z"/>'
   };
-  window.MORC_ICON = (name, extra) => S(P[name] || P.spark, extra);
-  window.MORC_ICONS = P;
+  window.DAUR_ICON = (name, extra) => S(P[name] || P.spark, extra);
+  window.DAUR_ICONS = P;
 })();

@@ -1,4 +1,4 @@
-/* M.O.R.C. product renderer.
+/* DAUR product renderer.
    Draws each pair as a side profile SVG so the catalog works before
    photography exists. Swap for real photos by setting product.images. */
 (function () {
@@ -140,7 +140,7 @@
       // dubrae on bottom row
       const [dx, dy] = pts[pts.length - 1];
       out += `<g class="hw-dubrae"><rect x="${dx - 11}" y="${dy - 10}" width="22" height="9" rx="1.5" transform="rotate(16 ${dx} ${dy - 5})" fill="${bp ? 'none' : `url(#${id}m)`}" stroke="${bp ? 'var(--volt,#CCFF00)' : 'rgba(0,0,0,.6)'}" stroke-width=".8"/>
-        ${bp ? '' : `<text x="${dx}" y="${dy - 3.4}" transform="rotate(16 ${dx} ${dy - 5})" fill="#1a1a1a" font-family="monospace" font-size="4.4" font-weight="700" text-anchor="middle">M.O.R.C.</text>`}</g>`;
+        ${bp ? '' : `<text x="${dx}" y="${dy - 3.4}" transform="rotate(16 ${dx} ${dy - 5})" fill="#1a1a1a" font-family="monospace" font-size="4.4" font-weight="700" text-anchor="middle">DAUR</text>`}</g>`;
     }
 
     // collar padding line
@@ -149,5 +149,5 @@
     return out;
   }
 
-  window.MORC_SHOE = { render, SHAPES };
+  window.DAUR_SHOE = { render, SHAPES };
 })();

@@ -3,7 +3,7 @@
   storefront script draws the page. The script replaces it on every view it
   draws; normal Shopify pages, search and 404 keep it.
 {%- endcomment -%}
-<div class="wrap morc-plain">
+<div class="wrap daur-plain">
 {%- case template.name -%}
   {%- when 'product' -%}
     <h1>{{ product.title }}</h1>
@@ -22,7 +22,7 @@
     <section class="phero"><span class="eyebrow">Search</span><h1>{% if search.performed %}{{ search.results_count }} results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1></section>
     <form action="{{ routes.search_url }}" method="get" class="track-one"><div class="f-ic"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Try black, derby, chelsea" aria-label="Search"></div><button class="btn volt" type="submit">Search</button></form>
     {%- if search.performed -%}
-    <ul class="morc-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a></li>{% endfor %}</ul>
+    <ul class="daur-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a></li>{% endfor %}</ul>
     {%- endif -%}
   {%- when '404' -%}
     <section class="phero"><span class="eyebrow">404</span><h1>Not on the supply line.</h1><p class="aside">This page does not exist. The shop does.</p></section>
@@ -32,7 +32,7 @@
     <div class="rte">{{ page.content }}</div>
   {%- when 'blog' -%}
     <section class="phero"><span class="eyebrow">Journal</span><h1>{{ blog.title }}</h1></section>
-    <ul class="morc-results">{% for a in blog.articles %}<li><a href="{{ a.url }}">{{ a.title }}</a> <span class="mute">{{ a.published_at | date: '%d %b %Y' }}</span></li>{% endfor %}</ul>
+    <ul class="daur-results">{% for a in blog.articles %}<li><a href="{{ a.url }}">{{ a.title }}</a> <span class="mute">{{ a.published_at | date: '%d %b %Y' }}</span></li>{% endfor %}</ul>
   {%- when 'article' -%}
     <section class="phero"><span class="eyebrow">{{ article.published_at | date: '%d %b %Y' }}</span><h1>{{ article.title }}</h1></section>
     <div class="rte">{{ article.content }}</div>
@@ -44,5 +44,5 @@
 {%- endcase -%}
 </div>
 {% schema %}
-{ "name": "M.O.R.C. page", "settings": [] }
+{ "name": "DAUR page", "settings": [] }
 {% endschema %}

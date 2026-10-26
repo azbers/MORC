@@ -1,15 +1,15 @@
-/* M.O.R.C. Supply catalog and store settings.
+/* DAUR Supply catalog and store settings.
    Edit this file to change products, prices, stock and delivery rules.
    IMPORTANT: the cost breakdown numbers below are working placeholders.
    Replace them with your real vendor invoices before launch, because the
    brand promise is radical transparency. */
 
-window.MORC_CONFIG = {
-  brand: 'M.O.R.C. Supply',
-  domain: 'https://morcsupply.pk',
+window.DAUR_CONFIG = {
+  brand: 'DAUR Supply',
+  domain: 'https://daursupply.com',
   currency: 'Rs.',
   whatsapp: '923055125974',          // order line, country code first, digits only. Admin > Settings can override it
-  supportEmail: 'supply@morcsupply.pk',
+  supportEmail: 'supply@daursupply.com',
   marketRetail: 12000,                // typical mainstream retail price for comparable pairs
   freeDeliveryPairs: 2,               // delivery is free when the bag holds this many pairs
   /* One flat Cash on Delivery fee and timing for every city in Pakistan. Admin > Settings can change both. */
@@ -32,7 +32,7 @@ window.MORC_CONFIG = {
    stock per size, and images. When images is empty the site draws the pair
    from silhouette + palette. audience: Men | Women | Kids. group: optional
    sub group such as Baby Girl or Baby Boy. */
-window.MORC_PRODUCTS = [
+window.DAUR_PRODUCTS = [
   {
     "id": "moc-runner-v1",
     "name": "Moc-Runner v1",
@@ -65,8 +65,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Moc-Runner v1 | Men's Black Leather Casual Shoes Price in Pakistan",
-      "description": "The M.O.R.C. Moc-Runner v1 in triple black. Premium local leather casual shoes with moc toe stitching, sold at factory price with Cash on Delivery in Pakistan."
+      "title": "DAUR Moc-Runner v1 | Men's Black Leather Casual Shoes Price in Pakistan",
+      "description": "The DAUR Moc-Runner v1 in triple black. Premium local leather casual shoes with moc toe stitching, sold at factory price with Cash on Delivery in Pakistan."
     },
     "variants": [
       {
@@ -149,8 +149,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Phantom Trainer | Black Streetwear Sneakers Price in Pakistan",
-      "description": "Phantom Trainer by M.O.R.C. Supply. Black and bone streetwear sneakers at factory price, delivered with Cash on Delivery across Pakistan."
+      "title": "DAUR Phantom Trainer | Black Streetwear Sneakers Price in Pakistan",
+      "description": "Phantom Trainer by DAUR Supply. Black and bone streetwear sneakers at factory price, delivered with Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -210,8 +210,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Grid Court Low | White Leather Sneakers Price in Pakistan",
-      "description": "Grid Court Low by M.O.R.C. Supply. Bone white leather court sneakers at factory price with Cash on Delivery across Pakistan."
+      "title": "DAUR Grid Court Low | White Leather Sneakers Price in Pakistan",
+      "description": "Grid Court Low by DAUR Supply. Bone white leather court sneakers at factory price with Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -294,8 +294,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Unit Derby 02 | Black Leather Derby Shoes Price in Pakistan",
-      "description": "Unit Derby 02 by M.O.R.C. Supply. Black full grain leather derby shoes from Pakistani workshops at factory price with Cash on Delivery."
+      "title": "DAUR Unit Derby 02 | Black Leather Derby Shoes Price in Pakistan",
+      "description": "Unit Derby 02 by DAUR Supply. Black full grain leather derby shoes from Pakistani workshops at factory price with Cash on Delivery."
     },
     "variants": [
       {
@@ -355,8 +355,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Concrete Mid | High Top Streetwear Sneakers Price in Pakistan",
-      "description": "Concrete Mid by M.O.R.C. Supply. Ash and black high top streetwear sneakers at factory price with Cash on Delivery across Pakistan."
+      "title": "DAUR Concrete Mid | High Top Streetwear Sneakers Price in Pakistan",
+      "description": "Concrete Mid by DAUR Supply. Ash and black high top streetwear sneakers at factory price with Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -416,8 +416,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Volt Signal | Black Running Style Sneakers Price in Pakistan",
-      "description": "Volt Signal by M.O.R.C. Supply. Black and volt running style sneakers in a small batch, at factory price with Cash on Delivery in Pakistan."
+      "title": "DAUR Volt Signal | Black Running Style Sneakers Price in Pakistan",
+      "description": "Volt Signal by DAUR Supply. Black and volt running style sneakers in a small batch, at factory price with Cash on Delivery in Pakistan."
     },
     "variants": [
       {
@@ -462,7 +462,7 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "A waxed black chelsea on a lugged rubber sole. Elastic gussets, pull tab, nothing else. Laceless, so it carries the M.O.R.C. seal on the pull tab instead.",
+    "description": "A waxed black chelsea on a lugged rubber sole. Elastic gussets, pull tab, nothing else. Laceless, so it carries the DAUR seal on the pull tab instead.",
     "specs": {
       "Upper": "Waxed full grain leather",
       "Lining": "Leather",
@@ -477,8 +477,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Ward Chelsea | Black Leather Chelsea Boots Price in Pakistan",
-      "description": "Ward Chelsea by M.O.R.C. Supply. Black waxed leather chelsea boots from Pakistani workshops at factory price with Cash on Delivery."
+      "title": "DAUR Ward Chelsea | Black Leather Chelsea Boots Price in Pakistan",
+      "description": "Ward Chelsea by DAUR Supply. Black waxed leather chelsea boots from Pakistani workshops at factory price with Cash on Delivery."
     },
     "variants": [
       {
@@ -561,8 +561,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Sector Slip | Black Leather Slip On Shoes Price in Pakistan",
-      "description": "Sector Slip by M.O.R.C. Supply. Black nappa leather slip on shoes at factory price with Cash on Delivery in Pakistan."
+      "title": "DAUR Sector Slip | Black Leather Slip On Shoes Price in Pakistan",
+      "description": "Sector Slip by DAUR Supply. Black nappa leather slip on shoes at factory price with Cash on Delivery in Pakistan."
     },
     "variants": [
       {
@@ -622,8 +622,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Halo Court | Women's White Leather Sneakers Price in Pakistan",
-      "description": "Halo Court by M.O.R.C. Supply. Women's bone leather sneakers at factory price with Cash on Delivery across Pakistan."
+      "title": "DAUR Halo Court | Women's White Leather Sneakers Price in Pakistan",
+      "description": "Halo Court by DAUR Supply. Women's bone leather sneakers at factory price with Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -706,8 +706,8 @@ window.MORC_PRODUCTS = [
       "logistics": 300
     },
     "seo": {
-      "title": "M.O.R.C. Unit Mini | Baby Boy Leather Sneakers Price in Pakistan",
-      "description": "Unit Mini by M.O.R.C. Supply. Soft leather baby sneakers at factory price with Cash on Delivery in Pakistan."
+      "title": "DAUR Unit Mini | Baby Boy Leather Sneakers Price in Pakistan",
+      "description": "Unit Mini by DAUR Supply. Soft leather baby sneakers at factory price with Cash on Delivery in Pakistan."
     },
     "variants": [
       {

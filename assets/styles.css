@@ -1,4 +1,4 @@
-/* M.O.R.C. Supply
+/* DAUR Supply
    Layout concept: an architectural drawing sheet laid over leather. A 12 column grid with
    visible hairlines and crosshair registration marks on a pale hide ground, espresso type,
    cognac for signals on light ground, volt reserved for filled drop chips.
@@ -191,8 +191,9 @@ main, header, footer, .ticker { position: relative; z-index: 1; }
 /* ---------- header ---------- */
 .hdr { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(var(--bg-rgb), .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
 .hdr .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; }
-.logo { font: 700 19px/1 var(--display); letter-spacing: .06em; display: inline-flex; align-items: baseline; gap: 8px; justify-self: center; }
-.logo small { font: 400 9px/1 var(--mono); letter-spacing: .24em; color: var(--mute); }
+.logo { font: 700 19px/1 var(--display); letter-spacing: .06em; display: inline-flex; align-items: flex-end; gap: 9px; justify-self: center; color: var(--bone); }
+.logo .wm { display: block; height: 19px; width: auto; }
+.logo small { font: 500 8.5px/1 var(--mono); letter-spacing: .26em; color: var(--mute); padding-bottom: 1px; }
 .nav { display: flex; gap: 28px; }
 .nav a { font: 400 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); transition: color .25s; position: relative; padding: 6px 0; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--bone); }
@@ -372,7 +373,7 @@ main, header, footer, .ticker { position: relative; z-index: 1; }
   linear-gradient(90deg, rgba(var(--fg-rgb), .5) 1px, transparent 1px) 0 0 / 18px 18px, #0b0b0b;
   clip-path: polygon(6% 10%, 30% 2%, 58% 8%, 92% 0, 100% 34%, 94% 64%, 100% 96%, 64% 92%, 36% 100%, 4% 94%, 0 60%, 6% 32%);
   transform: rotate(-6deg); transition: transform .8s var(--ease); position: relative; }
-.tissue::after { content: "M.O.R.C."; position: absolute; inset: 0; display: grid; place-items: center; font: 700 13px/1 var(--display); letter-spacing: .3em; color: var(--bone); mix-blend-mode: difference; }
+.tissue::after { content: "DAUR"; position: absolute; inset: 0; display: grid; place-items: center; font: 700 13px/1 var(--display); letter-spacing: .3em; color: var(--bone); mix-blend-mode: difference; }
 .kit-cell:hover .tissue { transform: rotate(4deg) scale(1.04); }
 /* manifest card */
 .mcard { width: 62%; aspect-ratio: .64; background: #111110; border: 1px solid rgba(255, 255, 255, .07); padding: 9% 8%; display: grid; align-content: space-between; box-shadow: 18px 26px 40px rgba(var(--shadow-rgb), .7); transform: rotate(4deg); transition: transform .8s var(--ease); }
@@ -434,6 +435,7 @@ section:has(> .wrap > .van-road) { overflow: hidden; }
 .ftr .wrap { padding-block: 56px 28px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px 20px; }
 .ftr-brand { grid-column: 1 / 5; display: grid; gap: 18px; align-content: start; }
 .ftr-brand .logo { justify-self: start; font-size: 26px; }
+.ftr-brand .logo .wm { height: 28px; }
 .ftr-brand p { color: var(--mute); max-width: 36ch; font-size: 13.5px; }
 .ftr-col { grid-column: span 2; display: grid; gap: 10px; align-content: start; }
 .ftr-col h4 { font: 400 10.5px/1 var(--mono); letter-spacing: .16em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
@@ -1314,7 +1316,7 @@ body[data-page="admin"] .pit { display: none; }
 .thumb.dk { background: var(--ink-2); }
 .thumb:not([aria-pressed="true"]) { opacity: .62; }
 
-/* the M.O.R.C. treatment: the workshop pair scans into its blueprint on hover */
+/* the DAUR treatment: the workshop pair scans into its blueprint on hover */
 .lc-shoe .lc-art { position: relative; }
 .lc-bp { position: absolute; inset: 0; clip-path: inset(0 100% 0 0); }
 .line-card:hover .lc-bp { animation: lcScan 2.6s .2s var(--ease) infinite; }
