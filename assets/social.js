@@ -258,7 +258,7 @@
     ];
     if (sale.length) sets.splice(1, 0, { id: 'cuts', label: 'Price cuts', cover: sale[0][0], coverV: sale[0][1], slides: sale.map(([p, v]) => ({ p, v, kicker: 'Price cut / ' + pct(v) + '% off', title: p.name, sub: fmt(v.price) + ' / was ' + fmt(v.compareAt) })) });
     sets.push({ id: 'new', label: 'New in', cover: fresh[0], slides: fresh.map((p) => ({ p, v: p.variants[0], kicker: 'New in / ' + p.audience + (p.group ? ' / ' + p.group : ''), title: p.name, sub: fmt(p.variants[0].price) })) });
-    // every product added in the last 7 days gets a status of its own: each colour, with up to 3 photos per colour
+    // every product published in the last 7 days gets a status of its own: each colour, with up to 3 photos per colour
     const age = (d) => (Date.now() - new Date(d + 'T00:00:00').getTime()) / 864e5;
     const added = P.filter((p) => p.createdAt && age(p.createdAt) <= 7).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
     const own = added.map((p) => ({ id: 'p-' + p.id + '-' + p.createdAt, label: 'Just landed', cover: p,
