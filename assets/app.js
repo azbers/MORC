@@ -1277,10 +1277,8 @@
     const map = (pins) => `<div class="pa-map">${L(A.mapFill, 'fill')}${L(A.map, 'line')}
       <svg class="pa-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${CITY.map(([, x, y]) => x + ',' + y).join(' ')}"/></svg>
       ${(pins || CITY).map(([n, x, y], i) => `<span class="pa-dot" style="left:${x}%;top:${y}%;--d:${i * 0.35}s"><i></i><em>${n}</em></span>`).join('')}</div>`;
-    const van = `<div class="pa-van">${L(A.vanLines, 'vl')}${L(A.vanBody, 'vb')}<b class="vt">DAUR<small>SUPPLY</small></b></div>`;
-    if (kind === 'shipping') return `<figure class="pa pa-ship" aria-hidden="true">${map()}${van}<figcaption>Every city in Pakistan</figcaption></figure>`;
-    if (kind === 'refunds') return `<figure class="pa pa-ref" aria-hidden="true"><div class="pa-sq">${L(A.refCard, 'rc')}${L(A.refArrow, 'ra')}</div><figcaption>7 day exchange / 30 day defects</figcaption></figure>`;
-    if (kind === 'cod') return `<figure class="pa pa-cod" aria-hidden="true"><div class="pa-sq">${L(A.codRest, 'cr')}${L(A.codArrows, 'ca')}</div><figcaption>Pay the rider at your door</figcaption></figure>`;
+    // shipping and contact keep the map; the van, refund and Cash on Delivery art were taken out at the owner's request
+    if (kind === 'shipping') return `<figure class="pa pa-ship" aria-hidden="true">${map()}<figcaption>Every city in Pakistan</figcaption></figure>`;
     if (kind === 'contact') return `<figure class="pa pa-con" aria-hidden="true">${map([['Wherever you are', 52, 52]])}<span class="pa-chat">${ic('whatsapp')}<i></i><i></i><i></i></span><figcaption>We answer on WhatsApp</figcaption></figure>`;
     return '';
   }

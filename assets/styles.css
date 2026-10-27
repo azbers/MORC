@@ -1561,15 +1561,6 @@ a.wa-send { display: inline-flex; align-items: center; justify-content: center; 
 .pa-dot em { position: absolute; left: 12px; top: -4px; font: 500 8.5px/1 var(--mono); font-style: normal; letter-spacing: .1em; text-transform: uppercase; color: var(--bone); white-space: nowrap; opacity: .85; }
 .pa-con .pa-dot i { width: 14px; height: 14px; }
 .pa-con .pa-dot em { left: 50%; top: 14px; transform: translateX(-50%); }
-.pa-van { position: relative; width: 72%; aspect-ratio: 1; margin-top: -26%; animation: vandrive 5s cubic-bezier(.45, 0, .25, 1) infinite; }
-.pa-van .vb { animation: vanbob .35s ease-in-out infinite alternate; }
-.pa-van .vl { animation: vanlines .5s linear infinite; }
-.pa-van .vt { position: absolute; left: 22%; top: 38%; width: 42%; display: grid; justify-items: center; font: 800 clamp(13px, 1.4vw, 19px)/1 var(--display); letter-spacing: -.02em; color: #F5EEE4; animation: vanbob .35s ease-in-out infinite alternate; }
-.pa-van .vt small { font: 700 6px/1.4 var(--mono); letter-spacing: .3em; }
-.pa-ref .ra { transform-origin: 63% 50%; animation: refspin 3.2s cubic-bezier(.6, 0, .3, 1) infinite; }
-.pa-ref .rc { animation: cardin 3.2s ease-in-out infinite; }
-.pa-cod .ca { transform-origin: 54% 52%; animation: codspin 4s cubic-bezier(.6, 0, .3, 1) infinite; }
-.pa-cod .cr { animation: vanbob 1.6s ease-in-out infinite alternate; }
 .pa-chat { position: absolute; right: 8%; top: 66%; display: flex; gap: 4px; align-items: center; padding: 8px 12px; border-radius: 16px 16px 16px 4px; background: var(--signal); color: var(--ink); animation: chatpop 3s ease-in-out infinite; }
 .pa-chat svg { width: 16px; height: 16px; }
 .pa-chat i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: typing 1.2s ease-in-out infinite; }
@@ -1577,12 +1568,6 @@ a.wa-send { display: inline-flex; align-items: center; justify-content: center; 
 @keyframes mapglow { 50% { opacity: .55; } }
 @keyframes route { to { stroke-dashoffset: -8.8; } }
 @keyframes dotping { 0% { box-shadow: 0 0 0 0 rgba(var(--signal-rgb), .6); } 80%, 100% { box-shadow: 0 0 0 14px rgba(var(--signal-rgb), 0); } }
-@keyframes vandrive { 0% { transform: translateX(-120%); } 30%, 70% { transform: translateX(0); } 100% { transform: translateX(140%); } }
-@keyframes vanbob { to { transform: translateY(-1.5%); } }
-@keyframes vanlines { 0% { opacity: .9; transform: translateX(0); } 100% { opacity: .2; transform: translateX(-8%); } }
-@keyframes refspin { 0%, 15% { transform: rotate(0); } 60%, 100% { transform: rotate(-360deg); } }
-@keyframes cardin { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-3%); } }
-@keyframes codspin { 0%, 20% { transform: rotate(0); } 70%, 100% { transform: rotate(360deg); } }
 @keyframes chatpop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.04); } }
 @keyframes typing { 50% { transform: translateY(-3px); opacity: .5; } }
 @media (max-width: 900px) { .policy.has-art { grid-template-columns: 1fr; } .pa { max-width: 240px; justify-self: center; width: 100%; } }
