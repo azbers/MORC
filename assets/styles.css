@@ -1649,7 +1649,11 @@ html.spin-open { overflow: hidden; }
 .zz, .zz *, .zz *::before, .zz *::after { animation-play-state: paused !important; }
 .card-acts { display: grid; grid-template-columns: minmax(0, 1fr) 42px; gap: 4px; }
 /* the pen and the van move on the compositor, not through layout */
-@keyframes penRide { from { transform: translateX(0); } to { transform: translateX(var(--w, 100%)); } }
+/* the ride uses the translate property, which is applied outside the nib's tilt, so the pen moves level along the line */
+@keyframes penRide { from { translate: 0 0; } to { translate: var(--w, 100%) 0; } }
+@keyframes penNib { from { rotate: -14deg; transform: translateY(-3%); } to { rotate: -4deg; transform: translateY(3%); } }
+/* a finger sliding sideways over the hero pair moves the x-ray lens; an upward or downward swipe still scrolls the page */
+.hero-stage { touch-action: pan-y; }
 .van-road { container-type: inline-size; }
 .van { left: 0; }
 @keyframes vanDrive { 0% { transform: translateX(-14cqw); } 100% { transform: translateX(100cqw); } }
@@ -1758,6 +1762,10 @@ html.spin-open { overflow: hidden; }
   .card:hover .card-media .bp { opacity: 0; }
   .card:hover .card-media .rn { opacity: 1; transform: none; }
   .card.pv .card-media .rn { opacity: 1; }
+  /* the touch version of the hover: alive.js adds .peek as a pair crosses the middle of the screen or is pressed */
+  .card.peek .card-media .bp { opacity: 1; }
+  .card.peek .card-media .rn { opacity: 0; transform: scale(1.04); }
+  .card.peek .card-media .bp, .card.peek .card-media .rn { transition-duration: .45s; }
 }
 /* the shop header gives the grid the first screen sooner on phones */
 @media (max-width: 560px) {

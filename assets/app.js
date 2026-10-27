@@ -555,12 +555,22 @@
     const st = $('#stage'), hero_ = $('#hero');
     const mv = (e) => {
       const r = st.getBoundingClientRect(); const pt = e.touches ? e.touches[0] : e;
-      st.style.setProperty('--lx', (pt.clientX - r.left) + 'px'); st.style.setProperty('--ly', (pt.clientY - r.top) + 'px');
+      // under a finger the lens rides a little above the touch point, so the x-ray is not hidden by the finger itself
+      const lift = e.pointerType && e.pointerType !== 'mouse' ? 56 : 0;
+      st.style.setProperty('--lx', (pt.clientX - r.left) + 'px'); st.style.setProperty('--ly', (pt.clientY - r.top - lift) + 'px');
       const hr = hero_.getBoundingClientRect();
       hero_.querySelector('.hero-light').style.setProperty('--mx', (pt.clientX - hr.left) + 'px');
       hero_.querySelector('.hero-light').style.setProperty('--my', (pt.clientY - hr.top) + 'px');
     };
-    st.addEventListener('pointermove', mv); st.addEventListener('pointerenter', () => st.classList.add('lens')); st.addEventListener('pointerleave', () => { st.classList.remove('lens'); tilt(0, 0); });
+    // a mouse shows the lens while it is over the pair; a finger shows it where it touches and while it slides,
+    // and the lens stays a moment after the finger lifts instead of vanishing at once
+    let lensT = 0;
+    const lensOn = () => { clearTimeout(lensT); st.classList.add('lens'); };
+    const lensOff = (e) => { if (e.pointerType === 'mouse') { st.classList.remove('lens'); tilt(0, 0); } else { clearTimeout(lensT); lensT = setTimeout(() => st.classList.remove('lens'), 1600); } };
+    st.addEventListener('pointermove', (e) => { if (e.pointerType !== 'mouse') lensOn(); mv(e); });
+    st.addEventListener('pointerdown', (e) => { lensOn(); mv(e); });
+    st.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') lensOn(); });
+    st.addEventListener('pointerleave', lensOff); st.addEventListener('pointercancel', lensOff);
     // the pair turns toward the pointer (or the tilt of the phone), so it reads as an object, not a drawing
     const tilt = (x, y) => { st.style.setProperty('--ry', (x * 16).toFixed(2) + 'deg'); st.style.setProperty('--rx', (-y * 10).toFixed(2) + 'deg'); };
     st.addEventListener('pointermove', (e) => { const r = st.getBoundingClientRect(); tilt((e.clientX - r.left) / r.width - .5, (e.clientY - r.top) / r.height - .5); });
@@ -612,7 +622,7 @@
       const narrow = innerWidth < 700;
       let at = 0;
       rows.forEach((r) => {
-        const ink = $('.ink', r), w = ink.offsetWidth, dur = narrow ? Math.max(.7, Math.min(1, w / 420)) : Math.max(1.1, w / 520);
+        const ink = $('.ink', r), w = ink.offsetWidth, dur = narrow ? Math.max(.9, Math.min(1.2, w / 380)) : Math.max(1.1, w / 520);
         r.insertAdjacentHTML('beforeend', `<i class="pen" aria-hidden="true">${pen}</i>`);
         r.style.setProperty('--w', w + 'px'); r.style.setProperty('--d', dur + 's'); r.style.setProperty('--at', at + 's');
         at += dur + .15;
@@ -772,6 +782,7 @@
       }));
       $('#results').innerHTML = r.length ? `<div class="grid">${r.map((x, i) => card(x.p, i, x.v)).join('')}</div>` : `<div class="empty"><span class="mono">Nothing matches those filters</span><button class="btn ghost" id="emptyClear">Clear filters</button></div>`;
       bindCards($('#results'));
+      if (window.DAUR_EXT && window.DAUR_EXT.peek) window.DAUR_EXT.peek($('#results'));
       const ec = $('#emptyClear'); if (ec) ec.addEventListener('click', clearAll);
       reveal();
     }

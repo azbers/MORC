@@ -335,6 +335,29 @@
     (root || document).querySelectorAll('#app > section, #app > div, #app > div > section, .ticker, .ftr').forEach((el) => { if (!el.dataset.zz) { el.dataset.zz = 1; zio.observe(el); } });
   }
 
+  // phones have no hover, so each pair shows its blueprint sketch once as it crosses the middle of the screen,
+  // and again while a finger rests on it
+  let pio = null;
+  const touchy = matchMedia('(hover: none)').matches;
+  function peekCards(root) {
+    if (!touchy || reduce || !('IntersectionObserver' in window)) return;
+    if (!pio) pio = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const c = e.target.closest('.card'); pio.unobserve(e.target);
+      if (!c) return;
+      c.classList.add('peek'); setTimeout(() => c.classList.remove('peek'), 1500);
+    }), { rootMargin: '-38% 0px -38% 0px' });
+    (root || document).querySelectorAll('.card .card-media:not([data-peek])').forEach((m) => {
+      m.dataset.peek = 1; pio.observe(m);
+      const c = m.closest('.card');
+      m.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') c.classList.add('peek'); });
+      const off = () => setTimeout(() => c.classList.remove('peek'), 350);
+      m.addEventListener('pointerup', off); m.addEventListener('pointercancel', off); m.addEventListener('pointerleave', off);
+    });
+  }
+
+  EXT.peek = peekCards;
+
   let booted = false;
   on('after', () => {
     const first = !booted;
@@ -344,6 +367,7 @@
     // the first view shows at once; the soft fade is kept for moving between views
     if (app && !reduce && !first) { app.classList.remove('pg-in'); void app.offsetWidth; app.classList.add('pg-in'); }
     sleepOffscreen(document);
+    peekCards(document);
     counters(app);
     requestAnimationFrame(() => setTimeout(rail, 0));
     dropdowns(app);
