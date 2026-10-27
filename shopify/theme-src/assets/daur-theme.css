@@ -9,3 +9,12 @@
 .daur-results { list-style: none; padding: 0; margin-top: 28px; display: grid; gap: 10px; }
 .daur-pass { min-height: 100vh; display: grid; align-content: center; gap: 24px; max-width: 560px; }
 .daur-pass .errors { color: var(--danger, #B3261E); }
+
+/* views the storefront script draws: the plain server copy stays out of sight (it is still in the page for search engines),
+   so the first thing a shopper sees is the real page, not a heading that jumps away. A quiet mark shows only if the script is slow,
+   and the plain copy comes back on its own if the script never runs. */
+html:not(.drawn) body:not([data-page="page"]) #app > .daur-plain { visibility: hidden; animation: daurShow 0s 6s forwards; }
+@keyframes daurShow { to { visibility: visible; } }
+html:not(.drawn) body:not([data-page="page"]) #app::after { content: "DAUR"; position: fixed; inset: 0; display: grid; place-items: center; font: 700 clamp(44px, 12vw, 96px)/1 'Space Grotesk', system-ui, sans-serif; letter-spacing: -.05em; font-style: italic; color: rgba(42, 28, 20, .14); opacity: 0; animation: daurMark 1.6s .45s ease-in-out infinite alternate, daurHide 0s 6s forwards; pointer-events: none; }
+@keyframes daurMark { from { opacity: 0; } to { opacity: 1; } }
+@keyframes daurHide { to { visibility: hidden; } }

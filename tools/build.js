@@ -12,7 +12,7 @@ const C = sandbox.window.DAUR_CONFIG;
 
 const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">';
 
-const THEME_BOOT = '<script>try{if(localStorage.getItem(\'daur.theme\')===\'dark\')document.documentElement.dataset.theme=\'dark\'}catch(e){}</script>';
+const THEME_BOOT = '<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem(\'daur.theme\')===\'dark\')d.dataset.theme=\'dark\';if(localStorage.getItem(\'daur.grid\')===\'1\')d.classList.add(\'grid-1\')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add(\'lite\')}catch(e){}</script>';
 
 const PAGES = {
   home: ['index.html', 'Men\'s Leather Shoes & Sneakers in Pakistan at Factory Price | DAUR Supply', 'Men\'s leather shoes, sneakers and chelsea boots from Pakistani workshops at factory price. Cash on Delivery across Pakistan, free delivery on 2 pairs.'],

@@ -50,11 +50,18 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const fmt = (n) => C.currency + ' ' + Math.round(n).toLocaleString('en-US');
+  const NF = new Intl.NumberFormat('en-US'); // one formatter, reused: toLocaleString builds a new one on every call
+  const fmt = (n) => C.currency + ' ' + NF.format(Math.round(n));
   const store = {
     get(k, d) { try { const v = localStorage.getItem('daur.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem('daur.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } if (SHOP && SHOP.forward) SHOP.forward(k, v); }
   };
+  // phones show two pairs a row; the toggle in the shop toolbar switches to one pair a row with sizes (remembered)
+  function gridOne(v) {
+    if (v === undefined) return document.documentElement.classList.contains('grid-1');
+    document.documentElement.classList.toggle('grid-1', v);
+    try { localStorage.setItem('daur.grid', v ? '1' : '2'); } catch (e) { /* storage blocked */ }
+  }
   const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', admin: 'admin.html' };
   function link(page, param) {
     if (SHOP) return SHOP.link(page, param);
@@ -397,7 +404,7 @@
         <div class="swatches">${p.variants.map((x) => `<button class="sw-b" style="--c:${x.hex}" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}<span class="mono mute" style="font-size:10px">${p.variants.length} colour${p.variants.length > 1 ? 's' : ''}</span></div>
         <div class="minibar" title="Our price against typical retail"><i class="v" style="width:${ratio}%"></i></div>
         <div class="sizes">${sz}</div>
-        <div style="display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:4px"><button class="card-add" data-add>${stockOf(v) ? 'Select size' : 'Sold out'}</button><button class="card-add wish-b" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" aria-label="Save to wishlist">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button></div>
+        <div class="card-acts"><button class="card-add" data-add>${stockOf(v) ? 'Select size' : 'Sold out'}</button><button class="card-add wish-b" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" aria-label="Save to wishlist">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button></div>
         ${low ? `<span class="mono volt" style="font-size:10px">Only ${stockOf(v)} pairs left</span>` : ''}
       </div></article>`;
   }
@@ -510,7 +517,7 @@
     </div></section>
 
     <section class="sheet x" id="drop"><div class="wrap">
-      ${head('Drop 01 / ' + drop.length + ' pairs', 'The catalog.', `<a class="link" href="${link('shop')}">Filter and sort</a>`, 'Hover a pair to see its blueprint. Pick a size and add it straight from the grid. Struck sizes are sold out.')}
+      ${head('Drop 01 / ' + drop.length + ' pairs', 'The catalog.', `<a class="link" href="${link('shop')}">Filter and sort</a>`, matchMedia('(hover: hover)').matches ? 'Hover a pair to see its blueprint. Pick a size and add it straight from the grid. Struck sizes are sold out.' : 'Tap a pair for its photos, sizes and the honest price breakdown. Struck sizes are sold out.')}
       <div class="grid" id="homeGrid">${drop.map((p, i) => card(p, i)).join('')}</div>
     </div></section>
 
@@ -601,9 +608,11 @@
     h.classList.add('writing');
     const go = () => {
       if (h.dataset.w) return; h.dataset.w = '1';
+      // phones get a quicker pen, so the promise is readable within the first second or two
+      const narrow = innerWidth < 700;
       let at = 0;
       rows.forEach((r) => {
-        const ink = $('.ink', r), w = ink.offsetWidth, dur = Math.max(1.1, w / 520);
+        const ink = $('.ink', r), w = ink.offsetWidth, dur = narrow ? Math.max(.7, Math.min(1, w / 420)) : Math.max(1.1, w / 520);
         r.insertAdjacentHTML('beforeend', `<i class="pen" aria-hidden="true">${pen}</i>`);
         r.style.setProperty('--w', w + 'px'); r.style.setProperty('--d', dur + 's'); r.style.setProperty('--at', at + 's');
         at += dur + .15;
@@ -611,7 +620,7 @@
       h.classList.add('go');
       setTimeout(() => { h.classList.remove('writing', 'go'); h.classList.add('written'); $$('.pen', h).forEach((p) => p.remove()); }, at * 1000 + 700);
     };
-    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 700); } else go();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 250); } else go();
   }
   function bindAnat(root) {
     const pick = (i) => {
@@ -688,21 +697,25 @@
       <section><div class="wrap">
         <div class="toolbar">
           ${ONE ? `<div class="filters" id="fAud">${['All'].concat(CATS).map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${F.cat === c}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div>` : `<div class="filters" id="fAud">${['All'].concat(C.audiences).map((a) => `<button class="fbtn" data-aud="${a}" aria-pressed="${F.aud === a}">${a}</button>`).join('')}</div>`}
-          <div class="tool-r"><button class="fbtn" id="fToggle" aria-expanded="false">${ic('sliders')}Filters <span id="fN"></span></button>
+          <div class="tool-r"><button class="fbtn" id="fToggle" aria-expanded="false" aria-controls="fpanel">${ic('sliders')}Filters <span id="fN"></span></button>
             <label class="sr" for="sort" style="position:absolute;left:-999px">Sort</label><select class="select" id="sort">
-            ${[['featured', 'Featured'], ['new', 'Newest'], ['low', 'Price, low to high'], ['high', 'Price, high to low'], ['saving', 'Biggest saving']].map(([v, t]) => `<option value="${v}" ${F.sort === v ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+            ${[['featured', 'Featured'], ['new', 'Newest'], ['low', 'Price, low to high'], ['high', 'Price, high to low'], ['saving', 'Biggest saving']].map(([v, t]) => `<option value="${v}" ${F.sort === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
+            <button class="fbtn fview" id="fView" type="button" aria-pressed="${gridOne()}" aria-label="One pair per row with sizes"><svg viewBox="0 0 20 20" aria-hidden="true"><g class="v2"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></g><g class="v1"><rect x="2" y="2" width="16" height="9" rx="1.5"/><path d="M2 14.5h16M2 17.5h10"/></g></svg></button></div>
         </div>
         <div class="shop">
-          <aside class="fpanel" id="fpanel">
+          <aside class="fpanel" id="fpanel" aria-label="Filters">
+            <div class="fsheet-h"><span class="fsheet-grab" aria-hidden="true"></span><b>Filters</b><button class="fsheet-x" id="fClose" type="button" aria-label="Close filters">${ic('close')}</button></div>
             <div class="fgrp"><span class="field-label"><span>${ic('search')}Search</span></span><input class="finput" id="fq" type="search" placeholder="Name, colour, style"></div>
             <div class="fgrp" id="gGroup"></div>
-            <div class="fgrp"><span class="field-label"><span>${ic('tag')}Style</span></span><div class="filters">${['All', ...CATS].map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${c === F.cat}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div></div>
+            <div class="fgrp fg-style"><span class="field-label"><span>${ic('tag')}Style</span></span><div class="filters">${['All', ...CATS].map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${c === F.cat}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('spark')}Colour</span></span><div class="filters cols">${allColors.map((c) => `<button class="fbtn col-chip" data-col="${esc(c)}" aria-pressed="false" style="--c:${esc(hexOf(c))}"><span class="cc-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg('runner', window.DAUR_KICKS.colorsFor(hexOf(c))) : ''}</span>${esc(c)}</button>`).join('')}</div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('ruler')}Size (EU)</span></span><div class="sizes" id="fSizes"></div></div>
             <div class="fgrp"><span class="field-label"><span>${ic('cash')}Price</span></span><div class="filters">${[['all', 'Any'], ['u4', 'Under 4,000'], ['4to5', '4,000 to 5,000'], ['o5', 'Over 5,000']].map(([v, t]) => `<button class="fbtn" data-pr="${v}" aria-pressed="${v === 'all'}">${t}</button>`).join('')}</div></div>
             <div class="fgrp"><label class="chk"><input type="checkbox" id="fSale" ${F.sale ? 'checked' : ''}> On sale only</label><label class="chk"><input type="checkbox" id="fStock"> In stock in my size</label></div>
             <button class="fclear" id="fClear">${ic('close')}Clear all filters</button>
+            <div class="fsheet-f"><button class="fbtn" id="fReset" type="button">Clear</button><button class="btn volt" id="fDone" type="button">Show pairs</button></div>
           </aside>
+          <div class="fscrim" id="fScrim" aria-hidden="true"></div>
           <div class="shop-main"><div class="active" id="active"></div><div id="results"></div></div>
         </div>
       </div></section>`;
@@ -748,6 +761,7 @@
       if (F.instock) chips.push(['instock', 'In stock']);
       if (F.q) chips.push(['q', '“' + F.q + '”']);
       $('#fN').textContent = chips.length ? '(' + chips.length + ')' : '';
+      $('#fDone').textContent = r.length ? `Show ${r.length} pair${r.length === 1 ? '' : 's'}` : 'No pairs match';
       $('#active').innerHTML = `<span class="count">${r.length} result${r.length === 1 ? '' : 's'}</span>` + chips.map(([k, t]) => `<button class="chip x-chip" data-x="${k}" data-v="${esc(t)}">${esc(t)} &times;</button>`).join('');
       $$('[data-x]').forEach((b) => b.addEventListener('click', () => {
         const k = b.dataset.x;
@@ -778,7 +792,36 @@
     $('#fq').addEventListener('input', (e) => { F.q = e.target.value.trim(); paint(); });
     $('#sort').addEventListener('change', (e) => { F.sort = e.target.value; paint(); });
     $('#fClear').addEventListener('click', clearAll);
-    $('#fToggle').addEventListener('click', () => { const o = $('#fpanel').classList.toggle('open'); $('#fToggle').setAttribute('aria-expanded', o); });
+    // on phones the panel is a bottom sheet over the grid; on wide screens it is the sidebar
+    const sheet = () => matchMedia('(max-width: 860px)').matches;
+    const home_ = $('.shop');
+    const setOpen = (o) => {
+      const s = o && sheet();
+      // as a sheet it sits above the header, so it moves to the page root while open
+      const back = () => { const fp = $('#fpanel'); if (fp && !fp.classList.contains('open') && fp.parentNode !== home_) { home_.prepend(fp); fp.after($('#fScrim')); } };
+      if (s) { document.body.append($('#fpanel'), $('#fScrim')); void $('#fpanel').offsetWidth; } else setTimeout(back, o ? 0 : 460);
+      $('#fpanel').classList.toggle('open', o); $('#fToggle').setAttribute('aria-expanded', o);
+      document.documentElement.classList.toggle('sheet-open', s);
+      $('#fScrim').classList.toggle('on', s);
+      $('#fpanel').style.transform = '';
+      if (s) { $('#fpanel').scrollTop = 0; $('#fClose').focus({ preventScroll: true }); } else if (!o && sheet()) $('#fToggle').focus({ preventScroll: true });
+    };
+    $('#fToggle').addEventListener('click', () => setOpen(!$('#fpanel').classList.contains('open')));
+    $('#fClose').addEventListener('click', () => setOpen(false));
+    $('#fDone').addEventListener('click', () => { setOpen(false); const r = $('#results'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ block: 'start' }); });
+    $('#fScrim').addEventListener('click', () => setOpen(false));
+    $('#fReset').addEventListener('click', clearAll);
+    const esc_ = (e) => { if (e.key === 'Escape' && $('#fpanel') && $('#fpanel').classList.contains('open') && sheet()) setOpen(false); };
+    document.addEventListener('keydown', esc_);
+    addEventListener('hashchange', function off() { document.documentElement.classList.remove('sheet-open'); document.removeEventListener('keydown', esc_); removeEventListener('hashchange', off); [$('#fpanel'), $('#fScrim')].forEach((x) => x && x.parentNode === document.body && x.remove()); });
+    // pull the sheet down by its handle to close it
+    const grab = $('.fsheet-h');
+    let y0 = null, dy = 0;
+    grab.addEventListener('pointerdown', (e) => { if (!sheet() || e.target.closest('button')) return; y0 = e.clientY; dy = 0; grab.setPointerCapture(e.pointerId); $('#fpanel').classList.add('drag'); });
+    grab.addEventListener('pointermove', (e) => { if (y0 == null) return; dy = Math.max(0, e.clientY - y0); $('#fpanel').style.transform = `translateY(${dy}px)`; });
+    const drop = () => { if (y0 == null) return; y0 = null; $('#fpanel').classList.remove('drag'); if (dy > 90) setOpen(false); else $('#fpanel').style.transform = ''; };
+    grab.addEventListener('pointerup', drop); grab.addEventListener('pointercancel', drop);
+    $('#fView').addEventListener('click', () => { const one = !gridOne(); gridOne(one); $('#fView').setAttribute('aria-pressed', one); });
     paintSide(); paint();
   };
 
@@ -1305,7 +1348,8 @@
   function reveal() {
     if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -40px' });
-    $$('.rv').forEach((el) => { const r = el.getBoundingClientRect(); if (r.top > innerHeight) { el.classList.add('pre'); io.observe(el); } });
+    // measured after the first frame is on screen, so the first paint never waits on it
+    requestAnimationFrame(() => setTimeout(() => $$('.rv').forEach((el) => { if (!el.isConnected) return; const r = el.getBoundingClientRect(); if (r.top > innerHeight) { el.classList.add('pre'); io.observe(el); } }), 0));
   }
   function markNav(page, param) {
     $$('[data-nav]').forEach((a) => {

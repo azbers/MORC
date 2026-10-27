@@ -1643,3 +1643,135 @@ html.spin-open { overflow: hidden; }
 .via-o input:focus-visible + span { outline: 1px solid var(--signal); outline-offset: 2px; }
 @media (max-width: 420px) { .via-o span { flex-direction: column; gap: 4px; font-size: 12.5px; } }
 @media (max-width: 900px) { .reel-stage .layer { translate: 4% 0; } .reel-stage .layer svg { width: 100%; } .spin-turn { width: 100%; } .spin-stage { height: clamp(240px, 44vh, 420px); } }
+
+/* ================= smooth on phones: motion only where it is seen, and nothing that repaints the whole screen ================= */
+/* looping decoration sleeps while its section is off screen (alive.js adds .zz) */
+.zz, .zz *, .zz *::before, .zz *::after { animation-play-state: paused !important; }
+.card-acts { display: grid; grid-template-columns: minmax(0, 1fr) 42px; gap: 4px; }
+/* the pen and the van move on the compositor, not through layout */
+@keyframes penRide { from { transform: translateX(0); } to { transform: translateX(var(--w, 100%)); } }
+.van-road { container-type: inline-size; }
+.van { left: 0; }
+@keyframes vanDrive { 0% { transform: translateX(-14cqw); } 100% { transform: translateX(100cqw); } }
+@media (prefers-reduced-motion: reduce) { .van { left: 2%; transform: none; } }
+/* the footer wave only runs while a letter is filled, which is the only time it shows */
+.fb-ch { animation: none; }
+.fb-ch.on { animation: wave 2.2s linear infinite; }
+/* the menu's sale link shimmers only while the menu is open */
+.mnav a.nav-sale { animation-play-state: paused; }
+.menu-open .mnav a.nav-sale { animation-play-state: running; }
+@keyframes pgIn { from { opacity: 0; } }
+
+/* touch screens: no blend or blur layers over the page while it scrolls */
+@media (hover: none), (max-width: 860px) {
+  :root:not([data-theme="dark"]) body::after { mix-blend-mode: normal; opacity: .3; }
+  #app::before { animation: none; inset: -10vmax; }
+  .hdr { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(var(--bg-rgb), .97); }
+  .sticky-buy, .dd-list { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--ink); }
+  .scrim, .lead-wrap.on { backdrop-filter: none; }
+  .hero h1 .pen { filter: none; }
+  .card-media .layer { transition: opacity .35s var(--ease); }
+  .rail:not(.rail-on) .rail-view { scroll-snap-type: x proximity; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+}
+/* low memory Android phones and Data Saver: the calm version */
+.lite body::after { display: none; }
+.lite body { background-image: var(--grain); background-size: 230px 230px; background-blend-mode: multiply; }
+:root[data-theme="dark"].lite body { background-blend-mode: normal; background-image: none; }
+.lite #app::before { display: none; }
+.lite *, .lite *::before, .lite *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.lite .ptag, .lite .lc-art, .lite .layer.float, .lite .hs::after, .lite .hs::before, .lite .shero-mq, .lite .shero::before, .lite .pa-dot i, .lite .dot, .lite .van svg, .lite .van .van-dust { animation: none !important; }
+
+/* ================= shop on phones ================= */
+.fsheet-h, .fsheet-f, .fscrim, .fview { display: none; }
+@media (max-width: 860px) {
+  /* style tabs stay on one line and swipe sideways */
+  .toolbar { gap: 12px; padding-block: 14px; }
+  .toolbar .filters#fAud { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+  .toolbar .filters#fAud::-webkit-scrollbar { display: none; }
+  .toolbar #fAud .fbtn { flex: none; white-space: nowrap; scroll-snap-align: start; }
+  .toolbar .tool-r { width: 100%; flex-wrap: nowrap; }
+  .toolbar .tool-r > #fToggle { flex: 1; justify-content: center; }
+  .toolbar .tool-r > .dd { flex: 1; min-width: 0; }
+  .toolbar .tool-r > .dd .dd-btn { width: 100%; text-align: left; }
+  #fToggle { display: inline-flex; gap: 8px; align-items: center; padding-inline: 18px; }
+  #fToggle .ic { width: 16px; height: 16px; }
+  .active { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; align-items: center; scrollbar-width: none; margin-bottom: 14px; }
+  .active::-webkit-scrollbar { display: none; }
+  .active > * { flex: none; }
+  .active .count { margin-right: 6px; }
+
+  /* the filter panel becomes a bottom sheet over the grid */
+  .fpanel, .fpanel.open { display: grid; }
+  .fpanel { position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 82; max-height: 86vh; max-height: 86dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+    margin: 0; border-radius: 22px 22px 0 0; border-bottom: 0; padding: 0 18px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--ink);
+    box-shadow: 0 -24px 60px -20px rgba(var(--shadow-rgb), .45); transform: translateY(105%); visibility: hidden;
+    transition: transform .42s cubic-bezier(.2, .9, .2, 1), visibility 0s linear .42s; }
+  .fpanel.open { transform: none; visibility: visible; transition: transform .42s cubic-bezier(.2, .9, .2, 1), visibility 0s; }
+  .fpanel.drag { transition: none; }
+  .fpanel .fg-style { display: none; }
+  .fpanel .fclear { display: none; }
+  .fsheet-h { display: grid; grid-template-columns: 1fr auto; align-items: center; position: sticky; top: 0; z-index: 2; background: var(--ink); padding: 22px 0 12px; border-bottom: 1px solid var(--line); touch-action: none; }
+  .fsheet-h b { font: 500 20px/1 var(--display); letter-spacing: -.02em; }
+  .fsheet-grab { position: absolute; left: 50%; top: 8px; width: 40px; height: 4px; margin-left: -20px; border-radius: 4px; background: var(--line-2); }
+  .fsheet-x { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line-2); color: var(--bone); }
+  .fsheet-x .ic { width: 16px; height: 16px; }
+  .fsheet-f { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; position: sticky; bottom: calc(-10px - env(safe-area-inset-bottom, 0px)); z-index: 2; background: var(--ink); padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); margin-top: 4px; border-top: 1px solid var(--line); }
+  .fsheet-f .fbtn { height: 50px; border-radius: 999px; padding: 0 22px; }
+  .fsheet-f .btn { height: 50px; border-radius: 999px; justify-content: center; }
+  .fscrim { display: block; position: fixed; inset: 0; z-index: 81; background: rgba(var(--shadow-rgb), .45); opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .fscrim.on { opacity: 1; pointer-events: auto; }
+  .sheet-open, .sheet-open body { overflow: hidden; }
+  .shop { gap: 0; }
+}
+
+/* two pairs a row on phones, with a toggle back to one pair a row with sizes */
+@media (max-width: 560px) {
+  .fview { display: inline-grid; place-items: center; flex: none; width: 46px; height: 46px; padding: 0; border-radius: 50%; border-color: var(--line-2); color: var(--bone); }
+  .fview svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .fview .v1 { display: none; }
+  .fview[aria-pressed="true"] .v1 { display: inline; }
+  .fview[aria-pressed="true"] .v2 { display: none; }
+  html:not(.grid-1) .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html:not(.grid-1) .grid > .card .card-media { aspect-ratio: 1 / 1; }
+  html:not(.grid-1) .grid > .card .card-media .layer { padding: 10px; }
+  html:not(.grid-1) .grid > .card .card-media .idx, html:not(.grid-1) .grid > .card .minibar,
+  html:not(.grid-1) .grid > .card .sizes, html:not(.grid-1) .grid > .card [data-add], html:not(.grid-1) .grid > .card .swatches .mono { display: none; }
+  html:not(.grid-1) .grid > .card .card-body { padding: 12px 12px 14px; gap: 7px; }
+  html:not(.grid-1) .grid > .card .card-top { display: grid; gap: 5px; }
+  html:not(.grid-1) .grid > .card .card-top h3 { font-size: 15px; line-height: 1.2; }
+  html:not(.grid-1) .grid > .card .card-top .price { font-size: 14px; }
+  html:not(.grid-1) .grid > .card .card-sub { display: grid; gap: 3px; font-size: 9.5px; }
+  html:not(.grid-1) .grid > .card .card-sub span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  html:not(.grid-1) .grid > .card .sw-b { width: 14px; height: 14px; }
+  html:not(.grid-1) .grid > .card .card-acts { position: absolute; top: 8px; right: 8px; z-index: 3; display: block; }
+  html:not(.grid-1) .grid > .card .wish-b { width: 36px; height: 36px; border-radius: 50%; background: rgba(var(--bg-rgb), .9); display: grid; place-items: center; padding: 0; }
+  html:not(.grid-1) .grid > .card .wish-b .ic { width: 17px; height: 17px; }
+  html:not(.grid-1) .grid > .card > .card-body > .mono.volt { font-size: 9px !important; }
+  html:not(.grid-1) .grid > .card .ptag { --tw: 46px; left: 6px; }
+
+  /* footer: the contact column gets the full width so the address never runs off the screen */
+  .ftr-col:has(.ilink) { grid-column: 1 / -1; }
+  .ftr-col .ilink { overflow-wrap: anywhere; }
+}
+/* a tap on a phone leaves :hover stuck, so the blueprint swap and lifts are kept for real pointers */
+@media (hover: none) {
+  .card:hover .card-media .bp { opacity: 0; }
+  .card:hover .card-media .rn { opacity: 1; transform: none; }
+  .card.pv .card-media .rn { opacity: 1; }
+}
+/* the shop header gives the grid the first screen sooner on phones */
+@media (max-width: 560px) {
+  .shero { padding-top: 22px; }
+  .shero-grid { padding: 16px 0 20px; gap: 18px; }
+  .shero-t { gap: 12px; }
+  .shero-t p { font-size: 14px; }
+  .shero-stats > div { padding: 10px 12px; gap: 4px; }
+  .shero-stats b { font-size: 20px; }
+  .parade { height: 84px; }
+  .pd { width: 112px; padding: 8px 12px; }
+}
+/* home sections below the first screen are laid out and painted only as they come near the screen */
+body[data-page="home"] #app > section ~ section { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+/* the product page buy bar sits above the falling pairs and never hides the end of the footer */
+.sticky-buy { z-index: 46; }
+body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
