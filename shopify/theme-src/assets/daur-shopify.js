@@ -2,8 +2,8 @@
    Runs before app.js. Turns the products Shopify prints into the page
    (snippets/daur-data.liquid) into the catalog shape the storefront uses,
    maps every storefront link to a Shopify address, and hands the bag to
-   Shopify checkout. Sign ups, restock requests, liked pair follow ups and
-   reviews are sent to the store owner through the Shopify contact form. */
+   Shopify checkout. Reviews are sent to the store owner through the Shopify
+   contact form. */
 (function () {
   'use strict';
   const S = window.DAUR_SHOPIFY;
@@ -48,7 +48,7 @@
       const m = t.match(/^(swatch|sole):(.+)=(#[0-9a-f]{3,8})$/i);
       if (m) (m[1].toLowerCase() === 'sole' ? soles : swatch)[m[2].trim().toLowerCase()] = m[3];
     });
-    const cost = (tagVal(tags, 'cost') || '').split('/').map(Number);
+
     const sizes = [];
     r.variants.forEach((v) => { const s = sizeOf(v); if (!sizes.includes(s)) sizes.push(s); });
     const claimed = new Set();
@@ -75,7 +75,7 @@
     return {
       id: r.handle, name: r.title.replace(/^(DAUR|M\.O\.R\.C\.)\s+/i, ''), audience, group: tagVal(tags, 'group'), category: r.type || 'Footwear',
       silhouette: tagVal(tags, 'silhouette') || 'runner', tag: tagVal(tags, 'badge') || 'Drop 01', createdAt: r.created, sizes,
-      description: body.description, specs: body.specs, cost: cost.length === 3 && cost.every((n) => !isNaN(n)) ? { vendor: cost[0], kit: cost[1], logistics: cost[2] } : null,
+      description: body.description, specs: body.specs,
       seo: r.seo || null, variants
     };
   }
@@ -83,10 +83,13 @@
 
   /* ---------- links ---------- */
   const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies' };
+  // a line or style with a collection of its own links to that collection, so each has an address search engines can list
+  const COLL = { men: 'men', women: 'women', kids: 'kids', sale: 'sale', sneakers: 'sneakers', leather: 'leather-shoes', hybrids: 'casual' };
+  const has = new Set(S.collections || []);
   S.link = function (page, param) {
     const h = param ? '#' + param : '';
     if (page === 'home') return base + '/' + h;
-    if (page === 'shop') return base + '/collections/all' + h;
+    if (page === 'shop') return COLL[param] && has.has(COLL[param]) ? base + '/collections/' + COLL[param] : base + '/collections/all' + h;
     if (page === 'product') return base + '/products/' + String(param || '').split('~')[0] + h;
     if (page === 'cart') return base + '/cart' + h;
     if (page === 'checkout') return base + '/cart#go-checkout';
@@ -117,8 +120,8 @@
     if (location.hash === '#go-checkout') { history.replaceState(null, '', location.pathname); checkout(); }
   });
 
-  /* ---------- sign ups and requests reach the owner by email through the contact form ---------- */
-  const LABEL = { alerts: 'Alert list sign up', restock: 'Restock request', leads: 'Liked pairs follow up', reviews: 'New review to check' };
+  /* ---------- reviews reach the owner by email through the contact form ---------- */
+  const LABEL = { reviews: 'New review to check' };
   const sent = {};
   S.forward = function (key, list) {
     if (!LABEL[key] || !Array.isArray(list) || !list.length) return;

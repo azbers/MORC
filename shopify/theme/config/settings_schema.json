@@ -96,5 +96,32 @@
         "default": "Rs."
       }
     ]
+  },
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "How the home page reads in Google results. Product and collection titles are set on each product and collection under Search engine listing."
+      },
+      {
+        "type": "text",
+        "id": "seo_home_title",
+        "label": "Home page title",
+        "default": "Men's Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply"
+      },
+      {
+        "type": "textarea",
+        "id": "seo_home_description",
+        "label": "Home page description",
+        "default": "Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan and finished with the DAUR mark. Cash on Delivery to every city, free delivery on 2 pairs."
+      },
+      {
+        "type": "text",
+        "id": "google_verification",
+        "label": "Google Search Console verification code",
+        "info": "Paste only the content value of the HTML tag Google gives you."
+      }
+    ]
   }
 ]

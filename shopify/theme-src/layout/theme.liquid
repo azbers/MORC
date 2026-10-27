@@ -11,10 +11,14 @@
       assign daur_param = product.handle
     when 'collection'
       assign daur_page = 'shop'
-      assign known = 'men,women,kids,sale,new' | split: ','
-      if known contains collection.handle
-        assign daur_param = collection.handle
-      endif
+      # collection handle : storefront view, so each style has an address of its own
+      assign known = 'men:men,women:women,kids:kids,sale:sale,new:new,sneakers:sneakers,leather-shoes:leather,casual:hybrids' | split: ','
+      for pair in known
+        assign kv = pair | split: ':'
+        if collection.handle == kv[0]
+          assign daur_param = kv[1]
+        endif
+      endfor
     when 'list-collections'
       assign daur_page = 'shop'
     when 'cart'
@@ -28,19 +32,27 @@
         endif
       endfor
   endcase
+  # the home page title and description are theme settings (Theme settings > Search)
+  assign daur_title = page_title
+  assign daur_desc = page_description
+  if template.name == 'index'
+    assign daur_title = settings.seo_home_title | default: page_title
+    assign daur_desc = settings.seo_home_description | default: page_description
+  endif
 -%}
 <html lang="{{ request.locale.iso_code }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
-{%- if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
+<title>{{ daur_title }}{% unless daur_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
+{%- if daur_desc %}<meta name="description" content="{{ daur_desc | escape }}">{% endif %}
 <link rel="canonical" href="{{ canonical_url }}">
+{%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
 <meta name="theme-color" content="#F5EEE4">
 <script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
 <meta property="og:site_name" content="{{ shop.name | escape }}">
-<meta property="og:title" content="{{ page_title | escape }}">
-<meta property="og:description" content="{{ page_description | escape }}">
+<meta property="og:title" content="{{ daur_title | escape }}">
+<meta property="og:description" content="{{ daur_desc | escape }}">
 <meta property="og:url" content="{{ canonical_url }}">
 {%- if template.name == 'product' and product.featured_image %}
 <meta property="og:type" content="product">
@@ -64,6 +76,7 @@
 {{ 'styles.css' | asset_url | stylesheet_tag }}
 {{ 'daur-theme.css' | asset_url | stylesheet_tag }}
 <noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}</style></noscript>
+{% render 'daur-ld', product: product, collection: collection %}
 {{ content_for_header }}
 </head>
 <body data-page="{{ daur_page }}">
@@ -76,7 +89,6 @@
 <script src="{{ 'pile.js' | asset_url }}" defer></script>
 {%- if daur_page == 'policies' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'social.js' | asset_url }}" defer></script>
-<script src="{{ 'leads.js' | asset_url }}" defer></script>
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
 </body>

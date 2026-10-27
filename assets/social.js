@@ -183,16 +183,16 @@
       for (let i = 0; i <= 1920; i += 135) { x.beginPath(); x.moveTo(0, i); x.lineTo(1080, i); x.stroke(); }
       x.fillStyle = '#EDEBE4'; x.font = '500 30px "JetBrains Mono", monospace'; x.fillText('DAUR SUPPLY / VALUE FLEX', 80, 140);
       x.fillStyle = '#CCFF00'; x.fillText('+', 1000, 140);
-      x.fillStyle = '#EDEBE4'; x.font = '500 150px "Space Grotesk", sans-serif'; x.fillText('I SKIPPED', 74, 420);
+      x.fillStyle = '#EDEBE4'; x.font = '500 150px "Space Grotesk", sans-serif'; x.fillText('I SAVED', 74, 420);
       x.fillStyle = '#CCFF00'; x.font = '700 190px "Space Grotesk", sans-serif'; x.fillText(fmt(saved).replace('Rs. ', 'Rs.'), 70, 620);
-      x.fillStyle = '#EDEBE4'; x.font = '500 96px "Space Grotesk", sans-serif'; x.fillText('of retail markup.', 74, 760);
+      x.fillStyle = '#EDEBE4'; x.font = '500 96px "Space Grotesk", sans-serif'; x.fillText('on full grain.', 74, 760);
       if (img) x.drawImage(img, 40, 830, 1000, 593);
       x.fillStyle = '#8b8a83'; x.font = '400 34px "JetBrains Mono", monospace';
       x.fillText(('DAUR ' + p.name + ' / ' + v.color).toUpperCase(), 80, 1520);
       x.fillStyle = '#EDEBE4'; x.font = '500 64px "Space Grotesk", sans-serif'; x.fillText(fmt(v.price), 80, 1610);
       x.fillStyle = '#5d5c57'; x.font = '400 50px "Space Grotesk", sans-serif'; x.fillText('Retail ' + fmt(C.marketRetail) + '+', 520, 1610);
       x.strokeStyle = '#5d5c57'; x.lineWidth = 3; x.beginPath(); x.moveTo(520, 1593); x.lineTo(1000, 1593); x.stroke();
-      x.fillStyle = '#EDEBE4'; x.font = '400 30px "JetBrains Mono", monospace'; x.fillText('SAME LOCAL CRAFT. ZERO RETAIL MARKUP.', 80, 1790);
+      x.fillStyle = '#EDEBE4'; x.font = '400 30px "JetBrains Mono", monospace'; x.fillText('BRANDED, NOT LABELED. CRAFTED IN PAKISTAN.', 80, 1790);
       x.fillStyle = '#CCFF00'; x.fillText(C.domain.replace(/^https?:\/\//, '').replace(/^www\./, ''), 80, 1840);
       try { panel.querySelector('#flexDl').href = cv.toDataURL('image/png'); } catch (e) { /* tainted */ }
     };
@@ -204,7 +204,7 @@
     const { stockOf, onSale } = A();
     const sizes = p.sizes.filter((sz) => (v.stock || {})[sz] > 0);
     const url = A().absLink ? A().absLink('product', p.id + '~' + v.id) : C.domain + '/product.html#' + p.id + '~' + v.id;
-    const details = [`DAUR ${p.name} / ${v.color}`, `Price: ${fmt(v.price)}${onSale(v) ? ` (was ${fmt(v.compareAt)})` : ''}`, `Typical retail: ${fmt(C.marketRetail)}+`, `I skipped ${fmt(saved)} of retail markup.`, p.description ? p.description.split('.')[0] + '.' : '', sizes.length ? `Sizes in stock: EU ${sizes.join(', ')}` : (stockOf(v) ? '' : 'Sold out right now'), 'Cash on Delivery across Pakistan.', url].filter(Boolean).join('\n');
+    const details = [`DAUR ${p.name} / ${v.color}`, `Price: ${fmt(v.price)}${onSale(v) ? ` (was ${fmt(v.compareAt)})` : ''}`, `Typical retail: ${fmt(C.marketRetail)}+`, `Saved ${fmt(saved)} against typical retail.`, p.description ? p.description.split('.')[0] + '.' : '', sizes.length ? `Sizes in stock: EU ${sizes.join(', ')}` : (stockOf(v) ? '' : 'Sold out right now'), 'Cash on Delivery across Pakistan.', url].filter(Boolean).join('\n');
     // the card is turned into a file as soon as it is drawn, so a tap can share it straight away
     let file = null, blob = null;
     const pack = () => cv.toBlob((b) => { if (b) { blob = b; file = new File([b], 'daur-value-flex.png', { type: 'image/png' }); } }, 'image/png');
@@ -252,9 +252,9 @@
     const fresh = P.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 3);
     const sets = [
       { id: 'drop01', label: 'Drop 01', cover: men[0], slides: men.map((p) => ({ p, v: p.variants[0], kicker: 'Drop 01 / ' + p.category, title: p.name, sub: p.variants[0].color + ' / ' + fmt(p.variants[0].price) })) },
-      { id: 'flex', label: 'Value flex', text: 'Rs', icon: 'cash', slides: [{ big: fmt(C.marketRetail) + '+', kicker: 'Mainstream retail', title: 'Logo. Hype. Markup.', strike: true }, { big: fmt(men[0].variants[0].price), kicker: 'DAUR price', title: 'Same benches. Same leather.', volt: true }, { big: fmt(C.marketRetail - men[0].variants[0].price), kicker: 'You keep', title: 'Spend it on the fit.' }] },
+      { id: 'flex', label: 'Value flex', text: 'Rs', icon: 'cash', slides: [{ big: fmt(C.marketRetail) + '+', kicker: 'Typical retail', title: 'For a comparable pair.', strike: true }, { big: fmt(men[0].variants[0].price), kicker: 'DAUR price', title: 'Full grain. Checked by hand.', volt: true }, { big: fmt(C.marketRetail - men[0].variants[0].price), kicker: 'The difference', title: 'Spend it on the fit.' }] },
       { id: 'unbox', label: 'Unboxing', text: 'Box', icon: 'box', slides: [{ kit: 'box', kicker: 'Unboxing / 01', title: 'Matte black corrugated box.' }, { kit: 'tissue', kicker: 'Unboxing / 02', title: 'Grid tissue. First tear.' }, { kit: 'card', kicker: 'Unboxing / 03', title: 'The manifest card.' }, { kit: 'hw', kicker: 'Unboxing / 04', title: 'Dubrae and the Supply Unit seal.' }] },
-      { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Sourced', 'Workshop rate, paid at the bench.'], ['Vetted', 'Stitch, grain, bond, comfort. Most fail.'], ['Re-laced', 'Matte cotton in. Factory laces out.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 24 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
+      { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Chosen', 'Picked at the bench, pair by pair.'], ['Checked', 'Stitch, grain, bond, comfort. Most never make it.'], ['Re-laced', 'Matte cotton laces. Engraved dubrae.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 24 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
     ];
     if (sale.length) sets.splice(1, 0, { id: 'cuts', label: 'Price cuts', cover: sale[0][0], coverV: sale[0][1], slides: sale.map(([p, v]) => ({ p, v, kicker: 'Price cut / ' + pct(v) + '% off', title: p.name, sub: fmt(v.price) + ' / was ' + fmt(v.compareAt) })) });
     sets.push({ id: 'new', label: 'New in', cover: fresh[0], slides: fresh.map((p) => ({ p, v: p.variants[0], kicker: 'New in / ' + p.audience + (p.group ? ' / ' + p.group : ''), title: p.name, sub: fmt(p.variants[0].price) })) });
@@ -349,14 +349,14 @@
   /* ---------------- the feed ---------------- */
   EXT.views.feed = function () {
     const { P, C, $, $$, esc, fmt, visual, link, setMeta, store, onSale, pct, toggleWish, addToCart, toast } = A();
-    setMeta('The Feed | DAUR Supply', 'Drops, price cuts and the anti markup manifesto, one swipe at a time.');
+    setMeta('The Feed | DAUR Supply', 'New pairs, price cuts and the story behind DAUR Supply, one swipe at a time.');
     const I = (n, c) => (window.DAUR_ICON ? window.DAUR_ICON(n, c) : '');
     const reels = [];
     P.forEach((p, k) => {
       const v = p.variants.find(onSale) || p.variants[0];
       reels.push({ p, v });
-      if (k === 1) reels.push({ text: ['They buy it for', fmt(p.cost ? p.cost.vendor : 2600), 'and sell it to you for', fmt(C.marketRetail) + '+'] });
-      if (k === 4) reels.push({ text: ['No influencer tax.', 'No logo tax.', 'Just the pair.', 'Drop 01 is live.'] });
+      if (k === 1) reels.push({ text: ['Full grain leather.', 'Checked by hand.', 'Signed DAUR.', 'Paid on delivery.'] });
+      if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Drop 01 is live.'] });
     });
     document.getElementById('app').innerHTML = `<div class="feed" id="feed">${reels.map((r, i) => r.text
       ? `<section class="reel txt"><div class="reel-in">${r.text.map((t, j) => `<p class="${j % 2 ? 'volt' : ''}" style="animation-delay:${j * .25}s">${esc(t)}</p>`).join('')}<span class="mono mute">Swipe up</span></div></section>`

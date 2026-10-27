@@ -1,20 +1,46 @@
 {%- comment -%}
-  Plain content for search engines and for the first moment before the
-  storefront script draws the page. The script replaces it on every view it
-  draws; normal Shopify pages, search and 404 keep it.
+  Plain content sent with the page, for search engines and for the first
+  moment before the storefront script draws the page. It says the same as
+  the drawn page: the script replaces it on every view it draws; normal
+  Shopify pages, search and 404 keep it.
 {%- endcomment -%}
+{%- liquid
+  assign styles = 'sneakers:Sneakers & joggers,leather-shoes:Leather & formal shoes,casual:Casual shoes,sale:Sale' | split: ','
+  assign home_url = routes.root_url
+-%}
+{%- capture style_links -%}
+  <ul class="daur-links">
+  {%- for s in styles -%}
+    {%- assign kv = s | split: ':' -%}
+    {%- assign c = collections[kv[0]] -%}
+    {%- if c.products_count > 0 -%}<li><a href="{{ c.url }}">{{ kv[1] }}</a></li>{%- endif -%}
+  {%- endfor -%}
+  </ul>
+{%- endcapture -%}
 <div class="wrap daur-plain">
 {%- case template.name -%}
+  {%- when 'index' -%}
+    <h1>Men's shoes, crafted in Pakistan.</h1>
+    <p>DAUR Supply is a Pakistani footwear brand for men. Leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Karachi and finished with our own hardware. Cash on Delivery to every city in Pakistan, dispatch within 24 hours and free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs.</p>
+    {{ style_links }}
+    <ul class="daur-results">{% for p in collections.all.products limit: 24 %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
   {%- when 'product' -%}
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {% for c in product.collections limit: 1 %}<a href="{{ c.url }}">{{ c.title }}</a> / {% endfor %}{{ product.title }}</nav>
     <h1>{{ product.title }}</h1>
-    <p>{{ product.price | money }}{% if product.compare_at_price > product.price %} <s>{{ product.compare_at_price | money }}</s>{% endif %}</p>
-    {%- if product.featured_image %}{{ product.featured_image | image_url: width: 900 | image_tag: loading: 'eager', alt: product.title }}{% endif %}
+    <p>{{ product.price | money }}{% if product.compare_at_price > product.price %} <s>{{ product.compare_at_price | money }}</s>{% endif %}{% unless product.available %} Sold out{% endunless %}</p>
+    {%- assign shot = product.images | first -%}
+    {%- if shot %}{{ shot | image_url: width: 900 | image_tag: loading: 'eager', alt: product.title }}{% endif %}
     <div class="rte">{{ product.description }}</div>
+    {%- for o in product.options_with_values -%}<p>{{ o.name }}: {{ o.values | join: ', ' }}</p>{%- endfor -%}
+    <p>Cash on Delivery to every city in Pakistan. Dispatch within 24 hours of confirmation, delivery in {{ settings.delivery_days }}. Free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs, 7 day size exchange.</p>
   {%- when 'collection' -%}
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {{ collection.title }}</nav>
     <h1>{{ collection.title }}</h1>
+    {%- if collection.description != blank %}<div class="rte">{{ collection.description }}</div>{% endif %}
     {%- paginate collection.products by 48 -%}
-    <ul>{% for p in collection.products %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
+    <ul class="daur-results">{% for p in collection.products %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}{% unless p.available %} Sold out{% endunless %}</li>{% endfor %}</ul>
     {%- endpaginate -%}
+    {{ style_links }}
   {%- when 'list-collections' -%}
     <h1>Collections</h1>
     <ul>{% for c in collections %}<li><a href="{{ c.url }}">{{ c.title }}</a></li>{% endfor %}</ul>
@@ -25,8 +51,9 @@
     <ul class="daur-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a></li>{% endfor %}</ul>
     {%- endif -%}
   {%- when '404' -%}
-    <section class="phero"><span class="eyebrow">404</span><h1>Not on the supply line.</h1><p class="aside">This page does not exist. The shop does.</p></section>
+    <section class="phero"><span class="eyebrow">404</span><h1>This page has moved on.</h1><p class="aside">The collection has not. Find your pair below.</p></section>
     <p><a class="btn volt" href="{{ routes.all_products_collection_url }}">Shop all pairs <span class="arr">&rarr;</span></a></p>
+    {{ style_links }}
   {%- when 'page' -%}
     <section class="phero"><span class="eyebrow">{{ shop.name }}</span><h1>{{ page.title }}</h1></section>
     <div class="rte">{{ page.content }}</div>

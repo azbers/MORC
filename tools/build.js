@@ -32,7 +32,7 @@ const PAGES = {
 };
 const NOINDEX = ['cart', 'checkout', 'order', 'track', 'wishlist', 'admin'];
 const SCRIPTS = ['assets/data.js', 'assets/shoe.js', 'assets/app.js'];
-const OPTIONAL = ['assets/icons.js', 'assets/kicks.js', 'assets/pile.js', 'assets/polart.js', 'assets/social.js', 'assets/leads.js', 'assets/admin.js', 'assets/alive.js'];
+const OPTIONAL = ['assets/icons.js', 'assets/kicks.js', 'assets/pile.js', 'assets/polart.js', 'assets/social.js', 'assets/admin.js', 'assets/alive.js'];
 
 function page(key) {
   const [file, title, desc] = PAGES[key];
