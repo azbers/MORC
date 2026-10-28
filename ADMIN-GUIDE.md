@@ -1,4 +1,4 @@
-# M.O.R.C. Supply admin guide
+# DAUR Supply admin guide
 
 ## 1. Open the admin
 
@@ -62,7 +62,7 @@ Until the store has a backend, admin changes are saved only in the browser you m
 **To publish catalog changes:**
 
 1. Open **Publish** and copy the catalog.
-2. Replace the `window.MORC_PRODUCTS` block at the bottom of `assets/data.js` with what you copied.
+2. Replace the `window.DAUR_PRODUCTS` block at the bottom of `assets/data.js` with what you copied.
 3. Run `node tools/build.js` and upload the site again.
 
 **To change the WhatsApp number, email, delivery fee or passcode for everyone:** edit them in `assets/data.js`, then rebuild and upload.

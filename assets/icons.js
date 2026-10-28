@@ -1,5 +1,5 @@
-/* M.O.R.C. icon set. 24px grid, 1.5 stroke, inherits currentColor.
-   Usage: MORC_ICON('heart') or MORC_ICON('heart', 'extra-class'). */
+/* DAUR icon set. 24px grid, 1.5 stroke, inherits currentColor.
+   Usage: DAUR_ICON('heart') or DAUR_ICON('heart', 'extra-class'). */
 (function () {
   const S = (d, extra) => `<svg class="ic${extra ? ' ' + extra : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${d}</svg>`;
   const P = {
@@ -42,11 +42,13 @@
     link: '<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>',
     lock: '<rect x="5" y="10.5" width="14" height="10" rx="1.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/>',
     ticket: '<path d="M3 7.5h18v3a2 2 0 000 3v3H3v-3a2 2 0 000-3v-3z"/><path d="M14.5 7.5v9" stroke-dasharray="1.5 2"/>',
+    instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/>',
+    facebook: '<path d="M14.5 20.5v-7h2.4l.4-2.9h-2.8V8.8c0-.8.3-1.4 1.4-1.4h1.5V4.8a19 19 0 00-2.2-.1c-2.2 0-3.6 1.3-3.6 3.7v2.2H9.2v2.9h2.4v7"/>',
     camera: '<path d="M4 8h3l1.5-2.5h7L17 8h3v11H4V8z"/><circle cx="12" cy="13.2" r="3.5"/>',
     home: '<path d="M4 11l8-6.5 8 6.5V20H4v-9z"/><path d="M10 20v-5h4v5"/>',
     play: '<path d="M8 5.5v13l10.5-6.5L8 5.5z"/>',
     flame: '<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.8 3.4-5.4 3.4-9.3 2.7 1.4 4.6 4 4.6 6.6.9-.5 1.6-1.6 1.7-2.8 1.8 1.6 3.3 3.6 3.3 5.9 0 3.4-2.6 5.8-6.5 5.8z"/>'
   };
-  window.MORC_ICON = (name, extra) => S(P[name] || P.spark, extra);
-  window.MORC_ICONS = P;
+  window.DAUR_ICON = (name, extra) => S(P[name] || P.spark, extra);
+  window.DAUR_ICONS = P;
 })();

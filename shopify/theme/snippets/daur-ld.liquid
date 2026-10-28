@@ -1,0 +1,85 @@
+{%- comment -%}
+  Structured data printed with the page itself, so search engines read the
+  brand, prices, stock and breadcrumbs without running the storefront script.
+  Only facts the store already states: theme settings for delivery, the
+  5 day exchange, and the products as they are in Shopify.
+{%- endcomment -%}
+{%- liquid
+  assign root = shop.url
+  assign phone = settings.whatsapp | remove: '+' | remove: ' ' | remove: '-'
+  assign days = settings.delivery_days | default: '' | split: ' '
+  assign tmin = days[0] | plus: 0
+  assign tmax = days[2] | plus: 0
+-%}
+{%- capture ship -%}
+{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":{{ settings.delivery_fee | default: 0 }},"currency":{{ shop.currency | json }}},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"PK"}{% if tmax > 0 %},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":{{ tmin }},"maxValue":{{ tmax }},"unitCode":"DAY"}}{% endif %}}
+{%- endcapture -%}
+{%- capture returns -%}
+{"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":5,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/ReturnShippingFees","refundType":"https://schema.org/ExchangeRefund"}
+{%- endcapture -%}
+{%- if template.name == 'index' -%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebSite","name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }}},
+{"@context":"https://schema.org","@type":"OnlineStore","name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"logo":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"sameAs":["https://www.instagram.com/daursupply","https://www.facebook.com/daursupply"],"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ settings.support_email | default: shop.email | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}]
+</script>
+{%- elsif template.name == 'product' -%}
+{%- liquid
+  assign ci = 0
+  assign si = 0
+  for o in product.options_with_values
+    assign on = o.name | downcase
+    if on contains 'colo'
+      assign ci = o.position
+    elsif on contains 'size'
+      assign si = o.position
+    endif
+  endfor
+  # the breadcrumb runs through the style collection when the pair is in one, otherwise through the line
+  assign coll = nil
+  for c in product.collections
+    if c.handle == 'sneakers' or c.handle == 'leather-shoes' or c.handle == 'casual'
+      assign coll = c
+    endif
+  endfor
+  unless coll
+    assign coll = product.collections | where: 'handle', 'men' | first
+  endunless
+  assign desc = product.description | split: '<ul' | first | strip_html | strip | strip_newlines
+-%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"ProductGroup","name":{{ product.title | json }},"description":{{ desc | json }},"url":{{ root | append: product.url | json }},"productGroupID":{{ product.id | append: "" | json }},"brand":{"@type":"Brand","name":{{ shop.name | json }}},{% if product.featured_image %}"image":{{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}"variesBy":[{% if ci > 0 %}"https://schema.org/color"{% endif %}{% if ci > 0 and si > 0 %},{% endif %}{% if si > 0 %}"https://schema.org/size"{% endif %}],
+"hasVariant":[
+{%- for v in product.variants -%}
+{%- liquid
+  case ci
+    when 1
+      assign vc = v.option1
+    when 2
+      assign vc = v.option2
+    when 3
+      assign vc = v.option3
+    else
+      assign vc = ''
+  endcase
+  case si
+    when 1
+      assign vs = v.option1
+    when 2
+      assign vs = v.option2
+    when 3
+      assign vs = v.option3
+    else
+      assign vs = ''
+  endcase
+  assign img = v.featured_image | default: product.featured_image
+-%}
+{"@type":"Product","name":{{ product.title | append: ' ' | append: v.title | json }},"sku":{{ v.sku | default: v.id | json }}{% if vc != '' %},"color":{{ vc | json }}{% endif %}{% if vs != '' %},"size":{{ vs | json }}{% endif %}{% if img %},"image":{{ img | image_url: width: 1200 | prepend: 'https:' | json }}{% endif %},"offers":{"@type":"Offer","url":{{ root | append: v.url | json }},"price":{{ v.price | divided_by: 100.0 }},"priceCurrency":{{ shop.currency | json }},"itemCondition":"https://schema.org/NewCondition","availability":"https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}","shippingDetails":{{ ship }},"hasMerchantReturnPolicy":{{ returns }}}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}}{% if coll %},{"@type":"ListItem","position":2,"name":{{ coll.title | json }},"item":{{ root | append: coll.url | json }}}{% endif %},{"@type":"ListItem","position":{% if coll %}3{% else %}2{% endif %},"name":{{ product.title | json }}}]}]
+</script>
+{%- elsif template.name == 'collection' -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ collection.title | json }}}]}
+</script>
+{%- endif -%}

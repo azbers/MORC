@@ -24,7 +24,7 @@ for k in SHAPES:
     res.append({'k': k, 'r': round(img.height / img.width, 3), 'src': 'data:image/png;base64,' + base64.b64encode(b.getvalue()).decode()})
     img.save(f'{ROOT}/assets/pile-src/{k}-mono.png')
 open(f'{ROOT}/assets/pile.js', 'w').write(
-    '/* M.O.R.C. footer pile sprites: the owner\'s men\'s sneaker icons (chunky and runner), repainted\n'
+    '/* DAUR footer pile sprites: the owner\'s men\'s sneaker icons (chunky and runner), repainted\n'
     f'   in one leather colour ({FILL}) by tools/pile_mono.py. r is height / width. */\n'
-    'window.MORC_PILE = ' + json.dumps(res) + ';\n')
+    'window.DAUR_PILE = ' + json.dumps(res) + ';\n')
 print([(r['k'], r['r'], len(r['src']) // 1024) for r in res])

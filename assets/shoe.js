@@ -1,4 +1,4 @@
-/* M.O.R.C. product renderer.
+/* DAUR product renderer.
    Draws each pair as a side profile SVG so the catalog works before
    photography exists. Swap for real photos by setting product.images. */
 (function () {
@@ -11,7 +11,8 @@
     derby:   { heel: 138, dipX: 182, dipY: 150, tx: 232, ty: 122, ex: 320, ey: 160, toe: 190, sole: 14, laced: true, derby: true },
     mid:     { heel: 84,  dipX: 168, dipY: 96,  tx: 214, ty: 74,  ex: 334, ey: 148, toe: 182, sole: 28, laced: true },
     chelsea: { heel: 70,  dipX: 200, dipY: 80,  tx: 290, ty: 82,  ex: 330, ey: 120, toe: 186, sole: 22, laced: false, chelsea: true },
-    slip:    { heel: 140, dipX: 190, dipY: 154, tx: 270, ty: 150, ex: 330, ey: 160, toe: 188, sole: 22, laced: false, slip: true }
+    slip:    { heel: 140, dipX: 190, dipY: 154, tx: 270, ty: 150, ex: 330, ey: 160, toe: 188, sole: 22, laced: false, slip: true },
+    loafer:  { heel: 146, dipX: 192, dipY: 160, tx: 262, ty: 156, ex: 330, ey: 164, toe: 190, sole: 26, laced: false, loafer: true }
   };
 
   const ST = 226; // top of sole line
@@ -118,6 +119,27 @@
       out += `<path d="M${s.tx + 14} ${s.ty + 4} C${s.ex + 60} ${s.ey + 18} 470 ${s.toe + 22} 540 ${s.toe + 22}" fill="none" stroke="${bp ? ink : c.stitch}" stroke-width="1.1" stroke-dasharray="2 2.5"/>`;
     }
 
+    if (s.loafer) {
+      // raised apron over the vamp with a pale piped edge, a saddle strap and a knotted tassel pair
+      out += `<clipPath id="${id}u"><path d="${up}"/></clipPath>`;
+      const edge = `M${s.tx - 4} ${s.ty + 30} C${s.tx + 60} ${s.ty + 38} 470 ${s.toe + 30} 548 ${s.toe + 34}`;
+      out += `<path clip-path="url(#${id}u)" d="${edge} L560 ${s.toe - 40} L${s.tx - 4} ${s.ty - 40} Z" fill="${fill(c.apron || c.panel)}" stroke="none"/>`;
+      out += `<path clip-path="url(#${id}u)" d="${edge}" fill="none" stroke="${bp ? ink : (c.pipe || c.stitch)}" stroke-width="${bp ? .9 : 2.6}" stroke-linecap="round"/>`;
+      out += `<path clip-path="url(#${id}u)" d="M${s.tx + 4} ${s.ty + 24} C${s.tx + 60} ${s.ty + 30} 470 ${s.toe + 22} 548 ${s.toe + 26}" fill="none" stroke="${bp ? ink : c.stitch}" stroke-width=".8" stroke-dasharray="3 3" opacity=".7"/>`;
+      const sx = s.tx + 30;
+      const strap = `M${sx - 12} ${s.ty - 1} L${sx + 12} ${s.ty + 3} L${sx + 4} ${s.ty + 46} L${sx - 20} ${s.ty + 41} Z`;
+      out += `<path d="${strap}" fill="${fill(c.upper)}" stroke="${bp ? ink : 'rgba(0,0,0,.2)'}" stroke-width="${sw}"/>`;
+      if (!bp) out += `<path d="${strap}" fill="url(#${id}l)"/>`;
+      out += `<path d="M${sx - 8} ${s.ty + 4} L${sx - 15} ${s.ty + 38} M${sx + 8} ${s.ty + 7} L${sx + 1} ${s.ty + 41}" stroke="${bp ? ink : c.stitch}" stroke-width=".7" stroke-dasharray="2.5 2.5" opacity=".75"/>`;
+      const kx = sx - 3, ky = s.ty + 20, tk = bp ? ink : (c.tassel || c.panel), tc = bp ? 'none' : (c.tassel || c.panel), te = bp ? ink : 'rgba(0,0,0,.28)';
+      out += `<g class="tassel"><path d="M${kx - 5} ${ky - 4} L${kx + 5} ${ky + 4} M${kx + 5} ${ky - 4} L${kx - 5} ${ky + 4}" stroke="${tk}" stroke-width="${bp ? 1 : 2.6}" stroke-linecap="round"/>
+        <path d="M${kx} ${ky + 2} C${kx + 4} ${ky + 10} ${kx + 10} ${ky + 16} ${kx + 16} ${ky + 20}" fill="none" stroke="${tk}" stroke-width="${bp ? .9 : 1.8}"/>
+        <path d="M${kx + 2} ${ky} C${kx + 12} ${ky + 6} ${kx + 22} ${ky + 8} ${kx + 32} ${ky + 10}" fill="none" stroke="${tk}" stroke-width="${bp ? .9 : 1.8}"/>
+        <path d="M${kx + 12} ${ky + 19} L${kx + 20} ${ky + 18} L${kx + 23} ${ky + 34} L${kx + 13} ${ky + 36} Z" fill="${tc}" stroke="${te}" stroke-width=".8"/>
+        <path d="M${kx + 28} ${ky + 9} L${kx + 36} ${ky + 9} L${kx + 40} ${ky + 25} L${kx + 30} ${ky + 26} Z" fill="${tc}" stroke="${te}" stroke-width=".8"/>
+        <path d="M${kx + 12} ${ky + 22} L${kx + 21} ${ky + 21} M${kx + 28} ${ky + 12} L${kx + 37} ${ky + 12}" stroke="${bp ? ink : 'rgba(0,0,0,.3)'}" stroke-width="1.1"/></g>`;
+    }
+
     if (s.laced) {
       // tongue
       out += `<path d="M${s.tx - 2} ${s.ty + 2} C${s.tx + 4} ${s.ty - 18} ${s.tx + 26} ${s.ty - 22} ${s.tx + 34} ${s.ty - 6} L${s.tx + 30} ${s.ty + 8}" fill="${fill(c.panel)}" stroke="${bp ? ink : 'rgba(255,255,255,.1)'}" stroke-width="${sw}"/>`;
@@ -140,7 +162,7 @@
       // dubrae on bottom row
       const [dx, dy] = pts[pts.length - 1];
       out += `<g class="hw-dubrae"><rect x="${dx - 11}" y="${dy - 10}" width="22" height="9" rx="1.5" transform="rotate(16 ${dx} ${dy - 5})" fill="${bp ? 'none' : `url(#${id}m)`}" stroke="${bp ? 'var(--volt,#CCFF00)' : 'rgba(0,0,0,.6)'}" stroke-width=".8"/>
-        ${bp ? '' : `<text x="${dx}" y="${dy - 3.4}" transform="rotate(16 ${dx} ${dy - 5})" fill="#1a1a1a" font-family="monospace" font-size="4.4" font-weight="700" text-anchor="middle">M.O.R.C.</text>`}</g>`;
+        ${bp ? '' : `<text x="${dx}" y="${dy - 3.4}" transform="rotate(16 ${dx} ${dy - 5})" fill="#1a1a1a" font-family="monospace" font-size="4.4" font-weight="700" text-anchor="middle">DAUR</text>`}</g>`;
     }
 
     // collar padding line
@@ -149,5 +171,5 @@
     return out;
   }
 
-  window.MORC_SHOE = { render, SHAPES };
+  window.DAUR_SHOE = { render, SHAPES };
 })();

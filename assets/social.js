@@ -1,4 +1,4 @@
-/* M.O.R.C. social layer: reviews with moderation, star ratings, story rail,
+/* DAUR social layer: reviews with moderation, star ratings, story rail,
    the vertical Feed, the shareable value flex card and the fit check wall.
    Reviews start as "pending" and only appear once approved in admin.html. */
 (function () {
@@ -7,7 +7,7 @@
   function notice(title, body) {
     let n = document.getElementById('notice');
     if (!n) { document.body.insertAdjacentHTML('beforeend', '<div class="notice" id="notice" role="status" aria-live="polite"></div>'); n = document.getElementById('notice'); }
-    const ic = (k) => (window.MORC_ICON ? window.MORC_ICON(k) : '');
+    const ic = (k) => (window.DAUR_ICON ? window.DAUR_ICON(k) : '');
     n.innerHTML = `<span class="nt-i">${ic('check')}</span><div><b></b><p></p></div><button class="nt-x" aria-label="Close">${ic('close')}</button><i class="nt-bar"></i>`;
     n.querySelector('b').textContent = title; n.querySelector('p').textContent = body;
     const hide = () => { n.classList.remove('on'); clearTimeout(n._t); };
@@ -15,15 +15,19 @@
     n.classList.remove('on'); void n.offsetWidth; n.classList.add('on');
     clearTimeout(n._t); n._t = setTimeout(hide, 5000);
   }
-  const A = () => window.MORC_API;
-  const EXT = window.MORC_EXT = window.MORC_EXT || { views: {}, hooks: {} };
+  const A = () => window.DAUR_API;
+  const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   EXT.hooks = EXT.hooks || {};
   const on = (name, fn) => { (EXT.hooks[name] = EXT.hooks[name] || []).push(fn); };
 
   /* ---------------- reviews data ---------------- */
+  // On Shopify, approved Fit notes come from the store (Content > Metaobjects > Fit note, Status Approved)
+  const FIT = { 'Runs small': 'small', 'True to size': 'true', 'Runs large': 'large' };
+  const slug = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const SERVER = (window.DAUR_FITNOTES || []).map((n) => ({ id: 'fn-' + n.id, pid: n.pid, vid: n.colour ? slug(n.colour) : '', rating: Math.max(1, Math.min(5, +n.rating || 5)), title: n.title || '', body: n.body || '', name: n.name || '', city: n.city || '', size: n.size || '', fit: FIT[n.fit] || '', photo: n.photo || '', verified: !!n.verified, status: 'approved', helpful: 0, at: n.date || '' }));
   const R = {
-    all() { return A().store.get('reviews', []); },
-    save(list) { A().store.set('reviews', list); },
+    all() { const ids = new Set(SERVER.map((r) => r.id)); return SERVER.concat(A().store.get('reviews', []).filter((r) => !ids.has(r.id))); },
+    save(list) { A().store.set('reviews', list.filter((r) => !String(r.id).startsWith('fn-'))); },
     approved(pid) { return R.all().filter((r) => r.status === 'approved' && (!pid || r.pid === pid)); },
     stats(pid) {
       const list = R.approved(pid);
@@ -75,7 +79,7 @@
       const top = s.list.slice().sort((x, y) => (y.helpful || 0) - (x.helpful || 0) || y.rating - x.rating).slice(0, 2);
       const ago = (t) => { const d = Math.max(0, Math.round((Date.now() - new Date(t)) / 864e5)); return d < 1 ? 'Today' : d < 14 ? d + ' day' + (d > 1 ? 's' : '') + ' ago' : d < 60 ? Math.round(d / 7) + ' weeks ago' : Math.round(d / 30) + ' months ago'; };
       card.innerHTML = `<div class="rvcard">${s.n ? `<div class="rvc-h">${stars(s.avg)}<b>${s.avg.toFixed(1)}</b><span>${s.n} fit note${s.n > 1 ? 's' : ''}</span><a href="#reviews" data-jump="reviews">See all</a></div>
-        ${top.map((r) => `<div class="rvc-r"><p>${esc(r.body)}</p><span class="rvc-m"><b>${esc(r.name)}</b>${r.verified ? `<span class="ok">${window.MORC_ICON ? window.MORC_ICON('check') : ''}Verified purchase</span>` : ''}<span>${ago(r.at)}</span></span></div>`).join('')}`
+        ${top.map((r) => `<div class="rvc-r"><p>${esc(r.body)}</p><span class="rvc-m"><b>${esc(r.name)}</b>${r.verified ? `<span class="ok">${window.DAUR_ICON ? window.DAUR_ICON('check') : ''}Verified purchase</span>` : ''}<span>${ago(r.at)}</span></span></div>`).join('')}`
         : `<div class="rvc-h"><span>Fresh off the bench. Wearing this pair?</span><a href="#reviews" data-jump="reviews">Leave the first fit note</a></div>`}</div>`;
     }
     const fitTotal = s.fit.small + s.fit.true + s.fit.large;
@@ -110,7 +114,7 @@
         ${r.photo ? `<img class="rv-photo" src="${esc(r.photo)}" alt="Photo from ${esc(r.name)}">` : ''}
         <div class="rv-meta mono"><span>${esc(r.name)}${r.city ? ', ' + esc(r.city) : ''}</span>${r.verified ? '<span class="volt">Verified buyer</span>' : ''}${r.size ? `<span>EU ${esc(r.size)}</span>` : ''}${r.fit ? `<span>${{ small: 'Runs small', true: 'True to size', large: 'Runs large' }[r.fit]}</span>` : ''}
           <button class="rm" data-help="${r.id}" ${voted.includes(r.id) ? 'disabled' : ''}>Helpful (${r.helpful || 0})</button></div>
-        ${r.reply ? `<div class="rv-reply"><span class="mono volt">M.O.R.C. replied</span><p>${esc(r.reply)}</p></div>` : ''}
+        ${r.reply ? `<div class="rv-reply"><span class="mono volt">DAUR replied</span><p>${esc(r.reply)}</p></div>` : ''}
       </article>`).join('') || (s.n ? '<p class="mute">No fit notes match this filter.</p>' : '');
       $$('[data-help]').forEach((b) => b.addEventListener('click', () => {
         const all = R.all(); const r = all.find((x) => x.id === b.dataset.help); if (!r) return;
@@ -132,10 +136,10 @@
         <div class="f-row"><div class="f"><label for="rvName">Name</label><input id="rvName" maxlength="40" autocomplete="given-name"><span class="err"></span></div><div class="f"><label for="rvCity">City</label><input id="rvCity" maxlength="40" autocomplete="address-level2"></div></div>
         <div class="f-row"><div class="f"><label for="rvSize">Size bought</label><select id="rvSize"><option value="">Select</option>${p.sizes.map((x) => `<option>${x}</option>`).join('')}</select></div>
           <div class="f"><label for="rvFit">Fit</label><select id="rvFit"><option value="">Select</option><option value="small">Runs small</option><option value="true">True to size</option><option value="large">Runs large</option></select></div></div>
-        <div class="f-row"><div class="f"><label for="rvOrder">Order number (optional)</label><input id="rvOrder" placeholder="MORC-XXXXXXX"></div>
+        <div class="f-row"><div class="f"><label for="rvOrder">Order number (optional)</label><input id="rvOrder" placeholder="DAUR-XXXXXXX"></div>
           <div class="f"><label for="rvPhoto">Fit check photo (optional)</label><input id="rvPhoto" type="file" accept="image/*" style="padding-top:13px"></div></div>
         <button class="btn volt" type="submit">Submit for approval</button>
-        <p class="form-note">Reviews go live after the M.O.R.C. team reads them. We publish critical reviews too.</p>`;
+        <p class="form-note">Reviews go live after the DAUR team reads them. We publish critical reviews too.</p>`;
       $$('[data-st]', f).forEach((b) => b.addEventListener('click', () => { rating = +b.dataset.st; $$('[data-st]', f).forEach((x) => { x.classList.toggle('on', +x.dataset.st <= rating); x.setAttribute('aria-checked', +x.dataset.st === rating); }); }));
       $('#rvPhoto').addEventListener('change', async (e) => { const fl = e.target.files[0]; if (!fl) return; try { photo = await resizeImage(fl, 900); toast('Photo attached'); } catch (er) { toast('That image could not be read'); } });
       f.onsubmit = (e) => {
@@ -157,7 +161,7 @@
     // value flex share button
     const share = $('#shareB');
     if (share && !$('#flexB')) {
-      share.insertAdjacentHTML('afterend', `<button class="act flexact" id="flexB">${window.MORC_ICON ? window.MORC_ICON('bolt') : ''}<span>Share the value flex card</span></button>`);
+      share.insertAdjacentHTML('afterend', `<button class="act flexact" id="flexB">${window.DAUR_ICON ? window.DAUR_ICON('bolt') : ''}<span>Share the value flex card</span></button>`);
       $('#flexB').addEventListener('click', () => flexCard(p, v));
     }
   });
@@ -171,8 +175,8 @@
     const panel = m.querySelector('.panel');
     panel.innerHTML = `<div class="field-label"><span>Value flex / story size</span><button class="x-btn" data-close>Close</button></div><canvas id="flexCv" width="1080" height="1920" style="width:100%;max-height:62vh;object-fit:contain;background:#080808"></canvas>
       <div class="flex-how" id="flexHow" hidden></div>
-      <a class="btn volt block wa-send" id="flexWa" target="_blank" rel="noopener">${window.MORC_ICON ? window.MORC_ICON('whatsapp') : ''}Send on WhatsApp</a>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><a class="btn ghost" id="flexDl" download="morc-value-flex.png">Save image</a><button class="btn ghost" id="flexCap">Copy caption</button></div>
+      <a class="btn volt block wa-send" id="flexWa" target="_blank" rel="noopener">${window.DAUR_ICON ? window.DAUR_ICON('whatsapp') : ''}Send on WhatsApp</a>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><a class="btn ghost" id="flexDl" download="daur-value-flex.png">Save image</a><button class="btn ghost" id="flexCap">Copy caption</button></div>
       <p class="form-note">On a phone, Send on WhatsApp attaches the card with the caption and pair details. On a computer, WhatsApp does not let any website attach a picture, so the card is copied for you to paste.</p>`;
     m.classList.add('on');
     const cv = panel.querySelector('#flexCv'), x = cv.getContext('2d');
@@ -181,18 +185,18 @@
       x.strokeStyle = 'rgba(237,235,228,.07)'; x.lineWidth = 2;
       for (let i = 0; i <= 1080; i += 135) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, 1920); x.stroke(); }
       for (let i = 0; i <= 1920; i += 135) { x.beginPath(); x.moveTo(0, i); x.lineTo(1080, i); x.stroke(); }
-      x.fillStyle = '#EDEBE4'; x.font = '500 30px "JetBrains Mono", monospace'; x.fillText('M.O.R.C. SUPPLY / VALUE FLEX', 80, 140);
+      x.fillStyle = '#EDEBE4'; x.font = '500 30px "JetBrains Mono", monospace'; x.fillText('DAUR SUPPLY / VALUE FLEX', 80, 140);
       x.fillStyle = '#CCFF00'; x.fillText('+', 1000, 140);
-      x.fillStyle = '#EDEBE4'; x.font = '500 150px "Space Grotesk", sans-serif'; x.fillText('I SKIPPED', 74, 420);
+      x.fillStyle = '#EDEBE4'; x.font = '500 150px "Space Grotesk", sans-serif'; x.fillText('I SAVED', 74, 420);
       x.fillStyle = '#CCFF00'; x.font = '700 190px "Space Grotesk", sans-serif'; x.fillText(fmt(saved).replace('Rs. ', 'Rs.'), 70, 620);
-      x.fillStyle = '#EDEBE4'; x.font = '500 96px "Space Grotesk", sans-serif'; x.fillText('of retail markup.', 74, 760);
+      x.fillStyle = '#EDEBE4'; x.font = '500 96px "Space Grotesk", sans-serif'; x.fillText('on full grain.', 74, 760);
       if (img) x.drawImage(img, 40, 830, 1000, 593);
       x.fillStyle = '#8b8a83'; x.font = '400 34px "JetBrains Mono", monospace';
-      x.fillText(('M.O.R.C. ' + p.name + ' / ' + v.color).toUpperCase(), 80, 1520);
+      x.fillText(('DAUR ' + p.name + ' / ' + v.color).toUpperCase(), 80, 1520);
       x.fillStyle = '#EDEBE4'; x.font = '500 64px "Space Grotesk", sans-serif'; x.fillText(fmt(v.price), 80, 1610);
       x.fillStyle = '#5d5c57'; x.font = '400 50px "Space Grotesk", sans-serif'; x.fillText('Retail ' + fmt(C.marketRetail) + '+', 520, 1610);
       x.strokeStyle = '#5d5c57'; x.lineWidth = 3; x.beginPath(); x.moveTo(520, 1593); x.lineTo(1000, 1593); x.stroke();
-      x.fillStyle = '#EDEBE4'; x.font = '400 30px "JetBrains Mono", monospace'; x.fillText('SAME LOCAL CRAFT. ZERO RETAIL MARKUP.', 80, 1790);
+      x.fillStyle = '#EDEBE4'; x.font = '400 30px "JetBrains Mono", monospace'; x.fillText('BRANDED, NOT LABELED. CRAFTED IN PAKISTAN.', 80, 1790);
       x.fillStyle = '#CCFF00'; x.fillText(C.domain.replace(/^https?:\/\//, '').replace(/^www\./, ''), 80, 1840);
       try { panel.querySelector('#flexDl').href = cv.toDataURL('image/png'); } catch (e) { /* tainted */ }
     };
@@ -204,10 +208,10 @@
     const { stockOf, onSale } = A();
     const sizes = p.sizes.filter((sz) => (v.stock || {})[sz] > 0);
     const url = A().absLink ? A().absLink('product', p.id + '~' + v.id) : C.domain + '/product.html#' + p.id + '~' + v.id;
-    const details = [`M.O.R.C. ${p.name} / ${v.color}`, `Price: ${fmt(v.price)}${onSale(v) ? ` (was ${fmt(v.compareAt)})` : ''}`, `Typical retail: ${fmt(C.marketRetail)}+`, `I skipped ${fmt(saved)} of retail markup.`, p.description ? p.description.split('.')[0] + '.' : '', sizes.length ? `Sizes in stock: EU ${sizes.join(', ')}` : (stockOf(v) ? '' : 'Sold out right now'), 'Cash on Delivery across Pakistan.', url].filter(Boolean).join('\n');
+    const details = [`DAUR ${p.name} / ${v.color}`, `Price: ${fmt(v.price)}${onSale(v) ? ` (was ${fmt(v.compareAt)})` : ''}`, `Typical retail: ${fmt(C.marketRetail)}+`, `Saved ${fmt(saved)} against typical retail.`, p.description ? p.description.split('.')[0] + '.' : '', sizes.length ? `Sizes in stock: EU ${sizes.join(', ')}` : (stockOf(v) ? '' : 'Sold out right now'), 'Cash on Delivery across Pakistan.', url].filter(Boolean).join('\n');
     // the card is turned into a file as soon as it is drawn, so a tap can share it straight away
     let file = null, blob = null;
-    const pack = () => cv.toBlob((b) => { if (b) { blob = b; file = new File([b], 'morc-value-flex.png', { type: 'image/png' }); } }, 'image/png');
+    const pack = () => cv.toBlob((b) => { if (b) { blob = b; file = new File([b], 'daur-value-flex.png', { type: 'image/png' }); } }, 'image/png');
     pack(); img.addEventListener('load', () => setTimeout(pack, 50));
     const wa = panel.querySelector('#flexWa');
     wa.href = 'https://wa.me/?text=' + encodeURIComponent(details);
@@ -215,7 +219,7 @@
       // phones: the share sheet sends the image and the caption together, WhatsApp included
       if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
         ev.preventDefault();
-        navigator.share({ files: [file], text: details, title: 'M.O.R.C. ' + p.name }).catch((er) => {
+        navigator.share({ files: [file], text: details, title: 'DAUR ' + p.name }).catch((er) => {
           if (er && er.name === 'AbortError') return;
           window.open(wa.href, '_blank', 'noopener'); guide(false);
         });
@@ -238,7 +242,7 @@
       how.hidden = false; how.scrollIntoView({ block: 'nearest' });
     }
     panel.querySelector('#flexCap').addEventListener('click', () => {
-      const t = details + '\n@morc.supply #MORCsupply #ValueFlex';
+      const t = details + '\n@daursupply #DAURsupply #ValueFlex';
       (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Caption copied'), () => toast(t));
     });
   }
@@ -252,27 +256,40 @@
     const fresh = P.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 3);
     const sets = [
       { id: 'drop01', label: 'Drop 01', cover: men[0], slides: men.map((p) => ({ p, v: p.variants[0], kicker: 'Drop 01 / ' + p.category, title: p.name, sub: p.variants[0].color + ' / ' + fmt(p.variants[0].price) })) },
-      { id: 'flex', label: 'Value flex', text: 'Rs', icon: 'cash', slides: [{ big: fmt(C.marketRetail) + '+', kicker: 'Mainstream retail', title: 'Logo. Hype. Markup.', strike: true }, { big: fmt(men[0].variants[0].price), kicker: 'M.O.R.C. price', title: 'Same benches. Same leather.', volt: true }, { big: fmt(C.marketRetail - men[0].variants[0].price), kicker: 'You keep', title: 'Spend it on the fit.' }] },
+      { id: 'flex', label: 'Value flex', text: 'Rs', icon: 'cash', slides: [{ big: fmt(C.marketRetail) + '+', kicker: 'Typical retail', title: 'For a comparable pair.', strike: true }, { big: fmt(men[0].variants[0].price), kicker: 'DAUR price', title: 'Full grain. Checked by hand.', volt: true }, { big: fmt(C.marketRetail - men[0].variants[0].price), kicker: 'The difference', title: 'Spend it on the fit.' }] },
       { id: 'unbox', label: 'Unboxing', text: 'Box', icon: 'box', slides: [{ kit: 'box', kicker: 'Unboxing / 01', title: 'Matte black corrugated box.' }, { kit: 'tissue', kicker: 'Unboxing / 02', title: 'Grid tissue. First tear.' }, { kit: 'card', kicker: 'Unboxing / 03', title: 'The manifest card.' }, { kit: 'hw', kicker: 'Unboxing / 04', title: 'Dubrae and the Supply Unit seal.' }] },
-      { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Sourced', 'Workshop rate, paid at the bench.'], ['Vetted', 'Stitch, grain, bond, comfort. Most fail.'], ['Re-laced', 'Matte cotton in. Factory laces out.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 24 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
+      { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Chosen', 'Picked at the bench, pair by pair.'], ['Checked', 'Stitch, grain, bond, comfort. Most never make it.'], ['Re-laced', 'Matte cotton laces. Engraved dubrae.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 24 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
     ];
     if (sale.length) sets.splice(1, 0, { id: 'cuts', label: 'Price cuts', cover: sale[0][0], coverV: sale[0][1], slides: sale.map(([p, v]) => ({ p, v, kicker: 'Price cut / ' + pct(v) + '% off', title: p.name, sub: fmt(v.price) + ' / was ' + fmt(v.compareAt) })) });
     sets.push({ id: 'new', label: 'New in', cover: fresh[0], slides: fresh.map((p) => ({ p, v: p.variants[0], kicker: 'New in / ' + p.audience + (p.group ? ' / ' + p.group : ''), title: p.name, sub: fmt(p.variants[0].price) })) });
-    return sets;
+    // every product published in the last 7 days gets a status of its own: each colour, with up to 3 photos per colour
+    const age = (d) => (Date.now() - new Date(d + 'T00:00:00').getTime()) / 864e5;
+    const added = P.filter((p) => p.createdAt && age(p.createdAt) <= 7).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
+    const own = added.map((p) => ({ id: 'p-' + p.id + '-' + p.createdAt, label: 'Just landed', cover: p,
+      slides: p.variants.flatMap((v) => {
+        const base = { p, v, kicker: 'Just landed / ' + v.color, title: p.name, sub: fmt(v.price) + (v.compareAt ? ' / was ' + fmt(v.compareAt) : '') };
+        return v.images.length ? v.images.slice(0, 3).map((img) => Object.assign({ img }, base)) : [base];
+      }) }));
+    // statuses written in Shopify as posts in the "status" blog: shown for 14 days, or until removed when tagged pin
+    const posts = (window.DAUR_STATUSES || []).filter((a) => (a.tags || []).some((t) => /^pin$/i.test(t)) || age(a.date) <= 14);
+    const linkOf = (a) => { const t = (a.tags || []).find((x) => /^link:/i.test(x)); return t ? t.slice(5).trim() : null; };
+    const latest = posts.length ? [{ id: 'st-' + posts.map((a) => a.id).join('-'), label: 'Latest', img: (posts.find((a) => a.image) || {}).image, text: 'New', icon: 'bag',
+      slides: posts.map((a) => ({ img: a.image, kicker: 'DAUR Supply / ' + a.date, title: a.title, sub: a.text, href: linkOf(a), big: a.image ? null : 'DAUR' })) }] : [];
+    return latest.concat(own, sets);
   }
   const KIT = {
-    box: '<div class="box3d"><div class="lid"><b>M.O.R.C.</b></div><div class="side"></div><div class="side2"></div></div>',
+    box: '<div class="box3d"><div class="lid"><b>DAUR</b></div><div class="side"></div><div class="side2"></div></div>',
     tissue: '<div class="tissue"></div>',
-    card: '<div class="mcard"><b>M.O.R.C.</b><p>This pair came from the same benches the big labels use. You paid for leather, labour and a fair margin. Nothing else.</p><i>MANIFEST / DROP 01</i></div>',
-    hw: '<div class="hw"><div class="dubrae">M.O.R.C.</div><div class="ziptag"><div class="strap"></div><div class="plate">M.O.R.C.<br>SUPPLY UNIT</div></div></div>'
+    card: '<div class="mcard"><b>DAUR</b><p>This pair came from the same benches the big labels use. You paid for leather, labour and a fair margin. Nothing else.</p><i>MANIFEST / DROP 01</i></div>',
+    hw: '<div class="hw"><div class="dubrae">DAUR</div><div class="ziptag"><div class="strap"></div><div class="plate">DAUR<br>SUPPLY UNIT</div></div></div>'
   };
   on('after', ({ page }) => {
     if (page !== 'home') return;
-    const { $, $$, visual, store } = A();
+    const { $, $$, visual, store, esc } = A();
     const slot = $('#ext-stories'); if (!slot) return;
     const sets = storySets();
     const seen = store.get('seen', []);
-    slot.innerHTML = `<div class="stories wrap" aria-label="Stories">${sets.map((s, i) => `<button class="story ${seen.includes(s.id) ? 'seen' : ''}" data-set="${i}"><span class="ring-o"><span class="ring-i">${s.cover ? visual(s.cover, s.coverV || s.cover.variants[0]) : (s.icon && window.MORC_ICON ? `<i class="st-ic">${window.MORC_ICON(s.icon)}</i>` : `<b>${s.text}</b>`)}</span></span><span class="mono">${s.label}</span></button>`).join('')}</div>`;
+    slot.innerHTML = `<div class="stories wrap" aria-label="Stories">${sets.map((s, i) => `<button class="story ${seen.includes(s.id) ? 'seen' : ''}" data-set="${i}"><span class="ring-o"><span class="ring-i">${s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy">` : s.cover ? visual(s.cover, s.coverV || s.cover.variants[0]) : (s.icon && window.DAUR_ICON ? `<i class="st-ic">${window.DAUR_ICON(s.icon)}</i>` : `<b>${s.text}</b>`)}</span></span><span class="mono">${s.label}</span></button>`).join('')}</div>`;
     $$('[data-set]', slot).forEach((b) => b.addEventListener('click', () => openStories(sets, +b.dataset.set)));
     // fit wall
     const wall = $('#ext-fitwall');
@@ -280,7 +297,7 @@
       const fits = R.approved().filter((r) => r.photo).slice(0, 8);
       wall.innerHTML = `<section class="sheet x"><div class="wrap">${A().head('Fit check wall', fits.length ? 'Worn by the network.' : 'Your fit. Our wall.', `<a class="link" href="${A().link('feed')}">Open the feed</a>`, fits.length ? '' : 'Post a review with a photo of your pair on foot. Approved fit checks are featured here and on our Instagram with credit.')}
         ${fits.length ? `<div class="fitwall">${fits.map((r) => { const p = A().prod(r.pid); return `<a class="fit" href="${A().link('product', r.pid)}"><img src="${esc(r.photo)}" alt="Fit check by ${A().esc(r.name)}" loading="lazy"><span class="fit-o">${stars(r.rating)}<b>${A().esc(r.name)}</b><span class="mono">${p ? A().esc(p.name) : ''}</span></span></a>`; }).join('')}</div>`
-        : `<div class="fitwall empty-wall">${['#MORCsupply', '@morc.supply', 'Fit check', 'Tag us'].map((t) => `<div class="fit ph"><span class="mono">${t}</span></div>`).join('')}</div>`}
+        : `<div class="fitwall empty-wall">${['#DAURsupply', '@daursupply', 'Fit check', 'Tag us'].map((t) => `<div class="fit ph"><span class="mono">${t}</span></div>`).join('')}</div>`}
       </div></section>`;
     }
   });
@@ -293,16 +310,17 @@
     const markSeen = () => { const s = store.get('seen', []); if (!s.includes(sets[si].id)) { s.push(sets[si].id); store.set('seen', s); } };
     function slideHTML(sl) {
       let art = '';
-      if (sl.p) art = `<div class="sv-art float">${visual(sl.p, sl.v)}</div>`;
+      if (sl.img) art = `<div class="sv-art photo"><img src="${esc(sl.img)}" alt="${esc(sl.title || '')}"></div>`;
+      else if (sl.p) art = `<div class="sv-art float">${visual(sl.p, sl.v)}</div>`;
       else if (sl.kit) art = `<div class="sv-art kit-art">${KIT[sl.kit]}</div>`;
       else if (sl.big) art = `<div class="sv-big ${sl.volt ? 'volt' : ''} ${sl.strike ? 'strike' : ''}">${esc(sl.big)}</div>`;
-      return `${art}<div class="sv-copy"><span class="mono volt">${esc(sl.kicker || '')}</span><h3>${esc(sl.title || '')}</h3>${sl.sub ? `<p class="mono">${esc(sl.sub)}</p>` : ''}${sl.p ? `<a class="btn volt" href="${link('product', sl.p.id + '~' + sl.v.id)}">Shop this pair <span class="arr">&rarr;</span></a>` : ''}</div>`;
+      return `${art}<div class="sv-copy"><span class="mono volt">${esc(sl.kicker || '')}</span><h3>${esc(sl.title || '')}</h3>${sl.sub ? `<p class="mono">${esc(sl.sub)}</p>` : ''}${sl.p ? `<a class="btn volt" href="${link('product', sl.p.id + '~' + sl.v.id)}">Shop this pair <span class="arr">&rarr;</span></a>` : sl.href ? `<a class="btn volt" href="${esc(sl.href)}">Take a look <span class="arr">&rarr;</span></a>` : ''}</div>`;
     }
     function paint() {
       const set = sets[si], sl = set.slides[i];
       markSeen();
       el.innerHTML = `<div class="sv-frame"><div class="sv-bars">${set.slides.map((_, k) => `<span><i style="width:${k < i ? 100 : 0}%"></i></span>`).join('')}</div>
-        <div class="sv-top"><span class="sv-av">M</span><b>morc.supply</b><span class="mono mute">${esc(set.label)}</span><button class="x-btn" data-x aria-label="Close stories">Close</button></div>
+        <div class="sv-top"><span class="sv-av">D</span><b>daursupply</b><span class="mono mute">${esc(set.label)}</span><button class="x-btn" data-x aria-label="Close stories">Close</button></div>
         <div class="sv-body">${slideHTML(sl)}</div>
         <button class="sv-tap l" data-prev aria-label="Previous"></button><button class="sv-tap r" data-next aria-label="Next"></button></div>`;
       el.querySelector('[data-x]').onclick = close;
@@ -335,21 +353,21 @@
   /* ---------------- the feed ---------------- */
   EXT.views.feed = function () {
     const { P, C, $, $$, esc, fmt, visual, link, setMeta, store, onSale, pct, toggleWish, addToCart, toast } = A();
-    setMeta('The Feed | M.O.R.C. Supply', 'Drops, price cuts and the anti markup manifesto, one swipe at a time.');
-    const I = (n, c) => (window.MORC_ICON ? window.MORC_ICON(n, c) : '');
+    setMeta('The Feed | DAUR Supply', 'New pairs, price cuts and the story behind DAUR Supply, one swipe at a time.');
+    const I = (n, c) => (window.DAUR_ICON ? window.DAUR_ICON(n, c) : '');
     const reels = [];
     P.forEach((p, k) => {
       const v = p.variants.find(onSale) || p.variants[0];
       reels.push({ p, v });
-      if (k === 1) reels.push({ text: ['They buy it for', fmt(p.cost ? p.cost.vendor : 2600), 'and sell it to you for', fmt(C.marketRetail) + '+'] });
-      if (k === 4) reels.push({ text: ['No influencer tax.', 'No logo tax.', 'Just the pair.', 'Drop 01 is live.'] });
+      if (k === 1) reels.push({ text: ['Full grain leather.', 'Checked by hand.', 'Signed DAUR.', 'Paid on delivery.'] });
+      if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Drop 01 is live.'] });
     });
     document.getElementById('app').innerHTML = `<div class="feed" id="feed">${reels.map((r, i) => r.text
       ? `<section class="reel txt"><div class="reel-in">${r.text.map((t, j) => `<p class="${j % 2 ? 'volt' : ''}" style="animation-delay:${j * .25}s">${esc(t)}</p>`).join('')}<span class="mono mute">Swipe up</span></div></section>`
       : `<section class="reel" data-i="${i}" style="--glow:${esc(r.v.hex || '#333')}"><a class="reel-stage" href="${link('product', r.p.id + '~' + r.v.id)}" aria-label="Open ${esc(r.p.name)} in ${esc(r.v.color)}"><div class="layer rn float">${visual(r.p, r.v)}</div><div class="layer scan">${visual(r.p, r.v, { mode: 'blueprint' })}</div><span class="reel-peek mono">View the pair <span class="arr">&rarr;</span></span></a>
-        <div class="reel-cap"><span class="mono"><b>@morc.supply</b> / ${esc(r.p.audience)}${r.p.group ? ' / ' + esc(r.p.group) : ''}</span>
+        <div class="reel-cap"><span class="mono"><b>@daursupply</b> / ${esc(r.p.audience)}${r.p.group ? ' / ' + esc(r.p.group) : ''}</span>
           <h2>${esc(r.p.name)}</h2><p>${esc(r.v.color)}${r.p.description ? '. ' + esc(r.p.description.split('.')[0]) + '.' : ''}</p>
-          <span class="mono mute">#MORCsupply #${esc(r.p.category)} #ValueFlex</span>
+          <span class="mono mute">#DAURsupply #${esc(r.p.category)} #ValueFlex</span>
           <div class="reel-price"><b>${fmt(r.v.price)}</b>${onSale(r.v) ? `<span class="strike mono">${fmt(r.v.compareAt)}</span><span class="chip v">&minus;${pct(r.v)}%</span>` : `<span class="strike mono">${fmt(C.marketRetail)}+ retail</span>`}</div>
           <a class="btn volt" href="${link('product', r.p.id + '~' + r.v.id)}">Shop now <span class="arr">&rarr;</span></a></div>
         <div class="reel-act">

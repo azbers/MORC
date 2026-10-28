@@ -1,4 +1,4 @@
 {
-  "sections": { "main": { "type": "morc-main", "settings": {} } },
+  "sections": { "main": { "type": "daur-main", "settings": {} } },
   "order": ["main"]
 }

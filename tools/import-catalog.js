@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Builds the M.O.R.C. catalog from a folder of product photos and text files.
+/* Builds the DAUR catalog from a folder of product photos and text files.
 
    Usage:
      node tools/import-catalog.js "<path to your products folder>"          (dry run, prints a report)
@@ -32,7 +32,7 @@
      Description: Heavy grain local leather upper ...
      Spec Upper: Full grain cow leather
      Spec Sole: Dual density rubber
-     SEO title: M.O.R.C. Moc-Runner v1 | Mens Black Leather Casual Shoes Pakistan
+     SEO title: DAUR Moc-Runner v1 | Mens Black Leather Casual Shoes Pakistan
      SEO description: ...
      Stock: 40=3, 41=6, 42=8         used for every colour unless colour.txt sets its own
 
@@ -125,7 +125,7 @@ function product(dir, audience, group) {
     id, name, audience, group: group || null, category: info.category || info.style || 'Sneakers', silhouette: info.silhouette || 'court', tag: info.badge || info.tag || 'New',
     createdAt: info.date || new Date().toISOString().slice(0, 10), sizes, description: desc, specs: info.specs,
     cost: { vendor: num(info['vendor cost']) || 0, kit: num(info['kit cost']) || 420, logistics: num(info['logistics cost']) || 330 },
-    seo: { title: info['seo title'] || `M.O.R.C. ${name} | ${audience}${group ? ' ' + group : ''} ${info.category || 'Shoes'} Pakistan`, description: info['seo description'] || desc.slice(0, 155) },
+    seo: { title: info['seo title'] || `DAUR ${name} | ${audience}${group ? ' ' + group : ''} ${info.category || 'Shoes'} Pakistan`, description: info['seo description'] || desc.slice(0, 155) },
     variants
   });
 }
@@ -156,8 +156,8 @@ copies.forEach(([a, b]) => { fs.mkdirSync(path.dirname(b), { recursive: true });
 const dataPath = path.join(root, 'assets/data.js');
 const data = fs.readFileSync(dataPath, 'utf8');
 fs.writeFileSync(dataPath + '.bak', data);
-const i = data.indexOf('window.MORC_PRODUCTS =');
-if (i < 0) { console.error('Could not find window.MORC_PRODUCTS in assets/data.js'); process.exit(1); }
-fs.writeFileSync(dataPath, data.slice(0, i) + 'window.MORC_PRODUCTS = ' + JSON.stringify(products, null, 2) + ';\n');
+const i = data.indexOf('window.DAUR_PRODUCTS =');
+if (i < 0) { console.error('Could not find window.DAUR_PRODUCTS in assets/data.js'); process.exit(1); }
+fs.writeFileSync(dataPath, data.slice(0, i) + 'window.DAUR_PRODUCTS = ' + JSON.stringify(products, null, 2) + ';\n');
 console.log(`\nWrote ${products.length} products to assets/data.js (backup at assets/data.js.bak) and copied ${copies.length} photos into products/.`);
 console.log('Run node tools/build.js to refresh the preview file.');

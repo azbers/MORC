@@ -1,10 +1,10 @@
-/* Supply Control: the M.O.R.C. admin panel (admin.html).
+/* Supply Control: the DAUR admin panel (admin.html).
    In this static build it edits data kept in this browser and exports a new
    data.js. On a live store the same screens sit on a database and a login. */
 (function () {
   'use strict';
-  const A = () => window.MORC_API;
-  const EXT = window.MORC_EXT = window.MORC_EXT || { views: {}, hooks: {} };
+  const A = () => window.DAUR_API;
+  const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   EXT.views = EXT.views || {};
   const clone = (o) => JSON.parse(JSON.stringify(o));
   const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -14,23 +14,23 @@
 
   EXT.views.admin = function (param) {
     const { C, $, $$, esc, fmt, store, link, setMeta, visual, toast } = A();
-    setMeta('Supply Control | M.O.R.C. Supply', 'Store admin.');
+    setMeta('Supply Control | DAUR Supply', 'Store admin.');
     const app = document.getElementById('app');
     let unlocked = false;
-    try { unlocked = sessionStorage.getItem('morc.admin') === '1'; } catch (e) { /* blocked */ }
+    try { unlocked = sessionStorage.getItem('daur.admin') === '1'; } catch (e) { /* blocked */ }
     if (!unlocked) {
       app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Supply Control</span><h1>Staff only.</h1><p class="aside">Enter the admin passcode.</p></div></section>
         <div class="wrap" style="padding-block:40px 96px"><form id="gate" class="track-form" novalidate><div class="f"><label for="pc">Passcode</label><input id="pc" type="password" autocomplete="current-password"><span class="err"></span></div><button class="btn volt">Unlock</button>
         <p class="form-note">Preview lock only. The live store needs a real staff login on the server.</p></form></div>`;
       $('#gate').addEventListener('submit', (e) => {
         e.preventDefault();
-        if ($('#pc').value === C.adminPasscode) { try { sessionStorage.setItem('morc.admin', '1'); } catch (er) { /* blocked */ } EXT.views.admin(param); }
+        if ($('#pc').value === C.adminPasscode) { try { sessionStorage.setItem('daur.admin', '1'); } catch (er) { /* blocked */ } EXT.views.admin(param); }
         else { $('#pc').closest('.f').classList.add('bad'); $('.err', $('#gate')).textContent = 'Wrong passcode.'; }
       });
       return;
     }
 
-    let cat = clone(store.get('catalog', null) || window.MORC_PRODUCTS);
+    let cat = clone(store.get('catalog', null) || window.DAUR_PRODUCTS);
     const [tab, arg] = (param || 'overview').split('~');
     const saveCat = (msg) => { store.set('catalog', cat); toast(msg || 'Saved. Storefront updated'); };
     const recv = (v) => v.received || v.stock || {};
@@ -42,8 +42,8 @@
     const shell = (inner) => `<section class="adm-head"><div class="wrap"><div><span class="eyebrow">Supply Control</span><h1>${esc((TABS.find((t) => t[0] === tab) || ['', 'Editor'])[1])}</h1></div>
         <div class="adm-tabs">${TABS.map(([k, t]) => `<a href="${link('admin', k)}" class="fbtn" aria-pressed="${k === tab}">${t}${k === 'reviews' ? ` (${store.get('reviews', []).filter((r) => r.status === 'pending').length})` : ''}</a>`).join('')}<button class="fbtn" id="lock">Lock</button></div></div></section>
       <div class="wrap adm"><p class="adm-note">Preview mode: changes are saved in this browser and shown on the storefront here. To publish for every visitor, use Publish to export data.js, or connect the backend described in README.md.</p>${inner}</div>`;
-    const bindShell = () => { $('#lock').addEventListener('click', () => { try { sessionStorage.removeItem('morc.admin'); } catch (e) { /* blocked */ } EXT.views.admin(param); }); };
-    const ic = (n) => (window.MORC_ICON ? window.MORC_ICON(n) : '');
+    const bindShell = () => { $('#lock').addEventListener('click', () => { try { sessionStorage.removeItem('daur.admin'); } catch (e) { /* blocked */ } EXT.views.admin(param); }); };
+    const ic = (n) => (window.DAUR_ICON ? window.DAUR_ICON(n) : '');
     const Cfg = A().C;
     const allOrders = () => store.get('orders', []);
     const findV = (pid, color) => { const p = cat.find((x) => x.id === pid); return p ? [p, p.variants.find((v) => v.color === color) || p.variants[0]] : [null, null]; };
@@ -147,14 +147,14 @@
           <div class="f-row"><div class="f"><label for="e-name">Name</label><input id="e-name" value="${esc(p.name)}" required><span class="err"></span></div><div class="f"><label for="e-id">URL id</label><input id="e-id" value="${esc(p.id)}" placeholder="made from the name"></div></div>
           <div class="f-row"><div class="f"><label for="e-aud">Line</label><select id="e-aud">${C.audiences.map((a) => `<option ${a === p.audience ? 'selected' : ''}>${a}</option>`).join('')}</select></div><div class="f"><label for="e-grp">Sub group (optional)</label><input id="e-grp" value="${esc(p.group || '')}" placeholder="Baby Girl, Baby Boy"></div></div>
           <div class="f-row"><div class="f"><label for="e-cat">Style</label><input id="e-cat" list="cats" value="${esc(p.category)}"><datalist id="cats">${cats.map((c) => `<option>${esc(c)}</option>`).join('')}</datalist></div><div class="f"><label for="e-tag">Badge</label><input id="e-tag" value="${esc(p.tag || '')}" placeholder="Drop 01, Limited"></div></div>
-          <div class="f-row"><div class="f"><label for="e-sil">Drawing used when there is no photo</label><select id="e-sil">${Object.keys(window.MORC_SHOE.SHAPES).map((s) => `<option ${s === p.silhouette ? 'selected' : ''}>${s}</option>`).join('')}</select></div><div class="f"><label for="e-sizes">Sizes (EU, comma separated)</label><input id="e-sizes" value="${p.sizes.join(', ')}"></div></div>
+          <div class="f-row"><div class="f"><label for="e-sil">Drawing used when there is no photo</label><select id="e-sil">${Object.keys(window.DAUR_SHOE.SHAPES).map((s) => `<option ${s === p.silhouette ? 'selected' : ''}>${s}</option>`).join('')}</select></div><div class="f"><label for="e-sizes">Sizes (EU, comma separated)</label><input id="e-sizes" value="${p.sizes.join(', ')}"></div></div>
           <div class="f"><label for="e-desc">Description</label><textarea id="e-desc">${esc(p.description)}</textarea></div>
           <div class="f"><label for="e-specs">Specifications, one per line as Label: value</label><textarea id="e-specs">${esc(Object.entries(p.specs || {}).map(([k, v]) => k + ': ' + v).join('\n'))}</textarea></div>
           <label class="chk"><input type="checkbox" id="e-hidden" ${p.hidden ? 'checked' : ''}> Hidden from the storefront</label>
         </fieldset>
         <fieldset><legend><span>02</span> Price transparency (per pair)</legend><div class="f-row" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="f"><label for="e-cv">Vendor price</label><input id="e-cv" type="number" value="${p.cost.vendor}"></div><div class="f"><label for="e-ck">Hardware and packaging</label><input id="e-ck" type="number" value="${p.cost.kit}"></div><div class="f"><label for="e-cl">QA, courier, COD</label><input id="e-cl" type="number" value="${p.cost.logistics}"></div></div></fieldset>
         <fieldset><legend><span>03</span> Colours, prices and stock</legend><div id="vlist">${p.variants.map(vHTML).join('')}</div><button type="button" class="btn ghost" id="vadd">Add colour</button></fieldset>
-        <fieldset><legend><span>04</span> Search listing</legend><div class="f"><label for="e-st">Page title</label><input id="e-st" value="${esc((p.seo || {}).title || '')}" placeholder="M.O.R.C. Name | Keyword Pakistan"></div><div class="f"><label for="e-sd">Meta description</label><textarea id="e-sd">${esc((p.seo || {}).description || '')}</textarea></div></fieldset>
+        <fieldset><legend><span>04</span> Search listing</legend><div class="f"><label for="e-st">Page title</label><input id="e-st" value="${esc((p.seo || {}).title || '')}" placeholder="DAUR Name | Keyword Pakistan"></div><div class="f"><label for="e-sd">Meta description</label><textarea id="e-sd">${esc((p.seo || {}).description || '')}</textarea></div></fieldset>
       </div><aside class="side"><span class="mono mute">${isNew ? 'New listing' : 'Editing'}</span><div class="ed-prev" id="prev">${visual(p, p.variants[0])}</div><button class="btn volt block" type="submit">Save listing</button><a class="btn ghost block" href="${link('admin', 'listings')}">Back to listings</a></aside></form>`);
       bindShell();
       const readVariants = () => $$('.vcard').map((el, i) => {
@@ -218,13 +218,13 @@
           <div class="ocard-b"><div><span class="mono mute">Items</span>${o.items.map((it) => `<p>${it.qty} x ${esc(it.name)}, ${esc(it.color)}, EU ${it.size}, ${fmt(it.price)}</p>`).join('')}<p class="mute">Subtotal ${fmt(o.subtotal)}${o.discount ? `, code ${esc(o.coupon)} minus ${fmt(o.discount)}` : ''}, delivery ${fmt(o.delivery)}</p>${(o.returns || []).map((r) => `<p class="volt">Returned: ${esc(r.item)}, ${esc(r.reason)}, ${esc(r.action)}${r.restock ? ', restocked' : ''}</p>`).join('')}<p class="mute">Placed ${prettyAgo(o.at)}</p></div>
           <div><span class="mono mute">Deliver to</span><p>${esc(o.address.address)}, ${esc(o.address.area)}, ${esc(o.address.city)}${o.address.landmark ? ', near ' + esc(o.address.landmark) : ''}</p>${o.address.note ? `<p class="mute">Note: ${esc(o.address.note)}</p>` : ''}<p class="mono">${esc(o.customer.phone)}${o.customer.email ? ' / ' + esc(o.customer.email) : ''}</p></div>
           <div style="display:grid;gap:8px;align-content:start"><label class="mono mute" for="os${i}">Status</label><select class="select" id="os${i}" data-os="${i}">${STATUSES.map((s) => `<option ${s === o.status ? 'selected' : ''}>${s}</option>`).join('')}</select>
-          <a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(Cfg.normPhone(o.customer.phone) || '')}?text=${encodeURIComponent(`Assalam o Alaikum ${o.customer.name}, this is M.O.R.C. Supply confirming order ${o.id} for ${fmt(o.total)} Cash on Delivery. Reply YES to confirm.`)}">Confirm on WhatsApp</a>
+          <a class="link" target="_blank" rel="noopener" href="https://wa.me/${esc(Cfg.normPhone(o.customer.phone) || '')}?text=${encodeURIComponent(`Assalam o Alaikum ${o.customer.name}, this is DAUR Supply confirming order ${o.id} for ${fmt(o.total)} Cash on Delivery. Reply YES to confirm.`)}">Confirm on WhatsApp</a>
           <a class="link" href="${link('admin', 'returns~' + o.id)}">Log a return</a></div>
           <form class="courier-f" data-cf="${i}"><span class="mono mute">Courier and live tracking</span>
             <div class="f-row"><div class="f"><label>Courier</label><input list="couriers" name="cn" value="${esc((o.courier || {}).name || '')}" placeholder="TCS, Leopards, PostEx, M&amp;P"></div><div class="f"><label>Tracking number</label><input name="no" value="${esc((o.courier || {}).no || '')}"></div></div>
             <div class="f"><label>Live tracking link from the courier</label><input name="url" type="url" value="${esc((o.courier || {}).url || '')}" placeholder="Paste the courier's tracking page link"></div>
             <div class="f"><label>Latest update for the customer (optional)</label><input name="note" value="${esc((o.courier || {}).note || '')}" placeholder="For example: Reached Lahore hub"></div>
-            <div class="acts"><button class="btn volt">Save tracking</button>${(o.courier || {}).url ? `<a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/${esc(Cfg.normPhone(o.customer.phone) || '')}?text=${encodeURIComponent(`Assalam o Alaikum ${o.customer.name}, your M.O.R.C. Supply order ${o.id} is with ${o.courier.name || 'the courier'}${o.courier.no ? ', tracking number ' + o.courier.no : ''}. Track it live here: ${o.courier.url}`)}">Send tracking on WhatsApp</a>` : ''}</div></form></div></details>`).join('')}</div>` : '<p class="mute">No orders here. Orders placed on this device appear in this list.</p>'));
+            <div class="acts"><button class="btn volt">Save tracking</button>${(o.courier || {}).url ? `<a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/${esc(Cfg.normPhone(o.customer.phone) || '')}?text=${encodeURIComponent(`Assalam o Alaikum ${o.customer.name}, your DAUR Supply order ${o.id} is with ${o.courier.name || 'the courier'}${o.courier.no ? ', tracking number ' + o.courier.no : ''}. Track it live here: ${o.courier.url}`)}">Send tracking on WhatsApp</a>` : ''}</div></form></div></details>`).join('')}</div>` : '<p class="mute">No orders here. Orders placed on this device appear in this list.</p>'));
       app.insertAdjacentHTML('beforeend', '<datalist id="couriers">' + ['TCS', 'Leopards Courier', 'M&P', 'PostEx', 'Trax', 'BlueEx', 'Call Courier', 'Rider', 'Pakistan Post'].map((c) => `<option value="${esc(c)}">`).join('') + '</datalist>');
       bindShell();
       $$('[data-cf]').forEach((f) => f.addEventListener('submit', (e) => {
@@ -444,10 +444,10 @@
         return { pairs, last, bought, dropped, due };
       };
       const rows = leads.map((l) => ({ l, ...info(l) })).filter((x) => view === 'all' || (view === 'due' && x.due) || (view === 'drop' && x.dropped && !x.bought) || (view === 'bought' && x.bought));
-      const pairText = (x) => { const v = x.p.variants.find((y) => y.price === x.now) || x.p.variants[0]; const sizes = x.p.sizes.filter((s) => (v.stock || {})[s] > 0); return `• M.O.R.C. ${x.p.name} (${v.color})\n  ${x.was && x.now < x.was ? `Was ${fmt(x.was)}, now ${fmt(x.now)}` : fmt(x.now)} / retail ${fmt(Cfg.marketRetail)}+\n  ${sizes.length ? 'Sizes in stock: EU ' + sizes.join(', ') : 'Sold out, reply to join the restock list'}\n  ${Cfg.domain}/product.html#${x.p.id}~${v.id}`; };
+      const pairText = (x) => { const v = x.p.variants.find((y) => y.price === x.now) || x.p.variants[0]; const sizes = x.p.sizes.filter((s) => (v.stock || {})[s] > 0); return `• DAUR ${x.p.name} (${v.color})\n  ${x.was && x.now < x.was ? `Was ${fmt(x.was)}, now ${fmt(x.now)}` : fmt(x.now)} / retail ${fmt(Cfg.marketRetail)}+\n  ${sizes.length ? 'Sizes in stock: EU ' + sizes.join(', ') : 'Sold out, reply to join the restock list'}\n  ${Cfg.domain}/product.html#${x.p.id}~${v.id}`; };
       const msg = (kind, x, code, pct, until) => {
         const list = (kind === 'drop' ? x.pairs.filter((y) => y.was && y.now < y.was) : x.pairs).map(pairText).join('\n\n');
-        const open = 'Assalam o Alaikum! This is M.O.R.C. Supply.';
+        const open = 'Assalam o Alaikum! This is DAUR Supply.';
         if (kind === 'drop') return `${open} Good news: a pair you liked just dropped in price.\n\n${list}\n\nCash on Delivery across Pakistan. Reply here and we will reserve your size.`;
         if (kind === 'offer') return `${open} A code just for you on the pairs you liked: ${code} gives ${pct}% off, valid until ${until}, for this WhatsApp number only.\n\n${list}\n\nEnter ${code} at checkout. Cash on Delivery across Pakistan.`;
         return `${open} You liked these pairs on our site and they are still waiting for you:\n\n${list}\n\nCash on Delivery across Pakistan. Reply here with your size and city to order.`;
@@ -483,7 +483,7 @@
           if (cap < 1) { toast('These pairs have no room for a discount at your profit floor'); return; }
           if (pct > cap) { pct = cap; toast('Code held at ' + cap + '% to protect your profit floor'); }
           const until = new Date(Date.now() + F.codeDays * 864e5).toISOString().slice(0, 10);
-          code = 'MORC' + l.wa.slice(-4) + Math.random().toString(36).slice(2, 5).toUpperCase();
+          code = 'DAUR' + l.wa.slice(-4) + Math.random().toString(36).slice(2, 5).toUpperCase();
           const cps = getCoupons();
           cps[code] = { type: 'percent', value: pct, min: 0, label: 'Your personal code, ' + pct + '% off', pids: x.pairs.map((y) => y.p.id), phone: l.wa, expires: until, limit: 1, active: true, lead: l.id };
           saveCoupons(cps);
@@ -499,14 +499,14 @@
 
     /* ---- publish / export ---- */
     if (tab === 'export') {
-      const src = `window.MORC_PRODUCTS = ${JSON.stringify(cat, null, 2)};\n`;
-      app.innerHTML = shell(`<div class="adm-two"><div><h3 class="adm-h">Catalog file</h3><p class="mute" style="margin-bottom:12px">Replace the window.MORC_PRODUCTS block at the bottom of assets/data.js with this, then re-upload the site. Every visitor then sees your changes.</p>
+      const src = `window.DAUR_PRODUCTS = ${JSON.stringify(cat, null, 2)};\n`;
+      app.innerHTML = shell(`<div class="adm-two"><div><h3 class="adm-h">Catalog file</h3><p class="mute" style="margin-bottom:12px">Replace the window.DAUR_PRODUCTS block at the bottom of assets/data.js with this, then re-upload the site. Every visitor then sees your changes.</p>
         <textarea class="code" id="src" readonly>${esc(src)}</textarea><div class="acts"><button class="btn volt" id="cp">Copy</button><a class="btn ghost" id="dl" download="catalog.js">Download</a></div></div>
         <div><h3 class="adm-h">Reset</h3><p class="mute" style="margin-bottom:12px">Discard the edits saved in this browser and return to the catalog in data.js.</p><button class="btn ghost" id="reset">Reset to file catalog</button></div></div>`);
       bindShell();
       try { $('#dl').href = URL.createObjectURL(new Blob([src], { type: 'text/javascript' })); } catch (e) { /* blocked */ }
       $('#cp').addEventListener('click', () => { (navigator.clipboard ? navigator.clipboard.writeText(src) : Promise.reject()).then(() => toast('Copied'), () => { $('#src').select(); toast('Select all and copy'); }); });
-      $('#reset').addEventListener('click', (e) => { if (!e.target.dataset.armed) { e.target.dataset.armed = 1; e.target.textContent = 'Confirm reset'; return; } try { localStorage.removeItem('morc.catalog'); } catch (er) { /* blocked */ } toast('Reset. Reloading'); setTimeout(() => location.reload(), 600); });
+      $('#reset').addEventListener('click', (e) => { if (!e.target.dataset.armed) { e.target.dataset.armed = 1; e.target.textContent = 'Confirm reset'; return; } try { localStorage.removeItem('daur.catalog'); } catch (er) { /* blocked */ } toast('Reset. Reloading'); setTimeout(() => location.reload(), 600); });
       return;
     }
     EXT.views.admin('overview');

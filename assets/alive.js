@@ -1,17 +1,19 @@
-/* M.O.R.C. motion layer. Everything here is decoration on top of a working
+/* DAUR motion layer. Everything here is decoration on top of a working
    store: a shoe cursor that faces the way it travels, the falling shoe pile
    above the footer, the liquid fill on the footer letters, scroll progress,
    card tilt, magnetic buttons and counters. Respects reduced motion and only
    swaps the cursor on devices with a real mouse. */
 (function () {
   'use strict';
-  const EXT = window.MORC_EXT = window.MORC_EXT || { views: {}, hooks: {} };
+  const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   EXT.hooks = EXT.hooks || {};
   const on = (name, fn) => { (EXT.hooks[name] = EXT.hooks[name] || []).push(fn); };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(pointer: fine)').matches;
+  // low memory Android phones and Data Saver get the calm version (set in the page head)
+  const lite = document.documentElement.classList.contains('lite');
 
-  const KX = () => window.MORC_KICKS;
+  const KX = () => window.DAUR_KICKS;
   // a sneaker sole print, heel at the left, toe at the right
   const PRINT = '<svg viewBox="0 0 30 12" aria-hidden="true"><path d="M2 6c0-2.4 1.6-4 4-4 2.2 0 3.4 1.2 3.4 4S8.2 10 6 10C3.6 10 2 8.4 2 6zM12 6c0-2.8 2.6-4.4 7-4.4 5.2 0 9 1.8 9 4.4s-3.8 4.4-9 4.4c-4.4 0-7-1.6-7-4.4z"/><path d="M15 4v4M18.4 3.6v4.8M21.8 3.8v4.4M25 4.6v2.8M4.4 4.4v3.2M7 4.2v3.6" class="tr"/></svg>';
 
@@ -66,22 +68,23 @@
     // the pairs land on the big footer letters themselves, so no extra band of page is needed
     big.insertAdjacentHTML('beforebegin', '<div class="pit" id="pit" aria-hidden="true"><canvas></canvas></div>');
     const box = big, cv = document.querySelector('#pit canvas'), cx = cv.getContext('2d');
-    const prods = (window.MORC_API ? window.MORC_API.P : window.MORC_PRODUCTS) || [];
+    const prods = (window.DAUR_API ? window.DAUR_API.P : window.DAUR_PRODUCTS) || [];
     const looks = [];
     prods.forEach((p) => p.variants.forEach((v) => looks.push({ kind: KX().kindOf(p), hex: v.hex || '#777' })));
     ['#CCFF00', '#EDEBE4', '#ff3b5c', '#2b4a7a', '#d8a3ad', '#a8794f'].forEach((h, i) => looks.push({ kind: KX().kinds[i % KX().kinds.length], hex: h }));
     // pre render every look once as an image
-    const own = (window.MORC_PILE || []).map((x) => { const img = new Image(); img.src = x.src; img.r = x.r; return img; });
+    const own = (window.DAUR_PILE || []).map((x) => { const img = new Image(); img.src = x.src; img.r = x.r; return img; });
     const sprites = own.length ? own : looks.map((l) => {
       const accent = l.hex.toLowerCase() === '#ccff00' ? '#0b0b0b' : '#CCFF00';
       const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(KX().svg(l.kind, KX().colorsFor(l.hex, accent)).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="80" '));
       return img;
     });
     // the canvas covers the screen so pairs can fall from the top of it; the world is measured from the pit's top left corner
+    const calmDrop = reduce || lite;
     let W = 0, H = 0, VW = 0, VH = 0, dpr = 1, shoes = [], raf = 0, visible = false, armed = true, calm = 0, timers = [], R = { left: 0, top: 0 };
     const ptr = { x: -999, y: -999, vx: 0, t: 0 };
     function size() {
-      const r = box.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1);
+      const r = box.getBoundingClientRect(); dpr = Math.min(fine ? 2 : 1.5, devicePixelRatio || 1);
       W = r.width; H = r.height; VW = innerWidth; VH = innerHeight;
       cv.width = VW * dpr; cv.height = VH * dpr; cv.style.width = VW + 'px'; cv.style.height = VH + 'px';
     }
@@ -93,10 +96,13 @@
         timers.push(setTimeout(() => {
           const img = sprites[Math.floor(Math.random() * sprites.length)], r = img.r || 0.625;
           const w = (W < 600 ? 58 : W < 1100 ? 100 : 128) * (0.85 + Math.random() * 0.35) * (r > 0.8 ? 0.82 : 1), h = w * r * 0.9;
-          shoes.push({ x: w / 2 + ((order[i] + 0.2 + Math.random() * 0.6) / n) * (W - w), y: -box.getBoundingClientRect().top - h - Math.random() * 120, vx: (Math.random() - 0.5) * 1.2, vy: 1 + Math.random() * 2, w, h, r, img, f: Math.random() < 0.5 ? -1 : 1, a: 0, ph: Math.random() * 6.28, air: true });
-          wake();
-        }, reduce ? 0 : i * 110 + Math.random() * 160));
+          const sky = fine ? box.getBoundingClientRect().top + Math.random() * 120 : 30 + Math.random() * 50;
+          shoes.push({ x: w / 2 + ((order[i] + 0.2 + Math.random() * 0.6) / n) * (W - w), y: -sky - h, vx: (Math.random() - 0.5) * 1.2, vy: 1 + Math.random() * 2, w, h, r, img, f: Math.random() < 0.5 ? -1 : 1, a: 0, ph: Math.random() * 6.28, air: true });
+          if (!calmDrop) wake();
+        }, calmDrop ? 0 : i * 110 + Math.random() * 160));
       }
+      // reduced motion and low end phones: run the fall out of sight and paint the settled pile once
+      if (calmDrop) setTimeout(() => { for (let k = 0; k < 360; k++) step(k * 16); shoes.forEach((s) => { s.vx = 0; s.vy = 0; s.air = false; }); timers = []; draw(); }, 0);
     }
     function step(t) {
       const floor = H - 4;
@@ -159,7 +165,8 @@
       ptr.vx = ptr.t && t - ptr.t < 100 ? Math.max(-14, Math.min(14, nx - ptr.x)) : 0;
       ptr.x = nx; ptr.y = ny; ptr.t = t; wake();
     }, { passive: true });
-    addEventListener('scroll', () => { if (visible && !raf) requestAnimationFrame(draw); }, { passive: true });
+    let dq = 0;
+    addEventListener('scroll', () => { if (visible && !raf && !dq) dq = requestAnimationFrame(() => { dq = 0; draw(); }); }, { passive: true });
     const io = new IntersectionObserver(([en]) => {
       visible = en.isIntersecting; cv.style.display = visible ? 'block' : 'none';
       if (visible && armed) { armed = false; size(); drop(); }
@@ -176,7 +183,7 @@
     if (!big || big.dataset.split) return;
     big.dataset.split = 1;
     big.innerHTML = [...big.textContent].map((c, i) => `<span class="fb-ch${c === '.' ? ' dot' : ''}" style="--i:${i}">${c}</span>`).join('');
-    big.removeAttribute('aria-hidden'); big.setAttribute('role', 'img'); big.setAttribute('aria-label', 'M.O.R.C.');
+    big.removeAttribute('aria-hidden'); big.setAttribute('role', 'img'); big.setAttribute('aria-label', 'DAUR');
     big.querySelectorAll('.fb-ch').forEach((ch) => {
       ch.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') ch.classList.add('on'); });
       ch.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') ch.classList.remove('on'); });
@@ -188,10 +195,15 @@
     if (document.getElementById('scrollBar')) return;
     document.body.insertAdjacentHTML('beforeend', '<div id="scrollBar" aria-hidden="true"></div>');
     const b = document.getElementById('scrollBar');
-    let q = 0;
-    const paint = () => { q = 0; const h = document.documentElement.scrollHeight - innerHeight; b.style.transform = `scaleX(${h > 0 ? Math.min(1, scrollY / h) : 0})`; };
+    let q = 0, h = 1;
+    // the page height is measured when it changes, never inside the scroll frame
+    const measure = () => { h = document.documentElement.scrollHeight - innerHeight; };
+    const paint = () => { q = 0; b.style.transform = `scaleX(${h > 0 ? Math.min(1, scrollY / h) : 0})`; };
     addEventListener('scroll', () => { if (!q) q = requestAnimationFrame(paint); }, { passive: true });
-    paint();
+    addEventListener('resize', measure);
+    // the observer reports after the browser has laid the page out anyway, so no extra layout is forced at start
+    if ('ResizeObserver' in window) new ResizeObserver(() => { measure(); paint(); }).observe(document.body);
+    else { measure(); paint(); }
   }
   function tilt() {
     if (!fine || reduce) return;
@@ -254,7 +266,8 @@
       const cs = getComputedStyle(view);
       // slide until the last card sits inside the right gutter
       const travel = Math.max(0, track.offsetWidth + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) - view.clientWidth);
-      const on = travel > 8 && !reduce;
+      // touch screens swipe the rail natively; pinning a section against a finger feels like a stall
+      const on = travel > 8 && !reduce && fine;
       sec.classList.toggle('rail-on', on);
       sec.style.height = on ? (pin.offsetHeight + travel) + 'px' : '';
       return { sec, track, bar: sec.querySelector('.rail-bar i'), travel, on, off: hdr ? hdr.offsetHeight : 0 };
@@ -274,7 +287,8 @@
   function rail() {
     railMeasure();
     if (railBound) return; railBound = true;
-    addEventListener('scroll', () => requestAnimationFrame(railMove), { passive: true });
+    let rq = 0;
+    addEventListener('scroll', () => { if (!rq && rails.some((r) => r.on)) rq = requestAnimationFrame(() => { rq = 0; railMove(); }); }, { passive: true });
     addEventListener('resize', railMeasure);
     addEventListener('load', railMeasure);
   }
@@ -313,13 +327,49 @@
     });
   }
 
+  // looping decoration stops while it is off screen, so scrolling only pays for what is in view
+  let zio = null;
+  function sleepOffscreen(root) {
+    if (!('IntersectionObserver' in window)) return;
+    if (!zio) zio = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('zz', !e.isIntersecting)), { rootMargin: '120px 0px' });
+    (root || document).querySelectorAll('#app > section, #app > div, #app > div > section, .ticker, .ftr').forEach((el) => { if (!el.dataset.zz) { el.dataset.zz = 1; zio.observe(el); } });
+  }
+
+  // phones have no hover, so each pair shows its blueprint sketch once as it crosses the middle of the screen,
+  // and again while a finger rests on it
+  let pio = null;
+  const touchy = matchMedia('(hover: none)').matches;
+  function peekCards(root) {
+    if (!touchy || reduce || !('IntersectionObserver' in window)) return;
+    if (!pio) pio = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const c = e.target.closest('.card'); pio.unobserve(e.target);
+      if (!c) return;
+      c.classList.add('peek'); setTimeout(() => c.classList.remove('peek'), 1500);
+    }), { rootMargin: '-38% 0px -38% 0px' });
+    (root || document).querySelectorAll('.card .card-media:not([data-peek])').forEach((m) => {
+      m.dataset.peek = 1; pio.observe(m);
+      const c = m.closest('.card');
+      m.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') c.classList.add('peek'); });
+      const off = () => setTimeout(() => c.classList.remove('peek'), 350);
+      m.addEventListener('pointerup', off); m.addEventListener('pointercancel', off); m.addEventListener('pointerleave', off);
+    });
+  }
+
+  EXT.peek = peekCards;
+
   let booted = false;
   on('after', () => {
+    const first = !booted;
+    document.documentElement.classList.add('drawn');
     if (!booted) { booted = true; cursor(); pit(); bigWord(); progress(); tilt(); magnets(); bagBump(); }
     const app = document.getElementById('app');
-    if (app && !reduce) { app.classList.remove('pg-in'); void app.offsetWidth; app.classList.add('pg-in'); }
+    // the first view shows at once; the soft fade is kept for moving between views
+    if (app && !reduce && !first) { app.classList.remove('pg-in'); void app.offsetWidth; app.classList.add('pg-in'); }
+    sleepOffscreen(document);
+    peekCards(document);
     counters(app);
-    rail();
+    requestAnimationFrame(() => setTimeout(rail, 0));
     dropdowns(app);
   });
 })();

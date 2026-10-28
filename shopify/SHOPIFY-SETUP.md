@@ -1,4 +1,4 @@
-# Putting M.O.R.C. Supply on Shopify
+# Putting DAUR Supply on Shopify
 
 Shopify takes over the parts the static site cannot do on its own:
 
@@ -7,14 +7,14 @@ Shopify takes over the parts the static site cannot do on its own:
 * the checkout with Cash on Delivery
 * hosting and security
 
-The M.O.R.C. design stays the same, because it is packaged as a Shopify theme.
+The DAUR design stays the same, because it is packaged as a Shopify theme.
 
 **Files in this folder**
 
 | File | What it is |
 |---|---|
 | `products.csv` | Your 10 pairs, every colour and size, ready for Shopify's product import |
-| `morc-supply-theme.zip` | The M.O.R.C. theme, ready to upload |
+| `daur-supply-theme.zip` | The DAUR theme, ready to upload |
 | `theme/` | The same theme unzipped, for anyone who edits code |
 
 Plan names and prices change, so check them on shopify.com/pricing before you choose.
@@ -23,7 +23,7 @@ Plan names and prices change, so check them on shopify.com/pricing before you ch
 
 1. Sign up at shopify.com with your business email.
 2. In **Settings > General** (called Store details on some accounts), set the following:
-   * Store name: M.O.R.C. Supply
+   * Store name: DAUR Supply
    * Country: Pakistan
    * Store currency: Pakistani Rupee (PKR)
    * Time zone: Karachi
@@ -65,7 +65,7 @@ Rs. 250 and "2 to 6 working days" are defaults I set. Please replace them with y
 
 | Shopify field | What it controls |
 |---|---|
-| Title | Shown without the "M.O.R.C." prefix, which the theme adds itself |
+| Title | Shown without the "DAUR" prefix, which the theme adds itself |
 | Product type | The category, for example Hybrids or Derby |
 | Description | The paragraph becomes the description. A bullet list of "Label: value" lines becomes the specifications table. |
 | Options | Name them exactly **Color** and **Size**. Write sizes as "EU 42". |
@@ -93,7 +93,7 @@ Tags carry the details Shopify has no field for:
 ## Step 6. Upload the theme
 
 1. Open **Online Store > Themes**.
-2. Click **Add theme > Upload zip file** and choose `morc-supply-theme.zip`.
+2. Click **Add theme > Upload zip file** and choose `daur-supply-theme.zip`.
 3. Click **Customize** on the uploaded theme, then open **Theme settings**. Fill in:
    * WhatsApp order number (country code first, digits only). It is used only inside WhatsApp links.
    * Support email and the announcement text.
@@ -122,7 +122,7 @@ Tags carry the details Shopify has no field for:
 | `alerts` | WhatsApp alert list |
 | `feed` | The feed |
 
-Any other page you create in Shopify shows its own content in the M.O.R.C. style.
+Any other page you create in Shopify shows its own content in the DAUR style.
 
 ## Step 8. Legal policies at checkout
 
@@ -167,8 +167,8 @@ Customers see the courier and the tracking link on their order status page. Seve
 
 ## What works differently on Shopify
 
-* **Admin:** the M.O.R.C. admin screen is not included. Shopify's own admin replaces it, with real logins.
-* **Checkout:** the bag, liked pairs, search and the flex card work as before. Checkout is Shopify's own page with Cash on Delivery. The M.O.R.C. checkout form is not used.
+* **Admin:** the DAUR admin screen is not included. Shopify's own admin replaces it, with real logins.
+* **Checkout:** the bag, liked pairs, search and the flex card work as before. Checkout is Shopify's own page with Cash on Delivery. The DAUR checkout form is not used.
 * **Track page:** it sends customers to their Shopify order page, or lets them ask on WhatsApp with an order number. Shopify does not allow a public lookup by phone number without a login.
 * **Alert list, restock requests, liked pairs follow ups and new reviews:** these are emailed to the store through Shopify's contact form, so they reach you instead of staying in the visitor's browser.
   * I tested this only against a local stand in for Shopify.
@@ -176,13 +176,13 @@ Customers see the courier and the tracking link on their order status page. Seve
   * Please send one test sign up after launch and confirm it arrives.
   * For reliable WhatsApp automation and a lead list, use a WhatsApp marketing app from the Shopify App Store.
 * **Reviews:** the built in reviews are kept in the visitor's browser and never go public, because there is no approval screen on Shopify. For public, moderated reviews, install a reviews app.
-* **Personal codes and profit floors:** the follow up rules from the M.O.R.C. admin (largest discount, minimum profit) are not automatic on Shopify. Create those codes in Discounts and limit them to the customer.
+* **Personal codes and profit floors:** the follow up rules from the DAUR admin (largest discount, minimum profit) are not automatic on Shopify. Create those codes in Discounts and limit them to the customer.
 
 ## Updating the theme later
 
 The theme source lives in `shopify/theme-src`, and it shares `assets/` with the static site.
 
-1. Run `node tools/shopify-theme.js` to rebuild `morc-supply-theme.zip`.
+1. Run `node tools/shopify-theme.js` to rebuild `daur-supply-theme.zip`.
 2. Upload the new zip as in Step 6.
 
 Run `node tools/shopify-csv.js` to rebuild `products.csv` from `assets/data.js`. Once you live on Shopify, edit products in Shopify instead.

@@ -1,7 +1,7 @@
 {
   "sections": {
     "main": {
-      "type": "morc-main",
+      "type": "daur-main",
       "settings": {}
     }
   },

@@ -1,15 +1,14 @@
-/* M.O.R.C. Supply catalog and store settings.
+/* DAUR Supply catalog and store settings.
    Edit this file to change products, prices, stock and delivery rules.
-   IMPORTANT: the cost breakdown numbers below are working placeholders.
-   Replace them with your real vendor invoices before launch, because the
-   brand promise is radical transparency. */
+   The cost numbers below are working placeholders for the admin's profit
+   checks. They are never shown on the storefront. */
 
-window.MORC_CONFIG = {
-  brand: 'M.O.R.C. Supply',
-  domain: 'https://morcsupply.pk',
+window.DAUR_CONFIG = {
+  brand: 'DAUR Supply',
+  domain: 'https://daursupply.com',
   currency: 'Rs.',
-  whatsapp: '923055125974',          // order line, country code first, digits only. Admin > Settings can override it
-  supportEmail: 'supply@morcsupply.pk',
+  whatsapp: '923199628735',          // order line, country code first, digits only. Admin > Settings can override it
+  supportEmail: 'contact@daursupply.com',
   marketRetail: 12000,                // typical mainstream retail price for comparable pairs
   freeDeliveryPairs: 2,               // delivery is free when the bag holds this many pairs
   /* One flat Cash on Delivery fee and timing for every city in Pakistan. Admin > Settings can change both. */
@@ -32,7 +31,7 @@ window.MORC_CONFIG = {
    stock per size, and images. When images is empty the site draws the pair
    from silhouette + palette. audience: Men | Women | Kids. group: optional
    sub group such as Baby Girl or Baby Boy. */
-window.MORC_PRODUCTS = [
+window.DAUR_PRODUCTS = [
   {
     "id": "moc-runner-v1",
     "name": "Moc-Runner v1",
@@ -50,14 +49,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "Heavy grain local leather upper. Sourced directly from Punjab’s classic artisan hubs. Structured moc toe stitching sitting on a lightweight, dual density traction sole. Curated for the street, priced for the people.",
+    "description": "The everyday leather shoe, rethought. Pebbled full grain cow leather meets a hand guided moc toe and a dual density sole that grips outside and cushions underfoot. Wear it with jeans on a weekday or a crisp shalwar kameez on Friday.",
     "specs": {
       "Upper": "Full grain cow leather, pebbled",
       "Lining": "Breathable leather and textile",
       "Stitch": "Hand guided moc toe, double needle",
       "Sole": "Dual density rubber, siped traction",
       "Weight": "Approx. 410 g (EU 42)",
-      "Origin": "Sialkot and Lahore vendor hubs"
+      "Made in": "Sialkot and Lahore, Pakistan"
     },
     "cost": {
       "vendor": 2600,
@@ -65,8 +64,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Moc-Runner v1 | Men's Black Leather Casual Shoes Price in Pakistan",
-      "description": "The M.O.R.C. Moc-Runner v1 in triple black. Premium local leather casual shoes with moc toe stitching, sold at factory price with Cash on Delivery in Pakistan."
+      "title": "Moc-Runner | Black Leather Casual Shoes for Men, Price in Pakistan",
+      "description": "Moc-Runner by DAUR Supply: full grain leather casual shoes for men with a hand guided moc toe and a cushioned sole. Cash on Delivery across Pakistan, free delivery on 2 pairs."
     },
     "variants": [
       {
@@ -134,14 +133,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "A stealth trainer with a bone white phylon midsole and a suede overlaid upper. Built on the same lasts that big labels order from, minus the logo tax.",
+    "description": "A stealth trainer for long city days. Suede overlays on breathable engineered mesh, a padded collar and a bone white phylon midsole that keeps every step light. Dark enough for the evening, easy enough for every day.",
     "specs": {
       "Upper": "Suede overlays on engineered mesh",
       "Lining": "Textile with padded collar",
       "Stitch": "Lock stitch overlays",
       "Sole": "Phylon midsole, rubber outsole",
       "Weight": "Approx. 330 g (EU 42)",
-      "Origin": "Lahore vendor hub"
+      "Made in": "Lahore, Pakistan"
     },
     "cost": {
       "vendor": 2850,
@@ -149,8 +148,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Phantom Trainer | Black Streetwear Sneakers Price in Pakistan",
-      "description": "Phantom Trainer by M.O.R.C. Supply. Black and bone streetwear sneakers at factory price, delivered with Cash on Delivery across Pakistan."
+      "title": "Phantom Trainer | Black Sneakers & Joggers for Men, Price in Pakistan",
+      "description": "Phantom Trainer by DAUR Supply: black suede and mesh sneakers for men on a light phylon sole. Cash on Delivery across Pakistan, free delivery on 2 pairs."
     },
     "variants": [
       {
@@ -195,14 +194,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "A clean bone court low in smooth leather on a stitched cupsole. The kind of pair that sells for five figures with the right logo. Here it sells at what it is worth.",
+    "description": "A clean court low that goes with everything. Smooth leather on a stitched rubber cupsole, cut with sharp, minimal lines. Wear it with denim, chinos or a white shalwar kameez and let the silhouette do the talking.",
     "specs": {
       "Upper": "Smooth corrected grain leather",
       "Lining": "Textile, foam padded",
       "Stitch": "Stitched cupsole",
       "Sole": "Rubber cupsole",
       "Weight": "Approx. 380 g (EU 42)",
-      "Origin": "Karachi vendor hub"
+      "Made in": "Karachi, Pakistan"
     },
     "cost": {
       "vendor": 2400,
@@ -210,8 +209,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Grid Court Low | White Leather Sneakers Price in Pakistan",
-      "description": "Grid Court Low by M.O.R.C. Supply. Bone white leather court sneakers at factory price with Cash on Delivery across Pakistan."
+      "title": "Grid Court Low | White Leather Sneakers for Men, Price in Pakistan",
+      "description": "Grid Court Low by DAUR Supply: clean leather court sneakers for men in bone or black, on a stitched rubber cupsole. Cash on Delivery across Pakistan, free delivery on 2 pairs."
     },
     "variants": [
       {
@@ -279,14 +278,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "An open laced derby in burnished black full grain, cut for wear with cargos as much as tailoring. Same benches, same leather, none of the boutique markup.",
+    "description": "An open laced derby in hand burnished black full grain leather. A Blake stitched welt and a stacked heel give it the stance of a formal shoe, while the rubber sole keeps it easy all day. As sharp with tailoring as it is with cargos.",
     "specs": {
       "Upper": "Full grain leather, hand burnished",
       "Lining": "Leather",
       "Stitch": "Blake stitched welt",
       "Sole": "Rubber with stacked heel",
       "Weight": "Approx. 450 g (EU 42)",
-      "Origin": "Sialkot vendor hub"
+      "Made in": "Sialkot, Pakistan"
     },
     "cost": {
       "vendor": 2950,
@@ -294,8 +293,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Unit Derby 02 | Black Leather Derby Shoes Price in Pakistan",
-      "description": "Unit Derby 02 by M.O.R.C. Supply. Black full grain leather derby shoes from Pakistani workshops at factory price with Cash on Delivery."
+      "title": "Unit Derby 02 | Black Leather Formal Shoes for Men, Price in Pakistan",
+      "description": "Unit Derby 02 by DAUR Supply: hand burnished full grain leather derby shoes for men, for the office, weddings and shalwar kameez. Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -340,14 +339,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "A mid cut in ash nubuck with black leather overlays and a padded high collar. Heavy, structured, made to be scuffed on concrete.",
+    "description": "A mid cut built with weight and structure. Ash nubuck with black leather overlays, a padded high collar and a herringbone rubber cupsole that holds firm on concrete. Made to be worn hard and look better for it.",
     "specs": {
       "Upper": "Nubuck with leather overlays",
       "Lining": "Padded textile collar",
       "Stitch": "Double row overlay stitch",
       "Sole": "Rubber cupsole, herringbone",
       "Weight": "Approx. 470 g (EU 42)",
-      "Origin": "Lahore vendor hub"
+      "Made in": "Lahore, Pakistan"
     },
     "cost": {
       "vendor": 3150,
@@ -355,8 +354,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Concrete Mid | High Top Streetwear Sneakers Price in Pakistan",
-      "description": "Concrete Mid by M.O.R.C. Supply. Ash and black high top streetwear sneakers at factory price with Cash on Delivery across Pakistan."
+      "title": "Concrete Mid | High Top Sneakers for Men, Price in Pakistan",
+      "description": "Concrete Mid by DAUR Supply: ash nubuck and leather high top sneakers for men on a herringbone rubber cupsole. Cash on Delivery across Pakistan, free delivery on 2 pairs."
     },
     "variants": [
       {
@@ -401,14 +400,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "The one loud pair in a quiet catalog. Black mesh and suede on a volt midsole. Small batch from a single vendor run.",
+    "description": "The one loud pair in the collection. Black engineered mesh and a suede toe ride on a volt EVA midsole made for movement. A limited run, for the days you want to be seen.",
     "specs": {
       "Upper": "Engineered mesh, suede toe",
       "Lining": "Textile",
       "Stitch": "Lock stitch overlays",
       "Sole": "EVA midsole, rubber outsole",
       "Weight": "Approx. 310 g (EU 42)",
-      "Origin": "Lahore vendor hub"
+      "Made in": "Lahore, Pakistan"
     },
     "cost": {
       "vendor": 2750,
@@ -416,8 +415,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Volt Signal | Black Running Style Sneakers Price in Pakistan",
-      "description": "Volt Signal by M.O.R.C. Supply. Black and volt running style sneakers in a small batch, at factory price with Cash on Delivery in Pakistan."
+      "title": "Volt Signal | Black Running Style Sneakers for Men, Price in Pakistan",
+      "description": "Volt Signal by DAUR Supply: black mesh and suede sneakers for men on a volt EVA sole, in a limited run. Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -462,14 +461,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "A waxed black chelsea on a lugged rubber sole. Elastic gussets, pull tab, nothing else. Laceless, so it carries the M.O.R.C. seal on the pull tab instead.",
+    "description": "A waxed full grain chelsea boot on a lugged rubber sole. Elastic gussets, a pull tab and clean lines, nothing more. Laceless, so the DAUR seal rides on the pull tab. Built for winter evenings, weddings and everything between.",
     "specs": {
       "Upper": "Waxed full grain leather",
       "Lining": "Leather",
       "Stitch": "Goodyear style welt stitch",
       "Sole": "Lugged rubber",
       "Weight": "Approx. 520 g (EU 42)",
-      "Origin": "Sialkot vendor hub"
+      "Made in": "Sialkot, Pakistan"
     },
     "cost": {
       "vendor": 3300,
@@ -477,8 +476,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Ward Chelsea | Black Leather Chelsea Boots Price in Pakistan",
-      "description": "Ward Chelsea by M.O.R.C. Supply. Black waxed leather chelsea boots from Pakistani workshops at factory price with Cash on Delivery."
+      "title": "Ward Chelsea | Leather Chelsea Boots for Men, Price in Pakistan",
+      "description": "Ward Chelsea by DAUR Supply: waxed full grain leather chelsea boots for men in black or dark brown, on a lugged rubber sole. Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -546,14 +545,14 @@ window.MORC_PRODUCTS = [
       44,
       45
     ],
-    "description": "Soft black nappa slip on with twin gores and a bone sole. The entry point to the supply line.",
+    "description": "Soft black nappa leather, twin elastic gores and a bone vulcanised sole. Slip on and go, from the office to the dinner table. The easiest way into a DAUR pair.",
     "specs": {
       "Upper": "Nappa leather",
       "Lining": "Leather and textile",
       "Stitch": "Apron stitch",
       "Sole": "Vulcanised rubber",
       "Weight": "Approx. 300 g (EU 42)",
-      "Origin": "Karachi vendor hub"
+      "Made in": "Karachi, Pakistan"
     },
     "cost": {
       "vendor": 2200,
@@ -561,8 +560,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Sector Slip | Black Leather Slip On Shoes Price in Pakistan",
-      "description": "Sector Slip by M.O.R.C. Supply. Black nappa leather slip on shoes at factory price with Cash on Delivery in Pakistan."
+      "title": "Sector Slip | Black Leather Slip On Shoes for Men, Price in Pakistan",
+      "description": "Sector Slip by DAUR Supply: soft nappa leather slip on shoes for men with twin elastic gores and a bone sole. Cash on Delivery across Pakistan, free delivery on 2 pairs."
     },
     "variants": [
       {
@@ -614,7 +613,7 @@ window.MORC_PRODUCTS = [
       "Stitch": "Stitched cupsole",
       "Sole": "Rubber cupsole",
       "Weight": "Approx. 300 g (EU 38)",
-      "Origin": "Karachi vendor hub"
+      "Made in": "Karachi, Pakistan"
     },
     "cost": {
       "vendor": 2300,
@@ -622,8 +621,8 @@ window.MORC_PRODUCTS = [
       "logistics": 330
     },
     "seo": {
-      "title": "M.O.R.C. Halo Court | Women's White Leather Sneakers Price in Pakistan",
-      "description": "Halo Court by M.O.R.C. Supply. Women's bone leather sneakers at factory price with Cash on Delivery across Pakistan."
+      "title": "DAUR Halo Court | Women's White Leather Sneakers Price in Pakistan",
+      "description": "Halo Court by DAUR Supply. Women's bone leather sneakers, crafted in Pakistan, with Cash on Delivery across Pakistan."
     },
     "variants": [
       {
@@ -698,7 +697,7 @@ window.MORC_PRODUCTS = [
       "Stitch": "Stitched sole",
       "Sole": "Flexible rubber",
       "Weight": "Approx. 140 g (EU 22)",
-      "Origin": "Lahore vendor hub"
+      "Made in": "Lahore, Pakistan"
     },
     "cost": {
       "vendor": 1300,
@@ -706,8 +705,8 @@ window.MORC_PRODUCTS = [
       "logistics": 300
     },
     "seo": {
-      "title": "M.O.R.C. Unit Mini | Baby Boy Leather Sneakers Price in Pakistan",
-      "description": "Unit Mini by M.O.R.C. Supply. Soft leather baby sneakers at factory price with Cash on Delivery in Pakistan."
+      "title": "DAUR Unit Mini | Baby Boy Leather Sneakers Price in Pakistan",
+      "description": "Unit Mini by DAUR Supply. Soft leather baby sneakers, crafted in Pakistan, with Cash on Delivery."
     },
     "variants": [
       {
@@ -734,5 +733,98 @@ window.MORC_PRODUCTS = [
         "images": []
       }
     ]
+  },
+  {
+    "id": "saddle-tassel",
+    "name": "Saddle Tassel",
+    "audience": "Men",
+    "group": null,
+    "category": "Hybrids",
+    "silhouette": "loafer",
+    "tag": "New",
+    "createdAt": "2026-10-26",
+    "sizes": [
+      40,
+      41,
+      42,
+      43,
+      44,
+      45
+    ],
+    "description": "A slip on tassel loafer that keeps things easy. The upper is a fine diagonal twill with a soft brushed apron over the toe, edged in pale piping so the shape reads from across the room. A saddle strap crosses the instep and ties off in a knotted tassel pair. Underneath, a flexible gum sole with a brick tread keeps every step light. Wear it with chinos, linen trousers or a crisp shalwar kameez, no socks required.",
+    "specs": {
+      "Upper": "Diagonal twill with a brushed apron",
+      "Details": "Saddle strap, knotted tassel pair, piped apron edge",
+      "Footbed": "Cushioned, stitched heel lining",
+      "Sole": "Flexible gum sole, brick tread",
+      "Style": "Slip on, no laces",
+      "Made in": "Pakistan"
+    },
+    "cost": null,
+    "seo": {
+      "title": "Saddle Tassel | Tassel Loafers for Men, Price in Pakistan",
+      "description": "The DAUR Saddle Tassel: a men's slip on tassel loafer in sand or black, with a flexible gum sole. Cash on Delivery across Pakistan."
+    },
+    "variants": [
+      {
+        "id": "sand",
+        "color": "Sand",
+        "hex": "#CDB697",
+        "price": 3900,
+        "compareAt": null,
+        "stock": {
+          "40": 2,
+          "41": 3,
+          "42": 4,
+          "43": 4,
+          "44": 2,
+          "45": 1
+        },
+        "palette": {
+          "upper": "#CDB697",
+          "panel": "#C2A988",
+          "apron": "#B79E80",
+          "pipe": "#F0E4D2",
+          "tassel": "#B39878",
+          "sole": "#C9965C",
+          "stitch": "#8E7558",
+          "lace": "#B39878"
+        },
+        "images": []
+      },
+      {
+        "id": "black",
+        "color": "Black",
+        "hex": "#1C1C1D",
+        "price": 3900,
+        "compareAt": null,
+        "stock": {
+          "40": 1,
+          "41": 2,
+          "42": 3,
+          "43": 3,
+          "44": 2,
+          "45": 1
+        },
+        "palette": {
+          "upper": "#1C1C1D",
+          "panel": "#18181A",
+          "apron": "#141415",
+          "pipe": "#2C2C2E",
+          "tassel": "#141415",
+          "sole": "#9AA3A6",
+          "stitch": "#4A4A4C",
+          "lace": "#141415"
+        },
+        "images": []
+      }
+    ]
   }
+];
+
+/* Statuses for the home page story rail. On Shopify these come from posts in the
+   blog with the handle "status": title, image, summary, tags pin and link:/path.
+   New products get a status of their own automatically for 7 days. */
+window.DAUR_STATUSES = window.DAUR_STATUSES || [
+  { "id": "free-two", "title": "Free delivery on 2 pairs", "text": "Order any two pairs and delivery is free, to every city in Pakistan. Pay cash at your door.", "image": null, "date": "2026-10-26", "tags": ["pin", "link:shop.html"] }
 ];

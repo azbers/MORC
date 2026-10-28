@@ -1,6 +1,6 @@
-/* M.O.R.C. shoe icon set: six silhouettes drawn as coloured line icons for the
+/* DAUR shoe icon set: six silhouettes drawn as coloured line icons for the
    cursor, the falling pile, the colour picker and the line cards.
-   MORC_KICKS.svg(kind, { upper, sole, accent, line }, extraClass) returns an
+   DAUR_KICKS.svg(kind, { upper, sole, accent, line }, extraClass) returns an
    SVG string; toe points right, viewBox 0 0 64 40. */
 (function () {
   'use strict';
@@ -63,7 +63,7 @@
     // dark pairs get a light outline so they read on the black site
     return { upper: hex, sole: dark ? '#2a2927' : '#ffffff', accent: accent || '#C89B5E', line: dark ? '#cfccc3' : '#0b0b0b' };
   };
-  window.MORC_KICKS = {
+  window.DAUR_KICKS = {
     kinds: Object.keys(K),
     kindOf,
     colorsFor,
