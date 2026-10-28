@@ -125,10 +125,21 @@
   const sent = {};
   S.forward = function (key, list) {
     if (!LABEL[key] || !Array.isArray(list) || !list.length) return;
-    const item = list[list.length - 1];
+    // a new review is added to the front of the list; anything else is appended
+    const item = key === 'reviews' ? list.filter((r) => r.status === 'pending').sort((a, b) => String(b.at).localeCompare(String(a.at)))[0] : list[list.length - 1];
+    if (!item) return;
+    const A = window.DAUR_API;
     const sig = key + JSON.stringify(item);
     if (sent[sig]) return; sent[sig] = 1;
-    const lines = Object.keys(item).map((k) => k + ': ' + (typeof item[k] === 'object' ? JSON.stringify(item[k]) : item[k]));
+    // laid out to match the Fit note fields in Shopify (Content > Metaobjects > Fit note)
+    const FIT = { small: 'Runs small', true: 'True to size', large: 'Runs large' };
+    const pr = A.prod(item.pid); const vr = pr && A.variant(pr, item.vid);
+    const lines = key === 'reviews' ? [
+      'Product: ' + (pr ? pr.name : item.pid), 'Colour: ' + (vr ? vr.color : item.vid || ''), 'Stars: ' + item.rating,
+      'Customer name: ' + (item.name || ''), 'City: ' + (item.city || ''), 'Headline: ' + (item.title || ''), 'Review text: ' + (item.body || ''),
+      'Size worn (EU): ' + (item.size || ''), 'Fit: ' + (FIT[item.fit] || ''), 'Order number given: ' + (item.order || 'none'),
+      'Photo: ' + (item.photo ? 'attached on the site; ask the customer to send it on WhatsApp' : 'none'), 'Date: ' + String(item.at || '').slice(0, 10)
+    ] : Object.keys(item).map((k) => k + ': ' + (typeof item[k] === 'object' ? JSON.stringify(item[k]) : item[k]));
     const f = new URLSearchParams();
     f.append('form_type', 'contact'); f.append('utf8', '✓');
     f.append('contact[email]', item.email || C.supportEmail);

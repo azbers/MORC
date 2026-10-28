@@ -26,6 +26,15 @@ window.DAUR_STATUSES = [
   { "id": {{ a.id | json }}, "title": {{ a.title | json }}, "text": {{ a.excerpt_or_content | strip_html | strip | truncate: 160 | json }}, "image": {% if a.image %}{{ a.image | image_url: width: 1080 | json }}{% else %}null{% endif %}, "date": {{ a.published_at | date: '%Y-%m-%d' | json }}, "tags": {{ a.tags | json }} }{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
 ];
+{%- comment -%} Fit notes: only entries whose Status is Approved reach the page {%- endcomment -%}
+{%- capture fitnotes -%}
+{%- for n in shop.metaobjects.fit_note.values limit: 50 -%}
+{%- if n.status.value == 'Approved' and n.product.value -%}
+{ "id": {{ n.system.handle | json }}, "pid": {{ n.product.value.handle | json }}, "rating": {{ n.rating.value | default: 5 }}, "name": {{ n.name.value | json }}, "city": {{ n.city.value | default: '' | json }}, "title": {{ n.title.value | default: '' | json }}, "body": {{ n.body.value | default: '' | json }}, "colour": {{ n.colour.value | default: '' | json }}, "size": {{ n.size.value | default: '' | json }}, "fit": {{ n.fit.value | default: '' | json }}, "photo": {% if n.photo.value %}{{ n.photo.value | image_url: width: 900 | json }}{% else %}null{% endif %}, "verified": {% if n.verified.value %}true{% else %}false{% endif %}, "date": {{ n.date.value | date: '%Y-%m-%d' | default: '' | json }} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },

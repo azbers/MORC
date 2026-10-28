@@ -1287,9 +1287,9 @@
       ['terms', 'Terms of service', `<p>These terms apply to every order placed on this website. By placing an order you agree to them.</p><ul>
         <li><b>Who we are.</b> DAUR Supply is a Pakistani footwear brand. Our shoes are made by independent workshops in Pakistan, checked by our team and finished with DAUR hardware. We do not sell products of other brands and never present our pairs as theirs.</li>
         <li><b>Orders.</b> An order is a request to buy. It becomes a contract once we confirm it with you by phone call or WhatsApp. We may decline or cancel an order if stock runs out, the price shown was clearly wrong, the details cannot be confirmed, or the order looks fraudulent. If that happens you pay nothing.</li>
-        <li><b>Prices.</b> All prices are in Pakistani rupees and include our packaging and hardware. The delivery fee is shown at checkout. The price you pay is the total on your confirmation.</li>
+        <li><b>Prices.</b> All prices are in Pakistani rupees and include our packaging and hardware, and any tax that applies. The delivery fee is shown at checkout. The price you pay is the total on your confirmation.</li>
         <li><b>Product details.</b> We describe and picture every pair as accurately as we can. Leather is natural, so small differences in grain and shade from one pair to the next are normal and are not defects.</li>
-        <li><b>Codes and offers.</b> One code per order. Personal codes work only for the pairs and WhatsApp number they were issued for, and only until their end date. Codes have no cash value.</li>
+        <li><b>Codes and offers.</b> One saving applies per order: either free delivery or one discount code, whichever saves you more. Gift offers are added on top. Personal codes work only for the pairs and WhatsApp number they were issued for, and only until their end date. Codes have no cash value.</li>
         <li><b>Cash on Delivery.</b> Payment is made to the courier rider when the parcel is delivered. Customers who repeatedly refuse confirmed parcels without a reason may lose access to Cash on Delivery.</li>
         <li><b>Reviews and content.</b> Reviews and photos you submit must be your own and honest. We read every review before it is published and may decline ones that are abusive, off topic or not about the product.</li>
         <li><b>Liability.</b> Our responsibility for an order is limited to the amount paid for it. Nothing in these terms removes rights you have under the consumer protection laws of Pakistan.</li>
@@ -1316,7 +1316,7 @@
       ['cod', 'Cash on Delivery', `<ul><li>No advance payment and no card are needed, and there is no Cash on Delivery surcharge.</li><li>Please keep the exact amount shown on your confirmation ready for the rider.</li><li>Most couriers do not allow a parcel to be opened before payment. Record an unboxing video; if anything is wrong, our exchange and defect terms apply.</li></ul>`],
       ['contact', 'Contact', `<p>Questions about an order, these terms or your data: ${wa}, or email ${mail}. Please include your order number.</p>`]
     ];
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Policies</span><h1>The fine print, in plain words.</h1><p class="aside">Last updated 27 October 2026.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Policies</span><h1>The fine print, in plain words.</h1><p class="aside">Last updated 28 October 2026.</p></div></section>
       <div class="wrap"><div class="terms">
         <nav>${S.map(([id, t], i) => `<a href="#${id}" data-jump="${id}">0${i + 1} ${t}</a>`).join('')}</nav>
         <div class="body">${S.map(([id, t, body], i) => { const art = polArt(id); return `<section class="clause" id="${id}"><span class="no">0${i + 1} / ${t}</span><div class="c policy ${art ? 'has-art' : ''}"><div><h2>${t}</h2>${body}</div>${art}</div></section>`; }).join('')}</div></div></div>`;
@@ -1333,7 +1333,7 @@
       ['How do I pick my size?', 'Use the size guide on any product page. Our leather pairs run true to size; if you are between sizes, go up.'],
       ['Do you deliver to my city?', 'Yes. We deliver to every city and town in Pakistan that our courier reaches, in ' + C.delivery.days + ', for ' + fmt(C.delivery.fee) + ', or free on ' + C.freeDeliveryPairs + ' pairs or more.'],
       ['How long does delivery take?', 'We dispatch within 24 hours of confirming your order. Delivery then takes ' + C.delivery.days + ' in most cities. Remote areas and public holidays can take longer.'],
-      ['How do I use a coupon code?', 'Enter it in the bag or at checkout. One code per order.']
+      ['How do I use a coupon code?', 'Enter it in the bag or at checkout. One saving applies per order: free delivery or your code, whichever saves you more. Gift offers are added on top.']
     ];
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our promise</span><h1>What every pair promises.</h1><p class="aside">Printed on the manifest card in every box. If we break a line, we make it right.</p></div></section>
       <div class="wrap"><div class="terms">

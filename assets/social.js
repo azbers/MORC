@@ -21,9 +21,13 @@
   const on = (name, fn) => { (EXT.hooks[name] = EXT.hooks[name] || []).push(fn); };
 
   /* ---------------- reviews data ---------------- */
+  // On Shopify, approved Fit notes come from the store (Content > Metaobjects > Fit note, Status Approved)
+  const FIT = { 'Runs small': 'small', 'True to size': 'true', 'Runs large': 'large' };
+  const slug = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const SERVER = (window.DAUR_FITNOTES || []).map((n) => ({ id: 'fn-' + n.id, pid: n.pid, vid: n.colour ? slug(n.colour) : '', rating: Math.max(1, Math.min(5, +n.rating || 5)), title: n.title || '', body: n.body || '', name: n.name || '', city: n.city || '', size: n.size || '', fit: FIT[n.fit] || '', photo: n.photo || '', verified: !!n.verified, status: 'approved', helpful: 0, at: n.date || '' }));
   const R = {
-    all() { return A().store.get('reviews', []); },
-    save(list) { A().store.set('reviews', list); },
+    all() { const ids = new Set(SERVER.map((r) => r.id)); return SERVER.concat(A().store.get('reviews', []).filter((r) => !ids.has(r.id))); },
+    save(list) { A().store.set('reviews', list.filter((r) => !String(r.id).startsWith('fn-'))); },
     approved(pid) { return R.all().filter((r) => r.status === 'approved' && (!pid || r.pid === pid)); },
     stats(pid) {
       const list = R.approved(pid);
