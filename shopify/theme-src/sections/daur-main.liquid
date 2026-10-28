@@ -32,7 +32,7 @@
     {%- if shot %}{{ shot | image_url: width: 900 | image_tag: loading: 'eager', alt: product.title }}{% endif %}
     <div class="rte">{{ product.description }}</div>
     {%- for o in product.options_with_values -%}<p>{{ o.name }}: {{ o.values | join: ', ' }}</p>{%- endfor -%}
-    <p>Cash on Delivery to every city in Pakistan. Dispatch within 24 hours of confirmation, delivery in {{ settings.delivery_days }}. Free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs, 7 day size exchange.</p>
+    <p>Cash on Delivery to every city in Pakistan. Dispatch within 24 hours of confirmation, delivery in {{ settings.delivery_days }}. Free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs, 5 day size exchange{% if product.compare_at_price > product.price %} does not apply to sale pairs; defects are covered for 30 days{% endif %}.</p>
   {%- when 'collection' -%}
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {{ collection.title }}</nav>
     <h1>{{ collection.title }}</h1>

@@ -2,7 +2,7 @@
   Structured data printed with the page itself, so search engines read the
   brand, prices, stock and breadcrumbs without running the storefront script.
   Only facts the store already states: theme settings for delivery, the
-  7 day exchange, and the products as they are in Shopify.
+  5 day exchange, and the products as they are in Shopify.
 {%- endcomment -%}
 {%- liquid
   assign root = shop.url
@@ -15,7 +15,7 @@
 {"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":{{ settings.delivery_fee | default: 0 }},"currency":{{ shop.currency | json }}},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"PK"}{% if tmax > 0 %},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":{{ tmin }},"maxValue":{{ tmax }},"unitCode":"DAY"}}{% endif %}}
 {%- endcapture -%}
 {%- capture returns -%}
-{"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","refundType":"https://schema.org/ExchangeRefund"}
+{"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":5,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/ReturnShippingFees","refundType":"https://schema.org/ExchangeRefund"}
 {%- endcapture -%}
 {%- if template.name == 'index' -%}
 <script type="application/ld+json">

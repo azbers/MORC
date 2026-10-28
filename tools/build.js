@@ -22,7 +22,7 @@ const PAGES = {
   checkout: ['checkout.html', 'Checkout | DAUR Supply', 'Cash on Delivery checkout for DAUR Supply.'],
   order: ['order.html', 'Order placed | DAUR Supply', 'Your DAUR Supply order.'],
   manifesto: ['manifesto.html', 'About DAUR Supply | Why Branded Shoes Cost More in Pakistan', 'Why branded shoes cost more in Pakistan, and how DAUR sells the same local leather shoes and sneakers straight from the workshops at factory price.'],
-  contract: ['contract.html', 'Delivery, Cash on Delivery & Exchanges in Pakistan | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 7 day size exchanges, defect cover and the EU to UK shoe size guide.'],
+  contract: ['contract.html', 'Delivery, Cash on Delivery & Exchanges in Pakistan | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery terms, 5 day size exchanges, defect cover and the EU to UK shoe size guide.'],
   track: ['track.html', 'Track your order | DAUR Supply', 'Track a DAUR Supply Cash on Delivery order.'],
   wishlist: ['wishlist.html', 'Wishlist | DAUR Supply', 'Your saved DAUR Supply pairs.'],
   list: ['list.html', 'Join the alert list | DAUR Supply', 'Get DAUR Supply drops, restocks and discounts first on WhatsApp.'],

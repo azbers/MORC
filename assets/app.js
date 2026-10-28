@@ -189,7 +189,7 @@
   const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['shop', 'sale', 'Sale'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
   const NAV_TOP = navItems.length - 2;
   function chrome() {
-    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '7 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
+    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
     const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
     document.body.insertAdjacentHTML('afterbegin', `
@@ -445,7 +445,7 @@
     all: { e: 'The guide', h: (ONE === 'Men' ? 'Men\'s' : 'Leather') + ' shoes, crafted in Pakistan.', b: [
       ['', 'DAUR Supply makes shoes for men who notice the details. The collection covers leather sneakers and joggers for every day, full grain formal shoes and chelsea boots for the moments that matter, and casual slip ons that move between the two. Every pair is checked by hand before it earns the DAUR seal.'],
       ['How to choose', 'For daily wear with jeans or chinos, start with a court low or a trainer. For the office, a wedding or a shalwar kameez, a black derby or a chelsea boot carries the look. For long days on your feet, a moc toe runner gives you leather with a cushioned sole.'],
-      ['Sizes, delivery and payment', () => `Pairs run in ${sizeSpan()}. Measure your foot heel to toe and match it to the size guide; between sizes, go up. We deliver to every city in Pakistan with Cash on Delivery, dispatch within 24 hours of confirming your order, and offer a 7 day size exchange.`]],
+      ['Sizes, delivery and payment', () => `Pairs run in ${sizeSpan()}. Measure your foot heel to toe and match it to the size guide; between sizes, go up. We deliver to every city in Pakistan with Cash on Delivery, dispatch within 24 hours of confirming your order, and offer a 5 day size exchange on full price pairs.`]],
       faq: [['Which shoes go best with shalwar kameez?', 'A black or dark brown leather pair keeps it sharp: a chelsea boot or a derby for formal days and weddings, a slip on for Fridays and family visits. A shoe darker than the kameez always looks considered.'],
         ['What is the difference between sneakers and joggers?', 'In Pakistan, joggers usually means sporty sneakers. Our sneakers range covers clean leather court lows for everyday style and lighter trainers for walking and travel.']] },
     sneakers: { e: 'Sneaker guide', h: 'Sneakers and joggers for men.', b: [
@@ -464,7 +464,7 @@
       ['Built for the whole day', 'Leather uppers breathe and mould to your foot, and rubber soles grip on tile and road. A slip on goes on in a second, which makes it the pair to keep by the door for the mosque, the market and the office.']],
       faq: [['Do leather slip ons stretch?', 'Leather softens and gives a little with wear, so choose a snug fit on day one. Elastic gores keep the shoe secure as it settles.']] },
     sale: { e: 'About the sale', h: 'Men\'s shoes on sale.', b: [
-      ['', 'These are price cuts on current pairs, with the original price shown beside the new one. Sale pairs carry the same checks, the same DAUR seal and the same 7 day size exchange as the rest of the collection.']],
+      ['', 'These are price cuts on current pairs, with the original price shown beside the new one. Sale pairs carry the same checks, the same DAUR seal and the same 30 day defect cover as the rest of the collection. Sale pairs cannot be exchanged for size, so please check the size guide before you order.']],
       faq: [['How long does the sale last?', 'Sale prices hold while sizes last. A sold out size is marked sold out on every page.']] },
     new: { e: 'New in', h: 'New arrivals for men.', b: [['', 'The newest pairs to earn the DAUR seal, with the latest first. Every one ships with Cash on Delivery to every city in Pakistan.']] }
   };
@@ -552,7 +552,7 @@
 
     ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', b: [
       ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We make leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Karachi and finished with our own hardware. Branded, not labeled: the DAUR mark sits on the laces and the seal, and the leather does the talking.`],
-      ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirmation, free delivery on two pairs and a 7 day size exchange.']],
+      ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirmation, free delivery on two pairs and a 5 day size exchange.']],
       l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]).concat(sale.length ? [[link('shop', 'sale'), 'Sale']] : []) })}
     <section class="sheet x"><div class="wrap"><div class="signup closer">
       <h2>Your next pair, at your door.</h2>
@@ -655,7 +655,7 @@
     ['Delivery', 'All of Pakistan', 'Every city and town the courier reaches, in ' + C.delivery.days + ' after dispatch.'],
     ['Payment', 'Cash on Delivery', 'Pay the rider when the box arrives. No card, no advance, no wallet needed.'],
     ['Delivery fee', fmt(C.delivery.fee) + ', or free', 'One flat fee for every city. Free on ' + C.freeDeliveryPairs + ' pairs or more.'],
-    ['Exchange', '7 days, unworn', 'Wrong size? Send it back unworn with the seal attached and we swap it. We cover the return courier on the first exchange.'],
+    ['Exchange', '5 days, unworn', 'Wrong size? Send it back unworn with the seal attached and we swap it once it reaches us. Sale pairs are final for size.'],
     ['Defects', '30 days', 'Stitching or sole failure in normal wear within 30 days and we replace the pair or refund it. No argument.']
   ];
 
@@ -954,13 +954,13 @@
             <button class="btn volt pill-add" id="add">${ic('bag')}<span>${size ? 'Add to bag, ' + fmt(v.price * qty) : 'Select a size'}</span></button>
             <button class="btn ghost block" id="buyNow">Buy now, pay on delivery</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
-          <ul class="trust"><li>Dispatch in 24 hours</li><li>7 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
+          <ul class="trust"><li>Dispatch in 24 hours</li><li>5 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
           <div id="ext-rvcard"></div>
           <div class="specs"><h4>Specs</h4><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
           <div class="acc">
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
-            <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Seven day size exchange on unworn pairs with the seal attached. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
+            <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Five day size exchange on unworn full price pairs with the seal attached. Sale pairs are final for size; defects are covered for 30 days on every pair. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
           </div>
         </div>
       </div></div>
@@ -1252,7 +1252,7 @@
             <p>The engraved DAUR dubrae on the laces and the Supply Unit seal on the top eyelet are how you know a pair is ours. There is no oversized logo and no loud print. Just clean leather, tight stitching and a silhouette that speaks for itself, the way the most confident pieces always have.</p>
             <p>Before a pair earns our seal, we check its stitching, leather grain, sole bond and comfort. If it is not right, it does not ship.</p></div>
           <div class="mblock" id="m3"><span class="eyebrow">03</span><h2>Luxury, Made Wearable.</h2>
-            <div class="pillars"><div><b>Materials you can name</b><p>Every upper, lining and sole is listed plainly on the product page.</p></div><div><b>Checked by hand</b><p>Six checks on every pair, from the flex of the upper to the bond of the sole.</p></div><div><b>Paid on delivery</b><p>Cash on Delivery to every city in Pakistan, with a 7 day size exchange.</p></div></div>
+            <div class="pillars"><div><b>Materials you can name</b><p>Every upper, lining and sole is listed plainly on the product page.</p></div><div><b>Checked by hand</b><p>Six checks on every pair, from the flex of the upper to the bond of the sole.</p></div><div><b>Paid on delivery</b><p>Cash on Delivery to every city in Pakistan, with a 5 day size exchange.</p></div></div>
             <p class="big">Premium should feel like this: solid in the hand, easy on the foot, and fair on the wallet.</p>
             <p class="verdict">Welcome to the new daur.</p>
             <a class="btn volt" href="${link('shop')}" style="justify-self:start">Shop the collection <span class="arr">&rarr;</span></a></div>
@@ -1308,7 +1308,8 @@
         <li>The delivery fee is ${fmt(C.delivery.fee)} for any city, and free on ${C.freeDeliveryPairs} pairs or more.</li>
         <li>At dispatch you receive the courier name, tracking number and live tracking link on WhatsApp. They also show on the <a class="link" href="${link('track')}">Track order</a> page.</li></ul>`],
       ['refunds', 'Returns, exchanges and refunds', `<ul>
-        <li><b>Size exchange.</b> Message us within 7 days of delivery. The pair must be unworn outside, in its original box, with the Supply Unit seal attached. We cover the return courier on the first exchange of each order.</li>
+        <li><b>Size exchange.</b> Message us within 5 days of delivery. The pair must be unworn outside, in its original box, with the Supply Unit seal attached. Send it back to us with the courier of your choice; once it reaches us and passes the check, your new size is dispatched.</li>
+        <li><b>Sale pairs.</b> Sale pairs cannot be exchanged for size. Defects within 30 days are still covered.</li>
         <li><b>Defects.</b> If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp and we replace the pair or refund it.</li>
         <li><b>Wrong or damaged item.</b> If the pair you received is not the one you ordered, or arrives damaged, tell us within 48 hours with photos. A short unboxing video helps us settle it fast.</li>
         <li><b>Refunds.</b> When a replacement is not available, we refund the item price to your bank account or mobile wallet once the returned pair reaches us and is checked. Delivery fees are refunded when the mistake was ours.</li>
@@ -1325,7 +1326,7 @@
 
   /* ---- contract ---- */
   V.contract = function (param) {
-    setMeta('Our Promise: Delivery, Cash on Delivery & Exchanges | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery, dispatch within 24 hours, 7 day size exchanges, 30 day defect cover and the EU to UK shoe size guide.');
+    setMeta('Our Promise: Delivery, Cash on Delivery & Exchanges | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery, dispatch within 24 hours, 5 day size exchanges, 30 day defect cover and the EU to UK shoe size guide.');
     const faq = [
       ['Is DAUR a brand?', 'Yes. DAUR Supply is our own Pakistani brand. Every pair is made in Pakistani workshops, checked by our team and finished with DAUR hardware: the engraved dubrae on the laces and the Supply Unit seal. We do not sell copies or products of other brands.'],
       ['Are the shoes real leather?', 'Each product page lists the upper, lining and sole of that pair. Our leather shoes and chelsea boots are full grain leather; sneakers list their leather, suede or mesh parts in the specs.'],
@@ -1344,7 +1345,7 @@
             <div class="city-grid"><div><b>Where</b><span>Every city and town our courier reaches</span></div><div><b>How long</b><span>${C.delivery.days} after dispatch</span></div><div><b>Fee</b><span>${fmt(C.delivery.fee)} / free on ${C.freeDeliveryPairs}+ pairs</span></div></div>
             <p>Your courier name, tracking number and live tracking link arrive on WhatsApp at dispatch, and show on the <a class="link" href="${link('track')}">Track order</a> page.</p></div></section>
           <section class="clause" id="cod"><span class="no">03 / Cash on Delivery</span><div class="c"><h2>Pay when the box is in your hands.</h2><ul><li>No advance payment and no card needed. There is no COD surcharge.</li><li>Pay the rider the exact total shown on your confirmation.</li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li><li>Refusing a confirmed parcel without a reason costs us two courier legs. Repeat refusals lose COD access.</li></ul></div></section>
-          <section class="clause" id="exchanges"><span class="no">04 / Exchanges</span><div class="c"><h2>Seven days to swap the size.</h2><ul><li>Message us within 7 days of delivery with your order number.</li><li>The pair must be unworn outside, in the original box, with the Supply Unit seal still attached.</li><li>We cover the return courier on your first exchange per order.</li><li>If the size you need is sold out, we refund the item price to your bank or wallet account.</li></ul></div></section>
+          <section class="clause" id="exchanges"><span class="no">04 / Exchanges</span><div class="c"><h2>Five days to swap the size.</h2><ul><li>Message us within 5 days of delivery with your order number.</li><li>The pair must be unworn outside, in the original box, with the Supply Unit seal still attached.</li><li>Send it back to us with the courier of your choice. Once it reaches us and passes the check, your new size is dispatched.</li><li>If the size you need is sold out, we refund the item price to your bank or wallet account.</li><li>Sale pairs cannot be exchanged for size. Defects within 30 days are still covered.</li></ul></div></section>
           <section class="clause" id="defects"><span class="no">05 / Defects</span><div class="c"><h2>30 days on stitching and sole.</h2><p>If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp. We replace the pair, or refund it if no replacement is available. Wear and tear, scuffs and misuse are not defects.</p></div></section>
           <section class="clause" id="sizing"><span class="no">06 / Size guide</span><div class="c"><h2>Measure, then match.</h2>${sizeTable()}<p>Measure your foot heel to toe while standing. Pick the size whose length is equal to or just above your measurement.</p></div></section>
           <section class="clause" id="faq"><span class="no">07 / FAQ</span><div class="c faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></section>
