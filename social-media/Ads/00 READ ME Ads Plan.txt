@@ -1,0 +1,57 @@
+DAUR SUPPLY  |  META ADS PLAN, MONTH ONE
+Prepared 29 October 2026
+
+WHEN TO START
+Start Day 01 only when all of these are true:
+  1. The store password is removed and real products with real photos are Active.
+  2. The WhatsApp Business number is linked to the Facebook Page.
+  3. Someone can reply to WhatsApp chats within working hours every day.
+Until then the folders below are ready and waiting.
+
+BUDGET  (Rs. 45,000 for month one, as planned in the original project)
+  Day 01 to 14   Campaign 1 Click to WhatsApp        Rs. 1,500 a day   Rs. 21,000
+  Day 15 to 30   Campaign 1 Click to WhatsApp        Rs. 1,000 a day   Rs. 16,000
+  Day 15 to 30   Campaign 2 Retargeting              Rs.   500 a day   Rs.  8,000
+  Total                                                                Rs. 45,000
+Meta charges in the ad account currency; actual spend can differ slightly
+from the daily budget on a given day.
+
+THE FOLDERS
+  Day 00 Setup before launch    accounts, Pixel, audiences
+  Day 01 Launch Click to WhatsApp  campaign 1 with creatives A1, A2, A3
+  Day 04 First check            look, do not edit
+  Day 08 Creative refresh       add A4 and A5, pause the weakest ad
+  Day 15 Retargeting            campaign 2 with R1 and R2, lower campaign 1
+  Day 22 Scale or fix           budget rules
+  Day 30 Month review           numbers to send to Claude
+Every creative comes in two sizes: Feed 1080x1350 (4:5) and Story 1080x1920
+(9:16). Upload both into the same ad so Meta uses the right one per placement.
+
+WHY THIS PLAN  (sources)
+  * Facebook has the second largest ad reach in Pakistan (52.9 million) and
+    its adult ad audience is 79.2% male; Instagram reaches 22.4 million, 63.0%
+    male. DataReportal, Digital 2026: Pakistan (figures from late 2025).
+    https://datareportal.com/reports/digital-2026-pakistan
+  * Click to WhatsApp ads can be built with the Engagement, Traffic and Sales
+    objectives in Ads Manager; deliver any promised offer quickly once the
+    chat starts. WhatsApp Business blog.
+    https://whatsappbusiness.com/blog/click-to-whatsapp-ad-guide/
+  * A Meta and Toluna study of about 100 short video ads found ads that set
+    out brand and message in the first five seconds were 1.7 times more
+    likely to drive strong purchase intent. Every DAUR creative shows the
+    message and the D mark at once for this reason.
+    https://tolunacorporate.com/what-makes-short-form-video-ads-work-meta-toluna-study/
+  * The learning phase usually needs about 50 optimisation events in 7 days,
+    and edits to targeting, creative, optimisation event or a budget change
+    above about 20% restart it. This is why the plan says do not edit before
+    Day 08 and raise budgets in steps of 20% at most. (Industry summary of
+    Meta's help pages.)
+    https://lebesgue.io/facebook-ads/facebook-ads-learning-phase-what-you-need-to-know-2024-update
+  * Product photos: these creatives are typographic because real product
+    photos do not exist yet. As soon as real photos arrive, send them to
+    Claude; product creatives will be added to Day 08 and Day 15.
+
+HONEST LIMITS
+  No result (cost per chat, orders, return on spend) can be promised before
+  the ads run. Claude cannot log in to Ads Manager; paste the numbers listed
+  in Day 30 (or weekly) and Claude will read them and adjust the plan.

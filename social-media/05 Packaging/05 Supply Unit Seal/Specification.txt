@@ -1,0 +1,7 @@
+DAUR SUPPLY UNIT SEAL  |  SPECIFICATION
+Tag          Soft PVC or rubber, matte black #16110D, 50 x 30 mm, about 2 mm thick, 5 mm corners
+Front        Symbol pressed in (deboss, see DEBOSS MASK); DAUR / SUPPLY UNIT printed in cream; serial number in brass
+Back         "Keep this seal on. Size exchange within 5 days needs it attached." + daursupply.com
+Strap        Black nylon, one time locking, about 15 to 20 cm, through the 8 x 3.2 mm slot
+Numbering    Printed serial from NO. 000001 if the supplier can; otherwise write by marker
+Use          Top eyelet of the right shoe. Write the number on the size label and in the Shopify order note.

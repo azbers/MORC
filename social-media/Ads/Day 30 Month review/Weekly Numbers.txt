@@ -1,0 +1,15 @@
+DAY 30  |  MONTH REVIEW  (fill in weekly, then paste to Claude)
+
+Week | Spend Rs. | Impressions | Reach | Frequency | Link CTR % | Chats started | Cost per chat Rs. | Orders from chats | Orders from site | Refused parcels
+1    |           |             |       |           |            |               |                   |                   |                  |
+2    |           |             |       |           |            |               |                   |                   |                  |
+3    |           |             |       |           |            |               |                   |                   |                  |
+4    |           |             |       |           |            |               |                   |                   |                  |
+
+Best ad (name):
+Weakest ad (name):
+Most common question in chats:
+Most common reason a chat did not order:
+
+Claude will use this to plan month two (the original plan adds TikTok in
+month two and Google Search after about 30 orders).

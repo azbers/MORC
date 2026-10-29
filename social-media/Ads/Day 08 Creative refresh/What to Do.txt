@@ -1,0 +1,22 @@
+DAY 08  |  CREATIVE REFRESH
+
+1. Compare the three ads by Cost per messaging conversation started and by
+   orders that came from those chats.
+2. Rule of thumb (not a Meta rule): once each ad has spent at least Rs. 1,500,
+   pause an ad whose cost per conversation is about double the best ad's.
+   Keep at least two ads running.
+3. Add two new ads to the same ad set (adding ads restarts learning for that
+   ad set, so do it once, both together):
+     A4 Five day exchange    Creatives/A4 Five day exchange Feed + Story
+     A5 Checked by hand      Creatives/A5 Checked by hand Feed + Story
+   Check before using A5: the hand checks must really happen on every pair.
+4. If real product photos are ready, ask Claude for product creatives and
+   add them now instead of, or as well as, A4 and A5.
+
+AD COPY
+A4  Primary text: Wrong size? You have five days from delivery to swap it. Unworn, original box, seal attached. Cash on Delivery across Pakistan.
+    Roman Urdu: Size theek nahi? Delivery ke 5 din ke andar size exchange. Pair unworn, original box aur seal ke saath. Poore Pakistan mein Cash on Delivery.
+    Headline: Five day size exchange
+A5  Primary text: Every pair is checked by hand before it is boxed: stitching, grain, upper flex, sole bond and comfort. Same local craft. Zero retail markup.
+    Roman Urdu: Har pair box hone se pehle hath se check hota hai: silai, leather, flex, sole aur comfort. Wohi local craft, retail markup ke baghair.
+    Headline: Every pair checked by hand

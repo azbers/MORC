@@ -1,0 +1,29 @@
+DAUR SUPPLY  |  ACCOUNTS REGISTER  (no passwords in this file)
+Updated 29 October 2026
+
+Platform        Handle or address               Login                    2FA on?  Backup / note
+Gmail           daursupply@gmail.com            (itself)                 [ ]      recovery phone: ________
+Domain email    contact@daursupply.com          forwards to the Gmail    n/a      set up in Shopify
+Shopify         ppiveu-zp.myshopify.com         owner account            [ ]      Basic plan, PKR
+Domain          daursupply.com                  bought in Shopify 26 Oct 2026     renewal: ________
+Instagram       @daursupply                     daursupply@gmail.com     [ ]
+Facebook Page   DAUR Supply                     your personal profile    [ ]      second admin: ________
+                facebook.com/daursupply
+WhatsApp        0319 9628735 (Business app)     the phone                [ ] PIN  linked devices: ________
+                wa.me/923199628735              username @daursupply reserved, not usable in links yet
+Meta Business   business.facebook.com           your personal profile    [ ]      ad account: ________
+TikTok          not claimed yet                 ____________________     [ ]
+Watix           Shopify app (WhatsApp API)      Shopify                  n/a      blocked until Coexistence
+Courier         PostEx / Leopards / Trax        not opened yet           [ ]      account no.: ________
+
+Date each item was completed:
+Gmail secured            ________
+Instagram finished       ________
+Facebook Page live       ________
+Page username set        ________
+Instagram linked         ________
+WhatsApp linked          ________
+Meta ad account created  ________
+Shopify social links set ________
+TikTok claimed           ________
+Courier account opened   ________

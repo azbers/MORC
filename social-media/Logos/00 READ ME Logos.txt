@@ -1,0 +1,35 @@
+DAUR SUPPLY  |  LOGO FILES
+Made 29 October 2026 from the final DAUR Supply marks (loop D symbol and
+the drawn DAUR wordmark, brand/daur-*.svg in the azbers/MORC repository).
+
+TRANSPARENT BACKGROUND
+Every file in "SVG", "PNG 4000px" and "PNG 1200px (web)" has a transparent
+background. "With Background" holds the square app icon on a solid colour.
+
+LAYOUTS
+  Symbol     the loop D alone (profile pictures, favicon, stamps, watermark)
+  Wordmark   DAUR alone (lace tag, engraving, small spaces)
+  Lockup     DAUR with the brass rule and SUPPLY underneath (website header)
+  Stacked    symbol over DAUR and SUPPLY (box lid, cover images, print)
+
+COLOURS
+  Espresso   #2A1C14 with brass #B0843F accent   for light backgrounds
+  Hide       #F5EEE4 with brass #C89B5E accent   for dark backgrounds
+  Brass      #B0843F                              on espresso or black
+  Black      #000000                              one colour print, engraving
+  White      #FFFFFF                              on photos, dark print
+
+WHICH FILE TO USE
+  Printing, laser engraving, box, signage   SVG (scales to any size)
+  Canva, PowerPoint, Word, social designs   PNG 4000px
+  Website, email, WhatsApp                  PNG 1200px (web)
+The SUPPLY text inside the SVG files is converted to shapes, so the files
+look the same on any computer without the JetBrains Mono font.
+
+RULES
+  * Keep clear space around the mark of at least the height of the D's
+    bottom bar.
+  * Do not stretch, recolour outside the palette, add shadows or outlines.
+  * DAUR alone on the lace tag and on the logo; "DAUR Supply" in text.
+  * No trademark search has been done yet. Run a WIPO image search and ask a
+    trademark agent before printing boxes or tags in volume.

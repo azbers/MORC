@@ -1,0 +1,6 @@
+DAUR MANIFEST CARD  |  SPECIFICATION
+Size         A6, 105 x 148 mm, 3 mm bleed on all sides in the PRINT files
+Card         350 gsm, matte lamination (soft touch if available)
+Front        Black with brass hot foil logo and rule (see FOIL MASK); text in CMYK
+Back         Cream, espresso text: exchange, defects, wrong item, care, Fit notes, charity, contacts
+Note         The back repeats the current store policies. Update it if a policy changes.

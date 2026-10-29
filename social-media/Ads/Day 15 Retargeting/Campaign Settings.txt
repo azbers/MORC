@@ -1,0 +1,30 @@
+DAY 15  |  CAMPAIGN 2  RETARGETING  (and lower campaign 1)
+
+FIRST: set campaign 1 budget from Rs. 1,500 to Rs. 1,000 a day.
+
+CAMPAIGN 2
+  Name            DAUR | Retarget | Warm
+  Objective       Engagement, conversion location WhatsApp
+                  (switch to Sales with the Purchase event once the Pixel
+                  records about 50 purchases in a week)
+  Budget          Rs. 500 a day, Day 15 to Day 30
+AD SET
+  Audience        Include: IG engaged 30d, FB engaged 30d, Site visitors 30d,
+                  WA chats 30d. Exclude: Buyers 30d.
+                  Turn Advantage+ audience OFF here, so it stays warm only.
+  Location        Pakistan, Men, 20 to 45
+  Placements      Advantage+ placements
+ADS
+  R1 SUPPLYLINE            Creatives/R1 SUPPLYLINE Feed + Story
+     Call to action: Shop now, link https://daursupply.com
+     Check SUPPLYLINE is still active in Shopify > Discounts.
+  R2 Order in one message  Creatives/R2 Order in one message Feed + Story
+     Call to action: Send WhatsApp message
+
+AD COPY
+R1  Primary text: Still deciding? Use the code SUPPLYLINE for Rs. 300 off at checkout on daursupply.com. One saving per order. Cash on Delivery across Pakistan.
+    Roman Urdu: Abhi soch rahe hain? Code SUPPLYLINE se Rs. 300 off, daursupply.com par checkout par. Aik order par aik saving. Cash on Delivery.
+    Headline: Rs. 300 off with SUPPLYLINE
+R2  Primary text: Order in one message. Send the pair, your size and your city on WhatsApp. We confirm and dispatch within 24 hours. Pay the rider on delivery.
+    Roman Urdu: Aik message mein order. Pair ka naam, size aur shehar WhatsApp par bhejein. Hum confirm kar ke 24 ghante mein dispatch karte hain.
+    Headline: Order on WhatsApp

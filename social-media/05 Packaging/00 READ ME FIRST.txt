@@ -1,0 +1,35 @@
+DAUR SUPPLY  |  PACKAGING AND ACCESSORIES KIT  |  VERSION 2
+Redesigned 29 October 2026. Open "00 DAUR Packaging Guide.html" for the full guide
+with pictures, plain language print terms, prices found online and sources.
+
+PICTURES (3D renders made from the print files in this folder)
+  00 Mockups (Full HD 1920x1080)   11 images: box, open box, card, lace tag,
+                                    seal, stickers, tissue, flyer bag, full kit
+  00 Mockups (4K 3840x2160)        the same 11 images in high resolution
+  09 Flat Artwork Previews (PNG)   every design flat, for checking on a phone
+
+PRINT FILES (send these to vendors)
+  01 Shoe Box            Preview, CMYK ink layer, foil mask, spot UV mask,
+                         dieline, inside lid
+  02 Tissue Paper        Full sheet 20 x 30 in and seamless repeat tile
+  03 Laces               Specification sheet (no artwork is printed on laces)
+  04 Lace Tag            Brass tag: 1 to 1 laser engraving files and drawing
+  05 Supply Unit Seal    Front and back, deboss mask
+  06 Manifest Card       A6 front and back, foil mask for the front
+  07 Stickers            Round seal 2 in, box seal strip, size label
+  08 Courier Flyer Bag   Front print
+  Each folder has a Specification.txt to send with the files.
+
+FILE TYPES
+  .svg  Open in Adobe Illustrator, CorelDRAW, Inkscape or Figma. Text is already
+        converted to shapes, so no fonts are needed.
+  .pdf  Same design, for printers who ask for PDF.
+  PRINT = goes to press.  GUIDE = shows cut and safe lines, for checking only.
+  FOIL / SPOT UV / DEBOSS MASK = black shows where that finish goes.
+
+THREE THINGS BEFORE PRINTING IN VOLUME
+  1. Put your biggest real pair (EU 45) in a sample box of 12.5 x 7.5 x 5 in.
+  2. Ask for a printed sample (proof) and approve it in hand. Screen colours
+     are not print colours, and the mockups are renders, not photos.
+  3. Trademark: no search has been done for the DAUR logo yet. Do it before
+     ordering boxes or tags in large numbers.

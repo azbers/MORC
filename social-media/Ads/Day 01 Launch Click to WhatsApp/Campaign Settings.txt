@@ -1,0 +1,39 @@
+DAY 01  |  CAMPAIGN 1  CLICK TO WHATSAPP
+
+CAMPAIGN
+  Name            DAUR | CTWA | Launch
+  Objective       Engagement
+  Budget          Rs. 1,500 a day (campaign budget), Day 01 to Day 14
+  Special ad category  none
+
+AD SET
+  Name            PK | Men 20 to 45 | Advantage+
+  Conversion location  Messaging apps > WhatsApp (number 0319 9628735)
+  Performance goal     Maximise number of conversations
+  Location        Pakistan
+  Age             20 to 45 (enter as audience suggestion if Advantage+
+                  audience is on)
+  Gender          Men (the line is men only)
+  Detailed targeting  leave empty, or as suggestions: Shoes, Leather,
+                  Sneakers, Online shopping
+  Placements      Advantage+ placements
+  Languages       leave empty (English and Urdu speakers both see it)
+
+ADS  (three ads in the ad set; each ad gets both sizes)
+  Ad A1  Cash on Delivery         Creatives/A1 Cash on Delivery Feed + Story
+  Ad A2  Zero retail markup       Creatives/A2 Zero retail markup Feed + Story
+  Ad A3  Two pairs free delivery  Creatives/A3 Two pairs free delivery Feed + Story
+  Text for each ad: "Ad Copy.txt"
+  Call to action  Send WhatsApp message
+
+MESSAGE TEMPLATE  (Ad > Message template)
+  Greeting   Assalam o Alaikum, welcome to DAUR Supply. Which pair and size
+             are you looking for?
+  Questions (ice breakers, up to 4):
+    1. I want to order
+    2. Which sizes do you have?
+    3. How does Cash on Delivery work?
+    4. How long does delivery take?
+
+AFTER PUBLISHING
+  Do not edit anything until Day 08 (see "Day 04 First check").

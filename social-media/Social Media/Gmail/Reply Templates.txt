@@ -1,0 +1,27 @@
+GMAIL REPLY TEMPLATES
+(Gmail > Settings > See all settings > Advanced > Templates > Enable.
+ Then in a new email: three dots > Templates > Save draft as template.)
+
+1. ORDER RECEIVED
+Subject: Your DAUR Supply order {order number}
+Assalam o Alaikum {name},
+Thank you for your order. We will call or message you on WhatsApp shortly to
+confirm your size and address before dispatch. Payment is Cash on Delivery.
+DAUR Supply
+
+2. DISPATCHED
+Subject: Your DAUR Supply order is on its way
+Assalam o Alaikum {name},
+Your order {order number} has been dispatched with {courier}.
+Tracking number: {tracking}. Please keep the cash amount ready at delivery.
+DAUR Supply
+
+3. SIZE EXCHANGE
+Subject: Size exchange for order {order number}
+Assalam o Alaikum {name},
+No problem. Size exchanges are accepted within five days of delivery. Please
+keep the pair unworn, in the original box, with the seal attached, and send it
+back with the courier of your choice (the return courier is paid by the
+customer). Once it reaches us and passes the check, your new size is
+dispatched. Sale pairs are final for size.
+DAUR Supply
