@@ -1,40 +1,35 @@
-DAUR SUPPLY  |  PACKAGING AND ACCESSORIES KIT
-Made 29 October 2026. Open "00 DAUR Packaging Guide.html" for the full guide
+DAUR SUPPLY  |  PACKAGING AND ACCESSORIES KIT  |  VERSION 2
+Redesigned 29 October 2026. Open "00 DAUR Packaging Guide.html" for the full guide
 with pictures, plain language print terms, prices found online and sources.
 
-WHAT IS IN THIS FOLDER
-  01 Shoe Box            Outside artwork on the dieline, dieline only, foil mask
-                         for the lid logo, optional inside lid print
-  02 Tissue Paper        Seamless repeat tile (127 mm) and full sheet 20 x 30 in
+PICTURES (3D renders made from the print files in this folder)
+  00 Mockups (Full HD 1920x1080)   11 images: box, open box, card, lace tag,
+                                    seal, stickers, tissue, flyer bag, full kit
+  00 Mockups (4K 3840x2160)        the same 11 images in high resolution
+  09 Flat Artwork Previews (PNG)   every design flat, for checking on a phone
+
+PRINT FILES (send these to vendors)
+  01 Shoe Box            Preview, CMYK ink layer, foil mask, spot UV mask,
+                         dieline, inside lid
+  02 Tissue Paper        Full sheet 20 x 30 in and seamless repeat tile
   03 Laces               Specification sheet (no artwork is printed on laces)
-  04 Lace Tag            Brass DAUR tag: 1 to 1 laser engraving files + drawing
-  05 Supply Unit Seal    Zip tie seal tag: front and back 1 to 1 + drawing
-  06 Manifest Card       A6 card front and back (PRINT files and GUIDE files)
-  07 Stickers            Round tissue seal 2 in, box seal strip, size label
-  08 Courier Flyer Bag   Front print for a black poly mailer
-  09 Previews            PNG pictures for viewing on the phone only
+  04 Lace Tag            Brass tag: 1 to 1 laser engraving files and drawing
+  05 Supply Unit Seal    Front and back, deboss mask
+  06 Manifest Card       A6 front and back, foil mask for the front
+  07 Stickers            Round seal 2 in, box seal strip, size label
+  08 Courier Flyer Bag   Front print
+  Each folder has a Specification.txt to send with the files.
 
-EVERY DESIGN COMES IN TWO FORMATS
-  .svg  Open in Adobe Illustrator, CorelDRAW, Inkscape or Figma. All text is
-        already converted to shapes, so no fonts are needed.
+FILE TYPES
+  .svg  Open in Adobe Illustrator, CorelDRAW, Inkscape or Figma. Text is already
+        converted to shapes, so no fonts are needed.
   .pdf  Same design, for printers who ask for PDF.
-  Groups named "...do-not-print" (cut, crease, bleed, safe zone, labels) are
-  guides. The designer hides or deletes them before sending to print.
-
-WHO GETS WHAT
-  Box maker          everything in 01 + section 4 of the guide
-  Tissue printer     02
-  Lace supplier      03
-  Laser engraver     04
-  Tag or seal maker  05
-  Card and sticker   06 and 07 (same printer can do both)
-  Flyer bag maker    08
+  PRINT = goes to press.  GUIDE = shows cut and safe lines, for checking only.
+  FOIL / SPOT UV / DEBOSS MASK = black shows where that finish goes.
 
 THREE THINGS BEFORE PRINTING IN VOLUME
-  1. Put your biggest real pair (EU 45) in a sample box. The box size here is
-     a Pakistani stock men's size (12.5 x 7.5 x 5 in) and is not yet tested
-     with DAUR stock.
+  1. Put your biggest real pair (EU 45) in a sample box of 12.5 x 7.5 x 5 in.
   2. Ask for a printed sample (proof) and approve it in hand. Screen colours
-     are not print colours.
+     are not print colours, and the mockups are renders, not photos.
   3. Trademark: no search has been done for the DAUR logo yet. Do it before
      ordering boxes or tags in large numbers.
