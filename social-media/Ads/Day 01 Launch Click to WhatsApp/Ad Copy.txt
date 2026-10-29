@@ -1,0 +1,26 @@
+AD COPY  |  CAMPAIGN 1  (paste one version per ad; Meta can rotate text
+options if you add both English and Roman Urdu as text options)
+
+A1  CASH ON DELIVERY
+Primary text (English)
+Pay when it reaches you. Men's leather shoes and sneakers from Pakistani workshops, dispatched within 24 hours of confirmation. Cash on Delivery across Pakistan.
+Primary text (Roman Urdu)
+Pehle pair hath mein, phir payment. Pakistani workshops ke men's leather shoes aur sneakers. Confirmation ke 24 ghante mein dispatch. Poore Pakistan mein Cash on Delivery.
+Headline   Pay when it reaches you
+Description  Cash on Delivery across Pakistan
+
+A2  ZERO RETAIL MARKUP
+Primary text (English)
+Same local craft. Zero retail markup. We select finished pairs at Pakistani workshops and sell them online, straight to your door. Message us your size on WhatsApp.
+Primary text (Roman Urdu)
+Wohi local craft, retail markup ke baghair. Pakistani workshops se chune hue pairs, seedha aap ke ghar tak. Apna size WhatsApp par bhejein.
+Headline   Same local craft. Zero retail markup.
+Description  Men's leather shoes and sneakers
+
+A3  TWO PAIRS FREE DELIVERY
+Primary text (English)
+Two pairs, free delivery. One pair is Rs. 200 to deliver; two pairs or more deliver free anywhere in Pakistan. Pay the rider on delivery.
+Primary text (Roman Urdu)
+Do pairs par delivery free. Aik pair ki delivery Rs. 200, do ya zyada pairs par free, poore Pakistan mein. Payment rider ko delivery par.
+Headline   Two pairs. Free delivery.
+Description  Cash on Delivery across Pakistan

@@ -1,0 +1,20 @@
+DAY 22  |  SCALE OR FIX
+
+Look at the last 7 days only.
+
+IF orders from ad chats are profitable (the original plan estimated ads stop
+being profitable above roughly Rs. 1,390 ad cost per order; this is an
+estimate, recheck it with real courier rates and product costs):
+  Raise the budget of the better campaign by 20% at most. Wait 3 to 4 days
+  before the next raise.
+
+IF chats are coming but few people order:
+  The problem is after the click. Check reply speed, the answers given, the
+  product photos and sizes in stock. Do not raise the budget.
+
+IF few chats are coming (cost per conversation rising week on week):
+  Check Frequency. Above about 3 in 7 days, people are tired of the ads: add
+  new creatives (ask Claude, ideally with real product photos and short
+  videos) rather than changing targeting.
+
+Never change more than one thing at a time.

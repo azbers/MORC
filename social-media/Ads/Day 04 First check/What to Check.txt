@@ -1,0 +1,20 @@
+DAY 04  |  FIRST CHECK  (look only; do not edit)
+
+Open Ads Manager > Campaigns > DAUR | CTWA | Launch. Note these per ad:
+  Amount spent
+  Impressions and Reach
+  Frequency                    (how many times one person saw the ad)
+  Link clicks and CTR (link)
+  Messaging conversations started
+  Cost per messaging conversation started
+
+Then check the WhatsApp side:
+  How many chats came in, how many asked a real question, how many ordered.
+  Reply speed: every chat answered the same day.
+
+Act now only if something is broken:
+  * Ad rejected: read the reason, fix, resubmit.
+  * No delivery at all after 24 hours: check billing and that WhatsApp is
+    still linked.
+Otherwise leave everything as it is; edits restart the learning phase.
+Write the numbers in "Day 30 Month review/Weekly Numbers.txt".

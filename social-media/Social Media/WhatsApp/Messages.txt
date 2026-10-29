@@ -1,0 +1,52 @@
+WHATSAPP BUSINESS MESSAGES  (copy and paste)
+
+GREETING MESSAGE  (sent to new customers)
+Assalam o Alaikum, welcome to DAUR Supply.
+Same local craft. Zero retail markup.
+Send us the name of the pair and your size, or order on daursupply.com.
+Cash on Delivery across Pakistan.
+
+AWAY MESSAGE
+Thank you for your message. We are away right now and will reply as soon as
+we are back. You can also order anytime on daursupply.com.
+
+QUICK REPLIES  (type the shortcut after "/" in a chat)
+
+/order
+To place your order please send: 1. Pair name 2. Size 3. Full name
+4. Full address with city 5. Phone number. Payment is Cash on Delivery.
+
+/confirm
+Your order is confirmed: {pair}, size {size}, total Rs. {amount} (Cash on
+Delivery). It will be dispatched within 24 hours. Thank you for choosing
+DAUR Supply.
+
+/delivery
+Delivery across Pakistan: Rs. 200 for one pair, free on two pairs or more.
+Payment is Cash on Delivery.
+
+/exchange
+Five day size exchange from delivery: keep the pair unworn, in the original
+box, with the seal attached, and tell us the size you need. Send it back with
+the courier of your choice; once it reaches us and passes the check, your new
+size is dispatched. The return courier is paid by the customer. Sale pairs
+are final for size.
+
+/defect
+Sorry about that. Defects in normal wear (stitching opens or the sole
+separates) are covered for 30 days from delivery. Please send clear photos
+of the issue and your order number, and we will arrange a replacement or a
+refund.
+
+/wrongitem
+Sorry about that. Please send photos of the pair and the box, and your order
+number, within 48 hours of delivery (an unboxing video helps). We will put
+it right.
+
+/saving
+One saving applies per order: free delivery on two pairs or more, or the
+code SUPPLYLINE for Rs. 300 off. Gifts, when offered, come on top.
+
+/track
+You can track your order on daursupply.com with your order number, phone or
+email. No sign in needed.
