@@ -37,11 +37,18 @@ function apiKey() {
 }
 
 async function call(method, url, key, body, isForm = false) {
-  const res = await fetch(API + url, {
-    method,
-    headers: isForm ? { Authorization: key } : { Authorization: key, "Content-Type": "application/json" },
-    body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
-  });
+  // Postiz limits how many public API calls it accepts per period; on 429 wait and try again.
+  let res;
+  for (let t = 0; ; t++) {
+    res = await fetch(API + url, {
+      method,
+      headers: isForm ? { Authorization: key } : { Authorization: key, "Content-Type": "application/json" },
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
+    });
+    if (res.status !== 429 || t >= 30) break;
+    log(`Postiz asked to slow down; waiting 2 minutes before ${method} ${url}`);
+    await new Promise((r) => setTimeout(r, 120000));
+  }
   const text = await res.text();
   if (!res.ok) throw new Error(`${method} ${url} ${res.status}: ${text.slice(0, 300)}`);
   try { return JSON.parse(text); } catch { return text; }

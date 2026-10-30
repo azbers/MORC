@@ -2,6 +2,17 @@ DAUR SUPPLY  |  POSTIZ: THE LOCAL SOCIAL MEDIA SCHEDULER
 Installed 29 October 2026 on this PC with Docker. Free and open source.
 Address once running: http://localhost:4007
 
+UPDATE 30 OCTOBER 2026 (LATEST)
+  * Claude now runs the posting. Postiz is connected to Claude Code as the MCP
+    server "postiz". Ask Claude, in a Claude Code chat opened in
+    D:\Sure Secure\Daur Supply, for example: "schedule the posts for 2 November"
+    or "create and post today's post". Claude follows CLAUDE.md in that folder:
+    picks the dated folder, checks images, prices, tags and mentions, uploads
+    the media (tools\postiz-upload.mjs), schedules as a draft unless you say
+    otherwise, then verifies with tools\postiz-verify.mjs and the live link.
+  * The automatic folder sync is switched off (Start Postiz.ps1) so it does not
+    add posts behind Claude's back. All earlier drafts were cleared.
+
 UPDATE 30 OCTOBER 2026
   * Docker Desktop was uninstalled and reinstalled per user. It now lives in
     C:\Users\azhar\AppData\Local\Programs\DockerDesktop. Start Postiz.ps1
@@ -15,7 +26,21 @@ UPDATE 30 OCTOBER 2026
     in image-cache\ (about 1.6 GB; safe to delete once Postiz runs).
   * The "spotlight" service in the compose file is a debugging tool behind a
     profile; it is not needed and is not downloaded.
-  * Until Postiz runs, schedule posts in Meta Business Suite's Planner
+  * Installed and running on 30 Oct 2026 (8 containers healthy). Owner
+    account created; sign ups locked (DISABLE_REGISTRATION true).
+  * Postiz docs (checked 30 Oct 2026) say the Meta app must be set to Live
+    for posts to be public; step 4c below ("keep in Development") is
+    superseded. Redirect URIs use port 4007 on this PC.
+  * Connected 30 Oct 2026: Facebook Page and Instagram (Meta app "DAUR Postiz",
+    Live). Images reach Meta through a free ngrok tunnel inside Docker:
+    open Postiz at https://devotee-jolliness-embargo.ngrok-free.dev
+    (token in server\ngrok.env; never copied to GitHub). Cloudflare R2 was
+    skipped because it did not accept the owner's card.
+  * The sync retries when Postiz says "Too Many Requests" (public API limit),
+    so a big batch can take up to an hour to arrive.
+  * Launch Day 01 to 14 folders are set "ready": false until the launch date
+    is set and their visuals are rebuilt with real pair photos.
+  * Until Postiz is connected, schedule posts in Meta Business Suite's Planner
     (02 Business and Meta Setup\00 Beginner Guides, part 3).
 
 WHAT IS IN THIS FOLDER

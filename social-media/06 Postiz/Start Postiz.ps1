@@ -33,9 +33,12 @@ Set-Location (Join-Path $here "server")
 docker compose up -d *>> $log
 Log "postiz containers started; open http://localhost:4007"
 
-# start the calendar sync watcher once
-$running = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" | Where-Object { $_.CommandLine -like "*daur-postiz-sync.mjs*" }
-if (-not $running) {
-  Start-Process -WindowStyle Hidden -FilePath "node" -ArgumentList "`"$here\sync\daur-postiz-sync.mjs`" --watch" -WorkingDirectory (Join-Path $here "sync")
-  Log "sync watcher started"
-}
+# The automatic folder sync is OFF since 30 Oct 2026: the owner asked Claude to create,
+# schedule and verify posts through the Postiz MCP connection instead (see 00 READ ME Postiz.txt).
+# To turn the folder sync back on, remove the "#" from the lines below.
+# $running = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" | Where-Object { $_.CommandLine -like "*daur-postiz-sync.mjs*" }
+# if (-not $running) {
+#   Start-Process -WindowStyle Hidden -FilePath "node" -ArgumentList "`"$here\sync\daur-postiz-sync.mjs`" --watch" -WorkingDirectory (Join-Path $here "sync")
+#   Log "sync watcher started"
+# }
+docker compose up -d ngrok *>> $log
