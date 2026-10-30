@@ -1,0 +1,26 @@
+{
+  "platform": "instagram",
+  "day": 0,
+  "pre": 6,
+  "title": "Supply Unit seal",
+  "date": "2026-11-10",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-10T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "The DAUR SUPPLY UNIT seal.\nEvery pair leaves with a numbered seal on the top eyelet. Keep it on until you are sure of the size: a size exchange within 5 days of delivery needs the pair unworn, in its box, with the seal attached.\nDesign render. Real photos when the first kits are made.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-10T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    }
+  ]
+}

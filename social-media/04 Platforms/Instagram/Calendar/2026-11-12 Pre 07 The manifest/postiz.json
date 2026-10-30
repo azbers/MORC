@@ -1,0 +1,26 @@
+{
+  "platform": "instagram",
+  "day": 0,
+  "pre": 7,
+  "title": "The manifest",
+  "date": "2026-11-12",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-12T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Every DAUR box carries a Manifest Card.\nOne side says why we exist. The other lists your terms in plain words: 5 day size exchange, 30 days on defects, 48 hours to report a wrong or damaged item. At least 5% of our profit goes to verified cases in need.\nDesign render. Real photos when the first kits are made.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-12T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    }
+  ]
+}

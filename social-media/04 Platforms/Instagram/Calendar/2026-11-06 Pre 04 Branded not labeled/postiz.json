@@ -1,0 +1,26 @@
+{
+  "platform": "instagram",
+  "day": 0,
+  "pre": 4,
+  "title": "Branded not labeled",
+  "date": "2026-11-06",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-06T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Branded, not labeled.\nNo logo printed on the leather. The DAUR mark sits on a brass lace tag on the bottom row, threaded on thick matte black cotton laces that replace the factory pair.\nDesign render. Real photos when the first kits are made.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-06T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    }
+  ]
+}

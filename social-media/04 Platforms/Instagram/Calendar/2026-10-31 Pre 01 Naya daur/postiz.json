@@ -1,0 +1,26 @@
+{
+  "platform": "instagram",
+  "day": 0,
+  "pre": 1,
+  "title": "Naya daur",
+  "date": "2026-10-31",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-10-31T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Naya daur. A new turn.\nDAUR Supply brings men's leather shoes and sneakers straight from Pakistani workshops, without the retail markup in between.\nThe first drop is on its way. Follow so you see it first.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-10-31T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "platform": "facebook",
+  "day": 0,
+  "pre": 3,
+  "title": "The box",
+  "date": "2026-11-04",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-04T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "First look at the DAUR box.\nHeavy matte black board, the loop D in brass, and every pair packed by hand inside.\nDesign render. Real photos when the first kits are made.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    }
+  ]
+}

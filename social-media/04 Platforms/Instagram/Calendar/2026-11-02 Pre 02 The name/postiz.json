@@ -1,0 +1,26 @@
+{
+  "platform": "instagram",
+  "day": 0,
+  "pre": 2,
+  "title": "The name",
+  "date": "2026-11-02",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-02T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Why DAUR?\n\u062f\u0648\u0631 means an era, a new turn, a full round. Good shoes have always been made in local workshops; the new turn is buying them without paying for someone else's logo and markup.\nNaya daur.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-02T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "platform": "instagram",
+  "day": 0,
+  "pre": 5,
+  "title": "Zero retail markup",
+  "date": "2026-11-08",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-08T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Same local craft. Zero retail markup.\nMany shoes sold under big names start in the same kind of local workshops. Retail adds its markup on the way to you. We visit the workshops, choose finished pairs, check every pair by hand, then re-lace, tag, seal and box it. You pay for the shoe, not the markup.\nDesign render. Real photos when the first kits are made.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-08T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    }
+  ]
+}
