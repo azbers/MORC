@@ -26,7 +26,7 @@ yellow cells only.
 From the original project: one delivered pair costs about Rs. 431 to Rs. 542
 to fulfil (courier, COD and refused parcels together), and ads stop being
 profitable above roughly Rs. 1,390 per order. These were estimates. Replace
-them with the written tariff from PostEx or Leopards as soon as you have it.
+them with the written Leopards tariff as soon as you have it. Leopards Retail (branch, verbal, Oct 2026): up to Rs. 350 per parcel (about Rs. 500 Sindh and Balochistan), 4% FBR withheld from the COD amount, optional 2% insurance, payout about 10 days after delivery, no charge for refused parcels. See 02 Business and Meta Setup Couriers.txt.
 
 4. WHY REFUSED PARCELS MATTER SO MUCH
 With COD the customer pays only when the parcel arrives. If they refuse it, you
@@ -44,7 +44,7 @@ delivered orders).
 
 6. CASH FLOW: THE TRAP FOR NEW SELLERS
 You pay the workshop and the ads now. The courier pays you the COD money later
-(PostEx says it pays upfront; Leopards pays weekly; check the contract). Keep
+(Leopards Retail pays about 10 days after delivery, as the branch told the owner; check the contract). Keep
 enough cash for at least two weeks of stock, ads and packaging before launch.
 Do not spend money you are still waiting to receive from the courier.
 

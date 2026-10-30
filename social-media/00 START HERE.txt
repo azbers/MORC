@@ -1,5 +1,5 @@
 DAUR SUPPLY  |  START HERE
-Reorganised 29 October 2026. Nothing was deleted: the previous layout is in
+Reorganised 29 October 2026, updated 30 October 2026. Nothing was deleted: the previous layout is in
 _Archive\2026-10-29 old layout.
 
 OPEN FIRST
@@ -17,7 +17,9 @@ THE FOLDERS
                                 06 Word list
                                 07 Short video playbook
                                 08 Sources
-  02 Business and Meta Setup  NTN, trademark, Meta Business Portfolio, couriers,
+  02 Business and Meta Setup  START with "00 Beginner Guides (Meta and
+                              Shopify).html". Also NTN, trademark, Meta
+                              Business Portfolio, couriers (Leopards answers),
                               Gmail, Accounts Register (no passwords)
   03 Shopify                  what to change in the store, in order
   04 Platforms                Instagram, Facebook, WhatsApp, TikTok, Meta Ads.
@@ -25,24 +27,42 @@ THE FOLDERS
                               and Calendar (one folder per date). Start with
                               "00 Calendar overview.txt".
   05 Packaging                give this whole folder to the box designer or
-                              printer; start with 00 Designer Brief.pdf
+                              printer or stamp maker; start with
+                              00 READ ME FIRST.txt (kit version 3,
+                              plain boxes stamped in house)
+  Product Photos              drop real pair photos here; one click turns
+                              them into branded posts, Stories and ads
   06 Postiz                   the scheduler on this PC; "00 READ ME Postiz.txt"
   _Archive                    old copies, kept for reference only
 
+UPDATED 30 OCTOBER 2026
+  * Pre-launch posts Pre 01 to Pre 08 (31 Oct to 14 Nov) are ready in the
+    Instagram, Facebook and WhatsApp Calendar folders. Post them from Meta
+    Business Suite's Planner (free, works with the PC off).
+  * New look "Tannery Royal": espresso leather, brass, Cinzel capitals.
+    Packaging kit version 3 in 05 Packaging.
+  * Leopards branch answers are in 02 ...\03 Couriers.txt.
+  * Docker Desktop was reinstalled per user (AppData\Local\Programs\
+    DockerDesktop). Postiz downloads with 06 Postiz\fast-image-download.mjs.
+
 YOUR ORDER OF WORK (each step links to its file)
   This week, while the pairs are in transit
+   0. Post the pre-launch series on its dates and reply to every comment.
    1. Secure Gmail, then Instagram, Facebook, WhatsApp
       (04 Platforms\<platform>\Setup).
    2. Meta Business Portfolio, ad account, second admin
       (02 Business and Meta Setup\02 Meta Business Portfolio setup.txt).
    3. Claim TikTok (04 Platforms\TikTok\Setup).
-   4. Open a courier account and get written rates (02 ...\03 Couriers.txt).
+   4. Get the Leopards rates in writing, then open the account
+      (02 ...\03 Couriers.txt).
+   4b. Get two quotes for plain boxes and the stamps (05 Packaging\
+      00 READ ME FIRST.txt, "Money") and put them in DAUR Numbers.xlsx.
    5. NTN and the trademark search (02 ...\01 Legal, tax and trademark.txt).
    6. Postiz one time setup (06 Postiz\00 READ ME Postiz.txt).
   When the pairs arrive
    7. Photograph and film them (DAUR Photo Guide, and the Plan.txt briefs for
       Days 15 to 30).
-   8. Measure the largest pair; send 05 Packaging to the printer for samples.
+   8. Measure the largest pair; buy plain boxes to fit; stamp a test box.
    9. Add real products in Shopify (03 Shopify\Product listing template.txt).
   10. Finish 03 Shopify\Shopify upgrade and update plan.txt, section A.
   Launch

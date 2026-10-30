@@ -33,3 +33,13 @@ RULES
   * DAUR alone on the lace tag and on the logo; "DAUR Supply" in text.
   * No trademark search has been done yet. Run a WIPO image search and ask a
     trademark agent before printing boxes or tags in volume.
+
+UPDATE 30 OCTOBER 2026 (TANNERY ROYAL)
+  * Square Symbol (transparent, for profile pictures): the loop D centred on
+    a transparent square, SVG plus PNG 1080 and 4000 px, in all five colours.
+  * Packaging and social posts now set the name as DAUR in widely spaced
+    Cinzel capitals with SUPPLY below (see 05 Packaging stamp files). The
+    files in this folder (heavy wordmark) stay in use on the website until a
+    new theme replaces them.
+  * Leather textures (CC0, Poly Haven): espresso, saddle and hide surfaces
+    used in mockups and posts. Free for commercial use.

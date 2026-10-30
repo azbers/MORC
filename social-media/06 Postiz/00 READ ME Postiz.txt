@@ -2,6 +2,22 @@ DAUR SUPPLY  |  POSTIZ: THE LOCAL SOCIAL MEDIA SCHEDULER
 Installed 29 October 2026 on this PC with Docker. Free and open source.
 Address once running: http://localhost:4007
 
+UPDATE 30 OCTOBER 2026
+  * Docker Desktop was uninstalled and reinstalled per user. It now lives in
+    C:\Users\azhar\AppData\Local\Programs\DockerDesktop. Start Postiz.ps1
+    finds it in either place.
+  * GitHub's package server (ghcr.io) sends the Postiz program to this
+    connection at about 0.1 MB/s, so "docker pull" takes hours and restarts
+    when the line drops. Use instead, in this folder:
+        node fast-image-download.mjs
+    It fetches the image in 8 MB pieces, 16 at a time, resumes after drops,
+    checks every layer's sha256 and loads it into Docker. The pieces are kept
+    in image-cache\ (about 1.6 GB; safe to delete once Postiz runs).
+  * The "spotlight" service in the compose file is a debugging tool behind a
+    profile; it is not needed and is not downloaded.
+  * Until Postiz runs, schedule posts in Meta Business Suite's Planner
+    (02 Business and Meta Setup\00 Beginner Guides, part 3).
+
 WHAT IS IN THIS FOLDER
   server\                      Postiz's official Docker files (from
                                github.com/gitroomhq/postiz-docker-compose), with
