@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 25,
+  "title": "Same pair two colours",
+  "date": "2026-12-10",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-10T15:30:00.000Z",
+      "media": [],
+      "caption": "[PRODUCT NAME] in [COLOUR 1] or [COLOUR 2]. Which one?\n#DAURSupply"
+    }
+  ]
+}

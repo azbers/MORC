@@ -1,0 +1,47 @@
+DAUR SUPPLY  |  TIKTOK SETUP
+Written 29 October 2026. Status: handle not claimed yet (Accounts Register).
+
+WHY TIKTOK
+DataReportal (Digital 2026: Pakistan, late 2025 data) counts 79.9 million
+TikTok users aged 18 and over in Pakistan, 71.2% of the adult audience male:
+the largest reach of any platform for DAUR's buyers. Organic TikTok can reach
+non followers from the first video, which suits a new brand.
+
+STEP 1  CLAIM THE HANDLE (do it now, even before posting)
+  [ ] Install TikTok on the phone. Sign up with daursupply@gmail.com.
+  [ ] Username: daursupply (if taken, daur.supply or daursupplypk). Write the
+      result in 02 Business and Meta Setup/Accounts Register.txt.
+  [ ] Name: DAUR Supply. Photo: Profile Picture (espresso) from
+      04 Platforms/Instagram/Setup.
+  [ ] Turn on two step verification (Settings and privacy > Security).
+
+STEP 2  SWITCH TO A BUSINESS ACCOUNT
+  [ ] Settings and privacy > Account > Switch to Business Account. Category:
+      Shopping & Retail (or the closest option shown).
+  [ ] Bio (80 characters max):
+        Men's leather shoes and sneakers. Zero retail markup. COD Pakistan.
+  [ ] Website link: https://daursupply.com (TikTok may show the link field only
+      after certain conditions; add it when it appears).
+  Business accounts can use only the Commercial Music Library for sounds.
+
+STEP 3  CONNECT SHOPIFY (optional, month two)
+  The "TikTok" app in the Shopify App Store connects the store and the TikTok
+  Pixel for ads. Check in the app whether TikTok Shop and catalogue features
+  are available for Pakistan before relying on them.
+
+STEP 4  POSTING
+  Days 01 to 14: TikTok\Calendar\<date>\Reel 1080x1920.mp4 and Caption.txt.
+  Days 15 to 30: filming briefs (Plan.txt), same as the Instagram Reels.
+  Post the same Reel on TikTok and Instagram, but download nothing from one app
+  to post on the other with its watermark: upload the clean MP4 from the folder.
+
+STEP 5  TIKTOK ADS (month two, per the Ads plan)
+  TikTok Ads Manager is available in Pakistan as a self serve tool. TikTok's own
+  help centre sets minimum budgets of more than USD 50 a day per campaign and
+  more than USD 20 a day per ad group. That is more than the month one Meta
+  budget per day, which is why TikTok ads wait for month two.
+
+SOURCES
+  DataReportal, Digital 2026: Pakistan  https://datareportal.com/reports/digital-2026-pakistan
+  TikTok Ads Manager budgets  https://ads.tiktok.com/help/article/budget
+  TikTok self serve ads in Pakistan (Business Recorder)  https://www.brecorder.com/news/amp/40398243

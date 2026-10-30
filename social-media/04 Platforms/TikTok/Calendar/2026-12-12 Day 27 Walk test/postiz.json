@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 27,
+  "title": "Walk test",
+  "date": "2026-12-12",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-12T15:30:00.000Z",
+      "media": [],
+      "caption": "Built to walk, not just to pose.\n#DAURSupply #MensShoes"
+    }
+  ]
+}

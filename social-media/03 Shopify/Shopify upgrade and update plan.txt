@@ -1,0 +1,72 @@
+DAUR SUPPLY  |  SHOPIFY: WHAT TO UPDATE, IN ORDER
+Written 29 October 2026 from the live store state in the project memory.
+Store: ppiveu-zp.myshopify.com, domain daursupply.com, Basic plan, PKR,
+password protected. Claude can create products, collections, discounts, pages
+and new (unpublished) themes through the connector; it cannot publish themes,
+edit policies, checkout, taxes or Brand settings. Those steps are marked OWNER.
+
+A. BEFORE LAUNCH (must be done)
+  [ ] OWNER  Publish theme "DAUR Supply 5 day exchange (review)" after
+             comparing it with the live theme (Online Store > Themes > Preview).
+  [ ] OWNER  Settings > Policies: paste Refund, Shipping, Terms of Service and
+             Contact texts (the DAUR versions, 5 day exchange).
+  [ ] OWNER  Settings > Returns: 5 days, customer provides return shipping,
+             Sale collection final sale, 0% restocking fee.
+  [ ] OWNER  Settings > Taxes and duties: "Include tax in prices" on; no rate
+             unless one really applies.
+  [ ] OWNER  Shipping and delivery: switch off local pickup.
+  [ ] OWNER  Settings > Notifications: paste each rebuilt DAUR email, send tests.
+  [ ] OWNER  Order Printer: paste the DAUR packing slip; print a test.
+  [ ] Set the 8 sample products to Draft. Add the real products (template in
+      "Product listing template.txt"): real photos, price, stock per size,
+      Cost per item, materials, options named Color and Size ("EU 42").
+  [ ] Courier: open an account, connect it (Universal Courier Pakistan app or
+      the courier's own app), book one test parcel.
+  [ ] OWNER  Remove the store password (Online Store > Preferences) only when
+      all of the above is done.
+
+B. CONNECT SALES AND TRACKING (launch week)
+  [ ] Install "Facebook & Instagram" by Meta; connect the Business Portfolio;
+      data sharing Maximum (see 02 Business and Meta Setup, Step 5).
+  [ ] Shop tab on Instagram and Facebook: available through that app if Meta
+      approves the store for commerce in your country. Meta's commerce
+      eligibility differs by country; the app will show whether it is
+      available for Pakistan. Do not plan around it until it shows.
+  [ ] Brand social links: Instagram and Facebook (Settings > Brand), TikTok
+      when claimed.
+  [ ] Google Search Console: verify daursupply.com and submit
+      https://daursupply.com/sitemap.xml (after the password is removed).
+  [ ] Note from research: Google Merchant Center free listings and Shopping
+      ads do not support Pakistan, and Google Business Profile is not for an
+      online only store. Skip both.
+
+C. ORDER AUTOMATION (after 7 or more days of real WhatsApp use)
+  [ ] Retry Watix with WhatsApp Coexistence for COD confirmation, retries and
+      tracking messages. Ask Watix in writing if Coexistence works for
+      Pakistani numbers.
+
+D. UPGRADES WORTH DOING (in this order, each after the last is working)
+  1. "Order on WhatsApp" and "Order now, pay on delivery" buttons on product
+     pages (Claude can build this as a new review theme).
+  2. Size chart on every product page, from real measurements (insole length
+     per EU size). This cuts size exchanges.
+  3. Product videos (the Reels from the calendar) on product pages.
+  4. Fit notes: ask every delivered customer by WhatsApp two days after
+     delivery.
+  5. Collections by use: Office, Everyday, Occasions, once there are enough
+     real products.
+  6. Abandoned checkout: Shopify sends an email automatically if the
+     customer gave an email; with phone only checkout, follow up on WhatsApp
+     manually until Watix works.
+
+E. WHAT NOT TO CHANGE
+  * Do not add online payment gateways you have not opened accounts with.
+    Research found no native Shopify support for JazzCash or Easypaisa (only
+    paid custom integrations), so COD stays the only method for now.
+  * Do not upgrade the Shopify plan for its own sake. Basic covers a new store.
+    Revisit only if a needed feature is limited to a higher plan.
+
+SOURCES
+  Shopify, Facebook data sharing  https://help.shopify.com/en/manual/promoting-marketing/analyze-marketing/meta-data-sharing
+  JazzCash and Easypaisa on Shopify (vendor page, indicates no native method)  https://ecosire.com/apps/shopify/shopify-easypaisa-jazzcash
+  Project memory, sections 5 and 14 (live store state, 29 October 2026)

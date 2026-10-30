@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 17,
+  "title": "Unboxing",
+  "date": "2026-12-02",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-02T15:30:00.000Z",
+      "media": [],
+      "caption": "What comes in the box.\nPair, black woven laces, brass DAUR tag, the Supply Unit seal and the Manifest Card.\nKeep the seal on until the fit is right: it is needed for a size exchange.\n#DAURSupply #Unboxing #MensShoes"
+    }
+  ]
+}

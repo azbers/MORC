@@ -1,0 +1,37 @@
+{
+  "platform": "instagram",
+  "day": 14,
+  "title": "Questions carousel",
+  "date": "2026-11-29",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-29T15:30:00.000Z",
+      "media": [
+        "Post 1 of 5 1080x1350.png",
+        "Post 2 of 5 1080x1350.png",
+        "Post 3 of 5 1080x1350.png",
+        "Post 4 of 5 1080x1350.png",
+        "Post 5 of 5 1080x1350.png"
+      ],
+      "caption": "Questions we get.\nHow do I pay? Cash to the rider on delivery.\nHow long is delivery? 2 to 6 working days, dispatched within 24 hours of confirmation.\nWrong size? Five day size exchange: unworn, original box, seal attached.\nHow do I order? daursupply.com or WhatsApp 0319 9628735.\n#DAURSupply #CashOnDelivery #MensShoes #Pakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-29T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-29T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Questions we get.\nHow do I pay? Cash to the rider on delivery.\nHow long is delivery? 2 to 6 working days, dispatched within 24 hours of confirmation.\nWrong size? Five day size exchange: unworn, original box, seal attached.\nHow do I order? daursupply.com or WhatsApp 0319 9628735.\n#DAURSupply #CashOnDelivery #MensShoes #Pakistan"
+    }
+  ]
+}

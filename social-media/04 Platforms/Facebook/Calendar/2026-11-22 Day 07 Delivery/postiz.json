@@ -1,0 +1,25 @@
+{
+  "platform": "facebook",
+  "day": 7,
+  "title": "Delivery",
+  "date": "2026-11-22",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-22T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Delivery, plainly.\nRs. 200 for one pair. Free on two pairs or more.\nDispatch within 24 hours of confirmation; orders confirmed on a Sunday or holiday go out the next working day.\n2 to 6 working days across Pakistan. Cash on Delivery.\n#DAURSupply #CashOnDelivery #Pakistan"
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-22T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Delivery, plainly.\nRs. 200 for one pair. Free on two pairs or more.\nDispatch within 24 hours of confirmation; orders confirmed on a Sunday or holiday go out the next working day.\n2 to 6 working days across Pakistan. Cash on Delivery.\n#DAURSupply #CashOnDelivery #Pakistan"
+    }
+  ]
+}

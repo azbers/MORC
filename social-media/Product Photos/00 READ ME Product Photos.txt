@@ -1,0 +1,42 @@
+DAUR SUPPLY  |  PRODUCT PHOTOS: FROM REAL PAIRS TO READY POSTS
+Made 30 October 2026.
+
+WHY THIS FOLDER EXISTS
+Posts with only text do not show what people are buying. Every product
+post and ad from now on is built from photos and videos of the real pairs.
+No drawn or sample shoes are used, because showing a pair DAUR does not
+sell would break customer trust (and Meta's ad rules on misleading ads).
+
+WHAT TO DO WHEN THE PAIRS ARRIVE
+1. Photograph each colour with the DAUR Photo Guide (8 turning shots, top,
+   sole, close up, inside, pair, on foot). Daylight by a window, plain wall
+   or the DAUR box behind it. Clean the pair first.
+2. Copy the best photos into this folder. Name them simply, for example
+   "Moc Runner Black 01.jpg".
+3. Open products.csv (Excel or Notepad) and add one line per photo:
+     photo         the file name, exactly
+     product       e.g. DAUR Moc-Runner v1
+     colour        e.g. Triple Black
+     price_rs      the real selling price, numbers only (leave empty to
+                   show no price)
+     sizes         e.g. EU 40 to 45 (only sizes really in stock)
+     line          optional short line; default is
+                   "Same local craft. Zero retail markup."
+4. Double click is not enough for Python files on every PC, so open a
+   terminal in the _builder folder and run:
+     python build_posts.py
+5. Finished images appear in "_Ready posts\<product> <colour>\":
+     Feed post 1080x1350, Story 1080x1920 (organic posting)
+     Ad feed 1080x1350, Ad story 1080x1920 (with the WhatsApp and COD button)
+   Copy them into the day folders in 04 Platforms, or tell Claude and it will.
+
+VIDEOS
+Put phone videos here too (vertical, 9:16). Reels are built with the shot
+lists and scripts from the product visuals thread. Short video is the
+format Instagram and TikTok push hardest to new viewers; see
+01 Learn the Basics\07 Short video playbook.txt.
+
+RULES
+* Only real photos of pairs you physically have.
+* Price on the image must equal the price in Shopify.
+* No logos of other brands in the shot (supplier tags, boxes, insoles).

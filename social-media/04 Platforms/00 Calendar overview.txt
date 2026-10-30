@@ -1,0 +1,52 @@
+DAUR SUPPLY  |  30 DAY CALENDAR (all platforms)
+Planning launch date: Monday 16 November 2026 (Day 01). This date is a plan, not a fact:
+set the real one with  node change-launch-date.mjs YYYY-MM-DD  in this folder once the store is ready.
+
+HOW THE FOLDERS WORK
+  Instagram\Calendar\<date>   feed post(s), Story, Reel, Caption.txt, postiz.json
+  Facebook\Calendar\<date>    same feed post and Reel, Facebook caption, postiz.json
+  TikTok\Calendar\<date>      Reel and caption (video days only)
+  WhatsApp\Calendar\<date>    Status image and text (post from the phone)
+  Meta Ads\<date>             the ads task for that day
+  Days 15 to 30 hold a filming brief (Plan.txt): they need the real pairs.
+
+Same table as a spreadsheet: 00 Calendar.csv (opens in Excel).
+
+DATE       DAY     TOPIC                             STATUS              META ADS
+2026-11-16 Mon Day 01  Launch grid                       ready               Launch Click to WhatsApp
+2026-11-17 Tue Day 02  Cash on Delivery                  ready               
+2026-11-18 Wed Day 03  Branded not labeled               ready               
+2026-11-19 Thu Day 04  Craft checks carousel             ready               First check
+2026-11-20 Fri Day 05  Sizes                             ready               
+2026-11-21 Sat Day 06  Five day size exchange            ready               
+2026-11-22 Sun Day 07  Delivery                          ready               
+2026-11-23 Mon Day 08  Where the markup goes carousel    ready               Creative refresh
+2026-11-24 Tue Day 09  Five steps carousel               ready               
+2026-11-25 Wed Day 10  Charity pledge                    ready               
+2026-11-26 Thu Day 11  SUPPLYLINE code                   ready               
+2026-11-27 Fri Day 12  Leather care                      ready               
+2026-11-28 Sat Day 13  Fit notes                         ready               
+2026-11-29 Sun Day 14  Questions carousel                ready               
+2026-11-30 Mon Day 15  First pair reveal                 needs real footage  Retargeting
+2026-12-01 Tue Day 16  Craft close ups                   needs real footage  
+2026-12-02 Wed Day 17  Unboxing                          needs real footage  
+2026-12-03 Thu Day 18  Size guide video                  needs real footage  
+2026-12-04 Fri Day 19  On foot styling                   needs real footage  
+2026-12-05 Sat Day 20  How COD works                     needs real footage  
+2026-12-06 Sun Day 21  Week 3 Questions                  needs real footage  
+2026-12-07 Mon Day 22  Care in 30 seconds                needs real footage  Scale or fix
+2026-12-08 Tue Day 23  Workshop to door                  needs real footage  
+2026-12-09 Wed Day 24  First Fit note                    needs real footage  
+2026-12-10 Thu Day 25  Same pair two colours             needs real footage  
+2026-12-11 Fri Day 26  Behind the price                  needs real footage  
+2026-12-12 Sat Day 27  Walk test                         needs real footage  
+2026-12-13 Sun Day 28  Restock or next drop              needs real footage  
+2026-12-14 Mon Day 29  Customer unboxing                 needs real footage  
+2026-12-15 Tue Day 30  Month one recap                   needs real footage  Month review
+
+DAILY TIMES (Pakistan time, a test until Insights show your own peak hours)
+  13:30  Reel on Instagram and Facebook
+  20:30  feed post on Instagram and Facebook, TikTok video
+  20:45  Instagram Story; post WhatsApp Status and Facebook Story by hand
+Source for the test slot: no verified Pakistan posting time data was found; after two weeks use
+Instagram Professional dashboard > Total followers > Most active times.

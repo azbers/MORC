@@ -1,0 +1,41 @@
+{
+  "platform": "facebook",
+  "day": 1,
+  "title": "Launch grid",
+  "date": "2026-11-16",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-16T15:30:00.000Z",
+      "media": [
+        "Post 2 The honest math 1080x1350.png"
+      ],
+      "caption": "Big brands buy from the same local workshops we do. Then they add a logo, an\ninfluencer and a markup. We keep the craft and drop the markup.\nSame local craft. Zero retail markup.\n#DAURSupply #LeatherShoes #MadeInPakistan"
+    },
+    {
+      "kind": "post",
+      "time": "2026-11-16T15:35:00.000Z",
+      "media": [
+        "Post 3 How to order 1080x1350.png"
+      ],
+      "caption": "Three steps.\n01 Pick your pair on daursupply.com or send us a message.\n02 Confirm on WhatsApp 0319 9628735. We confirm size and address.\n03 Pay cash when it arrives.\nDelivery Rs. 200 for one pair, free on two pairs or more.\n#DAURSupply #CashOnDelivery #Pakistan"
+    },
+    {
+      "kind": "post",
+      "time": "2026-11-16T15:40:00.000Z",
+      "media": [
+        "Post 1 Naya daur 1080x1350.png"
+      ],
+      "caption": "Naya daur.\nMen's leather shoes and sneakers from Pakistani workshops, at factory price.\nSame local craft. Zero retail markup.\nOrder at daursupply.com or WhatsApp 0319 9628735. Cash on Delivery across Pakistan.\n#DAURSupply #NayaDaur #LeatherShoes #MensShoes #Pakistan"
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-16T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Big brands buy from the same local workshops we do. Then they add a logo, an\ninfluencer and a markup. We keep the craft and drop the markup.\nSame local craft. Zero retail markup.\n#DAURSupply #LeatherShoes #MadeInPakistan"
+    }
+  ]
+}

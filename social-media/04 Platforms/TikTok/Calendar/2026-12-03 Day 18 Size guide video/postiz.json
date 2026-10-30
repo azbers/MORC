@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 18,
+  "title": "Size guide video",
+  "date": "2026-12-03",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-03T15:30:00.000Z",
+      "media": [],
+      "caption": "Find your size in two minutes. Measure, then match it to the chart on the product page.\nStill unsure? Send the number on WhatsApp 0319 9628735 and we will tell you the size.\n#DAURSupply #SizeGuide"
+    }
+  ]
+}

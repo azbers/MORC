@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 29,
+  "title": "Customer unboxing",
+  "date": "2026-12-14",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-14T15:30:00.000Z",
+      "media": [],
+      "caption": "Unboxed in [CITY]. Thank you, [@HANDLE].\n#DAURSupply"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 19,
+  "title": "On foot styling",
+  "date": "2026-12-04",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-04T15:30:00.000Z",
+      "media": [],
+      "caption": "One pair, three rooms.\n[PRODUCT NAME] with office, casual and shalwar kameez.\n#DAURSupply #MensStyle #Pakistan"
+    }
+  ]
+}

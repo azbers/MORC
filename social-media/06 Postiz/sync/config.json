@@ -1,0 +1,11 @@
+{
+  "postizUrl": "http://localhost:4007",
+  "apiKeyFile": "api-key.txt",
+  "mode": "draft",
+  "tiktokMethod": "UPLOAD",
+  "providers": {
+    "instagram": ["instagram", "instagram-standalone"],
+    "facebook": ["facebook"],
+    "tiktok": ["tiktok"]
+  }
+}

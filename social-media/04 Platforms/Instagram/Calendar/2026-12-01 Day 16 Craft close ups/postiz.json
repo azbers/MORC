@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 16,
+  "title": "Craft close ups",
+  "date": "2026-12-01",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-12-01T15:30:00.000Z",
+      "media": [],
+      "caption": "Up close. [PRODUCT NAME], checked by hand before it is boxed.\nSwipe for the stitching, the sole and the lining.\n#DAURSupply #Craftsmanship #LeatherShoes"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 15,
+  "title": "First pair reveal",
+  "date": "2026-11-30",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-11-30T15:30:00.000Z",
+      "media": [],
+      "caption": "[PRODUCT NAME] in [COLOUR]. Sizes EU 40 to 45.\nOrder on daursupply.com or WhatsApp 0319 9628735. Cash on Delivery across Pakistan.\n#DAURSupply #MensShoes #LeatherShoes #Pakistan"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+DAUR SUPPLY  |  LEGAL, TAX AND TRADEMARK BASICS (PAKISTAN)
+Written 29 October 2026. This is general information gathered from public
+sources, not legal or tax advice. Where sources disagree, it says so. Confirm
+with FBR, IPO Pakistan or a registered tax practitioner before acting.
+
+1. TRADING AS A SOLE PROPRIETOR
+A sole proprietorship is the simplest form: you are the business. No SECP
+company registration is needed for it. You can form a private limited company
+with SECP later if the business grows or takes partners.
+
+2. NTN (NATIONAL TAX NUMBER) WITH FBR
+  Where     FBR IRIS portal, https://iris.fbr.gov.pk
+  How       create an IRIS account with your CNIC, mobile number and email,
+            then file the registration form and add the business details
+            (business name "DAUR Supply", nature of business, address).
+  Documents CNIC, and a utility bill for the address, according to the guides.
+  Cost      guides report no government fee for registration.
+  Conflict  some guides say an individual's CNIC already serves as the NTN;
+            others say a sole proprietor should register the business in IRIS.
+            Ask FBR (helpline 051 111 772 772) or a tax practitioner which
+            applies to you.
+Why bother: a bank business account, courier merchant accounts, and later
+payment gateways often ask for an NTN, and filing returns as a filer usually
+means lower withholding tax on banking and other transactions.
+
+3. SALES TAX
+Sales tax registration (STRN) has thresholds and rules for retailers that
+change with each budget. Ask a tax practitioner whether DAUR must register at
+its current size. Until then, the store setting "Include tax in prices" stays
+on and no tax rate is added (owner rule in the project memory).
+
+4. BUSINESS BANK ACCOUNT
+Open a separate account for DAUR, even a personal account used only for the
+business. Courier COD payouts, Meta ad payments and workshop payments all go
+through it. This makes the weekly numbers and any tax filing simple.
+
+5. TRADEMARK FOR THE NAME AND LOGO
+  Office    Intellectual Property Organization of Pakistan (IPO Pakistan),
+            online filing at https://apply.ipo.gov.pk (according to guides).
+  Class     Class 25 covers footwear and clothing. Class 35 covers retail and
+            online store services. Pakistan accepts one class per application,
+            so each class is a separate filing.
+  Fees      third party guides from 2025 quote about Rs. 3,000 per class for
+            filing, and total official fees of roughly Rs. 13,000 to 15,000 for
+            one class without opposition. These are not official figures; check
+            the IPO fee schedule before paying.
+  Time      guides report 12 to 18 months from filing to certificate.
+  Before printing boxes in volume: search the IPO database and WIPO's Global
+  Brand Database (https://branddb.wipo.int) for DAUR in Class 25 and for
+  similar D logos. A known clash to look at: daur.shop, a Karachi watch
+  retailer. A trademark agent can do a proper search for a fee.
+
+6. WHAT IS ALREADY SAFE TO DO
+Selling under the DAUR Supply name while the application is pending is common
+practice, but a registered earlier mark held by someone else could force a
+rename. That is the reason to search before a large packaging print run.
+
+SOURCES
+  FBR IRIS  https://iris.fbr.gov.pk
+  NTN guides (third party)  https://www.ict.edu.pk/blogs/how-to-register-ntn-online-pakistan-2026
+                             https://www.startup.pk/?p=25661
+  IPO fee notification coverage  https://ssrana.in/articles/pakistan-government-notifies-revised-fee-structure-for-trademarks/
+  Trademark cost guide (third party)  https://scounts.pk/?p=8508
+  WIPO Global Brand Database  https://branddb.wipo.int

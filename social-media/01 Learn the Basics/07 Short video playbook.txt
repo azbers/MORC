@@ -1,0 +1,65 @@
+DAUR SUPPLY  |  SHORT VIDEO PLAYBOOK (REELS AND TIKTOK)
+Written 29 October 2026.
+
+WHY THE FIRST KIT WAS ONLY IMAGES
+The real pairs had not arrived, and the store images are drawings. A video of
+drawings, or stock footage of other brands' shoes, would show customers
+something DAUR does not sell, and Instagram gives less reach to unoriginal
+content. So the first kit had only designed images.
+
+WHAT IS NOW IN THE CALENDAR
+  Days 01 to 14  a Reel (MP4, 1080x1920, no sound) in every Instagram,
+                 Facebook and TikTok folder. Each is a slow motion version of
+                 that day's real designs: they can be posted now and need no
+                 product footage. Add music inside each app.
+  Days 15 to 30  filming briefs (Plan.txt) for product Reels: reveal, close
+                 ups, unboxing, size guide, styling, COD, care, walk test,
+                 customer videos. Film them when the pairs arrive.
+
+WHY VIDEO IS THE MAIN GROWTH TOOL (sources at the end)
+  * Reach: Buffer's analysis of over 4 million posts (2022 to 2024) found
+    Instagram Reels reached 36% more people than carousels and 125% more than
+    single images.
+  * Signals: Instagram's head named watch time, likes per reach and sends per
+    reach as the most important ranking signals (January 2025).
+  * Ads: a Meta and Toluna study of short video ads found those that showed
+    the brand and message in the first 5 seconds were 1.7 times more likely to
+    drive strong purchase intent.
+  * Engagement: carousels still earn the most likes and comments on
+    Instagram in Buffer's data, so keep carousels for teaching.
+  * Pakistan: TikTok has the largest adult reach (79.9 million, DataReportal).
+So: Reels and TikTok for reach, carousels for trust, single images least.
+
+THE DAUR REEL FORMULA
+  0 to 2 s   the hook: the shoe already moving, or a bold line of text.
+             No logo intro, no black screen.
+  2 to 10 s  one idea only: one pair, one detail, one answer.
+  last 2 s   the action: "Order on WhatsApp 0319 9628735" or "daursupply.com".
+  Length     7 to 20 seconds for most; up to 30 for tutorials.
+  Sound      from the app's own library (TikTok business accounts: Commercial
+             Music Library only). Add on screen text too: many people watch
+             without sound.
+  Captions   first line answers "why watch": "How to find your size at home".
+
+HOW TO FILM WELL ON A PHONE
+  Window light, no direct sun. Clean lens. Vertical. Phone still on books or a
+  tripod; move the shoe. Plain background (espresso cloth or wooden table).
+  Film each shot three times. Keep text away from the top 250 px and bottom
+  340 px of the frame.
+
+WHAT TO AVOID
+  * Reposting other brands' or influencers' videos (unoriginal, may be
+    copyright infringement).
+  * Watermarked TikTok downloads posted on Instagram: upload the clean file.
+  * Claims you cannot prove on camera.
+
+HOW TO USE REELS IN ADS
+After a Reel gets good organic shares, use the same video as an ad creative in
+the Click to WhatsApp campaign (Ads Manager > Ad > Use existing post), so its
+likes and comments carry over.
+
+SOURCES
+  Buffer  https://buffer.com/resources/instagram-reach-engagement-analysis/
+  Mosseri signals  https://searchenginejournal.com/instagram-algorithm-shift-why-sends-matter-more-than-ever/521389
+  Meta and Toluna  https://tolunacorporate.com/what-makes-short-form-video-ads-work-meta-toluna-study/
+  DataReportal Pakistan 2026  https://datareportal.com/reports/digital-2026-pakistan

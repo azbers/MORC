@@ -1,0 +1,5 @@
+# Never commit secrets or the local Postiz server copy
+06 Postiz/server/
+06 Postiz/sync/api-key.txt
+06 Postiz/sync/*-log.txt
+_Archive/

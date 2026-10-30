@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 11,
+  "title": "SUPPLYLINE code",
+  "date": "2026-11-26",
+  "needs_check": true,
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-11-26T15:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Rs. 300 off with the code SUPPLYLINE at checkout on daursupply.com.\nOne saving applies per order: this code or free delivery on two pairs or more.\n#DAURSupply #MensShoes #Pakistan"
+    }
+  ]
+}

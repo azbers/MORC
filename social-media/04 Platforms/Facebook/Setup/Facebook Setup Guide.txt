@@ -1,0 +1,74 @@
+FACEBOOK  |  Page "DAUR Supply", username @daursupply
+
+ANSWER TO YOUR QUESTION
+Yes, create a Facebook Page. A handle such as @daursupply (web address
+facebook.com/daursupply) is a Page username. A personal account cannot be a
+business account.
+
+Important about the account you made named "Daur Supply":
+Facebook's name rules say a personal profile must use the name you go by in
+everyday life, and a business name on a personal profile can lead to the
+profile being restricted or disabled. If that happens you would also lose
+control of any Page it manages. Recommended:
+  Option A (best): create the Page from your own real personal profile.
+  Option B: if you want to keep using the new account, change its name to
+            your real name (Settings > Accounts Center > Profiles > Name),
+            then create the Page from it.
+The Page will show "DAUR Supply" to customers. Your personal name is not shown
+on the Page.
+
+1. CREATE THE PAGE  (computer or phone)
+   Facebook menu > Pages > Create new Page.
+   Page name: DAUR Supply
+   Category: type "shoe" and pick the closest match (for example a shoe store
+             or shopping and retail category).
+   Bio: copy from "Page Text.txt".
+   Next screens: website https://daursupply.com, email contact@daursupply.com,
+   phone 0319 9628735. Hours are optional.
+   Profile picture: "Profile Picture (espresso) 1080x1080.png"
+   Cover photo: "Cover Photo 1640x624.png"
+
+2. SET THE USERNAME @daursupply  (computer only)
+   a. On a computer, click your profile photo (top right) > See all profiles >
+      choose DAUR Supply.
+   b. Click the Page photo (top right) > Settings and privacy > Settings >
+      Page setup > Username > Edit.
+   c. Type daursupply. Facebook shows if it is available. Save.
+   Rules: letters, numbers and periods only, at least 5 characters, must be
+   unique. Adding a period does not make it different, so daur.supply counts as
+   the same name as daursupply.
+   If Facebook does not allow a username yet: a brand new Page sometimes has to
+   be active first. Post the three launch images, add the details, and try
+   again after a few days.
+   If daursupply is taken: try daursupplypk or daursupplyofficial.
+
+3. ACTION BUTTON
+   On the Page, click the main button (Add action button or Edit button) and
+   choose "Send WhatsApp message" (after step 5) or "Shop now" linking to
+   https://daursupply.com.
+
+4. CONNECT INSTAGRAM
+   Page Settings > Linked accounts > Instagram > Connect account > log in as
+   @daursupply. Allow Instagram messages in the inbox so all messages appear in
+   one place.
+
+5. CONNECT WHATSAPP
+   Page Settings > Linked accounts (or WhatsApp) > enter 0319 9628735 > enter
+   the code WhatsApp sends > turn on the WhatsApp button.
+   Or from the WhatsApp Business app: Settings > Business tools >
+   Facebook & Instagram.
+
+6. META BUSINESS SUITE  (business.facebook.com or the Meta Business Suite app)
+   After steps 4 and 5 you can read Facebook, Instagram and (where supported)
+   WhatsApp messages in one inbox and schedule posts to both.
+   This is also where Meta ads are run later.
+
+7. SAFETY
+   a. Turn on two factor authentication on the personal profile that owns the
+      Page (Accounts Center > Password and security).
+   b. Add a trusted second person with full control of the Page as backup
+      (Page Settings > Page setup > Page access), so the Page is not lost if
+      one account is locked.
+
+Note: Meta's own help pages could not be opened from here, so these steps
+were checked against recent published guides. Meta changes labels often. If a label differs, use the search box in Settings.

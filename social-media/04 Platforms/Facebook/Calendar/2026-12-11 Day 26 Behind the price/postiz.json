@@ -1,0 +1,17 @@
+{
+  "platform": "facebook",
+  "day": 26,
+  "title": "Behind the price",
+  "date": "2026-12-11",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-12-11T15:30:00.000Z",
+      "media": [],
+      "caption": "You pay for the pair, the checks and the delivery. Not a showroom.\nSame local craft. Zero retail markup.\n#DAURSupply"
+    }
+  ]
+}

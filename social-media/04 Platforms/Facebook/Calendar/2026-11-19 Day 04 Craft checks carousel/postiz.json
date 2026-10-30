@@ -1,0 +1,29 @@
+{
+  "platform": "facebook",
+  "day": 4,
+  "title": "Craft checks carousel",
+  "date": "2026-11-19",
+  "needs_check": true,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-19T15:30:00.000Z",
+      "media": [
+        "Post 1 of 5 1080x1350.png",
+        "Post 2 of 5 1080x1350.png",
+        "Post 3 of 5 1080x1350.png",
+        "Post 4 of 5 1080x1350.png",
+        "Post 5 of 5 1080x1350.png"
+      ],
+      "caption": "Every pair is checked by hand before it is boxed.\n01 Stitching\n02 Grain and upper flex\n03 Sole bond, with a pull test at the toe and heel\n04 Comfort\nPairs that fail go back to the workshop.\n#DAURSupply #Craftsmanship #LeatherShoes #MadeInPakistan"
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-19T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Every pair is checked by hand before it is boxed.\n01 Stitching\n02 Grain and upper flex\n03 Sole bond, with a pull test at the toe and heel\n04 Comfort\nPairs that fail go back to the workshop.\n#DAURSupply #Craftsmanship #LeatherShoes #MadeInPakistan"
+    }
+  ]
+}

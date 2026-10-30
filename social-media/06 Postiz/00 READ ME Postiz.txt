@@ -1,0 +1,115 @@
+DAUR SUPPLY  |  POSTIZ: THE LOCAL SOCIAL MEDIA SCHEDULER
+Installed 29 October 2026 on this PC with Docker. Free and open source.
+Address once running: http://localhost:4007
+
+WHAT IS IN THIS FOLDER
+  server\                      Postiz's official Docker files (from
+                               github.com/gitroomhq/postiz-docker-compose), with
+                               a private random JWT secret already set.
+  sync\daur-postiz-sync.mjs    the DAUR tool that sends every calendar folder in
+                               "04 Platforms" to Postiz automatically.
+  sync\config.json             settings for the sync (draft or schedule mode).
+  sync\api-key.txt             paste the Postiz API key here (step 6).
+  sync\sync-log.txt            what the sync did, line by line.
+  Start Postiz.ps1             starts Docker, Postiz and the sync.
+  Turn on auto start (run once).ps1  makes Start Postiz run at each sign in.
+
+HOW THE AUTOMATIC UPDATE WORKS
+Each date folder in 04 Platforms\Instagram, \Facebook and \TikTok has a
+postiz.json file (caption, time, which images or video). The sync tool reads
+them and creates the posts in Postiz. With --watch it runs again 10 seconds
+after anything in a Calendar folder changes, and every 15 minutes. If you
+edit a caption or replace an image, the old Postiz post is removed and the new
+one is created. Past dates are skipped. Days 15 to 30 have "ready": false
+until you add the real photos or video and change it to true.
+By default posts arrive as DRAFTS so you can check each one in Postiz before it
+goes out. When you trust it, open sync\config.json and change "draft" to
+"schedule".
+
+ONE TIME SETUP (about one hour, in this order)
+1. Start Postiz
+   Right click "Start Postiz.ps1" > Run with PowerShell. Wait until
+   http://localhost:4007 opens in Chrome (first start can take a few minutes).
+   Then run "Turn on auto start (run once).ps1" so it starts at every sign in.
+
+2. Create your Postiz login
+   On http://localhost:4007 click Sign up and create the owner account with
+   daursupply@gmail.com and a new password kept in your password manager.
+   This account lives only on this PC.
+   After that, to stop anyone else signing up: in server\docker-compose.yaml set
+   DISABLE_REGISTRATION: 'true', then in that folder run
+   docker compose down  and  docker compose up -d
+
+3. Public storage for images and videos (needed for Instagram and TikTok)
+   Instagram, Facebook and TikTok fetch each image or video from a public HTTPS
+   link. Files stored only on this PC (http://localhost) cannot be fetched, so
+   posts would fail. Postiz's documented fix is Cloudflare R2:
+     a. Create a Cloudflare account, open R2, create a bucket "daur-postiz".
+        Cloudflare may ask for a payment card even on the free tier; check
+        the current free limits on Cloudflare's R2 pricing page.
+     b. Bucket > Settings > enable the public r2.dev URL (or a custom domain).
+     c. R2 > Manage API tokens > create a token with Object Read & Write for
+        that bucket. Note the Account ID, Access Key ID and Secret.
+     d. In server\docker-compose.yaml: comment out the three "local" storage
+        lines, uncomment the Cloudflare lines and fill them in. Keep the file
+        private; never post it anywhere.
+     e. docker compose down, then docker compose up -d.
+
+4. Meta app for Instagram and Facebook
+     a. developers.facebook.com > My Apps > Create app, using your personal
+        Facebook (the one that owns the DAUR Page). Choose the business type
+        or the use cases for managing a Page and Instagram content.
+     b. Add Facebook Login for Business. Valid OAuth redirect URIs:
+          http://localhost:4007/integrations/social/facebook
+          http://localhost:4007/integrations/social/instagram
+     c. Keep the app in Development mode. In development mode only people with
+        a role on the app (you) can connect, which is exactly what DAUR needs.
+        Postiz's docs say advanced access and business verification are needed
+        only for public apps used by other people.
+     d. App settings > Basic: copy App ID and App Secret into
+        FACEBOOK_APP_ID and FACEBOOK_APP_SECRET in docker-compose.yaml, then
+        docker compose down and docker compose up -d.
+     e. Postiz > Add channel > Instagram (Facebook business) and Facebook Page.
+        Approve every permission Facebook asks for.
+     If Facebook refuses the http://localhost address, tell Claude; the fix is a
+     free HTTPS tunnel, set up together.
+
+5. TikTok (month two, after the account is claimed)
+   TikTok's Content Posting API needs a TikTok developer app, and apps that
+   TikTok has not audited can only post privately. The sync therefore uses
+   "UPLOAD": the video goes to your TikTok inbox and you press Post in the app.
+   Until the developer app exists, upload TikTok videos by hand from the
+   04 Platforms\TikTok folders.
+
+6. API key for the sync
+   Postiz > Settings > Public API > copy the key. Open sync\api-key.txt,
+   replace the whole line with the key, save. Never share this file.
+
+7. First sync
+   In a terminal in the sync folder:
+     node daur-postiz-sync.mjs --dry     (shows what would be sent)
+     node daur-postiz-sync.mjs           (sends it)
+   Then open the Postiz calendar and check the drafts.
+
+WHAT POSTIZ CANNOT DO FOR DAUR
+  * WhatsApp Status: no scheduler can post it. Post from the phone; the
+    WhatsApp Calendar folders hold the image and text for each day.
+  * Facebook Stories: post from Meta Business Suite.
+  * The PC must be switched on and signed in at the scheduled time, because
+    Postiz runs here. If the PC is off, the post goes out when it is next on, or
+    fails. Meta Business Suite's own scheduler (free, runs on Meta's servers)
+    is the alternative for days you know the PC will be off.
+
+IF SOMETHING BREAKS
+  * Postiz page does not open: run Start Postiz.ps1 again, wait 3 minutes.
+  * Docker Desktop shows an error on start: Start Postiz.ps1 already moves
+    the known broken socket folders aside; run it again.
+  * A post failed: open it in Postiz to see the error; usually the media link
+    (step 3) or a disconnected channel (reconnect it in Postiz).
+  * Read sync\sync-log.txt and send it to Claude.
+
+SOURCES
+  Postiz Docker install  https://docs.postiz.com/installation/docker-compose
+  Postiz Instagram and Facebook provider  https://docs.postiz.com/providers/instagram
+  Postiz public API, create post  https://docs.postiz.com/public-api/posts/create
+  Postiz TikTok settings (media must be public HTTPS)  https://docs.postiz.com/public-api/providers/tiktok

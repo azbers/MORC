@@ -1,0 +1,36 @@
+{
+  "platform": "instagram",
+  "day": 8,
+  "title": "Where the markup goes carousel",
+  "date": "2026-11-23",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-23T15:30:00.000Z",
+      "media": [
+        "Post 1 of 4 1080x1350.png",
+        "Post 2 of 4 1080x1350.png",
+        "Post 3 of 4 1080x1350.png",
+        "Post 4 of 4 1080x1350.png"
+      ],
+      "caption": "Where the markup goes.\nA typical retail price pays for a mall shop, large ad budgets and layers of resellers. We select finished pairs at local Pakistani workshops and sell them online, straight to your door. You keep the difference.\nSame local craft. Zero retail markup.\n#DAURSupply #NayaDaur #LeatherShoes #MadeInPakistan"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-23T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-23T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Where the markup goes.\nA typical retail price pays for a mall shop, large ad budgets and layers of resellers. We select finished pairs at local Pakistani workshops and sell them online, straight to your door. You keep the difference.\nSame local craft. Zero retail markup.\n#DAURSupply #NayaDaur #LeatherShoes #MadeInPakistan"
+    }
+  ]
+}

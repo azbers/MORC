@@ -1,0 +1,39 @@
+INSTAGRAM  |  @daursupply
+
+You already own the handle. These steps finish the profile.
+
+1. ACCOUNT EMAIL AND SECURITY
+   Profile > menu (three lines) > Accounts Center:
+   a. Personal details > Contact info: add daursupply@gmail.com.
+   b. Password and security > Two factor authentication: turn it on.
+
+2. SWITCH TO A PROFESSIONAL ACCOUNT  (if not done yet)
+   Profile > menu > look for "Account type and tools" > Switch to professional
+   account > Business. When asked for a category, type "shoe" and pick the
+   closest match shown.
+
+3. EDIT PROFILE  (copy the text from "Profile Text.txt")
+   Name, Bio, Links (https://daursupply.com), Contact options (email
+   contact@daursupply.com, phone 0319 9628735, WhatsApp).
+   Photo: "Profile Picture (espresso) 1080x1080.png".
+   Instagram shows the photo as a circle; the D sits inside the safe area.
+
+4. CONNECT TO THE FACEBOOK PAGE  (do this after the Page exists)
+   Edit profile > Public business information > Page > Continue > log in to
+   Facebook > choose "DAUR Supply" > Next.
+   Alternative: from the Facebook Page: Settings > Linked accounts > Instagram >
+   Connect account.
+
+5. HIGHLIGHTS
+   Post a story for each topic, then tap "Highlight" and set the cover from
+   the "Highlight Covers" folder. Suggested titles (short):
+   Delivery, COD, Sizes, Fit Notes, Drops, Care.
+
+6. FIRST POSTS
+   Post the three images in "Launch Posts" in this order: 2, 3, then 1, so the
+   "Naya daur" post sits at the top left of your grid. Captions are in
+   "Captions.txt". Instagram crops the grid preview to a portrait 3:4 shape;
+   keep this in mind for later designs.
+
+Note: Instagram menus change often. If a label differs, use the search box
+in Settings.

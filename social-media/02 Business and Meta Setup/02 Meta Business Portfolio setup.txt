@@ -1,0 +1,76 @@
+DAUR SUPPLY  |  META BUSINESS PORTFOLIO: FULL SETUP, IN ORDER
+Written 29 October 2026. Meta renames menus often; if a name below differs on
+your screen, look for the closest match or search inside Settings.
+
+WHY THIS MATTERS
+The Business Portfolio (business.facebook.com) is the one place that owns the
+Facebook Page, Instagram, WhatsApp number, ad account and Pixel. If your
+personal Facebook is ever locked, a second admin in the portfolio can still run
+the business. Do this before any ad spend.
+
+STEP 1  SECURE YOUR PERSONAL FACEBOOK FIRST
+  [ ] Two factor authentication on (Settings > Accounts Center > Password and
+      security > Two factor authentication). Use an authenticator app.
+  [ ] Real name and real profile photo: Meta restricts accounts that look fake.
+
+STEP 2  CREATE THE BUSINESS PORTFOLIO
+  [ ] Go to business.facebook.com > Create a business portfolio.
+  [ ] Name: DAUR Supply. Your name. Business email: daursupply@gmail.com.
+  [ ] Business details: Islamabad, Pakistan; website https://daursupply.com.
+
+STEP 3  ADD THE ASSETS (Settings > Accounts)
+  [ ] Pages > Add > the DAUR Supply Page (you are already its admin).
+  [ ] Instagram accounts > Connect > @daursupply (it must be a Professional
+      account: Instagram > Settings > Account type and tools).
+  [ ] WhatsApp accounts > add the Business app number 0319 9628735, or link it
+      from the WhatsApp Business app: Settings > Business tools > Facebook &
+      Instagram. Do not move the number to the WhatsApp API now; the Watix
+      plan waits for Coexistence (see project memory section 9).
+
+STEP 4  CREATE THE AD ACCOUNT (Settings > Accounts > Ad accounts > Add > Create)
+  [ ] Name: DAUR Supply Ads.
+  [ ] Time zone: Asia/Karachi. Currency: PKR, unless your card only pays in USD.
+      Country and currency cannot be changed later.
+  [ ] Add a payment method in Billing and payments. Turn on your card's
+      international online payments with your bank first.
+
+STEP 5  PIXEL AND CONVERSIONS API THROUGH SHOPIFY (Data sources > Datasets)
+  [ ] Easiest route: in Shopify, install the "Facebook & Instagram" app by
+      Meta, connect the DAUR Supply portfolio, Page, Instagram, ad account,
+      and create or pick the Pixel inside the app.
+  [ ] Set Customer data sharing to Maximum. Shopify's help explains: Standard
+      is the Pixel only (ad blockers can stop it); Enhanced and Maximum add
+      the Conversions API, which sends purchase events server to server.
+  [ ] Check in Events Manager > Test events that both browser and server
+      events arrive after a test order. A Shopify community thread reports
+      cases where server events did not arrive; if so, contact Meta support.
+
+STEP 6  VERIFY THE DOMAIN (Brand safety and suitability > Domains)
+  [ ] Add daursupply.com. Choose DNS TXT verification and add the TXT record
+      in Shopify > Settings > Domains > daursupply.com > Manage > DNS settings.
+  Verifying shows Meta you own the website the ads link to.
+
+STEP 7  PEOPLE AND SAFETY
+  [ ] Settings > Users > People: add one trusted second admin (a family member
+      with a real, secured Facebook profile). Write their name in the
+      Accounts Register.
+  [ ] Security Center: require two factor authentication for everyone.
+  [ ] Business verification (Security Center > Start verification) asks for
+      official business documents. It is not needed to start running ads; it
+      becomes useful for the WhatsApp API and higher limits. Do it once the
+      NTN or a business bank statement in the DAUR name exists.
+
+STEP 8  INBOX AND AUTOMATIC REPLIES
+  [ ] Meta Business Suite > Inbox shows Facebook, Instagram and (if linked)
+      WhatsApp messages in one place, also in the Meta Business Suite phone app.
+  [ ] Inbox > Automations: set Instant reply and Frequently asked questions
+      using the texts from 04 Platforms/WhatsApp/Setup/Messages.txt.
+
+STEP 9  WRITE IT DOWN
+  [ ] Fill "Accounts Register.txt" in this folder: portfolio ID, ad account ID,
+      Pixel ID, second admin, date done. Never write passwords there.
+
+SOURCES
+  Shopify, Facebook data sharing levels  https://help.shopify.com/en/manual/promoting-marketing/analyze-marketing/meta-data-sharing
+  Shopify community, Conversions API issue  https://community.shopify.com/t/shopify-problems-enabling-the-meta-conversion-api/392566
+  WhatsApp Business, Click to WhatsApp ad guide  https://whatsappbusiness.com/blog/click-to-whatsapp-ad-guide/

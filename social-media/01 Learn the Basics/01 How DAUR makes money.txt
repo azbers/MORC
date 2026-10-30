@@ -1,0 +1,55 @@
+DAUR SUPPLY  |  HOW THE BUSINESS MAKES MONEY
+Written 29 October 2026 for an owner who is new to business. Read this first.
+
+1. THE WHOLE BUSINESS IN ONE LINE
+You buy finished pairs from Pakistani workshops, check them, re-lace and box
+them as DAUR, and sell them online with Cash on Delivery (COD). You keep the
+difference between what the customer pays and everything it cost to get the
+pair to them.
+
+2. THE FIVE NUMBERS THAT DECIDE IF YOU MAKE MONEY
+Every pair has these. Write them for every model before you sell it.
+
+  A  Selling price        what the customer pays (for example Rs. 4,500)
+  B  Product cost         what you pay the workshop for the pair
+  C  Kit cost             box, tissue, laces, tag, seal, card (see 05 Packaging)
+  D  Delivery cost        courier charge, COD handling fee, plus the cost of
+                          parcels that are refused and come back
+  E  Ad cost per order    total ad spend divided by delivered orders
+
+  Profit per pair  =  A  minus  B  minus  C  minus  D  minus  E
+
+The file "DAUR Numbers.xlsx" in this folder does this sum for you. Change the
+yellow cells only.
+
+3. THE ESTIMATES YOU ALREADY HAVE (not quotes, not facts yet)
+From the original project: one delivered pair costs about Rs. 431 to Rs. 542
+to fulfil (courier, COD and refused parcels together), and ads stop being
+profitable above roughly Rs. 1,390 per order. These were estimates. Replace
+them with the written tariff from PostEx or Leopards as soon as you have it.
+
+4. WHY REFUSED PARCELS MATTER SO MUCH
+With COD the customer pays only when the parcel arrives. If they refuse it, you
+usually pay the courier for the trip there and the trip back, and you have paid
+for the ad that brought the order. A refused parcel costs money and earns
+nothing. This is why every order is confirmed on WhatsApp or by call before it
+is booked (see "03 Selling on WhatsApp with COD.txt").
+
+5. BREAK EVEN, IN PLAIN WORDS
+Break even is the most you can spend on ads to get one delivered order and
+still make zero profit. Anything below it is profit. The spreadsheet shows it as
+"Most you can pay for one order". Watch this number every week in Ads Manager
+(cost per purchase or cost per conversation, divided by how many chats become
+delivered orders).
+
+6. CASH FLOW: THE TRAP FOR NEW SELLERS
+You pay the workshop and the ads now. The courier pays you the COD money later
+(PostEx says it pays upfront; Leopards pays weekly; check the contract). Keep
+enough cash for at least two weeks of stock, ads and packaging before launch.
+Do not spend money you are still waiting to receive from the courier.
+
+7. WHAT TO DO EACH WEEK (5 minutes)
+  * Fill the "Weekly" sheet in DAUR Numbers.xlsx: ad spend, chats, orders,
+    delivered, refused, returned for size, cash received.
+  * Look at two numbers: delivered orders and profit after ads.
+  * Send the sheet to Claude for the weekly review.

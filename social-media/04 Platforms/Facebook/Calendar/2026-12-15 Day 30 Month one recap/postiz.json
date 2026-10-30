@@ -1,0 +1,17 @@
+{
+  "platform": "facebook",
+  "day": 30,
+  "title": "Month one recap",
+  "date": "2026-12-15",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-12-15T15:30:00.000Z",
+      "media": [],
+      "caption": "Month one is done. Thank you to everyone who ordered, asked and wrote a Fit note.\n#DAURSupply #NayaDaur"
+    }
+  ]
+}

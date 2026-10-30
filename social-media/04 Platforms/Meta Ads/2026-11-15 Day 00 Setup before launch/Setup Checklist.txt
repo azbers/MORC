@@ -1,0 +1,31 @@
+DAY 00  |  SETUP BEFORE LAUNCH  (one evening on a computer)
+
+[ ] 1. Meta Business Suite: business.facebook.com, signed in with the
+       personal profile that owns the DAUR Supply Page.
+[ ] 2. Business settings > Accounts > Ad accounts > Add > Create a new ad
+       account. Name "DAUR Supply". Time zone Asia/Karachi. Choose the
+       currency carefully; it cannot be changed later (a new ad account
+       would be needed).
+[ ] 3. Billing: add a payment method (card that allows online international
+       payments, or the options Meta shows for Pakistan).
+[ ] 4. Link WhatsApp: Page Settings > Linked accounts > WhatsApp > 0319 9628735.
+       Link Instagram @daursupply in the same place.
+[ ] 5. Shopify: install the free "Facebook & Instagram" sales channel app by
+       Meta and connect the same business, Page, ad account and Pixel. Set
+       data sharing to the highest level offered (Conversions API).
+[ ] 6. Business settings > Brand safety > Domains: add daursupply.com and
+       verify it (the Shopify app can do this, or use the meta tag method).
+[ ] 7. Audiences (Ads Manager > Audiences > Create audience > Custom audience):
+       a. "IG engaged 30d"   Instagram account, everyone who engaged, 30 days
+       b. "FB engaged 30d"   Facebook Page, everyone who engaged, 30 days
+       c. "Site visitors 30d" Website, all visitors, 30 days (after step 5)
+       d. "Buyers 30d"       Website, Purchase, 30 days (used to exclude)
+       e. "WA chats 30d"     Messaging, people who messaged the Page or
+                             WhatsApp, 30 days (if offered)
+[ ] 8. WhatsApp Business app: greeting message, away message and quick
+       replies from "04 Platforms/WhatsApp/Setup/Messages.txt" are in place, so
+       every ad chat gets an instant answer.
+[ ] 9. Two factor authentication on the profile that owns the business.
+
+Meta changes labels often. If a menu name differs, use the search box in
+Business settings.

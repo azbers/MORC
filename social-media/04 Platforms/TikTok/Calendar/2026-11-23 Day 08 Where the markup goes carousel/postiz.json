@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 8,
+  "title": "Where the markup goes carousel",
+  "date": "2026-11-23",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-11-23T15:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Where the markup goes.\nA typical retail price pays for a mall shop, large ad budgets and layers of resellers. We select finished pairs at local Pakistani workshops and sell them online, straight to your door. You keep the difference.\nSame local craft. Zero retail markup.\n#DAURSupply #NayaDaur #LeatherShoes #MadeInPakistan"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "platform": "instagram",
+  "day": 3,
+  "title": "Branded not labeled",
+  "date": "2026-11-18",
+  "needs_check": true,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-18T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Branded, not labeled.\nNo logo printed on the leather. The DAUR mark lives on the hardware: a brass lace tag on the bottom row and the DAUR SUPPLY UNIT seal on the top eyelet. Keep the seal on until you are sure of the size; it is needed for a size exchange.\n#DAURSupply #BrandedNotLabeled #LeatherShoes #MensStyle"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-18T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-18T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Branded, not labeled.\nNo logo printed on the leather. The DAUR mark lives on the hardware: a brass lace tag on the bottom row and the DAUR SUPPLY UNIT seal on the top eyelet. Keep the seal on until you are sure of the size; it is needed for a size exchange.\n#DAURSupply #BrandedNotLabeled #LeatherShoes #MensStyle"
+    }
+  ]
+}

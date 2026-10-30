@@ -1,0 +1,26 @@
+DAUR SUPPLY  |  PRODUCT LISTING TEMPLATE
+Fill one copy per model, then send it to Claude to create the product, or enter
+it in Shopify > Products > Add product. Leave a line empty rather than guess.
+
+Title                 DAUR [Model name]
+SEO title             [Model name] Leather Shoes for Men, Price in Pakistan | DAUR Supply
+Product type          Leather / Sneakers / Hybrids / Loafer
+Vendor (hidden)       DAUR Supply
+Price (Rs.)           ______
+Compare at price      leave empty unless it was really sold higher before
+Cost per item (Rs.)   ______  (what the workshop charges; not shown to customers)
+Colours               ______  (option name must be "Color")
+Sizes in stock        EU 40 __  41 __  42 __  43 __  44 __  45 __  (option "Size", values "EU 42")
+Upper material        ______  (only what the workshop confirms in writing)
+Lining                ______
+Sole                  ______
+Construction          ______  (for example cemented, stitched)
+Insole length per size (cm)  40 __ 41 __ 42 __ 43 __ 44 __ 45 __
+Weight of one pair (g) ______
+Eyelet pairs          ______  (needed for lace length, see 05 Packaging)
+Box size used         Low or Boot (see 05 Packaging)
+Photos                14 per colour per the DAUR Photo Guide
+Video                 the Day 15 reveal Reel for this model
+Fit notes on sizing   ______  (for example "runs half a size large", only after testing)
+Description (3 short paragraphs: what it is, how it feels, what it goes with)
+______

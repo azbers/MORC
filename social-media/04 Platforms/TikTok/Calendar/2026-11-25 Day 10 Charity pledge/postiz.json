@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 10,
+  "title": "Charity pledge",
+  "date": "2026-11-25",
+  "needs_check": true,
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-11-25T15:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "At least 5% of our profit goes to verified and genuine cases.\n\"Charity does not decrease wealth.\" Sahih Muslim 2588\n#DAURSupply #NayaDaur #Pakistan"
+    }
+  ]
+}

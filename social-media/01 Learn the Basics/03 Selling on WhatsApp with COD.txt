@@ -1,0 +1,57 @@
+DAUR SUPPLY  |  SELLING ON WHATSAPP WITH CASH ON DELIVERY
+Written 29 October 2026.
+
+Most DAUR orders will start as a WhatsApp chat (from a Click to WhatsApp ad, the
+Instagram bio link or the website button). The chat is the shop counter.
+
+1. THE ORDER FLOW, STEP BY STEP
+  1. Chat starts. Greeting message goes out automatically (WhatsApp Business >
+     Business tools > Greeting message; text in 04 Platforms/WhatsApp/Setup).
+  2. Ask three things only: which pair, which colour, which EU size.
+     If they are unsure of size, ask for foot length in cm (heel to longest
+     toe) and match it to the chart.
+  3. Send the price, delivery fee (Rs. 200 for one pair, free on two or more),
+     and the delivery time (dispatch within 24 hours, 2 to 6 working days).
+  4. Ask for: full name, full address with city, a second phone number if
+     they have one. Or send the product link so they order on the website.
+  5. Confirm in one message (template below) and ask them to reply "Confirm".
+  6. Book the parcel in the courier app only after "Confirm".
+  7. Send the tracking number the same day.
+  8. Two days after delivery: thank you message and the Fit note link.
+
+2. CONFIRMATION MESSAGE (paste as a quick reply /confirm)
+  Assalam o Alaikum [Name], thank you for your order with DAUR Supply.
+  Pair: [model], [colour], EU [size]
+  Total to pay the rider: Rs. [amount] (Cash on Delivery)
+  Address: [address], [city]
+  Dispatch within 24 hours, delivery in 2 to 6 working days.
+  Please reply "Confirm" so we can book your parcel.
+
+3. WHY CONFIRMATION MATTERS
+A refused COD parcel costs two courier trips and earns nothing (see
+"01 How DAUR makes money.txt"). A clear confirmation with the exact amount
+removes surprises at the door. If someone does not reply within a day, send one
+polite reminder; if there is still no reply, do not ship.
+
+4. SIGNS AN ORDER MAY BE REFUSED
+  * No reply to the confirmation.
+  * Address with no city or landmark.
+  * Several pairs in several sizes "to try".
+  * A number that does not answer a call.
+For these, call before booking. It is fine to ask a customer to confirm by
+voice.
+
+5. QUICK REPLIES ALREADY WRITTEN
+"04 Platforms/WhatsApp/Setup/Messages.txt" has the greeting, away message and
+quick replies: /exchange (5 days), /defect, /wrongitem, /saving and more. Add
+/confirm from section 2 above.
+
+6. RESPONSE TIME
+A buyer who asked about shoes will often buy from whoever answers first. Set an away message for hours you are at your day job
+that says when you will reply, and keep that promise.
+
+7. WHAT NOT TO DO
+  * No advance payment requests: COD is the promise.
+  * No pressure lines or invented scarcity.
+  * Do not send marketing broadcasts to people who have not opted in. WhatsApp
+    can restrict accounts that many people block or report.

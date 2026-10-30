@@ -1,0 +1,25 @@
+{
+  "platform": "facebook",
+  "day": 5,
+  "title": "Sizes",
+  "date": "2026-11-20",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-20T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Sizes EU 40 to 45.\nNot sure which one? Send us your usual size in another brand on WhatsApp 0319 9628735 and we will help you choose. If it still does not fit, the five day size exchange has you covered.\n#DAURSupply #MensShoes #ShoeSize #Pakistan"
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-20T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Sizes EU 40 to 45.\nNot sure which one? Send us your usual size in another brand on WhatsApp 0319 9628735 and we will help you choose. If it still does not fit, the five day size exchange has you covered.\n#DAURSupply #MensShoes #ShoeSize #Pakistan"
+    }
+  ]
+}

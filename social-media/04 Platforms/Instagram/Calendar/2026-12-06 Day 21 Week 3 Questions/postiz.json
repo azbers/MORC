@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 21,
+  "title": "Week 3 Questions",
+  "date": "2026-12-06",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-12-06T15:30:00.000Z",
+      "media": [],
+      "caption": "You asked, we answered. Send yours on WhatsApp 0319 9628735.\n#DAURSupply"
+    }
+  ]
+}

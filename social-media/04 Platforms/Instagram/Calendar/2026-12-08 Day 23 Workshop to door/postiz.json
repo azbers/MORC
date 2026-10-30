@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 23,
+  "title": "Workshop to door",
+  "date": "2026-12-08",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-08T15:30:00.000Z",
+      "media": [],
+      "caption": "Five steps between the workshop and your door.\n#DAURSupply #MadeInPakistan"
+    }
+  ]
+}

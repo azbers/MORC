@@ -1,0 +1,49 @@
+DAUR SUPPLY  |  RUNNING THE BUSINESS, DAY BY DAY AND WEEK BY WEEK
+Written 29 October 2026 for an owner with a day job.
+
+EVERY DAY (about 30 to 45 minutes, split morning and evening)
+  [ ] Morning: reply to every WhatsApp chat, Instagram DM and Facebook message.
+  [ ] Confirm new orders (see 03 Selling on WhatsApp with COD.txt).
+  [ ] Book confirmed orders in the courier app; print the packing slip
+      (Order Printer) and the courier label.
+  [ ] Pack: relace with the black laces, brass tag, seal on the top eyelet,
+      tissue, Manifest Card, box, courier label.
+  [ ] Hand parcels to the rider or drop at the branch.
+  [ ] Send tracking numbers.
+  [ ] Evening: post the day's Story or Status (04 Platforms, today's folder);
+      feed posts go out from Postiz by themselves once it is connected.
+  [ ] Reply to comments.
+
+EVERY WEEK (about 1 hour, pick a fixed day, for example Sunday)
+  [ ] Fill the Weekly sheet in 01 Learn the Basics/DAUR Numbers.xlsx.
+  [ ] Check the courier payout matches the delivered COD orders.
+  [ ] Count stock per model and size. Mark sold out sizes in Shopify.
+  [ ] Approve or reject new Fit notes (Shopify > Content > Metaobjects).
+  [ ] Open Instagram Insights: which post got the most shares and profile
+      visits. Make more like it.
+  [ ] Send the Weekly sheet and Insights screenshots to Claude.
+  [ ] Prepare next week's Reels (film on the weekend).
+
+EVERY MONTH
+  [ ] Month review in 04 Platforms/Meta Ads (Day 30 folder).
+  [ ] Set aside the charity pledge: at least 5% of the month's profit.
+  [ ] Reorder fast selling sizes; drop slow ones.
+  [ ] Reorder packaging before it runs out (printers often need 1 to 3 weeks).
+  [ ] Back up: export Shopify orders (Orders > Export) to this computer.
+
+SIMPLE BOOKKEEPING (no software needed at the start)
+Keep one sheet with every money movement: date, what, money in, money out.
+Keep every invoice photo (workshop, printer, courier, Meta receipts) in one
+folder per month. This is what an accountant or FBR will ask for.
+
+STOCK RULES
+  * Sell only what is in your hands or confirmed by the vendor for same week
+    delivery. The project memory notes an open question (Tirmidhi 1232) about
+    selling what you do not yet hold; ask a qualified mufti, as planned.
+  * Keep the stock count in Shopify true. Overselling creates refused and
+    cancelled orders.
+
+QUALITY RULE
+The website promises hand checks of stitching, grain, upper flex, sole bond,
+and comfort, with a pull test at toe and heel. Do them on every pair, every
+time, or change the website text.

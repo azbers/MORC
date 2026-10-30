@@ -1,0 +1,45 @@
+DAUR SUPPLY  |  WORD LIST (marketing, ads, store and shipping)
+
+Ad account        the Meta account that pays for ads, inside the Business Portfolio.
+Ad set            the middle level of a Meta ad: audience, placements, budget.
+Advantage+        Meta's automatic setting that lets its system choose audience
+                  or placements. Recommended for small budgets.
+Aglet             the plastic or metal tip at the end of a lace.
+AOV               average order value: total sales divided by number of orders.
+Bleed             extra artwork (usually 3 mm) beyond the cut line so no white edge
+                  shows after cutting. Printers ask for it.
+Business Portfolio  Meta's name (formerly Business Manager) for the folder that holds
+                  Page, Instagram, WhatsApp, ad account, Pixel and people.
+Carousel          one post with several swipeable images or videos.
+CMYK              the four printing inks. Screens use RGB; print files must be CMYK.
+COD               Cash on Delivery. The customer pays the rider.
+Conversion        the action you want: a chat, an order, a purchase.
+Conversions API   server to server tracking between Shopify and Meta; works even
+  (CAPI)          when a browser blocks the Pixel.
+CPM               cost per 1,000 impressions.
+CTR               click through rate: clicks divided by impressions.
+CTWA              Click to WhatsApp ad.
+Dieline           the flat drawing of a box with cut and fold lines.
+Engagement        likes, comments, shares, saves.
+Fit note          DAUR's name for a customer review.
+Frequency         average times one person saw your ad.
+Hook              the first 1 to 3 seconds of a Reel or ad that make people stop.
+Impressions       times an ad or post was shown.
+Learning phase    the first days of an ad set while Meta learns who responds.
+Lookalike         an audience Meta builds that resembles your customers.
+Organic           unpaid reach from posts and Reels.
+Pantone           a standard numbered ink colour system used by printers.
+Pixel             a piece of Meta code on the website that reports visits and
+                  purchases back to Meta.
+Reach             number of different people who saw something.
+Reel              a vertical short video on Instagram or Facebook.
+Refusal / RTO     a COD parcel the customer did not accept; it returns to origin.
+Retargeting       showing ads to people who already visited, chatted or engaged.
+ROAS              return on ad spend: sales value divided by ad spend.
+Sends             people sharing your post in a DM. A strong signal for Instagram.
+SKU               stock keeping unit: one model, in one colour, in one size.
+Story             a vertical post that disappears after 24 hours.
+UGC               user generated content: photos or videos made by customers.
+Volumetric weight courier billing weight from box size: length x width x height in
+                  cm divided by a number the courier sets (often 5,000). A shoe box
+                  can be billed heavier than it weighs. Ask each courier.

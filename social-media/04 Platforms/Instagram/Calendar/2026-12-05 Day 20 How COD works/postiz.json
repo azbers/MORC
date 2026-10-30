@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 20,
+  "title": "How COD works",
+  "date": "2026-12-05",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-05T15:30:00.000Z",
+      "media": [],
+      "caption": "Order, confirm on WhatsApp, pay the rider. No advance payment.\n#DAURSupply #CashOnDelivery"
+    }
+  ]
+}

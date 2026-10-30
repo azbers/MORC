@@ -1,0 +1,70 @@
+DAUR SUPPLY  |  START HERE
+Reorganised 29 October 2026. Nothing was deleted: the previous layout is in
+_Archive\2026-10-29 old layout.
+
+OPEN FIRST
+  00 DAUR Supply Master File.html   every brand fact, contact, policy and link
+                                    in one page (open in Chrome or Edge)
+
+THE FOLDERS
+  Logos                       all logo files (SVG for print, PNG for screens)
+  01 Learn the Basics         read these first if you are new to business:
+                                01 How DAUR makes money (+ DAUR Numbers.xlsx)
+                                02 Marketing basics
+                                03 Selling on WhatsApp with COD
+                                04 Meta ads explained simply
+                                05 Running the business week by week
+                                06 Word list
+                                07 Short video playbook
+                                08 Sources
+  02 Business and Meta Setup  NTN, trademark, Meta Business Portfolio, couriers,
+                              Gmail, Accounts Register (no passwords)
+  03 Shopify                  what to change in the store, in order
+  04 Platforms                Instagram, Facebook, WhatsApp, TikTok, Meta Ads.
+                              Each has Setup (profile texts, pictures, guides)
+                              and Calendar (one folder per date). Start with
+                              "00 Calendar overview.txt".
+  05 Packaging                give this whole folder to the box designer or
+                              printer; start with 00 Designer Brief.pdf
+  06 Postiz                   the scheduler on this PC; "00 READ ME Postiz.txt"
+  _Archive                    old copies, kept for reference only
+
+YOUR ORDER OF WORK (each step links to its file)
+  This week, while the pairs are in transit
+   1. Secure Gmail, then Instagram, Facebook, WhatsApp
+      (04 Platforms\<platform>\Setup).
+   2. Meta Business Portfolio, ad account, second admin
+      (02 Business and Meta Setup\02 Meta Business Portfolio setup.txt).
+   3. Claim TikTok (04 Platforms\TikTok\Setup).
+   4. Open a courier account and get written rates (02 ...\03 Couriers.txt).
+   5. NTN and the trademark search (02 ...\01 Legal, tax and trademark.txt).
+   6. Postiz one time setup (06 Postiz\00 READ ME Postiz.txt).
+  When the pairs arrive
+   7. Photograph and film them (DAUR Photo Guide, and the Plan.txt briefs for
+      Days 15 to 30).
+   8. Measure the largest pair; send 05 Packaging to the printer for samples.
+   9. Add real products in Shopify (03 Shopify\Product listing template.txt).
+  10. Finish 03 Shopify\Shopify upgrade and update plan.txt, section A.
+  Launch
+  11. Set the real Day 01 date:
+        open a terminal in 04 Platforms and run
+        node change-launch-date.mjs YYYY-MM-DD
+  12. Remove the store password. Day 01 posts and the Day 01 ads go live.
+  Every week
+  13. Fill DAUR Numbers.xlsx (Weekly) and send it to Claude.
+
+BRAND FACTS USED IN EVERY PROFILE
+  Name          DAUR Supply
+  Line          Same local craft. Zero retail markup.
+  Website       https://daursupply.com
+  Public email  contact@daursupply.com  (forwards to daursupply@gmail.com)
+  Phone and WhatsApp  0319 9628735  (+92 319 9628735), wa.me/923199628735
+  Delivery      Rs. 200 for one pair, free on two pairs or more,
+                dispatch within 24 hours, 2 to 6 working days
+  Exchange      5 day size exchange, unworn, original box, seal attached,
+                return courier paid by the customer; sale pairs final for size
+  Colours       Espresso #2A1C14, Hide #F5EEE4, Brass #B0843F
+
+PASSWORDS
+Never save passwords in this folder. Use a password manager and two factor
+authentication on every account.

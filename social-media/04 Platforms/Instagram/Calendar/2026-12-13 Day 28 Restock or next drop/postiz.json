@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 28,
+  "title": "Restock or next drop",
+  "date": "2026-12-13",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-12-13T15:30:00.000Z",
+      "media": [],
+      "caption": "[What is really arriving and when]. Turn on post notifications.\n#DAURSupply"
+    }
+  ]
+}

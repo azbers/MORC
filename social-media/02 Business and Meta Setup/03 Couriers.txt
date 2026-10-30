@@ -1,0 +1,70 @@
+DAUR SUPPLY  |  COURIERS
+Updated 30 October 2026 with the owner's visit to a nearby Leopards branch.
+
+STATUS
+  Leopards is the front runner. No account is open yet. Everything in the
+  Leopards section below is what branch staff told the owner verbally; ask
+  for it in writing (a tariff sheet or the account agreement) before launch.
+
+LEOPARDS: WHAT THE BRANCH SAID (owner's visit, October 2026)
+  Account types   Two: Retail (open at any nearby branch) and Merchant
+                  (open at the head office or area office). A Retail account
+                  cannot be upgraded to Merchant later. All answers below are
+                  for Retail.
+  To open         Basic business, personal and bank details.
+  Delivery charge At most Rs. 350 per parcel across Pakistan; up to about
+                  Rs. 500 for Sindh and Balochistan. Paid in advance by DAUR.
+  Volume discount Quoted as Rs. 350, then 10% off at 10 parcels a day, 20% at
+                  25, 30% at 50, 40% at 100.
+  Tax             4% FBR withholding is deducted from the COD amount before
+                  payout. It cannot be avoided by the merchant.
+                  (Example: on a Rs. 4,000 COD parcel, Rs. 160 is withheld.)
+  Insurance       Optional, 2% of the pair's price; covers loss or missing
+                  parcels. (Rs. 80 on a Rs. 4,000 pair.)
+  Payout          Into the bank account about 10 days after delivery.
+  Returns         No charge for a returned (refused) parcel on Retail.
+  Attempts        2 to 3 delivery attempts; the rider calls the customer
+                  before delivery; the customer gets delivery and tracking
+                  messages.
+  Open parcel     Not allowed: the customer cannot open the parcel before
+                  paying.
+  Speed           2 to 3 days across Pakistan, 3 to 4 days for Sindh and
+                  Balochistan. Parcels handed in before 5 pm ship the same day.
+  Pickup          No pickup charge stated, or DAUR drops parcels at the shop.
+  Paperwork       No airway bill printing needed: Leopards provides the
+                  packing wrapper and DAUR writes on it. No packaging rules
+                  other than that the box must fit inside the wrapper.
+  Shopify         No Shopify integration on Retail; Leopards provides its own
+                  parcel management portal. Orders are booked by hand.
+
+WHAT THIS MEANS FOR DAUR (plain arithmetic, no estimates added)
+  Per Rs. 4,000 COD order: Rs. 350 delivery + Rs. 160 FBR withholding
+  + Rs. 80 insurance if taken = up to Rs. 590 before packaging and ads.
+  The website charges the customer Rs. 200 for one pair and nothing on two
+  pairs, so DAUR carries the rest. The full cost model belongs to the
+  costed plan thread and to DAUR Numbers.xlsx.
+  Cash flow: money arrives about 10 days after delivery, so stock for the
+  first two weeks must be paid from savings.
+  Retail cannot become Merchant. If you expect to need Shopify integration
+  or Merchant terms later, ask the head office what Merchant requires before
+  opening Retail.
+  The website promises delivery in 2 to 6 working days; Leopards' 2 to 4
+  days fits inside that, so no wording change is needed.
+
+QUESTIONS STILL TO ASK LEOPARDS, IN WRITING
+  1. Is Rs. 350 per parcel for any weight, or up to which weight? How is a
+     shoe box billed (actual or volumetric weight)? Bring the real box.
+  2. Is "no return charge" in the Retail agreement? Get it on paper.
+  3. Is the 4% FBR deduction on the full COD amount, and will Leopards give a
+     withholding certificate for the tax return?
+  4. Merchant account: requirements, rates, payout days, Shopify integration.
+  5. Can the customer's parcel be opened for checking if DAUR allows it?
+
+OTHER COURIERS (from the 28 October shortlist, not re checked)
+  PostEx    says it pays COD upfront; online signup at merchant.postex.pk/signup.
+  Trax      backup; online form, up to three payouts a week.
+  Aggregators named in research: Flaship, Oshi.
+
+PUT THE ANSWERS IN
+  01 Learn the Basics\DAUR Numbers.xlsx, sheet "Per pair": courier charge,
+  tax withheld, insurance, return charge.

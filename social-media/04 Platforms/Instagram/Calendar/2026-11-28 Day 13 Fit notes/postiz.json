@@ -1,0 +1,33 @@
+{
+  "platform": "instagram",
+  "day": 13,
+  "title": "Fit notes",
+  "date": "2026-11-28",
+  "needs_check": true,
+  "posts": [
+    {
+      "kind": "post",
+      "time": "2026-11-28T15:30:00.000Z",
+      "media": [
+        "Post 1080x1350.png"
+      ],
+      "caption": "Worn your pair? Write a fit note on its page at daursupply.com.\nTell other buyers how the size, comfort and finish felt. Approved notes appear on the product page, critical ones included.\n#DAURSupply #FitNotes #MensShoes"
+    },
+    {
+      "kind": "story",
+      "time": "2026-11-28T15:45:00.000Z",
+      "media": [
+        "Story 1080x1920.png"
+      ],
+      "caption": ""
+    },
+    {
+      "kind": "reel",
+      "time": "2026-11-28T08:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Worn your pair? Write a fit note on its page at daursupply.com.\nTell other buyers how the size, comfort and finish felt. Approved notes appear on the product page, critical ones included.\n#DAURSupply #FitNotes #MensShoes"
+    }
+  ]
+}

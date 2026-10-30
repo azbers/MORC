@@ -1,0 +1,17 @@
+{
+  "platform": "instagram",
+  "day": 22,
+  "title": "Care in 30 seconds",
+  "date": "2026-12-07",
+  "needs_check": true,
+  "ready": false,
+  "note": "Set ready to true after adding the real files and filling the caption.",
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-12-07T15:30:00.000Z",
+      "media": [],
+      "caption": "Thirty seconds of care adds months of wear.\nSave this for later.\n#DAURSupply #LeatherCare"
+    }
+  ]
+}

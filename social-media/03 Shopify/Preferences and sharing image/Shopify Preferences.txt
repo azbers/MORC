@@ -1,0 +1,32 @@
+SHOPIFY  |  ONLINE STORE > PREFERENCES
+
+SOCIAL SHARING IMAGE
+Upload: "Social Sharing Image 1200x628.png" (this folder).
+This picture shows when someone shares daursupply.com on WhatsApp, Facebook
+and similar apps.
+
+HOME PAGE TITLE  (58 of 70 characters)
+DAUR Supply | Men's Leather Shoes and Sneakers in Pakistan
+
+Important: also set the store name to "DAUR Supply" in Settings > General
+(Store details). The theme adds the store name to the title only when the
+title does not already contain it, and the check is case sensitive. With the
+store name "Daur Supply", the browser tab would show the name twice.
+
+META DESCRIPTION  (147 of 320 characters; Google usually shows about the
+first 150 to 160)
+Men's leather shoes and sneakers from Pakistani workshops at factory price. Same local craft. Zero retail markup. Cash on Delivery across Pakistan.
+
+AUTOMATIC HREFLANG TAGS
+Keep ON. No harm with one language.
+
+CRAWLER ACCESS
+Leave empty. Signatures are only for outside tools you choose to let crawl
+the store; Google does not need one.
+
+AUTOMATIC REDIRECTION
+Country/region: ON is fine (you sell in Pakistan only).
+Language: leave OFF (the store has English only).
+
+SPAM PROTECTION
+Keep both ON.

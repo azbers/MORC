@@ -1,0 +1,80 @@
+DAUR SUPPLY  |  META ADS EXPLAINED SIMPLY
+Written 29 October 2026. The exact campaign settings for each day are in
+"04 Platforms/Meta Ads". This file explains what the words mean.
+
+1. WHERE ADS LIVE
+  Meta Business Suite / Business Portfolio  the company folder. Holds your
+      Facebook Page, Instagram account, WhatsApp number, ad account, Pixel and
+      the people who can use them. Set up in "02 Business and Meta Setup".
+  Ads Manager (adsmanager.facebook.com)  where you build, run and read ads.
+  Do not use the blue "Boost post" button for sales. It has fewer settings.
+  Build ads in Ads Manager instead.
+
+2. THE THREE LEVELS OF AN AD
+  Campaign   the goal. DAUR uses "Engagement" with WhatsApp as the conversion
+             location (Click to WhatsApp), and later "Sales" for website orders.
+  Ad set     who sees it, where, and the budget: Pakistan, men 20 to 45,
+             Advantage+ placements.
+  Ad         what they see: image or video, text, the "Send WhatsApp message"
+             button.
+
+3. CLICK TO WHATSAPP, IN ONE PARAGRAPH
+The ad has a button that opens a WhatsApp chat with 0319 9628735 and a ready
+first message. You answer like a shop assistant and close the order in the chat
+(see "03 Selling on WhatsApp with COD.txt"). WhatsApp's own guide says these ads
+can use the Engagement, Traffic or Sales objective, and that any offer promised
+in the ad must be delivered quickly once the chat starts.
+
+4. THE LEARNING PHASE (why you must not keep editing)
+After you publish, Meta spends some days learning who responds. Industry
+summaries of Meta's help pages say it usually needs about 50 optimisation
+events in 7 days, and that big edits (targeting, creative, optimisation event,
+or a budget change of more than about 20%) restart learning. So: publish, wait,
+read on Day 04, change only on Day 08.
+
+5. THE NUMBERS IN ADS MANAGER, IN PLAIN WORDS
+  Amount spent      money used so far.
+  Reach             how many different people saw the ad.
+  Impressions       how many times it was shown (one person can see it twice).
+  Frequency         impressions divided by reach. When it keeps rising and the
+                    cost per chat rises with it, people are tired of the ad:
+                    refresh creatives (rule of thumb, not a Meta rule).
+  CPM               cost per 1,000 impressions. How expensive the audience is.
+  CTR (link)        out of 100 people who saw it, how many clicked. Shows if the
+                    creative and first line are interesting.
+  Messaging conversations started
+                    chats opened from the ad. The main result for Campaign 1.
+  Cost per messaging conversation started
+                    amount spent divided by chats. Watch this every few days.
+  Purchases / ROAS  only for website Sales campaigns, once the Pixel is set up.
+                    ROAS = sales value divided by ad spend.
+Ads Manager does not know which chats became paid, delivered orders. Count that
+yourself in DAUR Numbers.xlsx (Weekly sheet): chats, confirmed, delivered.
+
+6. WHAT GOOD LOOKS LIKE
+Nobody can tell you a correct cost per chat before your own ads run. Agency
+blogs quote Pakistani ranges, but none publish audited data, so they are not
+used in this plan. The real test is: ad spend divided by DELIVERED orders must
+stay below the break even number in DAUR Numbers.xlsx.
+
+7. PAYING FOR ADS FROM PAKISTAN
+The payment methods Meta offers depend on the ad account's country and
+currency, which cannot be changed after the ad account is created. Create the
+ad account with country Pakistan and currency PKR unless your bank card only
+works in USD. Use a debit or credit card that is enabled for international
+online payments; ask your bank to enable it if a payment is declined. Taxes on
+ad spend: Pakistan introduced a "Digital Presence Proceeds Levy" in 2025 for
+foreign digital platforms; whether and how it appears on Meta invoices should be
+confirmed with your bank statement or a tax adviser. Do not guess this.
+
+8. RULES THAT GET ADS REJECTED (Meta Advertising Standards)
+  * Before and after or "too good to be true" claims.
+  * Personal attribute wording such as "Are you short?".
+  * Prices or offers in the ad that differ from the store or chat.
+  * Images that are mostly text can deliver less; keep text short.
+
+SOURCES
+  WhatsApp Business, Click to WhatsApp ad guide  https://whatsappbusiness.com/blog/click-to-whatsapp-ad-guide/
+  Learning phase summary  https://lebesgue.io/facebook-ads/facebook-ads-learning-phase-what-you-need-to-know-2024-update
+  Meta Advertising Standards  https://transparency.meta.com/policies/ad-standards/
+  Pakistan Digital Presence Proceeds Levy (news)  https://propakistani.pk/2025/06/21/here-is-how-much-pakistanis-are-spending-on-online-apps/

@@ -1,0 +1,17 @@
+{
+  "platform": "tiktok",
+  "day": 1,
+  "title": "Launch grid",
+  "date": "2026-11-16",
+  "needs_check": false,
+  "posts": [
+    {
+      "kind": "reel",
+      "time": "2026-11-16T15:30:00.000Z",
+      "media": [
+        "Reel 1080x1920.mp4"
+      ],
+      "caption": "Big brands buy from the same local workshops we do. Then they add a logo, an\ninfluencer and a markup. We keep the craft and drop the markup.\nSame local craft. Zero retail markup.\n#DAURSupply #LeatherShoes #MadeInPakistan"
+    }
+  ]
+}

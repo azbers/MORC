@@ -1,0 +1,76 @@
+DAUR SUPPLY  |  MARKETING BASICS FOR A NEW OWNER
+Written 29 October 2026. Sources are listed at the end and in "08 Sources.txt".
+
+1. WHAT MARKETING IS, FOR DAUR
+Getting the right men in Pakistan to (1) notice DAUR, (2) trust it enough to
+order with Cash on Delivery, (3) accept the parcel at the door, and (4) come back
+or tell a friend. Every post, ad and message should push one of those four.
+
+  Stage        What the buyer thinks            What DAUR gives them
+  Notice       "What is this?"                  Reels, ads, a clear first line
+  Trust        "Is this real? Will it fit?"     COD, 5 day size exchange, real
+                                                photos, Fit notes, fast replies
+  Order        "How do I buy?"                  WhatsApp chat, simple checkout
+  Come back    "That was good."                 the box, the card, a follow up
+
+2. ORGANIC VERSUS PAID
+  Organic   posts, Reels and Stories that people see for free. Slow, but it
+            builds the page that ads send people to.
+  Paid      ads in Meta Ads Manager (Facebook, Instagram, WhatsApp) and later
+            TikTok. Fast and measurable, but costs money each day.
+You need both. An ad that sends people to an empty profile wastes money; a nice
+profile with no ads grows slowly. The 30 day calendar in "04 Platforms" runs
+both together.
+
+3. WHERE YOUR BUYERS ARE (Pakistan, late 2025, DataReportal Digital 2026)
+  TikTok      79.9 million users aged 18+, 71.2% of the adult audience male
+  YouTube     54.3 million ad reach
+  Facebook    52.9 million ad reach, 79.2% of the adult ad audience male
+  Instagram   22.4 million ad reach, 63.0% male
+  Messenger   15.5 million
+DataReportal warns that ad reach is not the same as active users. Even so, it
+says clearly: Facebook and TikTok reach the most Pakistani men. Instagram is
+smaller but is where people check if a brand looks real. This is why the plan
+is Meta first (Facebook, Instagram and WhatsApp in one ad), TikTok second.
+
+4. WHY SHORT VIDEO (REELS AND TIKTOK) MATTERS
+  * Buffer analysed over 4 million Instagram posts (January 2022 to October
+    2024): Reels got about 36% more reach than carousels and 125% more than
+    single photo posts. Carousels got the most engagement (likes, comments).
+  * Adam Mosseri (head of Instagram, January 2025) named watch time, likes per
+    reach and sends per reach (people sharing the post in a DM) as the three
+    most important signals, and said original content gets more distribution
+    than reposts.
+  * A Meta and Toluna study of about 100 short video ads found ads that
+    showed the brand and the message in the first five seconds were 1.7 times
+    more likely to drive strong purchase intent.
+What this means for DAUR: Reels to reach new people, carousels to teach and get
+saved, single images least. Film your own real pairs; never repost other
+brands' videos. Show DAUR and the main point in the first seconds.
+
+5. CONTENT PILLARS (what to post about, in rotation)
+  Product     the real pairs: turns, close ups, on foot, colours
+  Proof       checks, the box, Fit notes, customer unboxings (with permission)
+  Help        sizes, care, how COD works, how the exchange works
+  Story       Naya daur, the honest math, workshop to door, the charity pledge
+  Offer       SUPPLYLINE, free delivery on two pairs (one saving per order)
+Keep Offer posts to about one in five, or the page reads like an ad.
+
+6. WHAT TO MEASURE ON ORGANIC POSTS
+Instagram Professional dashboard shows, per post: reach, saves, shares, profile
+visits, follows. For DAUR the useful ones are shares (sends) and profile visits,
+because they mean someone is interested. Likes alone do not pay.
+
+7. RULES THAT PROTECT THE BRAND
+  * No fake reviews, no fake stock counts ("only 2 left") unless true, no fake
+    countdowns. They break customer trust and Meta's advertising standards.
+  * No claims you have not tested (waterproof, genuine leather on a model you
+    have not confirmed, slip resistant).
+  * Reply to every comment and DM within working hours; speed is trust.
+
+SOURCES
+  DataReportal, Digital 2026: Pakistan  https://datareportal.com/reports/digital-2026-pakistan
+  Buffer, Instagram reach and engagement analysis  https://buffer.com/resources/instagram-reach-engagement-analysis/
+  Search Engine Journal on Mosseri's 2025 signals  https://searchenginejournal.com/instagram-algorithm-shift-why-sends-matter-more-than-ever/521389
+  Engadget, Instagram rewards original content  https://www.engadget.com/instagrams-algorithm-overhaul-will-reward-original-content-and-penalize-aggregators-130018977.html
+  Meta and Toluna short video study  https://tolunacorporate.com/what-makes-short-form-video-ads-work-meta-toluna-study/

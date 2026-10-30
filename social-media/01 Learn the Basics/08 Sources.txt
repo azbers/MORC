@@ -1,0 +1,74 @@
+DAUR SUPPLY  |  ALL SOURCES USED IN THIS FOLDER (checked 29 October 2026)
+Official sources first. Third party guides are marked; treat their numbers as
+pointers to check, not facts.
+
+AUDIENCE
+  DataReportal, Digital 2026: Pakistan (late 2025 data)
+    https://datareportal.com/reports/digital-2026-pakistan
+
+INSTAGRAM AND SHORT VIDEO
+  Buffer, reach and engagement by format (4 million+ posts, 2022 to 2024)
+    https://buffer.com/resources/instagram-reach-engagement-analysis/
+  Search Engine Journal on Mosseri's 2025 ranking signals
+    https://searchenginejournal.com/instagram-algorithm-shift-why-sends-matter-more-than-ever/521389
+  Engadget, Instagram rewards original content
+    https://www.engadget.com/instagrams-algorithm-overhaul-will-reward-original-content-and-penalize-aggregators-130018977.html
+  Meta and Toluna, what makes short form video ads work
+    https://tolunacorporate.com/what-makes-short-form-video-ads-work-meta-toluna-study/
+  Instagram post sizes (third party)
+    https://www.inro.social/blog/instagram-post-size
+
+META ADS AND WHATSAPP
+  WhatsApp Business, Click to WhatsApp ad guide
+    https://whatsappbusiness.com/blog/click-to-whatsapp-ad-guide/
+  Meta Advertising Standards
+    https://transparency.meta.com/policies/ad-standards/
+  Learning phase summary (third party)
+    https://lebesgue.io/facebook-ads/facebook-ads-learning-phase-what-you-need-to-know-2024-update
+  Digital Presence Proceeds Levy (news)
+    https://propakistani.pk/2025/06/21/here-is-how-much-pakistanis-are-spending-on-online-apps/
+
+TIKTOK
+  TikTok Ads Manager budgets (official)
+    https://ads.tiktok.com/help/article/budget
+  TikTok self serve ads in Pakistan (Business Recorder)
+    https://www.brecorder.com/news/amp/40398243
+
+SHOPIFY
+  Shopify, Facebook data sharing (official)
+    https://help.shopify.com/en/manual/promoting-marketing/analyze-marketing/meta-data-sharing
+  Shopify community, Conversions API issue
+    https://community.shopify.com/t/shopify-problems-enabling-the-meta-conversion-api/392566
+  JazzCash and Easypaisa on Shopify (vendor page)
+    https://ecosire.com/apps/shopify/shopify-easypaisa-jazzcash
+
+LEGAL AND TAX (third party unless marked)
+  FBR IRIS (official)  https://iris.fbr.gov.pk
+  NTN guide  https://www.ict.edu.pk/blogs/how-to-register-ntn-online-pakistan-2026
+  Sole proprietorship  https://www.startup.pk/?p=25661
+  Trademark fee notification coverage  https://ssrana.in/articles/pakistan-government-notifies-revised-fee-structure-for-trademarks/
+  Trademark cost guide  https://scounts.pk/?p=8508
+  WIPO Global Brand Database (official)  https://branddb.wipo.int
+
+PACKAGING
+  Shoe box dimensions (industry guides)
+    https://gamutpackaging.com/blogs/resources/understanding-shoe-box-dimensions-a-comprehensive-guide
+    https://ibexpackaging.com/shoe-box-dimensions/
+  Foot length by EU size  https://www.samsoe.com/en/support/size-guide/mens-shoes.html
+  Shoelace length chart  https://slickieslaces.com/blogs/news/shoelace-length-chart
+  Pakistani packaging directories (no prices published)
+    https://ensun.io/search/rigid-box   https://ensun.io/search/cardboard/pakistan
+
+POSTIZ
+  Docker install  https://docs.postiz.com/installation/docker-compose
+  Compose file  https://github.com/gitroomhq/postiz-docker-compose
+  Instagram and Facebook  https://docs.postiz.com/providers/instagram
+  Public API, create post  https://docs.postiz.com/public-api/posts/create
+  Upload  https://docs.postiz.com/public-api/uploads/upload-file
+  TikTok settings  https://docs.postiz.com/public-api/providers/tiktok
+
+NOT FOUND (said plainly, not guessed)
+  * A verified best posting time for Pakistan.
+  * An audited Pakistani cost per WhatsApp conversation benchmark.
+  * Official minimum order quantities or prices from Pakistani box printers.
+  * An official 2025 or 2026 IPO Pakistan fee schedule.
