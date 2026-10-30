@@ -1,6 +1,0 @@
-DAUR TISSUE  |  SPECIFICATION
-Paper        Cream (close to Hide #F5EEE4) or white tissue, 17 gsm
-Print        1 colour, espresso #2A1C14 (or black), one side, low coverage (well under 50%)
-Sheet        508 x 762 mm (20 x 30 in)
-Pattern      Seamless repeat tile 63.5 mm (fits the sheet exactly: 8 x 12 tiles)
-Local option Same pattern on printed butter paper if 17 gsm printed tissue is not available

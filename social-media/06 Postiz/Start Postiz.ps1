@@ -10,6 +10,11 @@ function Log($m) { "$(Get-Date -Format s)  $m" | Add-Content -Path $log }
 # Docker Desktop on this PC crashed on 29 Oct 2026 because socket files left by an
 # earlier crash could not be removed. If Docker is not running, move such folders
 # aside first (nothing is deleted; the folders are renamed with a date).
+# Docker was reinstalled per user on 30 Oct 2026 (AppData\Local\Programs\DockerDesktop);
+# accept either install location and make sure docker.exe is on PATH.
+$dockerHome = @("$env:LOCALAPPDATA\Programs\DockerDesktop", "C:\Program Files\Docker\Docker") | Where-Object { Test-Path "$_\Docker Desktop.exe" } | Select-Object -First 1
+if ($dockerHome) { $env:Path += ";$dockerHome\resources\bin" }
+
 $dockerUp = $false
 try { docker info *> $null; $dockerUp = ($LASTEXITCODE -eq 0) } catch {}
 if (-not $dockerUp) {
@@ -19,7 +24,7 @@ if (-not $dockerUp) {
       if ($stale) { Rename-Item $d ((Split-Path $d -Leaf) + ".stale-" + (Get-Date -Format "yyyyMMdd-HHmmss")); Log "moved aside $d" }
     }
   }
-  Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+  Start-Process "$dockerHome\Docker Desktop.exe"
   Log "starting Docker Desktop"
   for ($i = 0; $i -lt 60; $i++) { Start-Sleep 5; docker info *> $null; if ($LASTEXITCODE -eq 0) { break } }
 }

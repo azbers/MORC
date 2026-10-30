@@ -1,35 +1,89 @@
-DAUR SUPPLY  |  PACKAGING AND ACCESSORIES KIT  |  VERSION 2
-Redesigned 29 October 2026. Open "00 DAUR Packaging Guide.html" for the full guide
-with pictures, plain language print terms, prices found online and sources.
+DAUR SUPPLY  |  PACKAGING KIT, VERSION 3 "TANNERY ROYAL"
+Made 30 October 2026. The previous kit (version 2) is kept unchanged in
+Social Media\_Archive\05 Packaging (version 2, replaced 2026-10-30).
 
-PICTURES (3D renders made from the print files in this folder)
-  00 Mockups (Full HD 1920x1080)   11 images: box, open box, card, lace tag,
-                                    seal, stickers, tissue, flyer bag, full kit
-  00 Mockups (4K 3840x2160)        the same 11 images in high resolution
-  09 Flat Artwork Previews (PNG)   every design flat, for checking on a phone
+THE IDEA
+The box looks and feels like the website: espresso pebble leather, brass,
+hide cream. To keep costs low we do NOT print boxes. We buy PLAIN boxes
+and stamp them ourselves. Only what adds value to the customer is kept.
 
-PRINT FILES (send these to vendors)
-  01 Shoe Box            Preview, CMYK ink layer, foil mask, spot UV mask,
-                         dieline, inside lid
-  02 Tissue Paper        Full sheet 20 x 30 in and seamless repeat tile
-  03 Laces               Specification sheet (no artwork is printed on laces)
-  04 Lace Tag            Brass tag: 1 to 1 laser engraving files and drawing
-  05 Supply Unit Seal    Front and back, deboss mask
-  06 Manifest Card       A6 front and back, foil mask for the front
-  07 Stickers            Round seal 2 in, box seal strip, size label
-  08 Courier Flyer Bag   Front print
-  Each folder has a Specification.txt to send with the files.
+WHAT IS IN THE KIT (and why each item earns its place)
+  Box          Plain espresso or dark brown box with a leather grain
+               (leatherette) paper finish. Stamped by us on the lid.
+  Stamp 1      LID wordmark, 120 x 44 mm. The one brand moment on the box.
+  Stamp 2      END size label, 80 x 30 mm. Write size, colour and number by
+               hand when packing; saves picking errors and replaces a
+               printed size sticker.
+  Stamp 3      Small loop D, 25 x 25 mm. Optional, for the other end.
+  Tissue       PLAIN cream tissue (no printing), closed with the sticker.
+  Round sticker 50 mm. Closes the tissue; the one printed item inside.
+  Manifest Card A6, front and back. Front: why DAUR exists. Back: the real
+               terms (5 day size exchange, 30 day defects, 48 hours wrong or
+               damaged), care, Fit notes, contacts. It answers questions
+               before they become WhatsApp messages.
+  Supply Unit seal 50 x 30 mm, front and back. Needed for size exchanges.
+  Lace tag     Brass, laser engraved DAUR, 30 x 10 mm. Back is optional.
+  Laces        Thick matte black woven cotton (spec sheet in 06 Laces).
 
-FILE TYPES
-  .svg  Open in Adobe Illustrator, CorelDRAW, Inkscape or Figma. Text is already
-        converted to shapes, so no fonts are needed.
-  .pdf  Same design, for printers who ask for PDF.
-  PRINT = goes to press.  GUIDE = shows cut and safe lines, for checking only.
-  FOIL / SPOT UV / DEBOSS MASK = black shows where that finish goes.
+REMOVED, TO SAVE MONEY (from version 2)
+  Box seal strip sticker, printed tissue, printed inside lid, printed
+  courier flyer bag (Leopards supplies its own wrapper), spot UV and foil
+  on the box, printed box all over.
 
-THREE THINGS BEFORE PRINTING IN VOLUME
-  1. Put your biggest real pair (EU 45) in a sample box of 12.5 x 7.5 x 5 in.
-  2. Ask for a printed sample (proof) and approve it in hand. Screen colours
-     are not print colours, and the mockups are renders, not photos.
-  3. Trademark: no search has been done for the DAUR logo yet. Do it before
-     ordering boxes or tags in large numbers.
+FILES
+  Every item has an SVG (editable, vector, all text converted to outlines)
+  and a PDF at true size. Stamp files are black = ink. Give them to the
+  stamp maker as they are; the maker mirrors the rubber himself (say so).
+  00 Mockups has every box side, the open box, and every card front and back.
+
+HOW TO STAMP (in house)
+  1. Order Stamp 1 as a rubber or polymer stamp on a wooden block, NOT a
+     self inking stamp: a block lets you rock it evenly on a 120 mm mark.
+  2. Ink: a metallic gold PIGMENT ink pad that states it works on coated or
+     glossy paper. Dye ink smears on leatherette. Test on one spare box first.
+  3. Use a guide: a cardboard L square taped to the table, so every lid is
+     stamped in the same place (centre of the lid).
+  4. Let it dry 10 to 15 minutes before boxing; a hair dryer on low speeds
+     it up.
+  Upgrade later: a manual hot foil press with a brass die gives a true
+  foil finish. International listings seen on 30 Oct 2026 ran from about
+  USD 175 to USD 535 before shipping and import charges (zonesuntech.com,
+  wutaleather.com). Only worth it at steady volume.
+
+MONEY: WHAT TO GET QUOTED BEFORE BUYING
+  I could not find reliable Pakistani prices online for plain shoe boxes or
+  custom logo stamps, so nothing below is a guess. Get two written quotes
+  for each and put them in DAUR Numbers.xlsx (sheet "Per pair"):
+    a) Plain box, leatherette wrapped rigid, 330 x 205 x 130 mm outside,
+       per piece at 50 and at 200 pieces (Lahore: Shah Alam Market and
+       Kashmir Road paper and packaging markets; also packit.pk).
+    b) Plain box, corrugated, dark brown or black, same size (cheaper
+       fallback; the stamp still works).
+    c) Rubber or polymer stamps 1, 2 and 3 (one time cost).
+    d) Gold pigment ink pad (lasts many boxes).
+    e) Round stickers, 50 mm, per 100.
+    f) Manifest Cards, A6, 350 gsm or more, two sided, per 100.
+    g) Seals and brass lace tags, per 100.
+  The only local price found: a do it yourself self inking text stamp kit,
+  Rs. 1,950 (stationerystation.pk, 30 Oct 2026). It suits Stamp 2 text,
+  not the logo.
+  Rule of thumb for the margin: total packaging per pair (a + share of c
+  and d + e + f + seal + tag + laces + tissue) should stay a small, known
+  number. Write the real figure in the sheet before setting prices.
+
+SIZES
+  Box outside 330 x 205 x 130 mm fits most men's pairs to EU 45; check with
+  the largest real pair before buying in bulk, and ask the courier how the
+  box is billed (volumetric weight).
+
+TYPE AND COLOUR
+  Wordmark and labels: Cinzel. Body text: Cormorant Garamond. Both are free
+  for commercial use (SIL Open Font License, Google Fonts). Colours:
+  Espresso #2A1C14, Hide #F5EEE4, Brass #B0843F, gold ink about #C29A55.
+  Leather surfaces in the mockups use a CC0 (free) photographed leather
+  texture from Poly Haven, recoloured.
+
+STILL OPEN
+  * No trademark search has been done for DAUR. Do it before ordering
+    stamps or tags in volume.
+  * Mockups are digital renders, not photos of made items.
