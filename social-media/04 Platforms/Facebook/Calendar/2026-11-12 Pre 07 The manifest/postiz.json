@@ -10,9 +10,12 @@
       "kind": "post",
       "time": "2026-11-12T15:30:00.000Z",
       "media": [
-        "Post 1080x1350.png"
+        "Post 1 of 2 1080x1350.png",
+        "Post 2 of 2 1080x1350.png"
       ],
       "caption": "Every DAUR box carries a Manifest Card.\nOne side says why we exist. The other lists your terms in plain words: 5 day size exchange, 30 days on defects, 48 hours to report a wrong or damaged item. At least 5% of our profit goes to verified cases in need.\nDesign render. Real photos when the first kits are made.\n#DAURSupply #NayaDaur #MensShoes #LeatherShoes #Pakistan"
     }
-  ]
+  ],
+  "version": 2,
+  "visual_sources": "pexels-34850982.jpg (Mood photo); see Product Photos\\_mood (Pexels licence)\\Sources.txt"
 }

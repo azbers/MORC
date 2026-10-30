@@ -14,7 +14,7 @@ SCHEDULED IN POSTIZ
 Feed post 20:30 Pakistan time. Story 20:45, scheduled in Postiz.
 
 STORY
-Post "Story 1080x1920.png". Add a poll or question sticker, for example "Sneakers or leather shoes first?"
+Carousel: "Post 1 of 2" then "Post 2 of 2". Story: "Story 1080x1920.png". Add a poll or question sticker, for example "Sneakers or leather shoes first?"
 
 AFTER POSTING
 Reply to every comment and DM the same day. Early replies are what turns a new follower into a buyer.
