@@ -20,6 +20,19 @@
 .j-ex p { margin: 0 0 8px; max-width: 68ch; }
 .j-list .mono, .j-by { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; margin: 0; }
 .j-pages { margin-top: 28px; display: flex; gap: 12px; }
+.j-list article.has-img { display: grid; grid-template-columns: 240px 1fr; gap: 22px; align-items: start; }
+.j-thumb { display: block; border-radius: 10px; overflow: hidden; background: var(--line, rgba(0,0,0,.06)); }
+.j-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; }
+@media (max-width: 699px) { .j-list article.has-img { grid-template-columns: 1fr; gap: 14px; } }
+.j-art .rte .j-fig { margin: 24px 0 28px; }
+.j-art .rte .j-fig img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.j-art .rte .j-fig figcaption { font-size: 12px; line-height: 1.5; margin-top: 8px; opacity: .72; }
+.j-art .rte .j-fig figcaption a { color: inherit; }
+.j-art .rte .j-table { width: 100%; border-collapse: collapse; margin: 20px 0 28px; font-size: 15px; display: block; overflow-x: auto; }
+.j-art .rte .j-table th, .j-art .rte .j-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line, rgba(0,0,0,.12)); vertical-align: top; }
+.j-art .rte .j-table thead th { font-family: 'Space Grotesk', sans-serif; font-weight: 600; border-bottom-width: 2px; white-space: nowrap; }
+.j-art .rte .j-table tbody td:first-child { font-weight: 500; white-space: nowrap; }
+@media (min-width: 700px) { .j-art .rte .j-table { display: table; } }
 .j-art h1 { font-size: clamp(30px, 4.6vw, 54px) !important; max-width: 22ch; }
 .j-art .j-by { margin: 0 0 28px; }
 .j-art .rte h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(21px, 2.4vw, 26px); line-height: 1.25; margin: 36px 0 12px; }

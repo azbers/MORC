@@ -65,7 +65,7 @@
     {%- endif -%}
     {%- paginate blog.articles by 24 -%}
     {%- if blog.articles.size > 0 -%}
-    <ul class="j-list">{% for a in blog.articles %}<li><article><h2><a href="{{ a.url }}">{{ a.title }}</a></h2>{% if a.excerpt != blank %}<div class="j-ex">{{ a.excerpt }}</div>{% endif %}<p class="mono mute">{{ a.tags | join: ' &middot; ' }}</p></article></li>{% endfor %}</ul>
+    <ul class="j-list">{% for a in blog.articles %}<li><article{% if a.image %} class="has-img"{% endif %}>{% if a.image %}<a class="j-thumb" href="{{ a.url }}" tabindex="-1" aria-hidden="true">{{ a.image | image_url: width: 640, height: 400, crop: 'center' | image_tag: loading: 'lazy', alt: a.image.alt, sizes: '(min-width: 700px) 240px, 100vw', widths: '320, 480, 640' }}</a>{% endif %}<div class="j-body"><h2><a href="{{ a.url }}">{{ a.title }}</a></h2>{% if a.excerpt != blank %}<div class="j-ex">{{ a.excerpt }}</div>{% endif %}<p class="mono mute">{{ a.tags | join: ' &middot; ' }}</p></div></article></li>{% endfor %}</ul>
     {%- else -%}
     <p>New guides are on their way. In the meantime, <a href="{{ routes.all_products_collection_url }}">shop all pairs</a>.</p>
     {%- endif -%}
