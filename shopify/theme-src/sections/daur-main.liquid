@@ -48,7 +48,7 @@
     <section class="phero"><span class="eyebrow">Search</span><h1>{% if search.performed %}{{ search.results_count }} results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1></section>
     <form action="{{ routes.search_url }}" method="get" class="track-one"><div class="f-ic"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Try black, derby, chelsea" aria-label="Search"></div><button class="btn volt" type="submit">Search</button></form>
     {%- if search.performed -%}
-    <ul class="daur-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a></li>{% endfor %}</ul>
+    <ul class="daur-results">{% for item in search.results %}<li><a href="{{ item.url }}">{{ item.title }}</a>{% if item.object_type == 'article' %} <span class="mono mute">Journal guide</span>{% endif %}</li>{% endfor %}</ul>
     {%- endif -%}
   {%- when '404' -%}
     <section class="phero"><span class="eyebrow">404</span><h1>This page has moved on.</h1><p class="aside">The collection has not. Find your pair below.</p></section>
@@ -59,25 +59,38 @@
     <div class="rte">{{ page.content }}</div>
   {%- when 'blog' -%}
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {% if current_tags %}<a href="{{ blog.url }}">{{ blog.title }}</a> / {{ current_tags | join: ', ' }}{% else %}{{ blog.title }}{% endif %}</nav>
-    <section class="phero"><span class="eyebrow">Journal</span><h1>{{ blog.title }}</h1><p class="aside">Guides on leather, fit, care and style for men in Pakistan, and plain answers on how DAUR works.</p></section>
+    <section class="phero"><span class="eyebrow">Journal</span><h1>{% if current_tags %}{{ current_tags | first }}{% else %}{{ blog.title }}{% endif %}</h1><p class="aside">Guides on leather, fit, care and style for men in Pakistan, and plain answers on how DAUR works.</p></section>
+    <form action="{{ routes.search_url }}" method="get" class="j-search" role="search"><input type="hidden" name="type" value="article"><input type="hidden" name="options[prefix]" value="last"><label class="sr-only" for="j-q">Search the Journal</label><input id="j-q" type="search" name="q" placeholder="Search guides: size, suede, monsoon" autocomplete="off"><button class="btn volt" type="submit">Search</button></form>
     {%- if blog.all_tags.size > 0 -%}
-    <ul class="daur-links j-tags" aria-label="Topics"><li><a href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>All</a></li>{% for t in blog.all_tags %}<li><a href="{{ blog.url }}/tagged/{{ t | handleize }}"{% if current_tags contains t %} aria-current="page"{% endif %}>{{ t }}</a></li>{% endfor %}</ul>
+    <nav class="j-chips" aria-label="Topics"><a href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>All guides</a>{% for t in blog.all_tags %}<a href="{{ blog.url }}/tagged/{{ t | handleize }}"{% if current_tags contains t %} aria-current="page"{% endif %}>{{ t }}</a>{% endfor %}</nav>
     {%- endif -%}
     {%- paginate blog.articles by 24 -%}
     {%- if blog.articles.size > 0 -%}
-    <ul class="j-list">{% for a in blog.articles %}<li><article{% if a.image %} class="has-img"{% endif %}>{% if a.image %}<a class="j-thumb" href="{{ a.url }}" tabindex="-1" aria-hidden="true">{{ a.image | image_url: width: 640, height: 400, crop: 'center' | image_tag: loading: 'lazy', alt: a.image.alt, sizes: '(min-width: 700px) 240px, 100vw', widths: '320, 480, 640' }}</a>{% endif %}<div class="j-body"><h2><a href="{{ a.url }}">{{ a.title }}</a></h2>{% if a.excerpt != blank %}<div class="j-ex">{{ a.excerpt }}</div>{% endif %}<p class="mono mute">{{ a.tags | join: ' &middot; ' }}</p></div></article></li>{% endfor %}</ul>
+    <ul class="j-list">{% for a in blog.articles %}{% assign words = a.content | strip_html | split: ' ' | size %}{% assign mins = words | divided_by: 200 | at_least: 1 %}<li><article{% if a.image %} class="has-img"{% endif %}>{% if a.image %}<a class="j-thumb" href="{{ a.url }}" tabindex="-1" aria-hidden="true">{{ a.image | image_url: width: 640, height: 400, crop: 'center' | image_tag: loading: 'lazy', alt: a.image.alt, sizes: '(min-width: 700px) 240px, 100vw', widths: '320, 480, 640' }}</a>{% endif %}<div class="j-body"><p class="j-meta">{% if a.tags.size > 0 %}<span>{{ a.tags | first }}</span>{% endif %}<span>{{ mins }} min read</span></p><h2><a href="{{ a.url }}">{{ a.title }}</a></h2>{% if a.excerpt != blank %}<div class="j-ex">{{ a.excerpt | strip_html | truncatewords: 32 }}</div>{% endif %}<a class="j-go" href="{{ a.url }}" aria-label="Read: {{ a.title | escape }}">Read guide <span class="arr">&rarr;</span></a></div></article></li>{% endfor %}</ul>
     {%- else -%}
     <p>New guides are on their way. In the meantime, <a href="{{ routes.all_products_collection_url }}">shop all pairs</a>.</p>
     {%- endif -%}
-    {%- if paginate.pages > 1 %}<nav class="j-pages" aria-label="Pages">{{ paginate | default_pagination }}</nav>{% endif -%}
+    {%- if paginate.pages > 1 %}<nav class="j-pages" aria-label="Pages">{% if paginate.previous %}<a href="{{ paginate.previous.url }}">&larr; Newer</a>{% endif %}<span>Page {{ paginate.current_page }} of {{ paginate.pages }}</span>{% if paginate.next %}<a href="{{ paginate.next.url }}">Older &rarr;</a>{% endif %}</nav>{% endif -%}
     {%- endpaginate -%}
   {%- when 'article' -%}
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / <a href="{{ blog.url }}">{{ blog.title }}</a> / {{ article.title }}</nav>
+    {%- liquid
+      assign words = article.content | strip_html | split: ' ' | size
+      assign mins = words | divided_by: 200 | at_least: 1
+    -%}
+    {%- comment -%} guides go live on a schedule: a link to a guide that is not public yet is shown as plain text, so no reader or crawler meets a missing page {%- endcomment -%}
+    {%- capture pub -%}{%- paginate blog.articles by 250 -%}{%- for a in blog.articles -%}|{{ a.handle }}|{%- endfor -%}{%- endpaginate -%}{%- endcapture -%}
+    {%- capture body -%}{%- assign bits = article.content | split: '<a href="/blogs/journal/' -%}{%- for bit in bits -%}{%- if forloop.first -%}{{ bit }}{%- else -%}{%- assign lh = bit | split: '"' | first -%}{%- assign key = '|' | append: lh | append: '|' -%}{%- if pub contains key -%}<a href="/blogs/journal/{{ bit }}{%- else -%}{{ bit | remove_first: lh | remove_first: '">' | remove_first: '</a>' }}{%- endif -%}{%- endif -%}{%- endfor -%}{%- endcapture -%}
+    {%- assign parts = body | split: '<h2>' -%}
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / <a href="{{ blog.url }}">{{ blog.title }}</a>{% if article.tags.size > 0 %} / <a href="{{ blog.url }}/tagged/{{ article.tags | first | handleize }}">{{ article.tags | first }}</a>{% endif %}</nav>
     <article class="j-art">
       <section class="phero"><span class="eyebrow">{{ article.tags | first | default: 'Journal' }}</span><h1>{{ article.title }}</h1></section>
-      <p class="mono mute j-by">By {{ article.author | default: shop.name }} &middot; <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d %b %Y' }}</time></p>
-      <div class="rte">{{ article.content }}</div>
-      {%- if article.tags.size > 0 %}<ul class="daur-links j-tags" aria-label="Topics">{% for t in article.tags %}<li><a href="{{ blog.url }}/tagged/{{ t | handleize }}">{{ t }}</a></li>{% endfor %}</ul>{% endif %}
+      <p class="mono mute j-by">By {{ article.author | default: shop.name }} &middot; <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d %b %Y' }}</time> &middot; {{ mins }} min read</p>
+      {%- if parts.size > 3 -%}
+      <details class="j-toc"><summary>On this page <span class="mute">({{ parts.size | minus: 1 }} sections)</span></summary><ol>{% for part in parts offset: 1 %}{% assign h = part | split: '</h2>' | first | strip_html | strip %}<li><a href="#{{ h | handleize }}">{{ h }}</a></li>{% endfor %}</ol></details>
+      {%- endif -%}
+      <div class="rte">{% for part in parts %}{% if forloop.first %}{{ part }}{% else %}{% assign h = part | split: '</h2>' | first | strip_html | strip %}<h2 id="{{ h | handleize }}">{{ part }}{% endif %}{% endfor %}</div>
+      <div class="j-share"><a class="btn" href="https://wa.me/?text={{ article.title | append: ' ' | append: shop.url | append: article.url | url_encode }}" target="_blank" rel="noopener">Share on WhatsApp</a> <a href="{{ blog.url }}">&larr; All Journal guides</a></div>
+      {%- if article.tags.size > 0 %}<nav class="j-chips" aria-label="Topics">{% for t in article.tags %}<a href="{{ blog.url }}/tagged/{{ t | handleize }}">{{ t }}</a>{% endfor %}</nav>{% endif %}
     </article>
     {%- liquid
       assign main_tag = article.tags | first
@@ -86,12 +99,15 @@
     {%- capture related -%}
       {%- for a in blog.articles -%}
         {%- if shown < 3 and a.id != article.id and a.tags contains main_tag -%}
-          <li><a href="{{ a.url }}">{{ a.title }}</a></li>
+          <li><a href="{{ a.url }}">{% if a.image %}{{ a.image | image_url: width: 480, height: 300, crop: 'center' | image_tag: loading: 'lazy', alt: '', widths: '240, 480', sizes: '(min-width: 700px) 240px, 100vw' }}{% endif %}<span>{{ a.title }}</span></a></li>
           {%- assign shown = shown | plus: 1 -%}
         {%- endif -%}
       {%- endfor -%}
     {%- endcapture -%}
-    {%- if shown > 0 %}<aside class="j-rel"><h2>Keep reading</h2><ul class="daur-results">{{ related }}</ul></aside>{% endif %}
+    {%- if shown > 0 %}<aside class="j-rel"><h2>Keep reading</h2><ul class="j-cards">{{ related }}</ul></aside>{% endif %}
+    {%- if blog.previous_article or blog.next_article -%}
+    <nav class="j-nextprev" aria-label="More guides">{% if blog.previous_article %}<a href="{{ blog.previous_article.url }}"><small>Previous guide</small>{{ blog.previous_article.title }}</a>{% endif %}{% if blog.next_article %}<a class="nx" href="{{ blog.next_article.url }}"><small>Next guide</small>{{ blog.next_article.title }}</a>{% endif %}</nav>
+    {%- endif -%}
     <p class="j-more"><a class="btn volt" href="{{ routes.all_products_collection_url }}">Shop all pairs <span class="arr">&rarr;</span></a> <a href="{{ blog.url }}">All Journal guides</a></p>
     {{ style_links }}
   {%- when 'cart' -%}
