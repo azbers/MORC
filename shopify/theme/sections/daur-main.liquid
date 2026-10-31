@@ -58,11 +58,42 @@
     <section class="phero"><span class="eyebrow">{{ shop.name }}</span><h1>{{ page.title }}</h1></section>
     <div class="rte">{{ page.content }}</div>
   {%- when 'blog' -%}
-    <section class="phero"><span class="eyebrow">Journal</span><h1>{{ blog.title }}</h1></section>
-    <ul class="daur-results">{% for a in blog.articles %}<li><a href="{{ a.url }}">{{ a.title }}</a> <span class="mute">{{ a.published_at | date: '%d %b %Y' }}</span></li>{% endfor %}</ul>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {% if current_tags %}<a href="{{ blog.url }}">{{ blog.title }}</a> / {{ current_tags | join: ', ' }}{% else %}{{ blog.title }}{% endif %}</nav>
+    <section class="phero"><span class="eyebrow">Journal</span><h1>{{ blog.title }}</h1><p class="aside">Guides on leather, fit, care and style for men in Pakistan, and plain answers on how DAUR works.</p></section>
+    {%- if blog.all_tags.size > 0 -%}
+    <ul class="daur-links j-tags" aria-label="Topics"><li><a href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>All</a></li>{% for t in blog.all_tags %}<li><a href="{{ blog.url }}/tagged/{{ t | handleize }}"{% if current_tags contains t %} aria-current="page"{% endif %}>{{ t }}</a></li>{% endfor %}</ul>
+    {%- endif -%}
+    {%- paginate blog.articles by 24 -%}
+    {%- if blog.articles.size > 0 -%}
+    <ul class="j-list">{% for a in blog.articles %}<li><article><h2><a href="{{ a.url }}">{{ a.title }}</a></h2>{% if a.excerpt != blank %}<div class="j-ex">{{ a.excerpt }}</div>{% endif %}<p class="mono mute">{{ a.tags | join: ' &middot; ' }}</p></article></li>{% endfor %}</ul>
+    {%- else -%}
+    <p>New guides are on their way. In the meantime, <a href="{{ routes.all_products_collection_url }}">shop all pairs</a>.</p>
+    {%- endif -%}
+    {%- if paginate.pages > 1 %}<nav class="j-pages" aria-label="Pages">{{ paginate | default_pagination }}</nav>{% endif -%}
+    {%- endpaginate -%}
   {%- when 'article' -%}
-    <section class="phero"><span class="eyebrow">{{ article.published_at | date: '%d %b %Y' }}</span><h1>{{ article.title }}</h1></section>
-    <div class="rte">{{ article.content }}</div>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / <a href="{{ blog.url }}">{{ blog.title }}</a> / {{ article.title }}</nav>
+    <article class="j-art">
+      <section class="phero"><span class="eyebrow">{{ article.tags | first | default: 'Journal' }}</span><h1>{{ article.title }}</h1></section>
+      <p class="mono mute j-by">By {{ article.author | default: shop.name }} &middot; <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d %b %Y' }}</time></p>
+      <div class="rte">{{ article.content }}</div>
+      {%- if article.tags.size > 0 %}<ul class="daur-links j-tags" aria-label="Topics">{% for t in article.tags %}<li><a href="{{ blog.url }}/tagged/{{ t | handleize }}">{{ t }}</a></li>{% endfor %}</ul>{% endif %}
+    </article>
+    {%- liquid
+      assign main_tag = article.tags | first
+      assign shown = 0
+    -%}
+    {%- capture related -%}
+      {%- for a in blog.articles -%}
+        {%- if shown < 3 and a.id != article.id and a.tags contains main_tag -%}
+          <li><a href="{{ a.url }}">{{ a.title }}</a></li>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if shown > 0 %}<aside class="j-rel"><h2>Keep reading</h2><ul class="daur-results">{{ related }}</ul></aside>{% endif %}
+    <p class="j-more"><a class="btn volt" href="{{ routes.all_products_collection_url }}">Shop all pairs <span class="arr">&rarr;</span></a> <a href="{{ blog.url }}">All Journal guides</a></p>
+    {{ style_links }}
   {%- when 'cart' -%}
     <h1>Your bag</h1>
   {%- else -%}
