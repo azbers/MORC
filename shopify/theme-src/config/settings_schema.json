@@ -121,6 +121,12 @@
         "id": "google_verification",
         "label": "Google Search Console verification code",
         "info": "Paste only the content value of the HTML tag Google gives you."
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Link preview image",
+        "info": "Shown when a page link is shared on WhatsApp, Facebook or Instagram and the page has no photo of its own. Best size 1200 x 630 px. Left empty, the built in DAUR share image is used. The Social sharing image in Online Store > Preferences takes priority over this."
       }
     ]
   }
