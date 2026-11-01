@@ -100,10 +100,14 @@
 <meta name="twitter:title" content="{{ daur_title | escape }}">
 <meta name="twitter:description" content="{{ og_desc | escape }}">
 <meta name="twitter:image" content="{{ og_img_url }}">
+{%- comment -%} Google shows a site icon only from a real, crawlable file whose size is a multiple of 48 px; an inline data: icon is ignored {%- endcomment -%}
 {%- if settings.favicon %}
-<link rel="icon" href="{{ settings.favicon | image_url: width: 64 }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ settings.favicon | image_url: width: 192, height: 192, crop: 'center' }}">
+<link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180, crop: 'center' }}">
 {%- else %}
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232A1C14'/%3E%3Cg transform='translate(16.6 16) scale(.1) translate(-62 -100) skewX(-14)' fill='%23F5EEE4'%3E%3Cpath d='M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ 'daur-favicon-192.png' | asset_url }}">
+<link rel="icon" type="image/svg+xml" href="{{ 'daur-favicon.svg' | asset_url }}">
+<link rel="apple-touch-icon" href="{{ 'daur-favicon-180.png' | asset_url }}">
 {%- endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {%- comment -%} fonts load without holding up the first paint; the system fallbacks show until they arrive {%- endcomment -%}
