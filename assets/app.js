@@ -508,7 +508,7 @@
   function lbLooks() {
     const set = window.DAUR_LOOKBOOK && window.DAUR_LOOKBOOK.length ? window.DAUR_LOOKBOOK : null;
     let looks = [];
-    if (set) set.forEach((x) => { const p = prod(x.pid); if (p) looks.push({ p, v: (x.vid && p.variants.find((v) => v.id === x.vid)) || p.variants[0], photo: x.photo || '', styled: x.styled || '' }); });
+    if (set) set.forEach((x) => { const p = prod(x.pid); if (p) looks.push({ p, v: (x.vid && p.variants.find((v) => v.id === x.vid)) || p.variants[0], photo: x.photo || '', styled: x.styled || '', shoe: x.shoe || '', sw: +x.sw || 0, sh: +x.sh || 0, heel: x.heel == null ? .12 : +x.heel, note: x.note || '' }); });
     if (!looks.length) {
       // no looks chosen in the theme: one look per pair of the current line, colours alternating
       P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 6).forEach((p, i) => looks.push({ p, v: p.variants[i % p.variants.length] || p.variants[0], photo: '', styled: '' }));
@@ -543,9 +543,11 @@
     return d;
   }
   function lbFigure(l, i) {
-    const s = LB_HEEL[l.p.silhouette] || 126, hemY = 420 + (s - 30) * .924 + 20;
-    const shoe = SHOE.render({ name: l.p.name, colorway: l.v.color, silhouette: l.p.silhouette, palette: l.v.palette });
-    const nest = (x, y) => shoe.replace('<svg ', `<svg x="${x}" y="${y}" width="440" height="261" `);
+    // a cut out photo (side profile, toe to the right, transparent ground) stands where the drawing would
+    const ph = l.shoe && l.sw && l.sh ? Math.min(300, 440 * l.sh / l.sw) : 0, pw = ph ? ph * l.sw / l.sh : 0;
+    const s = LB_HEEL[l.p.silhouette] || 126, hemY = ph ? 652 - ph + (l.heel + .16) * ph : 420 + (s - 30) * .924 + 20;
+    const shoe = ph ? '' : SHOE.render({ name: l.p.name, colorway: l.v.color, silhouette: l.p.silhouette, palette: l.v.palette });
+    const nest = (x, y) => ph ? `<image href="${esc(l.shoe)}" x="${150 + (440 - pw) * .2}" y="${652 - ph}" width="${pw}" height="${ph}" preserveAspectRatio="xMidYMax meet"/>` : shoe.replace('<svg ', `<svg x="${x}" y="${y}" width="440" height="261" `);
     return `<svg class="lb-legs pose-${l.pose}" viewBox="0 0 640 700" role="img" aria-label="Illustration: ${esc(l.p.name)} in ${esc(l.v.color)}, worn with ${esc(LB_WEAR[l.wear].t.toLowerCase())}">
       <ellipse class="lb-shadow" cx="370" cy="660" rx="250" ry="16"/>
       <g class="lb-back">${lbLeg(l.wear, hemY, 'lbb' + i)}${nest(150, 420)}</g>
@@ -560,12 +562,12 @@
     return `<section class="sheet x saddle lb" id="lookbook" style="--n:${n}" aria-roledescription="lookbook" aria-label="The wardrobe, ${n} looks">
       <div class="lb-pin">
         <div class="wrap lb-top"><span class="eyebrow">The wardrobe / ${n} looks</span><h2>One pair steps out.</h2><span class="lb-count mono" aria-live="polite"><b id="lbNow">01</b> / ${two(n)}</span></div>
-        <div class="lb-rail" aria-hidden="true"><i class="lb-bar"></i>${looks.map((l, i) => `<span class="lb-hang" data-i="${i}" style="--x:${((i + .5) / n * 100).toFixed(2)}%;--sw:${(i % 3) * -.9}s"><i class="lb-hook"></i><span class="lb-pair">${visual(l.p, l.v)}</span></span>`).join('')}</div>
+        <div class="lb-rail" aria-hidden="true"><i class="lb-bar"></i>${looks.map((l, i) => `<span class="lb-hang" data-i="${i}" style="--x:${((i + .5) / n * 100).toFixed(2)}%;--sw:${(i % 3) * -.9}s"><i class="lb-hook"></i><span class="lb-pair">${l.shoe ? `<img src="${esc(l.shoe)}" alt="" loading="lazy">` : visual(l.p, l.v)}</span></span>`).join('')}</div>
         <div class="wrap lb-stage">
           <div class="lb-fig">${looks.map((l, i) => `<a class="lb-look${i ? '' : ' on'}" data-i="${i}" href="${link('product', l.p.id + '~' + l.v.id)}" tabindex="${i ? -1 : 0}" style="--fx:${(((i + .5) / n) - .5) * 100}vw">
             ${l.photo ? `<img src="${esc(l.photo)}" alt="${esc(l.p.name + ' ' + l.v.color + ', styled look')}" loading="lazy">` : l.v.images && l.v.images.length ? `<span class="lb-shot">${visual(l.p, l.v)}</span>` : lbFigure(l, i)}
-            <span class="lb-spot" aria-hidden="true"></span></a>`).join('')}
-            ${looks.some((l) => !l.photo && !(l.v.images && l.v.images.length)) ? '<span class="lb-note mono">Illustration. Model photos follow the first shoot.</span>' : ''}</div>
+            <span class="lb-spot" aria-hidden="true"></span>${l.note ? `<span class="lb-tag mono">${esc(l.note)}</span>` : ''}</a>`).join('')}
+            ${looks.some((l) => !l.photo && !l.shoe && !(l.v.images && l.v.images.length)) ? '<span class="lb-note mono">Illustration. Model photos follow the first shoot.</span>' : ''}</div>
           <div class="lb-info">${looks.map((l, i) => {
             const sp = l.p.specs || {};
             return `<div class="lb-card${i ? '' : ' on'}" data-i="${i}" ${i ? 'aria-hidden="true"' : ''}>
