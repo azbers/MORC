@@ -506,9 +506,10 @@
   };
   const LB_POSE = ['stand', 'stride', 'rest', 'step'];
   function lbLooks() {
+    if (window.DAUR_LOOKBOOK_OFF) return [];
     const set = window.DAUR_LOOKBOOK && window.DAUR_LOOKBOOK.length ? window.DAUR_LOOKBOOK : null;
     let looks = [];
-    if (set) set.forEach((x) => { const p = prod(x.pid); if (p) looks.push({ p, v: (x.vid && p.variants.find((v) => v.id === x.vid)) || p.variants[0], photo: x.photo || '', styled: x.styled || '', shoe: x.shoe || '', sw: +x.sw || 0, sh: +x.sh || 0, heel: x.heel == null ? .12 : +x.heel, note: x.note || '' }); });
+    if (set) set.forEach((x) => { const p = prod(x.pid); const c = String(x.colour || '').toLowerCase(); if (p) looks.push({ p, v: (x.vid && p.variants.find((v) => v.id === x.vid)) || (c && p.variants.find((v) => v.color.toLowerCase() === c)) || p.variants[0], photo: x.photo || '', styled: x.styled || '', shoe: x.shoe || '', sw: +x.sw || 0, sh: +x.sh || 0, heel: x.heel == null ? .12 : +x.heel, note: x.note || '' }); });
     if (!looks.length) {
       // no looks chosen in the theme: one look per pair of the current line, colours alternating
       P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 6).forEach((p, i) => looks.push({ p, v: p.variants[i % p.variants.length] || p.variants[0], photo: '', styled: '' }));
@@ -565,7 +566,7 @@
         <div class="lb-rail" aria-hidden="true"><i class="lb-bar"></i>${looks.map((l, i) => `<span class="lb-hang" data-i="${i}" style="--x:${((i + .5) / n * 100).toFixed(2)}%;--sw:${(i % 3) * -.9}s"><i class="lb-hook"></i><span class="lb-pair">${l.shoe ? `<img src="${esc(l.shoe)}" alt="" loading="lazy">` : visual(l.p, l.v)}</span></span>`).join('')}</div>
         <div class="wrap lb-stage">
           <div class="lb-fig">${looks.map((l, i) => `<a class="lb-look${i ? '' : ' on'}" data-i="${i}" href="${link('product', l.p.id + '~' + l.v.id)}" tabindex="${i ? -1 : 0}" style="--fx:${(((i + .5) / n) - .5) * 100}vw">
-            ${l.photo ? `<img src="${esc(l.photo)}" alt="${esc(l.p.name + ' ' + l.v.color + ', styled look')}" loading="lazy">` : l.v.images && l.v.images.length ? `<span class="lb-shot">${visual(l.p, l.v)}</span>` : lbFigure(l, i)}
+            ${l.photo ? `<img src="${esc(l.photo)}" alt="${esc(l.p.name + ' ' + l.v.color + ', styled look')}" loading="lazy">` : !l.shoe && l.v.images && l.v.images.length ? `<span class="lb-shot">${visual(l.p, l.v)}</span>` : lbFigure(l, i)}
             <span class="lb-spot" aria-hidden="true"></span>${l.note ? `<span class="lb-tag mono">${esc(l.note)}</span>` : ''}</a>`).join('')}
             ${looks.some((l) => !l.photo && !l.shoe && !(l.v.images && l.v.images.length)) ? '<span class="lb-note mono">Illustration. Model photos follow the first shoot.</span>' : ''}</div>
           <div class="lb-info">${looks.map((l, i) => {

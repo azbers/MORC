@@ -129,5 +129,272 @@
         "info": "Shown when a page link is shared on WhatsApp, Facebook or Instagram and the page has no photo of its own. Best size 1200 x 630 px. Left empty, the built in DAUR share image is used. The Social sharing image in Online Store > Preferences takes priority over this."
       }
     ]
+  },
+  {
+    "name": "Lookbook",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The wardrobe on the home page: pairs hang on a rail and one steps forward as the visitor scrolls. Leave every look empty to show the first six pairs automatically. For each look, pick the pair and add a shoe cut out: a transparent PNG, side profile, toe to the right, nothing around the shoe."
+      },
+      {
+        "type": "checkbox",
+        "id": "lookbook_show",
+        "label": "Show the lookbook on the home page",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Look 1"
+      },
+      {
+        "type": "product",
+        "id": "look_1_product",
+        "label": "Pair"
+      },
+      {
+        "type": "text",
+        "id": "look_1_colour",
+        "label": "Colour shown",
+        "info": "Exactly as the Color option is written, for example Black Waxed. Left empty, the first colour is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_1_shoe",
+        "label": "Shoe cut out (transparent PNG, side profile, toe right)"
+      },
+      {
+        "type": "range",
+        "id": "look_1_heel",
+        "label": "Top of the heel, percent of the photo height",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 8,
+        "info": "Where the trouser hem sits. Boots near 2, sneakers and shoes near 8 to 12."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_1_photo",
+        "label": "Model photo (optional, replaces the drawn figure)"
+      },
+      {
+        "type": "text",
+        "id": "look_1_styled",
+        "label": "Worn with (optional)",
+        "info": "For example: Dark denim and a white overshirt. Left empty, a styling line is chosen for the pair."
+      },
+      {
+        "type": "header",
+        "content": "Look 2"
+      },
+      {
+        "type": "product",
+        "id": "look_2_product",
+        "label": "Pair"
+      },
+      {
+        "type": "text",
+        "id": "look_2_colour",
+        "label": "Colour shown",
+        "info": "Exactly as the Color option is written, for example Black Waxed. Left empty, the first colour is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_2_shoe",
+        "label": "Shoe cut out (transparent PNG, side profile, toe right)"
+      },
+      {
+        "type": "range",
+        "id": "look_2_heel",
+        "label": "Top of the heel, percent of the photo height",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 8,
+        "info": "Where the trouser hem sits. Boots near 2, sneakers and shoes near 8 to 12."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_2_photo",
+        "label": "Model photo (optional, replaces the drawn figure)"
+      },
+      {
+        "type": "text",
+        "id": "look_2_styled",
+        "label": "Worn with (optional)",
+        "info": "For example: Dark denim and a white overshirt. Left empty, a styling line is chosen for the pair."
+      },
+      {
+        "type": "header",
+        "content": "Look 3"
+      },
+      {
+        "type": "product",
+        "id": "look_3_product",
+        "label": "Pair"
+      },
+      {
+        "type": "text",
+        "id": "look_3_colour",
+        "label": "Colour shown",
+        "info": "Exactly as the Color option is written, for example Black Waxed. Left empty, the first colour is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_3_shoe",
+        "label": "Shoe cut out (transparent PNG, side profile, toe right)"
+      },
+      {
+        "type": "range",
+        "id": "look_3_heel",
+        "label": "Top of the heel, percent of the photo height",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 8,
+        "info": "Where the trouser hem sits. Boots near 2, sneakers and shoes near 8 to 12."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_3_photo",
+        "label": "Model photo (optional, replaces the drawn figure)"
+      },
+      {
+        "type": "text",
+        "id": "look_3_styled",
+        "label": "Worn with (optional)",
+        "info": "For example: Dark denim and a white overshirt. Left empty, a styling line is chosen for the pair."
+      },
+      {
+        "type": "header",
+        "content": "Look 4"
+      },
+      {
+        "type": "product",
+        "id": "look_4_product",
+        "label": "Pair"
+      },
+      {
+        "type": "text",
+        "id": "look_4_colour",
+        "label": "Colour shown",
+        "info": "Exactly as the Color option is written, for example Black Waxed. Left empty, the first colour is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_4_shoe",
+        "label": "Shoe cut out (transparent PNG, side profile, toe right)"
+      },
+      {
+        "type": "range",
+        "id": "look_4_heel",
+        "label": "Top of the heel, percent of the photo height",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 8,
+        "info": "Where the trouser hem sits. Boots near 2, sneakers and shoes near 8 to 12."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_4_photo",
+        "label": "Model photo (optional, replaces the drawn figure)"
+      },
+      {
+        "type": "text",
+        "id": "look_4_styled",
+        "label": "Worn with (optional)",
+        "info": "For example: Dark denim and a white overshirt. Left empty, a styling line is chosen for the pair."
+      },
+      {
+        "type": "header",
+        "content": "Look 5"
+      },
+      {
+        "type": "product",
+        "id": "look_5_product",
+        "label": "Pair"
+      },
+      {
+        "type": "text",
+        "id": "look_5_colour",
+        "label": "Colour shown",
+        "info": "Exactly as the Color option is written, for example Black Waxed. Left empty, the first colour is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_5_shoe",
+        "label": "Shoe cut out (transparent PNG, side profile, toe right)"
+      },
+      {
+        "type": "range",
+        "id": "look_5_heel",
+        "label": "Top of the heel, percent of the photo height",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 8,
+        "info": "Where the trouser hem sits. Boots near 2, sneakers and shoes near 8 to 12."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_5_photo",
+        "label": "Model photo (optional, replaces the drawn figure)"
+      },
+      {
+        "type": "text",
+        "id": "look_5_styled",
+        "label": "Worn with (optional)",
+        "info": "For example: Dark denim and a white overshirt. Left empty, a styling line is chosen for the pair."
+      },
+      {
+        "type": "header",
+        "content": "Look 6"
+      },
+      {
+        "type": "product",
+        "id": "look_6_product",
+        "label": "Pair"
+      },
+      {
+        "type": "text",
+        "id": "look_6_colour",
+        "label": "Colour shown",
+        "info": "Exactly as the Color option is written, for example Black Waxed. Left empty, the first colour is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_6_shoe",
+        "label": "Shoe cut out (transparent PNG, side profile, toe right)"
+      },
+      {
+        "type": "range",
+        "id": "look_6_heel",
+        "label": "Top of the heel, percent of the photo height",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 8,
+        "info": "Where the trouser hem sits. Boots near 2, sneakers and shoes near 8 to 12."
+      },
+      {
+        "type": "image_picker",
+        "id": "look_6_photo",
+        "label": "Model photo (optional, replaces the drawn figure)"
+      },
+      {
+        "type": "text",
+        "id": "look_6_styled",
+        "label": "Worn with (optional)",
+        "info": "For example: Dark denim and a white overshirt. Left empty, a styling line is chosen for the pair."
+      }
+    ]
   }
 ]

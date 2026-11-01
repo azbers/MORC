@@ -34,6 +34,18 @@ window.DAUR_STATUSES = [
 {%- endif -%}
 {%- endfor -%}
 {%- endcapture -%}
+{%- comment -%} Lookbook: looks chosen in Theme settings > Lookbook; an empty list lets the page pick the pairs itself {%- endcomment -%}
+window.DAUR_LOOKBOOK_OFF = {% if settings.lookbook_show == false %}true{% else %}false{% endif %};
+window.DAUR_LOOKBOOK = [
+{%- for i in (1..6) -%}
+{%- capture kp %}look_{{ i }}_product{% endcapture -%}{%- capture ks %}look_{{ i }}_shoe{% endcapture -%}{%- capture kh %}look_{{ i }}_heel{% endcapture -%}{%- capture kf %}look_{{ i }}_photo{% endcapture -%}{%- capture kc %}look_{{ i }}_colour{% endcapture -%}{%- capture kt %}look_{{ i }}_styled{% endcapture -%}
+{%- assign lp = settings[kp] -%}
+{%- if lp != blank and lp.handle != blank -%}
+{%- assign sh = settings[ks] -%}{%- assign ph = settings[kf] -%}{%- assign heel = settings[kh] | default: 8 -%}
+{ "pid": {{ lp.handle | json }}, "colour": {{ settings[kc] | default: '' | strip | json }}, "shoe": {% if sh != blank %}{{ sh | image_url: width: 1400 | json }}, "sw": {{ sh.width }}, "sh": {{ sh.height }}{% else %}""{% endif %}, "heel": {{ heel | divided_by: 100.0 }}, "photo": {% if ph != blank %}{{ ph | image_url: width: 1200 | json }}{% else %}""{% endif %}, "styled": {{ settings[kt] | default: '' | json }} },
+{%- endif -%}
+{%- endfor -%}
+];
 window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
