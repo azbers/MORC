@@ -50,6 +50,7 @@ for (const [folderPlat, ident] of [["Instagram", "instagram"], ["Facebook", "fac
   const meta = JSON.parse(fs.readFileSync(f, "utf8"));
   for (const p of meta.posts) {
     if (ident === "facebook" && p.kind === "story") continue;
+    if (process.argv[4] === "posts-only" && p.kind !== "post") continue;
     const images = [];
     for (const m of p.media) images.push(await upload(path.join(dir, m)));
     const date = mode === "now" ? new Date(Date.now() + 60000).toISOString() : p.time;
