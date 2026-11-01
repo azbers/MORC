@@ -1,0 +1,6 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1600px;height:900px;background:#F5EEE4;color:#2A1C14;font-family:'DejaVu Sans',Arial,sans-serif;padding:64px 80px;position:relative}
+.ey{font:600 20px 'DejaVu Sans Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#8A5A2B}
+h1{font-size:54px;line-height:1.08;margin:14px 0 34px;letter-spacing:-.01em}
+.ft{position:absolute;left:80px;right:80px;bottom:44px;display:flex;justify-content:space-between;font:500 18px 'DejaVu Sans Mono',monospace;color:#6E5A4A;letter-spacing:.06em}
+.ft b{color:#2A1C14;letter-spacing:.3em}

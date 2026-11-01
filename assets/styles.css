@@ -683,9 +683,9 @@ legend span { color: var(--signal); }
   .menu-btn { display: block; }
   .hdr .wrap { grid-template-columns: auto 1fr auto; }
   .logo { justify-self: start; margin-left: 14px; }
-  .mnav { display: grid; position: fixed; inset: calc(64px + env(safe-area-inset-top, 0px)) 0 0; background: var(--ink); z-index: 49; padding: 24px var(--gutter-r) 24px var(--gutter-l); align-content: start; gap: 0; transform: translateY(-8px); opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s var(--ease); }
+  .mnav { display: grid; position: fixed; inset: calc(64px + env(safe-area-inset-top, 0px)) 0 0; background: var(--ink); z-index: 49; padding: 24px var(--gutter-r) 24px var(--gutter-l); align-content: start; gap: 0; overflow-y: auto; overscroll-behavior: contain; transform: translateY(-8px); opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s var(--ease); }
   .menu-open .mnav { opacity: 1; transform: none; pointer-events: auto; }
-  .mnav a { font: 500 40px/1 var(--display); letter-spacing: -.03em; padding: 16px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
+  .mnav a { font: 500 26px/1.1 var(--display); letter-spacing: -.02em; padding: 13px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
   .mnav a span { font: 400 11px/1 var(--mono); color: var(--dim); align-self: center; }
   .shead h2, .shead p.lede, .shead .aside { grid-column: 1 / -1; justify-self: start; }
   .crow .k, .crow .v, .crow .d { grid-column: 1 / -1; }

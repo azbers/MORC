@@ -2,7 +2,8 @@
   Structured data printed with the page itself, so search engines read the
   brand, prices, stock and breadcrumbs without running the storefront script.
   Only facts the store already states: theme settings for delivery, the
-  5 day exchange, and the products as they are in Shopify.
+  5 day exchange, the products as they are in Shopify, and Journal
+  articles (BlogPosting with the store as author and publisher).
 {%- endcomment -%}
 {%- liquid
   assign root = shop.url
@@ -77,6 +78,20 @@
 {%- endfor -%}
 ]},
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}}{% if coll %},{"@type":"ListItem","position":2,"name":{{ coll.title | json }},"item":{{ root | append: coll.url | json }}}{% endif %},{"@type":"ListItem","position":{% if coll %}3{% else %}2{% endif %},"name":{{ product.title | json }}}]}]
+</script>
+{%- elsif template.name == 'article' -%}
+{%- liquid
+  assign aurl = root | append: article.url
+  assign adesc = article.metafields.global.description_tag | default: article.excerpt_or_content | strip_html | strip | strip_newlines | truncate: 300
+-%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"BlogPosting","headline":{{ article.title | json }},"description":{{ adesc | json }},"url":{{ aurl | json }},"mainEntityOfPage":{"@type":"WebPage","@id":{{ aurl | json }}},"datePublished":{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},"dateModified":{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},"inLanguage":"en-PK",{% if article.image %}"image":{{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}{% if article.tags.size > 0 %}"keywords":{{ article.tags | join: ', ' | json }},{% endif %}"author":{"@type":"Organization","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }}},"publisher":{"@type":"Organization","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }}}},"isPartOf":{"@type":"Blog","name":{{ blog.title | json }},"url":{{ root | append: blog.url | json }}}},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":{{ root | append: blog.url | json }}},{"@type":"ListItem","position":3,"name":{{ article.title | json }}}]}]
+</script>
+{%- elsif template.name == 'blog' -%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"Blog","name":{{ blog.title | json }},"url":{{ root | append: blog.url | json }},"inLanguage":"en-PK","publisher":{"@type":"Organization","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }}}},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ blog.title | json }}}]}]
 </script>
 {%- elsif template.name == 'collection' -%}
 <script type="application/ld+json">
