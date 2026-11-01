@@ -1755,3 +1755,117 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 }
 /* phones: the headline is sized to the screen so each line of the promise stays on one row while the pen writes it */
 @media (max-width: 700px) { .hero h1 { font-size: min(52px, calc((100vw - 36px) / 7.75)); } }
+
+/* ---------------- lookbook: the wardrobe (home) ----------------
+   Pairs hang on a brass rail; the active pair steps forward and is worn.
+   Only transform and opacity animate, so phones keep a smooth scroll. */
+.lb { --top: 64px; height: calc(var(--n) * 62vh + 100vh); height: calc(var(--n) * 62svh + 100svh); }
+.lb-pin { position: sticky; top: var(--top); height: calc(100vh - var(--top)); height: calc(100svh - var(--top)); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; overflow: hidden; }
+.lb-pin::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(60% 55% at 38% 62%, rgba(255, 214, 160, .20), transparent 70%), linear-gradient(180deg, rgba(0, 0, 0, .28), transparent 30%, transparent 75%, rgba(0, 0, 0, .35)); }
+.lb-top { display: flex; align-items: baseline; gap: 18px 28px; flex-wrap: wrap; padding-top: clamp(14px, 2.4vh, 28px); }
+.lb-top h2 { font-size: clamp(26px, 3.6vw, 52px); letter-spacing: -.035em; line-height: 1; margin: 0; flex: 1 1 auto; }
+.lb-count { font-size: 12px; letter-spacing: .12em; color: var(--mute); }
+.lb-count b { color: var(--signal); font-size: 15px; }
+
+/* the rail */
+.lb-rail { position: relative; height: clamp(92px, 15vh, 150px); margin: 6px var(--gutter-r) 0 var(--gutter-l); }
+.lb-bar { position: absolute; left: 0; right: 0; top: 10px; height: 6px; border-radius: 3px; background: linear-gradient(180deg, #F0D29C, #B98A4E 55%, #6E4B22); box-shadow: 0 6px 14px rgba(0, 0, 0, .45); }
+.lb-hang { position: absolute; top: 8px; left: var(--x); width: clamp(64px, 9vw, 120px); transform: translateX(-50%); transform-origin: 50% 0; cursor: pointer; animation: lbSwing 5.5s ease-in-out var(--sw) infinite alternate; }
+.lb-hook { position: absolute; left: 50%; top: 0; width: 12px; height: 26px; margin-left: -6px; border: 2px solid #D9AE72; border-bottom: 0; border-radius: 6px 6px 0 0; }
+.lb-hook::after { content: ""; position: absolute; left: 3px; top: 24px; width: 2px; height: clamp(10px, 2vh, 18px); background: #D9AE72; }
+.lb-pair { position: absolute; top: clamp(34px, 5vh, 44px); left: 50%; width: 100%; transform: translateX(-30%) rotate(64deg); transform-origin: 18% 30%; opacity: .62; filter: brightness(.78) saturate(.7); transition: transform .7s var(--ease), opacity .5s var(--ease); }
+.lb-pair svg, .lb-pair img { display: block; width: 100%; height: auto; }
+.lb-hang.out { animation: none; }
+.lb-hang.out .lb-pair { opacity: 0; transform: translateX(-30%) translateY(40px) rotate(20deg) scale(1.4); }
+.lb-hang.out .lb-hook { border-color: var(--signal); }
+.lb-hang:hover .lb-pair { opacity: .9; }
+@keyframes lbSwing { from { transform: translateX(-50%) rotate(-2.2deg); } to { transform: translateX(-50%) rotate(2.2deg); } }
+
+/* the stage */
+.lb-stage { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(16px, 4vw, 64px); align-items: center; min-height: 0; }
+.lb-fig { position: relative; height: 100%; min-height: 0; }
+.lb-look { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; pointer-events: none; transform: translateX(calc(var(--fx, 0vw) * .5)) translateY(-28%) scale(.42); transition: opacity .55s var(--ease), transform .8s var(--ease); }
+.lb-look.on { opacity: 1; pointer-events: auto; transform: none; }
+.lb-look.back { transform: translateY(-34%) scale(.4); }
+.lb-look > svg, .lb-look > img, .lb-shot { max-width: 100%; max-height: 100%; width: auto; height: 100%; object-fit: contain; position: relative; z-index: 1; }
+.lb-look > img { border-radius: 6px; object-fit: cover; aspect-ratio: 4 / 5; height: auto; max-height: 100%; }
+.lb-shot svg, .lb-shot img { width: 100%; height: 100%; object-fit: contain; }
+.lb-spot { position: absolute; left: 50%; bottom: 4%; width: 70%; height: 30%; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(255, 222, 176, .32), transparent); z-index: 0; }
+.lb-legs .lb-shadow { fill: rgba(0, 0, 0, .42); }
+.lb-legs g { transition: transform .9s var(--ease); transform-box: view-box; }
+.lb-legs .lb-back { filter: brightness(.55) saturate(.8); }
+/* poses: the back leg and the front foot move, so each look reads as a new stance */
+.pose-stand .lb-back { transform: translate(-96px, -14px); }
+.pose-stride .lb-back { transform: translate(-210px, -40px) rotate(9deg); transform-origin: 300px 0; }
+.pose-stride .lb-front { transform: rotate(-4deg); transform-origin: 300px 0; }
+.pose-rest .lb-back { transform: translate(-150px, -60px) rotate(-14deg); transform-origin: 520px 640px; }
+.pose-step .lb-back { transform: translate(-60px, -8px) rotate(4deg); transform-origin: 300px 0; }
+.pose-step .lb-front { transform: rotate(-12deg); transform-origin: 560px 650px; }
+.lb-look:not(.on) .lb-legs g { transform: none; }
+.lb-note { position: absolute; left: 0; bottom: 6px; font-size: 10px; letter-spacing: .08em; color: var(--dim); z-index: 2; }
+
+/* the details */
+.lb-info { position: relative; height: 100%; min-height: 0; }
+.lb-card { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; opacity: 0; transform: translateY(calc(var(--dir, 1) * 26px)); transition: opacity .45s var(--ease), transform .6s var(--ease); pointer-events: none; }
+.lb-card.on { opacity: 1; transform: none; pointer-events: auto; transition-delay: .12s; }
+.lb-k { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--signal); }
+.lb-card h3 { font-family: var(--display); font-size: clamp(28px, 3.4vw, 54px); line-height: .95; letter-spacing: -.035em; margin: 0; }
+.lb-c { display: inline-flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 14px; }
+.lb-c i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px var(--line-2); }
+.lb-card dl { margin: 6px 0 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.lb-card dl div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.lb-card dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); padding-top: 2px; }
+.lb-card dd { margin: 0; font-size: 14px; color: var(--bone); }
+.lb-card p { margin: 2px 0 0; color: var(--text-2); font-size: 14px; max-width: 42ch; }
+.lb-card p:empty { display: none; }
+.lb-buy { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+.lb-buy .num { font-family: var(--display); font-size: 24px; letter-spacing: -.02em; }
+.lb-buy .btn { margin-left: auto; }
+
+/* dots */
+.lb-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: clamp(12px, 2.4vh, 24px); }
+.lb-dots { display: flex; gap: 4px; }
+.lb-dots button { background: none; border: 0; padding: 12px 4px; cursor: pointer; }
+.lb-dots i { display: block; width: 22px; height: 3px; border-radius: 2px; background: var(--line-2); transition: background .3s, width .3s var(--ease); }
+.lb-dots [aria-pressed="true"] i { background: var(--signal); width: 40px; }
+.lb-hint { font-size: 10.5px; letter-spacing: .12em; }
+
+@media (max-width: 860px) {
+  .lb { height: calc(var(--n) * 56svh + 100svh); }
+  .lb-top { gap: 4px 14px; }
+  .lb-top .eyebrow { width: 100%; font-size: 10.5px; }
+  .lb-rail { height: clamp(70px, 11svh, 96px); }
+  .lb-hang { width: clamp(46px, 13vw, 70px); }
+  .lb-stage { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 6px; }
+  .lb-info { height: auto; display: grid; }
+  .lb-card { position: relative; inset: auto; grid-area: 1 / 1; gap: 6px; justify-content: flex-start; }
+  .lb-card h3 { font-size: clamp(24px, 7vw, 32px); }
+  .lb-card dl div { grid-template-columns: 84px 1fr; padding: 5px 0; }
+  .lb-card dl div:nth-child(n+3) { display: none; }
+  .lb-card p { display: none; }
+  .lb-buy .num { font-size: 20px; }
+  .lb-buy .btn { padding-block: 11px; }
+  .lb-hint { display: none; }
+}
+@media (max-height: 640px) and (max-width: 860px) { .lb-card dl { display: none; } }
+
+/* low end phones and reduced motion: no pinning, no swinging; the looks sit one after another */
+.lite .lb, .lb-static { height: auto; }
+.lite .lb-hang, .lite .lb-pair, .lite .lb-look, .lite .lb-card, .lite .lb-legs g { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .lb { height: auto; }
+  .lb-pin { position: relative; top: 0; height: auto; min-height: calc(100svh - var(--top)); }
+  .lb-hang { animation: none; }
+  .lb-pair, .lb-look, .lb-card, .lb-legs g { transition: none; }
+  .lb-stage { min-height: 62svh; }
+  .lb-hint { display: none; }
+}
+.lite .lb-pin { position: relative; top: 0; height: auto; min-height: calc(100svh - var(--top)); }
+.lite .lb-stage { min-height: 62svh; }
+.lite .lb-hint { display: none; }
+.lb-pin > .wrap { width: 100%; }
+.lb-pin > .lb-rail { width: auto; }
+@media (prefers-reduced-motion: reduce) { .lb-fig { height: 46svh; } }
+.lite .lb-fig { height: 46svh; }
+@media (max-width: 860px) { .lb-fig { height: 100%; } }
+.lb-legs { -webkit-mask-image: linear-gradient(180deg, transparent 2%, #000 30%); mask-image: linear-gradient(180deg, transparent 2%, #000 30%); }

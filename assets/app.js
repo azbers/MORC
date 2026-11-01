@@ -482,6 +482,143 @@
     return `<div class="shead rv"><span class="eyebrow">${eyebrow}</span><h2>${title}</h2>${aside ? `<div class="aside">${aside}</div>` : ''}${lede ? `<p class="lede">${lede}</p>` : ''}</div>`;
   }
 
+  /* ---------------- lookbook: the wardrobe ----------------
+     The pairs hang on a brass rail like a closet. As the visitor scrolls, one pair steps
+     off the rail and is worn: a knee down figure (drawn until real model photos exist),
+     a new pose, new styling and the pair's details. Real photos come from the theme
+     settings (Lookbook) in Shopify, or from product photos; drawings are the fallback. */
+  // where the trouser hem sits on each drawn silhouette (top of the heel counter, shoe.js units)
+  const LB_HEEL = { court: 128, runner: 116, moc: 126, derby: 138, mid: 84, chelsea: 70, slip: 140, loafer: 146 };
+  const LB_WEAR = {
+    denim: { c: '#22304A', c2: '#2D3E5E', t: 'Straight dark denim' },
+    chino: { c: '#B59C76', c2: '#C7B08A', t: 'Cropped stone chinos' },
+    tailored: { c: '#36363C', c2: '#45454C', t: 'Tailored charcoal trousers' },
+    jogger: { c: '#1C1C1E', c2: '#29292C', t: 'Tapered black joggers' },
+    shalwar: { c: '#EDE5D8', c2: '#F7F1E7', t: 'White shalwar kameez' }
+  };
+  const LB_STYLE = { court: ['denim', 'chino'], runner: ['jogger', 'denim'], moc: ['chino', 'denim'], derby: ['tailored', 'chino'], mid: ['denim', 'jogger'], chelsea: ['denim', 'tailored'], slip: ['shalwar', 'chino'], loafer: ['shalwar', 'chino'] };
+  const LB_NOTE = {
+    denim: 'Dark denim with a single clean break over the collar. A plain tee or an overshirt on top.',
+    chino: 'Cropped chinos with a short roll, so the whole pair and a flash of sock show.',
+    tailored: 'Charcoal trousers with a sharp crease, cut to sit just on the shoe.',
+    jogger: 'Tapered joggers with a ribbed cuff that stops at the ankle. Weekend, airport, late chai.',
+    shalwar: 'A crisp white shalwar kameez for Jummah, Eid and every wedding dinner in between.'
+  };
+  const LB_POSE = ['stand', 'stride', 'rest', 'step'];
+  function lbLooks() {
+    const set = window.DAUR_LOOKBOOK && window.DAUR_LOOKBOOK.length ? window.DAUR_LOOKBOOK : null;
+    let looks = [];
+    if (set) set.forEach((x) => { const p = prod(x.pid); if (p) looks.push({ p, v: (x.vid && p.variants.find((v) => v.id === x.vid)) || p.variants[0], photo: x.photo || '', styled: x.styled || '' }); });
+    if (!looks.length) {
+      // no looks chosen in the theme: one look per pair of the current line, colours alternating
+      P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 6).forEach((p, i) => looks.push({ p, v: p.variants[i % p.variants.length] || p.variants[0], photo: '', styled: '' }));
+    }
+    const used = {};
+    return looks.map((l, i) => {
+      const opts = LB_STYLE[l.p.silhouette] || ['denim', 'chino'];
+      const wear = opts.find((o) => !used[o]) || opts[i % opts.length]; used[wear] = (used[wear] || 0) + 1;
+      return Object.assign(l, { wear, pose: LB_POSE[i % LB_POSE.length] });
+    });
+  }
+  // a drawn trouser leg ending at hem height y, wearing style w; the shoe is placed by the caller
+  function lbLeg(w, y, id) {
+    const W = LB_WEAR[w], x0 = 168, x1 = 316;
+    const g = `<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${W.c}"/><stop offset=".55" stop-color="${W.c2}"/><stop offset="1" stop-color="${W.c}"/></linearGradient>`;
+    if (w === 'shalwar') {
+      const b = y - 4;
+      return `<defs>${g}</defs><path d="M96 -40 C110 ${b * .5} 118 ${b - 70} 150 ${b - 26} L${x0} ${b} L${x1 - 6} ${b} L330 ${b - 26} C366 ${b - 70} 372 ${b * .5} 388 -40 Z" fill="url(#${id})"/>
+        <path d="M150 ${b - 26} L330 ${b - 26} L${x1 - 6} ${b} L${x0} ${b} Z" fill="${W.c}" stroke="rgba(0,0,0,.18)"/>
+        ${[0, 1, 2, 3, 4].map((k) => `<path d="M${200 + k * 22} ${b - 30} C${190 + k * 26} ${b * .7} ${170 + k * 30} ${b * .4} ${150 + k * 36} -40" fill="none" stroke="rgba(60,40,20,.13)" stroke-width="2"/>`).join('')}`;
+    }
+    const top = w === 'tailored' ? [126, 362] : w === 'jogger' ? [140, 344] : [134, 352];
+    const hx0 = w === 'jogger' ? x0 + 12 : w === 'tailored' ? x0 - 8 : x0, hx1 = w === 'jogger' ? x1 - 14 : w === 'tailored' ? x1 + 6 : x1;
+    const hy = w === 'chino' ? y - 34 : w === 'jogger' ? y - 18 : y;
+    let d = `<defs>${g}</defs>`;
+    if (w === 'chino' || w === 'jogger') d += `<path d="M${hx0 + 14} ${hy - 4} L${hx1 - 14} ${hy - 4} L${hx1 - 18} ${y + 6} L${hx0 + 18} ${y + 6} Z" fill="#17120F"/>`; // sock
+    d += `<path d="M${top[0]} -40 L${top[1]} -40 C${top[1] - 6} ${hy * .5} ${hx1 + 6} ${hy - 90} ${hx1} ${hy} L${hx0} ${hy} C${hx0 - 4} ${hy - 90} ${top[0] + 8} ${hy * .5} ${top[0]} -40 Z" fill="url(#${id})"/>`;
+    if (w === 'denim') d += `<path d="M${top[1] - 22} -40 C${top[1] - 26} ${hy * .5} ${hx1 - 6} ${hy - 90} ${hx1 - 8} ${hy - 2}" fill="none" stroke="#C89B5E" stroke-opacity=".7" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M${hx0 + 6} ${hy - 26} C${hx0 + 50} ${hy - 36} ${hx1 - 40} ${hy - 18} ${hx1 - 4} ${hy - 30}M${hx0 + 10} ${hy - 52} C${hx0 + 60} ${hy - 60} ${hx1 - 50} ${hy - 44} ${hx1 - 6} ${hy - 56}" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="3"/>`;
+    if (w === 'tailored') d += `<path d="M${(top[0] + top[1]) / 2 + 6} -40 L${(hx0 + hx1) / 2 + 4} ${hy - 4}" stroke="rgba(255,255,255,.16)" stroke-width="2"/>`;
+    if (w === 'chino') d += `<path d="M${hx0 - 3} ${hy - 22} L${hx1 + 3} ${hy - 22} L${hx1} ${hy} L${hx0} ${hy} Z" fill="${W.c2}" stroke="rgba(0,0,0,.16)"/>`;
+    if (w === 'jogger') d += `<path d="M${hx0 + 2} ${hy - 22} L${hx1 - 2} ${hy - 22} L${hx1 - 4} ${hy} L${hx0 + 4} ${hy} Z" fill="#141416"/>${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => `<path d="M${hx0 + 10 + k * ((hx1 - hx0 - 20) / 9)} ${hy - 20}v18" stroke="rgba(255,255,255,.08)" stroke-width="2"/>`).join('')}`;
+    return d;
+  }
+  function lbFigure(l, i) {
+    const s = LB_HEEL[l.p.silhouette] || 126, hemY = 420 + (s - 30) * .924 + 20;
+    const shoe = SHOE.render({ name: l.p.name, colorway: l.v.color, silhouette: l.p.silhouette, palette: l.v.palette });
+    const nest = (x, y) => shoe.replace('<svg ', `<svg x="${x}" y="${y}" width="440" height="261" `);
+    return `<svg class="lb-legs pose-${l.pose}" viewBox="0 0 640 700" role="img" aria-label="Illustration: ${esc(l.p.name)} in ${esc(l.v.color)}, worn with ${esc(LB_WEAR[l.wear].t.toLowerCase())}">
+      <ellipse class="lb-shadow" cx="370" cy="660" rx="250" ry="16"/>
+      <g class="lb-back">${lbLeg(l.wear, hemY, 'lbb' + i)}${nest(150, 420)}</g>
+      <g class="lb-front">${lbLeg(l.wear, hemY, 'lbf' + i)}${nest(150, 420)}</g>
+    </svg>`;
+  }
+  function lookbook() {
+    if (!SHOE || !SHOE.render) return '';
+    const looks = lbLooks();
+    if (looks.length < 2) return '';
+    const n = looks.length, two = (k) => String(k).padStart(2, '0');
+    return `<section class="sheet x saddle lb" id="lookbook" style="--n:${n}" aria-roledescription="lookbook" aria-label="The wardrobe, ${n} looks">
+      <div class="lb-pin">
+        <div class="wrap lb-top"><span class="eyebrow">The wardrobe / ${n} looks</span><h2>One pair steps out.</h2><span class="lb-count mono" aria-live="polite"><b id="lbNow">01</b> / ${two(n)}</span></div>
+        <div class="lb-rail" aria-hidden="true"><i class="lb-bar"></i>${looks.map((l, i) => `<span class="lb-hang" data-i="${i}" style="--x:${((i + .5) / n * 100).toFixed(2)}%;--sw:${(i % 3) * -.9}s"><i class="lb-hook"></i><span class="lb-pair">${visual(l.p, l.v)}</span></span>`).join('')}</div>
+        <div class="wrap lb-stage">
+          <div class="lb-fig">${looks.map((l, i) => `<a class="lb-look${i ? '' : ' on'}" data-i="${i}" href="${link('product', l.p.id + '~' + l.v.id)}" tabindex="${i ? -1 : 0}" style="--fx:${(((i + .5) / n) - .5) * 100}vw">
+            ${l.photo ? `<img src="${esc(l.photo)}" alt="${esc(l.p.name + ' ' + l.v.color + ', styled look')}" loading="lazy">` : l.v.images && l.v.images.length ? `<span class="lb-shot">${visual(l.p, l.v)}</span>` : lbFigure(l, i)}
+            <span class="lb-spot" aria-hidden="true"></span></a>`).join('')}
+            ${looks.some((l) => !l.photo && !(l.v.images && l.v.images.length)) ? '<span class="lb-note mono">Illustration. Model photos follow the first shoot.</span>' : ''}</div>
+          <div class="lb-info">${looks.map((l, i) => {
+            const sp = l.p.specs || {};
+            return `<div class="lb-card${i ? '' : ' on'}" data-i="${i}" ${i ? 'aria-hidden="true"' : ''}>
+              <span class="mono lb-k">Look ${two(i + 1)} / ${esc(lineName(lineOf(l.p)))}</span>
+              <h3>${esc(l.p.name)}</h3><span class="lb-c"><i style="--c:${esc(l.v.hex || '#222')}"></i>${esc(l.v.color)}</span>
+              <dl><div><dt>Worn with</dt><dd>${esc(l.styled || LB_WEAR[l.wear].t)}</dd></div>${sp.Upper ? `<div><dt>Upper</dt><dd>${esc(sp.Upper)}</dd></div>` : ''}${sp.Sole ? `<div><dt>Sole</dt><dd>${esc(sp.Sole)}</dd></div>` : ''}<div><dt>Sizes</dt><dd>EU ${Math.min(...l.p.sizes)} to ${Math.max(...l.p.sizes)}</dd></div></dl>
+              <p>${esc(l.styled ? '' : LB_NOTE[l.wear])}</p>
+              <div class="lb-buy"><span class="num">${fmt(l.v.price)}</span>${onSale(l.v) ? `<span class="strike mute">${fmt(l.v.compareAt)}</span>` : ''}<a class="btn volt" href="${link('product', l.p.id + '~' + l.v.id)}" tabindex="${i ? -1 : 0}">See the pair <span class="arr">&rarr;</span></a></div>
+            </div>`; }).join('')}</div>
+        </div>
+        <div class="wrap lb-foot"><div class="lb-dots" role="group" aria-label="Choose a look">${looks.map((l, i) => `<button type="button" data-go="${i}" aria-pressed="${!i}" aria-label="Look ${i + 1}, ${esc(l.p.name)}"><i></i></button>`).join('')}</div><span class="mono mute lb-hint">Scroll to change the look</span></div>
+      </div>
+    </section>`;
+  }
+  function bindLookbook(root) {
+    const sec = $('#lookbook', root); if (!sec) return;
+    const n = +getComputedStyle(sec).getPropertyValue('--n') || $$('.lb-card', sec).length;
+    const looks = $$('.lb-look', sec), cards = $$('.lb-card', sec), hangs = $$('.lb-hang', sec), dots = $$('[data-go]', sec), now = $('#lbNow', sec);
+    let cur = 0, raf = 0;
+    const show = (k) => {
+      if (k === cur) return;
+      const dir = k > cur ? 1 : -1;
+      looks.forEach((x, i) => { x.classList.toggle('on', i === k); x.classList.toggle('back', i === cur); x.tabIndex = i === k ? 0 : -1; x.style.setProperty('--dir', dir); });
+      cards.forEach((x, i) => { x.classList.toggle('on', i === k); x.toggleAttribute('aria-hidden', i !== k); x.style.setProperty('--dir', dir); const a = $('a', x); if (a) a.tabIndex = i === k ? 0 : -1; });
+      hangs.forEach((x, i) => x.classList.toggle('out', i === k));
+      dots.forEach((x, i) => x.setAttribute('aria-pressed', i === k));
+      now.textContent = String(k + 1).padStart(2, '0');
+      cur = k;
+    };
+    hangs[0] && hangs[0].classList.add('out');
+    const pinned = () => getComputedStyle($('.lb-pin', sec)).position === 'sticky';
+    const tick = () => {
+      raf = 0;
+      if (!pinned()) return;
+      const r = sec.getBoundingClientRect(), span = r.height - innerHeight;
+      const p = span > 0 ? Math.min(.9999, Math.max(0, -r.top / span)) : 0;
+      sec.style.setProperty('--p', p.toFixed(4));
+      show(Math.floor(p * n));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
+    addEventListener('hashchange', function off() { removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); removeEventListener('hashchange', off); });
+    // a dot (or a pair on the rail) jumps to its look: scrolls there when pinned, swaps in place when not
+    const go = (k) => {
+      if (!pinned()) return show(k);
+      const top = sec.getBoundingClientRect().top + scrollY, span = sec.offsetHeight - innerHeight;
+      scrollTo({ top: top + span * (k + .5) / n, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    };
+    dots.forEach((b) => b.addEventListener('click', () => go(+b.dataset.go)));
+    hangs.forEach((h) => h.addEventListener('click', () => go(+h.dataset.i)));
+    tick();
+  }
+
   /* ---------------- views ---------------- */
   const V = {};
 
@@ -519,6 +656,8 @@
       ${head(ONE ? 'Shop by style' : 'Shop by line', `${nWord} ${ONE ? 'style' : 'line'}${lines.length === 1 ? '' : 's'}. One signature.`, `<a class="link" href="${link('shop')}">Shop all</a>`)}
       <div class="lines">${lines.map((l, i) => lineCard(l, i)).join('')}</div>
     </div></section>
+
+    ${lookbook()}
 
     <section class="sheet x" id="drop"><div class="wrap">
       ${head('Drop 01 / ' + drop.length + ' pairs', 'The collection.', `<a class="link" href="${link('shop')}">Filter and sort</a>`, matchMedia('(hover: hover)').matches ? 'Hover a pair to see how it is built. Pick your size and add it straight from here.' : 'Tap a pair for photos, colours and sizes. Your size, at your door, paid on arrival.')}
@@ -593,7 +732,7 @@
     }
     magicType($('h1.magic', hero_));
     hero_.addEventListener('pointermove', (e) => { const hr = hero_.getBoundingClientRect(); const l = hero_.querySelector('.hero-light'); l.style.setProperty('--mx', (e.clientX - hr.left) + 'px'); l.style.setProperty('--my', (e.clientY - hr.top) + 'px'); });
-    bindCards(app); bindAnat(app);
+    bindCards(app); bindAnat(app); bindLookbook(app);
   };
 
   // the delivery van is itself a sneaker, in house colours, with the day's parcels strapped to the heel
