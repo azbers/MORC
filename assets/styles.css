@@ -2015,3 +2015,5 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 @media (min-width: 901px) { .reel-photo { width: min(46vh, 480px); } }
 /* the short menu: one line per link */
 .nav a { white-space: nowrap; }
+/* footer between 861 and 1199 px: the contact column takes one more grid column so the email address fits */
+@media (min-width: 861px) and (max-width: 1199px) { .ftr-brand { grid-column: 1 / 4; } .ftr-col:has(.ilink) { grid-column: span 3; } }
