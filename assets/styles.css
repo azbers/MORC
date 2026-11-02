@@ -2068,7 +2068,7 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 /* Our giving page */
 .gv-hero .wrap { display: grid; gap: 14px; }
 @media (min-width: 1000px) { .gv-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.gv-loaf { justify-self: start; background: none; border: 0; padding: 18px 0 0; cursor: pointer; width: min(420px, 100%); }
+.gv-loaf { grid-column: 1 / -1; justify-self: start; background: none; border: 0; padding: 18px 0 0; cursor: pointer; width: min(420px, 100%); }
 .gv-loaf .loaf { width: 100%; }
 .gv-loaf .lf-amt { font-size: 7px; }
 .gv-rec { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); }
