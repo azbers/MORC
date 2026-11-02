@@ -1,3 +1,7 @@
+/* brand fonts, served with the theme (latin, weights in use only) */
+@font-face { font-family: 'Space Grotesk'; src: url("font-grotesk.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("font-inter.woff2") format("woff2"); font-weight: 400 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url("font-mono.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
 /* stand in fonts sized to the brand fonts, so text does not jump or rewrap when the web fonts arrive (layout shift) */
 @font-face { font-family: 'DAUR Display Fallback'; src: local('Arial'), local('ArialMT'), local('Liberation Sans'); size-adjust: 91.5%; }
 @font-face { font-family: 'DAUR Body Fallback'; src: local('Arial'), local('ArialMT'), local('Liberation Sans'); size-adjust: 105.5%; }
@@ -229,13 +233,15 @@ main, header, footer, .ticker { position: relative; z-index: 1; }
 .hero h1.magic .row > span { animation: none; }
 /* written by a shoe pen: each line is uncovered left to right while a small pair rides the nib */
 .hero h1.magic .row { position: relative; overflow: visible; }
-.hero h1 .ink { display: inline-block; }
-.hero h1.writing .ink { clip-path: inset(-10% 100% -10% 0); }
-.hero h1.writing.go .ink { animation: inkIn var(--d, 1.4s) cubic-bezier(.42, .08, .58, .95) var(--at, 0s) forwards; }
+.hero h1 .ink, .hero h1 .ink-i { display: inline-block; }
+.hero h1 .ink { overflow: hidden; padding: .12em .08em .12em 0; margin: -.12em -.08em -.12em 0; vertical-align: top; }
+.hero h1.writing .ink { transform: translate3d(-101%, 0, 0); }
+.hero h1.writing .ink-i { transform: translate3d(101%, 0, 0); }
+.hero h1.writing.go .ink, .hero h1.writing.go .ink-i { animation: inkIn var(--d, 1.4s) cubic-bezier(.42, .08, .58, .95) var(--at, 0s) forwards; }
 .hero h1 .pen { position: absolute; left: 0; top: 18%; width: .62em; height: .4em; margin-left: -.5em; opacity: 0; pointer-events: none; transform-origin: 20% 90%; filter: drop-shadow(0 4px 4px rgba(var(--shadow-rgb), .35)); }
 .hero h1 .pen svg { width: 100%; height: 100%; }
 .hero h1.go .pen { animation: penRide var(--d, 1.4s) cubic-bezier(.42, .08, .58, .95) var(--at, 0s) forwards, penShow var(--d, 1.4s) linear var(--at, 0s) forwards, penNib .32s ease-in-out var(--at, 0s) infinite alternate; }
-@keyframes inkIn { to { clip-path: inset(-10% 0 -10% 0); } }
+@keyframes inkIn { to { transform: translate3d(0, 0, 0); } }
 @keyframes penRide { from { left: 0; } to { left: var(--w, 100%); } }
 @keyframes penShow { 0% { opacity: 0; } 6%, 94% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes penNib { from { rotate: -14deg; translate: 0 -3%; } to { rotate: -4deg; translate: 0 3%; } }

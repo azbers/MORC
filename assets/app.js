@@ -630,15 +630,17 @@
     const K = window.DAUR_KICKS;
     const pen = K ? K.svg('runner', { upper: '#2A1C14', sole: '#F5EEE4', accent: '#B97A47', line: '#F5EEE4' }) : '';
     const rows = $$('.row', h);
-    rows.forEach((r) => { const ink = document.createElement('span'); ink.className = 'ink'; while (r.firstChild) ink.appendChild(r.firstChild); r.appendChild(ink); });
+    // each line sits in a window (.ink) that slides open while the words inside slide the other way: a left to right reveal done with transforms only, so it runs on the GPU
+    rows.forEach((r) => { const ink = document.createElement('span'), inner = document.createElement('span'); ink.className = 'ink'; inner.className = 'ink-i'; while (r.firstChild) inner.appendChild(r.firstChild); ink.appendChild(inner); r.appendChild(ink); });
     h.classList.add('writing');
     const go = () => {
       if (h.dataset.w) return; h.dataset.w = '1';
       // phones get a quicker pen, so the promise is readable within the first second or two
       const narrow = innerWidth < 700;
       let at = 0;
-      rows.forEach((r) => {
-        const ink = $('.ink', r), w = ink.offsetWidth, dur = narrow ? Math.max(.9, Math.min(1.2, w / 380)) : Math.max(1.1, w / 520);
+      const ws = rows.map((r) => $('.ink', r).offsetWidth); // read every width first, then write, so the page is measured once
+      rows.forEach((r, k) => {
+        const w = ws[k], dur = narrow ? Math.max(.9, Math.min(1.2, w / 380)) : Math.max(1.1, w / 520);
         r.insertAdjacentHTML('beforeend', `<i class="pen" aria-hidden="true">${pen}</i>`);
         r.style.setProperty('--w', w + 'px'); r.style.setProperty('--d', dur + 's'); r.style.setProperty('--at', at + 's');
         at += dur + .15;

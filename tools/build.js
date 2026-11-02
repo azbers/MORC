@@ -10,7 +10,7 @@ const sandbox = { window: {} };
 require('vm').runInNewContext(fs.readFileSync(path.join(root, 'assets/data.js'), 'utf8'), sandbox);
 const C = sandbox.window.DAUR_CONFIG;
 
-const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">';
+const FONTS = '<link rel="preload" as="font" type="font/woff2" href="assets/font-grotesk.woff2" crossorigin>';
 
 const THEME_BOOT = '<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem(\'daur.theme\')===\'dark\')d.dataset.theme=\'dark\';if(localStorage.getItem(\'daur.grid\')===\'1\')d.classList.add(\'grid-1\')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add(\'lite\')}catch(e){}</script>';
 
@@ -80,12 +80,11 @@ fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nDisallow: /check
 const inline = (f) => fs.readFileSync(path.join(root, f), 'utf8').replace(/<\/script/gi, '<\\/script');
 const js = ['assets/data.js', 'assets/shoe.js'].concat(OPTIONAL.filter((f) => fs.existsSync(path.join(root, f))), ['assets/app.js']);
 // the stylesheet points at the leather tiles next to it; the one file preview carries them inline
-const inlineTiles = (css) => css.replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
+const inlineTiles = (css) => css.replace(/url\("(font-[a-z]+\.woff2)"\)/g, (m, f) => `url("data:font/woff2;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`).replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'dist/preview.html'), `<title>DAUR Supply</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${PAGES.home[2]}">
-${FONTS}
 ${THEME_BOOT}
 <style>${inlineTiles(fs.readFileSync(path.join(root, 'assets/styles.css'), 'utf8'))}</style>
 <main id="app" tabindex="-1"></main>
