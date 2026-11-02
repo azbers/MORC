@@ -41,9 +41,13 @@
   };
   EXT.reviews = R;
 
+  // a drawn heart: rounded lobes and a soft point, filled with the deep red gradient
+  const HP = 'M12 20.6c-.3 0-.6-.1-.8-.3C6.9 16.6 3.2 13.4 3.2 9.2 3.2 6.4 5.4 4.2 8 4.2c1.6 0 3 .8 4 2.1 1-1.3 2.4-2.1 4-2.1 2.6 0 4.8 2.2 4.8 5 0 4.2-3.7 7.4-8 11.1-.2.2-.5.3-.8.3z';
+  const hsvg = (cls) => `<svg class="hs-i ${cls || ''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${HP}"/></svg>`;
+  const h5 = (cls) => hsvg(cls).repeat(5);
   function stars(r, cls) {
     const w = Math.max(0, Math.min(100, r / 5 * 100));
-    return `<span class="stars hearts ${cls || ''}" role="img" aria-label="${r.toFixed(1)} out of 5"><span class="s-bg">♥♥♥♥♥</span><span class="s-fg" style="width:${w}%">♥♥♥♥♥</span></span>`;
+    return `<span class="stars hearts ${cls || ''}" role="img" aria-label="${r.toFixed(1)} out of 5"><span class="s-bg">${h5('e')}</span><span class="s-fg" style="width:${w}%">${h5('f')}</span></span>`;
   }
   EXT.stars = stars;
 
@@ -55,42 +59,60 @@
       if (document.getElementById('daur-hearts-css')) return;
       const st = document.createElement('style'); st.id = 'daur-hearts-css';
       st.textContent = `
-:root{--daur-heart:#9B0F1E;--daur-heart-2:#C8102E;--daur-heart-rgb:155,15,30}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--daur-heart:#D7263D;--daur-heart-2:#F0475B;--daur-heart-rgb:215,38,61}}
-:root[data-theme="dark"]{--daur-heart:#D7263D;--daur-heart-2:#F0475B;--daur-heart-rgb:215,38,61}
-.stars.hearts{letter-spacing:2px}
-.stars.hearts .s-fg{color:var(--daur-heart);background:linear-gradient(90deg,var(--daur-heart),var(--daur-heart-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hz{font-style:normal;color:var(--daur-heart)}
+:root{--daur-heart:#9B0F1E;--daur-heart-2:#D0283B;--daur-heart-3:#5E0712;--daur-heart-rgb:155,15,30}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--daur-heart:#C81E33;--daur-heart-2:#EE4A5E;--daur-heart-3:#8E0F1F;--daur-heart-rgb:215,38,61}}
+:root[data-theme="dark"]{--daur-heart:#C81E33;--daur-heart-2:#EE4A5E;--daur-heart-3:#8E0F1F;--daur-heart-rgb:215,38,61}
+.stars.hearts{display:inline-flex;letter-spacing:0;font-size:13px;vertical-align:middle}
+.stars.hearts.lg{font-size:19px}
+.stars.hearts .s-bg,.stars.hearts .s-fg{display:flex;gap:.18em;white-space:nowrap}
+.stars.hearts .s-fg{position:absolute;inset:0 auto 0 0;overflow:hidden}
+.hs-i{width:1.05em;height:1.05em;flex:none;display:inline-block;vertical-align:-.15em;overflow:visible}
+.hs-i path{fill:url(#daur-heart-g);stroke:none}
+.hs-i.e path{fill:none;stroke:var(--line-2);stroke-width:1.5}
+.hs-i.f{filter:drop-shadow(0 1px 1px rgba(var(--daur-heart-rgb),.25))}
+.hz{width:11px;height:11px;margin-left:2px}
+.filters .hz{width:10px;height:10px;vertical-align:-1px}
 .rv-dist .minibar i,.rv-fit .fit-track i{background:var(--daur-heart)}
 .rv-avg .big{color:var(--daur-heart)}
-.star-pick button{font-size:26px;line-height:1;color:var(--line-2);transition:color .2s,transform .2s;background:none;border:0;padding:2px 3px;cursor:pointer;position:relative}
-.star-pick button.on{color:var(--daur-heart);text-shadow:0 0 14px rgba(var(--daur-heart-rgb),.45)}
-.star-pick button:hover{transform:scale(1.15)}
+.star-pick{gap:6px}
+.star-pick button{width:38px;height:38px;padding:4px;color:var(--line-2);transition:transform .2s;background:none;border:0;cursor:pointer;position:relative}
+.star-pick button .hs-i{width:100%;height:100%}
+.star-pick button .hs-i path{fill:none;stroke:var(--line-2);stroke-width:1.4;transition:fill .2s,stroke .2s}
+.star-pick button.on .hs-i path{fill:url(#daur-heart-g);stroke:var(--daur-heart)}
+.star-pick button.on .hs-i{filter:drop-shadow(0 3px 8px rgba(var(--daur-heart-rgb),.35))}
+.star-pick button:hover{transform:scale(1.12)}
 .star-pick button.pop,.like.pop .lk-h{animation:hpop .55s cubic-bezier(.2,1.6,.4,1)}
 @keyframes hpop{0%{transform:scale(1)}25%{transform:scale(.7)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
 .like{display:inline-flex;align-items:center;gap:6px;font:400 11px/1 var(--mono);letter-spacing:.1em;color:var(--dim);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;position:relative;transition:border-color .2s,color .2s}
-.like .lk-h{font-size:15px;line-height:1;display:inline-block;color:transparent;-webkit-text-stroke:1.3px currentColor}
+.like .lk-h{display:inline-flex;width:16px;height:16px}
+.like .lk-h .hs-i{width:16px;height:16px}
+.like .lk-h path{fill:none;stroke:currentColor;stroke-width:1.7}
 .like:hover{color:var(--daur-heart);border-color:var(--daur-heart)}
 .like.on{color:var(--daur-heart);border-color:rgba(var(--daur-heart-rgb),.5);background:rgba(var(--daur-heart-rgb),.08)}
-.like.on .lk-h{color:var(--daur-heart);-webkit-text-stroke:0}
+.like.on .lk-h path{fill:url(#daur-heart-g);stroke:var(--daur-heart)}
 .rv-item{position:relative;user-select:none;-webkit-user-select:none}
 .rv-item p,.rv-item h4{user-select:text;-webkit-user-select:text}
-.hp{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;color:var(--daur-heart);font-size:13px;line-height:1;will-change:transform,opacity;animation:hfly .8s ease-out forwards}
+.hp,.hbig,.hrain{display:block}
+.hp .hs-i,.hbig .hs-i,.hrain .hs-i{width:100%;height:100%;display:block}
+.hp{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;width:1em;height:1em;font-size:13px;line-height:1;will-change:transform,opacity;animation:hfly .8s ease-out forwards}
 @keyframes hfly{0%{opacity:1;transform:translate(var(--x0),var(--y0)) scale(.6)}100%{opacity:0;transform:translate(var(--x1),var(--y1)) scale(1.1) rotate(var(--r))}}
-.hbig{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;font-size:84px;line-height:1;color:#fff;-webkit-text-stroke:0;background:linear-gradient(135deg,var(--daur-heart-2),var(--daur-heart));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 18px rgba(var(--daur-heart-rgb),.5));animation:hbig .9s cubic-bezier(.2,1.4,.4,1) forwards}
+.hbig{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;width:96px;height:96px;filter:drop-shadow(0 8px 22px rgba(var(--daur-heart-rgb),.45));animation:hbig .9s cubic-bezier(.2,1.4,.4,1) forwards}
 @keyframes hbig{0%{opacity:0;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(.2)}20%{opacity:1;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(1.15)}35%{transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(.95)}60%{opacity:1;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) translate(-50%,-90%) scale(1)}}
-.hrain{position:fixed;top:-40px;pointer-events:none;z-index:9999;color:var(--daur-heart);line-height:1;animation:hrain linear forwards}
+.hrain{position:fixed;top:-40px;pointer-events:none;z-index:9999;width:1em;height:1em;animation:hrain linear forwards}
 @keyframes hrain{to{transform:translate(var(--dx),110vh) rotate(var(--r));opacity:.2}}
 @media (prefers-reduced-motion:reduce){.star-pick button.pop,.like.pop .lk-h{animation:none}}
 `;
       document.head.appendChild(st);
+      // one shared gradient for every heart: a lit top lobe into a deep blood red point
+      const add = () => { if (document.getElementById('daur-heart-defs')) return; document.body.insertAdjacentHTML('afterbegin', '<svg id="daur-heart-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="daur-heart-g" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0" style="stop-color:var(--daur-heart-2)"/><stop offset=".55" style="stop-color:var(--daur-heart)"/><stop offset="1" style="stop-color:var(--daur-heart-3)"/></linearGradient></defs></svg>'); };
+      if (document.body) add(); else document.addEventListener('DOMContentLoaded', add);
     },
     // a small burst of hearts from an element
     burst(el, n) {
       if (CALM() || !el) return;
       const b = el.getBoundingClientRect(); const cx = b.left + b.width / 2, cy = b.top + b.height / 2;
       for (let i = 0; i < n; i++) {
-        const h = document.createElement('i'); h.className = 'hp'; h.textContent = '♥';
+        const h = document.createElement('i'); h.className = 'hp'; h.innerHTML = hsvg('f');
         const a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 34;
         h.style.cssText = `--x0:${cx}px;--y0:${cy}px;--x1:${cx + Math.cos(a) * d}px;--y1:${cy + Math.sin(a) * d - 14}px;--r:${(Math.random() * 60 - 30) | 0}deg;font-size:${9 + Math.random() * 9}px;opacity:${0.6 + Math.random() * 0.4}`;
         document.body.appendChild(h); setTimeout(() => h.remove(), 850);
@@ -99,7 +121,7 @@
     // the big heart that pops where a note is double tapped
     big(at) {
       if (CALM()) return;
-      const h = document.createElement('i'); h.className = 'hbig'; h.textContent = '♥';
+      const h = document.createElement('i'); h.className = 'hbig'; h.innerHTML = hsvg('f g');
       h.style.cssText = `--x:${at.x}px;--y:${at.y}px`;
       document.body.appendChild(h); setTimeout(() => h.remove(), 950);
       HEART.burst({ getBoundingClientRect: () => ({ left: at.x, top: at.y, width: 0, height: 0 }) }, 12);
@@ -109,9 +131,9 @@
       if (CALM()) return;
       const w = window.innerWidth;
       for (let i = 0; i < 42; i++) {
-        const h = document.createElement('i'); h.className = 'hrain'; h.textContent = '♥';
+        const h = document.createElement('i'); h.className = 'hrain'; h.innerHTML = hsvg('f');
         const dur = 1.6 + Math.random() * 1.4;
-        h.style.cssText = `left:${Math.random() * w}px;font-size:${12 + Math.random() * 22}px;--dx:${(Math.random() * 120 - 60) | 0}px;--r:${(Math.random() * 360 - 180) | 0}deg;animation-duration:${dur}s;animation-delay:${Math.random() * 0.5}s;opacity:${0.55 + Math.random() * 0.45};color:${Math.random() < 0.35 ? 'var(--daur-heart-2)' : 'var(--daur-heart)'}`;
+        h.style.cssText = `left:${Math.random() * w}px;font-size:${12 + Math.random() * 22}px;--dx:${(Math.random() * 120 - 60) | 0}px;--r:${(Math.random() * 360 - 180) | 0}deg;animation-duration:${dur}s;animation-delay:${Math.random() * 0.5}s;opacity:${0.55 + Math.random() * 0.45};`;
         document.body.appendChild(h); setTimeout(() => h.remove(), (dur + 0.6) * 1000);
       }
     }
@@ -161,13 +183,13 @@
       <div class="rv-grid">
         <div class="rv-sum">
           ${s.n ? `<div class="rv-avg"><span class="big num">${s.avg.toFixed(1)}</span><div>${stars(s.avg, 'lg')}<span class="mono mute">${s.n} fit note${s.n > 1 ? 's' : ''}</span></div></div>
-          <div class="rv-dist">${s.dist.map((c, i) => `<button class="rv-row" data-f="${5 - i}"><span class="mono">${5 - i} <i class="hz">♥</i></span><span class="minibar"><i style="width:${s.n ? c / s.n * 100 : 0}%"></i></span><span class="mono mute num">${c}</span></button>`).join('')}</div>
+          <div class="rv-dist">${s.dist.map((c, i) => `<button class="rv-row" data-f="${5 - i}"><span class="mono">${5 - i} ${hsvg('f hz')}</span><span class="minibar"><i style="width:${s.n ? c / s.n * 100 : 0}%"></i></span><span class="mono mute num">${c}</span></button>`).join('')}</div>
           <div class="rv-fit"><span class="mono mute">Fit</span><div class="fit-track"><i style="left:${fitPos}%"></i></div><div class="fit-l mono"><span>Runs small</span><span>True to size</span><span>Runs large</span></div></div>`
           : `<p class="mute">This pair has just landed, so its first fit notes are still to come. Wearing it? Tell us how it fits, how it feels after a full day, and add a photo if you like. A real person on our team reads every note before it goes live, good or bad.</p>`}
         </div>
         <div class="rv-list">
           <form class="rv-form" id="rvForm" hidden novalidate></form>
-          ${s.n ? `<div class="toolbar" style="margin:0"><div class="filters">${[['all', 'All'], ['5', '5 ♥'], ['4', '4 ♥'], ['crit', 'Critical'], ['photo', 'With photos']].map(([k, t]) => `<button class="fbtn" data-rf="${k}" aria-pressed="${k === 'all'}">${t}</button>`).join('')}</div>
+          ${s.n ? `<div class="toolbar" style="margin:0"><div class="filters">${[['all', 'All'], ['5', '5 ' + hsvg('f hz')], ['4', '4 ' + hsvg('f hz')], ['crit', 'Critical'], ['photo', 'With photos']].map(([k, t]) => `<button class="fbtn" data-rf="${k}" aria-pressed="${k === 'all'}">${t}</button>`).join('')}</div>
             <select class="select" id="rvSort" aria-label="Sort reviews"><option value="new">Newest</option><option value="high">Highest rated</option><option value="low">Lowest rated</option><option value="help">Most helpful</option></select></div>` : ''}
           <div id="rvItems"></div>
         </div>
@@ -185,7 +207,7 @@
         ${r.title ? `<h4>${esc(r.title)}</h4>` : ''}<p>${esc(r.body)}</p>
         ${r.photo ? `<img class="rv-photo" src="${esc(r.photo)}" alt="Photo from ${esc(r.name)}">` : ''}
         <div class="rv-meta mono"><span>${esc(r.name)}${r.city ? ', ' + esc(r.city) : ''}</span>${r.verified ? '<span class="volt">Verified buyer</span>' : ''}${r.size ? `<span>EU ${esc(r.size)}</span>` : ''}${r.fit ? `<span>${{ small: 'Runs small', true: 'True to size', large: 'Runs large' }[r.fit]}</span>` : ''}
-          <button class="like${voted.includes(r.id) ? ' on' : ''}" data-help="${r.id}" aria-pressed="${voted.includes(r.id)}" aria-label="Helpful"><span class="lk-h">♥</span><span class="num">${r.helpful || 0}</span></button></div>
+          <button class="like${voted.includes(r.id) ? ' on' : ''}" data-help="${r.id}" aria-pressed="${voted.includes(r.id)}" aria-label="Helpful"><span class="lk-h">${hsvg('lk')}</span><span class="num">${r.helpful || 0}</span></button></div>
         ${r.reply ? `<div class="rv-reply"><span class="mono volt">DAUR replied</span><p>${esc(r.reply)}</p></div>` : ''}
       </article>`).join('') || (s.n ? '<p class="mute">No fit notes match this filter.</p>' : '');
       // Instagram style like: tap the heart, or double tap the note itself
@@ -213,7 +235,7 @@
       if (!f.hidden) { f.hidden = true; return; }
       let rating = 0, photo = '';
       f.hidden = false;
-      f.innerHTML = `<div class="f"><label>Your rating</label><div class="star-pick" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-st="${n}" role="radio" aria-checked="false" aria-label="${n} heart${n > 1 ? 's' : ''}">♥</button>`).join('')}</div><span class="err"></span></div>
+      f.innerHTML = `<div class="f"><label>Your rating</label><div class="star-pick" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-st="${n}" role="radio" aria-checked="false" aria-label="${n} heart${n > 1 ? 's' : ''}">${hsvg('pk')}</button>`).join('')}</div><span class="err"></span></div>
         <div class="f"><label for="rvTitle">Headline</label><input id="rvTitle" maxlength="80" placeholder="Sum it up in a line"></div>
         <div class="f"><label for="rvBody">Your review</label><textarea id="rvBody" maxlength="1200" placeholder="Comfort, stitching, sizing, how the leather breaks in"></textarea><span class="err"></span></div>
         <div class="f-row"><div class="f"><label for="rvName">Name</label><input id="rvName" maxlength="40" autocomplete="given-name"><span class="err"></span></div><div class="f"><label for="rvCity">City</label><input id="rvCity" maxlength="40" autocomplete="address-level2"></div></div>
