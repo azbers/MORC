@@ -2111,3 +2111,22 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
   .line-item, .cart-page .line-item { grid-template-columns: 72px minmax(0, 1fr); gap: 12px; }
   .li-ctl { flex-wrap: wrap; row-gap: 8px; }
 }
+
+/* ---- selling: honest price framing (per wear, the line ladder, what the buyer kept) ---- */
+.per-wear { margin: 8px 0 0; font-size: 11px; letter-spacing: .08em; color: var(--mute); }
+.ladder { display: grid; gap: 8px; }
+.ladder ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.ladder li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n p" "t d"; column-gap: 12px; row-gap: 2px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.ladder li.me { background: color-mix(in srgb, var(--volt) 10%, transparent); box-shadow: inset 2px 0 0 var(--volt); }
+.ladder .ld-n { grid-area: n; font-size: 14px; min-width: 0; overflow-wrap: anywhere; }
+.ladder a.ld-n { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.ladder a.ld-n:hover { text-decoration-color: currentColor; }
+.ladder .ld-t { grid-area: t; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.ladder .ld-p { grid-area: p; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+.ladder .ld-d { grid-area: d; font-size: 10px; letter-spacing: .06em; color: var(--mute); text-align: right; }
+.kept { margin: 10px 0 4px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--volt) 45%, var(--line)); background: color-mix(in srgb, var(--volt) 8%, transparent); }
+.kept-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 500; }
+.kept-h b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.kept ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 2px; font-size: 12.5px; color: var(--mute); }
+.kept li { display: flex; justify-content: space-between; gap: 12px; }
+.per-wear, .ladder .ld-d { text-transform: none; }

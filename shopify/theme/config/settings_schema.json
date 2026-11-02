@@ -143,6 +143,39 @@
     ]
   },
   {
+    "name": "Selling",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "How prices are framed. Every figure shown comes from real prices in the store: nothing here invents a before price, a countdown or a stock level."
+      },
+      {
+        "type": "checkbox",
+        "id": "retail_anchor",
+        "label": "Show the typical retail comparison",
+        "default": true,
+        "info": "Shows the struck through Typical retail figure (set under Store details) on cards, product pages, the Runway and the bag. Pakistan's Competition Commission expects a struck through price to be a real price, so keep this on only if you can show that comparable pairs sell at that price."
+      },
+      {
+        "type": "checkbox",
+        "id": "price_ladder",
+        "label": "Show where a pair sits in the line",
+        "default": true,
+        "info": "On each product page: the pair with the next higher price, this pair and the next lower one, at their real prices, dearest first."
+      },
+      {
+        "type": "range",
+        "id": "per_wear_days",
+        "label": "Price per wear, days worn a week",
+        "min": 0,
+        "max": 7,
+        "step": 1,
+        "default": 3,
+        "info": "Shows 'About Rs. X a wear, worn N days a week for a year' under the price. Set 0 to hide it."
+      }
+    ]
+  },
+  {
     "name": "Giving (the slice)",
     "settings": [
       {

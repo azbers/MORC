@@ -138,12 +138,19 @@
     const delivery = !n || free ? 0 : C.delivery.fee; // one flat fee for all of Pakistan
     const total = subtotal - discount + (delivery || 0);
     const retail = n * C.marketRetail;
-    return { lines, subtotal, before, sale: before - subtotal, discount, couponErr, cp, delivery, free, total, retail, n };
+    // what the buyer keeps: only money that really stays in their pocket (sale cut, code, delivery we carry)
+    const shipKept = n && free ? C.delivery.fee : 0;
+    const kept = before - subtotal + discount + shipKept;
+    return { lines, subtotal, before, sale: before - subtotal, discount, couponErr, cp, delivery, free, total, retail, n, shipKept, kept };
   }
   /* ---- the slice: at least 5% of our profit on every pair goes to people in need ----
      C.give.on switches it everywhere, C.give.pct is the share of profit (at least 5).
      The share is of our profit, never of the price, and nothing is added to the price.
      Slices are pooled and given every quarter to verified cases; the records go on the Our giving page. */
+  /* ---- selling: honest price framing, switched in Theme settings > Selling ----
+     retailAnchor: the typical retail comparison; ladder: where a pair sits in the line (real prices of
+     real pairs, dearest first); perWear: price per wear at this many days a week for a year (0 hides it). */
+  const SELL = Object.assign({ retailAnchor: true, ladder: true, perWear: 3 }, C.sell || {});
   const GIVE = Object.assign({ on: true, pct: 5, causes: ['School fees', 'Medical bills', 'Food rations'], quarter: null }, C.give || {});
   GIVE.causes = (GIVE.causes || []).map((x) => String(x).trim()).filter(Boolean).slice(0, 4);
   // calendar quarter, for example "October to December 2026"; the giving happens at its end
@@ -216,7 +223,9 @@
     if (add <= 0) { toast('No more stock in EU ' + size); return false; }
     if (ex) ex.qty += add; else cart.push({ pid, vid: v.id, size: +size, qty: add });
     saveCart();
-    toast(GIVE.on ? `${p.name}, EU ${size} added. A slice of it goes to someone in need.` : `${p.name}, EU ${size} added`, 'View bag', openBag);
+    const n = pairs(), fee = C.delivery.fee || 0, gap = C.freeDeliveryPairs - n;
+    const ship = !fee ? '' : gap === 1 ? ` One more pair and delivery is on us.` : gap <= 0 && n - add < C.freeDeliveryPairs ? ` Delivery is now on us: you keep ${fmt(fee)}.` : '';
+    toast(ship ? `EU ${size} added.${ship}` : GIVE.on ? `${p.name}, EU ${size} added. A slice of it goes to someone in need.` : `${p.name}, EU ${size} added`, 'View bag', openBag);
     return true;
   }
   function toggleWish(pid) {
@@ -390,9 +399,40 @@
     if (nat) nat.onclick = () => navigator.share({ title, text: text || title, url }).catch((er) => { if (!er || er.name !== 'AbortError') toast('This browser blocked the app list. Use the options above.'); });
     m.classList.add('on');
   }
+  // "You kept": the real money that stays with the buyer on this bag, line by line, never a made up figure
+  function keptBox(t) {
+    const rows = [];
+    if (t.sale) rows.push(['Sale prices', t.sale]);
+    if (t.discount) rows.push([coupon || 'Code', t.discount]);
+    if (t.shipKept) rows.push(['Delivery on us', t.shipKept]);
+    if (!rows.length) return '';
+    return `<div class="kept" role="status"><div class="kept-h"><span>You kept</span><b class="num">${fmt(t.kept)}</b></div><ul>${rows.map(([k, x]) => `<li><span>${esc(k)}</span><span class="num">${fmt(x)}</span></li>`).join('')}</ul></div>`;
+  }
+  // price per wear, as an honest conditional: this price, worn this many days a week for one year
+  function perWear(price) {
+    if (!(SELL.perWear > 0) || !price) return '';
+    const d = SELL.perWear;
+    return `<p class="per-wear mono">About ${fmt(Math.round(price / (d * 52)))} a wear, worn ${d} day${d > 1 ? 's' : ''} a week for a year</p>`;
+  }
+  // where this pair sits in the line: real prices of real pairs, dearest first, this pair in the middle when it can be
+  function ladder(p, v) {
+    if (!SELL.ladder) return '';
+    const rows = P.filter((x) => x.audience === p.audience && x.variants.some(stockOf)).map((x) => ({ x, price: x.id === p.id ? v.price : minPrice(x) }));
+    if (!rows.some((r) => r.x.id === p.id)) rows.push({ x: p, price: v.price });
+    if (rows.length < 3) return '';
+    rows.sort((a, b) => b.price - a.price || a.x.name.localeCompare(b.x.name));
+    const i = rows.findIndex((r) => r.x.id === p.id);
+    const from = Math.max(0, Math.min(i - 1, rows.length - 3));
+    const pick = rows.slice(from, from + 3);
+    return `<div class="ladder"><div class="field-label"><span>Where it sits in the line</span><span>Real prices, dearest first</span></div><ol>${pick.map((r) => {
+      const me = r.x.id === p.id, d = r.price - v.price;
+      return `<li${me ? ' class="me" aria-current="true"' : ''}>${me ? `<span class="ld-n">${esc(r.x.name)}</span>` : `<a class="ld-n" href="${link('product', r.x.id)}">${esc(r.x.name)}</a>`}<span class="ld-t mono">${me ? 'This pair' : esc(lineName(r.x.category))}</span><span class="ld-p num">${fmt(r.price)}</span>${me ? '' : `<span class="ld-d mono">${d > 0 ? '+' : '&minus;'}${fmt(Math.abs(d))}</span>`}</li>`;
+    }).join('')}</ol></div>`;
+  }
   function freeMeter(n) {
     const need = Math.max(0, C.freeDeliveryPairs - n);
-    return `<div class="free-meter"><span class="mono">${need ? `Add ${need} more pair${need > 1 ? 's' : ''} for free delivery` : '<span class="volt">Free delivery unlocked</span>'}</span><div class="minibar"><i class="v" style="width:${Math.min(100, n / C.freeDeliveryPairs * 100)}%"></i></div></div>`;
+    const fee = C.delivery.fee || 0;
+    return `<div class="free-meter"><span class="mono">${need ? `Add ${need} more pair${need > 1 ? 's' : ''} and delivery is on us${fee ? `: you keep ${fmt(fee)}` : ''}` : `<span class="volt">Delivery is on us${fee ? `. You keep ${fmt(fee)}` : ''}</span>`}</span><div class="minibar"><i class="v" style="width:${Math.min(100, n / C.freeDeliveryPairs * 100)}%"></i></div></div>`;
   }
   function lineHTML(d, big) {
     const { p, v, l } = d; const max = (v.stock || {})[l.size] || 0;
@@ -432,7 +472,7 @@
     $('#dFoot').innerHTML = `
       ${t.sale ? `<div class="sum-row save"><span>Sale savings</span><span>&minus; ${fmt(t.sale)}</span></div>` : ''}
       <div class="sum-row total"><span>Subtotal</span><span>${fmt(t.subtotal)}</span></div>
-      <div class="sum-row mute" style="font-size:12px"><span>Saved against typical retail of ${fmt(C.marketRetail)} a pair</span><span class="volt">${fmt(t.retail - t.subtotal)}</span></div>
+      ${keptBox(t)}${SELL.retailAnchor ? `<div class="sum-row mute" style="font-size:12px"><span>Saved against typical retail of ${fmt(C.marketRetail)} a pair</span><span class="volt">${fmt(t.retail - t.subtotal)}</span></div>` : ''}
       <a class="btn volt block" href="${link('checkout')}">Checkout, Cash on Delivery <span class="arr">&rarr;</span></a>
       <a class="btn ghost block" href="${link('cart')}">View full bag</a>`;
     bindLines(body);
@@ -457,6 +497,7 @@
     const sz = p.sizes.map((s) => { const n = (v.stock || {})[s] || 0; return `<button class="size" data-s="${s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-pressed="false" aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('');
     const tag = onSale(v) || /^drop/i.test(p.tag || '') ? '' : `<span class="chip ${p.tag === 'Limited' ? 'v' : ''}">${esc(p.tag)}</span>`;
     const ratio = v.price / C.marketRetail * 100;
+    const pw = SELL.perWear > 0 ? Math.round(v.price / (SELL.perWear * 52)) : 0;
     const low = stockOf(v) <= 6 && stockOf(v) > 0;
     return `<article class="card" data-pid="${p.id}" data-vid="${v.id}">
       <a class="card-media" href="${link('product', p.id + '~' + v.id)}"><span class="sr-only">${esc(p.name)} ${esc(v.color)}</span>
@@ -465,9 +506,9 @@
       <div class="card-body">
         <div class="card-top"><h3><a href="${link('product', p.id + '~' + v.id)}">${esc(p.name)}</a></h3><span class="price">${fmt(v.price)}</span></div>
         ${window.DAUR_EXT && window.DAUR_EXT.cardExtra ? window.DAUR_EXT.cardExtra(p) : ''}
-        <div class="card-sub"><span>${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span>` : `<span class="was">Retail <span class="strike">${Math.round(C.marketRetail).toLocaleString('en-US')}+</span></span>`}</div>
+        <div class="card-sub"><span>${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span>` : SELL.retailAnchor ? `<span class="was">Retail <span class="strike">${Math.round(C.marketRetail).toLocaleString('en-US')}+</span></span>` : pw ? `<span class="was">About ${fmt(pw)} a wear</span>` : ''}</div>
         <div class="swatches">${p.variants.map((x) => `<button class="sw-b" style="--c:${x.hex}" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}<span class="mono mute" style="font-size:10px">${p.variants.length} colour${p.variants.length > 1 ? 's' : ''}</span></div>
-        <div class="minibar" title="Our price against typical retail"><i class="v" style="width:${ratio}%"></i></div>
+        ${SELL.retailAnchor ? `<div class="minibar" title="Our price against typical retail"><i class="v" style="width:${ratio}%"></i></div>` : ''}
         <div class="sizes">${sz}</div>
         <div class="card-acts"><button class="card-add" data-add>${stockOf(v) ? 'Select size' : 'Sold out'}</button><button class="card-add wish-b" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" aria-label="Save to wishlist">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button></div>
         ${low ? `<span class="mono volt" style="font-size:10px">Only ${stockOf(v)} pairs left</span>` : ''}
@@ -578,7 +619,7 @@
       </div>
       <div class="hero-foot">
         <div><span class="k">DAUR price</span><span class="v num volt">${fmt(hv.price)}</span></div>
-        <div><span class="k">Typical retail</span><span class="v num strike">${fmt(C.marketRetail)}+</span></div>
+        ${SELL.retailAnchor ? `<div><span class="k">Typical retail</span><span class="v num strike">${fmt(C.marketRetail)}+</span></div>` : SELL.perWear > 0 ? `<div><span class="k">Per wear</span><span class="v num">About ${fmt(Math.round(hv.price / (SELL.perWear * 52)))}</span></div>` : ''}
         <div><span class="k">Payment</span><span class="v">On delivery</span></div>
         <div><span class="k">Delivery</span><span class="v">Free on ${C.freeDeliveryPairs} pairs</span></div>
       </div>
@@ -955,7 +996,8 @@
         </div>
         <div class="buy">
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
-            <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>`}</div>
+            <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : SELL.retailAnchor ? `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>` : ''}</div>
+            ${perWear(v.price)}
             ${GIVE.on ? `<button class="slice-note" id="sliceB" type="button" aria-haspopup="dialog" data-recut>${loaf(GIVE.pct + '%')}<span class="sl-t"><b>A slice of this pair goes to someone in need.</b><span>At least ${GIVE.pct}% of our profit on it. Your price stays the same.</span></span></button>` : ''}
             <p class="blurb">${esc(p.description)}</p></div>
           <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg(window.DAUR_KICKS.kindOf(p), window.DAUR_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
@@ -967,6 +1009,7 @@
             <button class="btn ghost block" id="buyNow">Buy now, pay on delivery</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
           <ul class="trust"><li>Dispatch in 24 hours</li><li>5 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
+          ${ladder(p, v)}
           <div id="ext-rvcard"></div>
           <div class="specs"><h2 class="specs-h">Specs</h2><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
@@ -1074,8 +1117,9 @@
       <div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>
       <div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
+      ${keptBox(t)}
       ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>${votePicker()}` : ''}
-      <div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>`;
+      ${SELL.retailAnchor ? `<div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>` : ''}`;
   }
   function bindPromo(cb) {
     const b = $('#promoBtn'); if (!b) return;
@@ -1511,7 +1555,7 @@
         <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)} / ${esc(lineName(p.category))}</p>
         <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol>
         <div class="rw-math">${onSale(v) ? `<div><span class="k">Sale price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Was</span><span class="num strike">${fmt(v.compareAt)}</span></div><div><span class="k">You save</span><b class="num">${fmt(v.compareAt - v.price)}</b></div>`
-          : `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Typical retail</span><span class="num strike">${fmt(C.marketRetail)}+</span></div><div><span class="k">You keep</span><b class="num">${fmt(keep)}+</b></div>`}</div>
+          : SELL.retailAnchor ? `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Typical retail</span><span class="num strike">${fmt(C.marketRetail)}+</span></div><div><span class="k">You keep</span><b class="num">${fmt(keep)}+</b></div>` : `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Delivery</span><b class="num">Free on ${C.freeDeliveryPairs}</b></div><div><span class="k">Pay</span><b class="num">On delivery</b></div>`}</div>
         ${p.variants.length > 1 ? `<div class="rw-cols"><div class="field-label"><span>Colour / ${esc(v.color)}</span></div><div class="swatches">${p.variants.map((x) => `<button class="sw-b" type="button" style="--c:${esc(x.hex || '#777')}" data-rv="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}</div></div>` : ''}
         <div class="rw-size"><div class="field-label strong"><span>Size / EU ${size || ''}</span><button type="button" id="rwSg">${ic('ruler')}Size guide</button></div>
           <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>

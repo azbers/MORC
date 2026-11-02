@@ -19,6 +19,7 @@ window.DAUR_CONFIG = {
   coupons: {},
   audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
+  sell: { retailAnchor: {% if settings.retail_anchor == false %}false{% else %}true{% endif %}, ladder: {% if settings.price_ladder == false %}false{% else %}true{% endif %}, perWear: {% if settings.per_wear_days == blank %}3{% else %}{{ settings.per_wear_days }}{% endif %} },
   announce: {{ settings.announcement | default: '' | json }},
   give: { on: {% if settings.give_on == false %}false{% else %}true{% endif %}, pct: {{ settings.give_pct | default: 5 }}, causes: {{ settings.give_causes | default: 'School fees, Medical bills, Food rations' | split: ',' | json }},
     quarter: {% if shop.metafields.daur.slice_quarter.value %}{ "key": {{ shop.metafields.daur.slice_quarter.value | json }}, "pairs": {{ shop.metafields.daur.slice_pairs.value | default: 0 }}, "votes": {% if shop.metafields.daur.slice_votes.value %}{{ shop.metafields.daur.slice_votes.value | json }}{% else %}{}{% endif %} }{% else %}null{% endif %} }
