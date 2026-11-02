@@ -108,7 +108,7 @@
         "type": "text",
         "id": "seo_home_title",
         "label": "Home page title",
-        "default": "Men's Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply"
+        "default": "Men's Leather Shoes & Sneakers in Pakistan | DAUR Supply"
       },
       {
         "type": "textarea",
@@ -127,6 +127,12 @@
         "id": "share_image",
         "label": "Link preview image",
         "info": "Shown when a page link is shared on WhatsApp, Facebook or Instagram and the page has no photo of its own. Best size 1200 x 630 px. Left empty, the built in DAUR share image is used. The Social sharing image in Online Store > Preferences takes priority over this."
+      },
+      {
+        "type": "text",
+        "id": "clarity_id",
+        "label": "Microsoft Clarity project ID",
+        "info": "From clarity.microsoft.com, for example z6zmhh4wyo. Clarity records how visitors scroll and click; mention it in your privacy policy. Leave empty to turn it off."
       }
     ]
   }

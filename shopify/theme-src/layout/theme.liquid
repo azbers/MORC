@@ -36,8 +36,12 @@
   assign daur_title = page_title
   assign daur_desc = page_description
   if template.name == 'index'
-    assign daur_title = settings.seo_home_title | default: page_title
-    assign daur_desc = settings.seo_home_description | default: page_description
+    # a fixed fallback, so the home page never goes out with only the shop name and no description
+    assign daur_title = settings.seo_home_title | default: "Men's Leather Shoes & Sneakers in Pakistan | DAUR Supply"
+    assign daur_desc = settings.seo_home_description | default: "Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan and finished with the DAUR mark. Cash on Delivery to every city, free delivery on 2 pairs."
+  endif
+  if daur_desc == blank
+    assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan. Cash on Delivery to every city in Pakistan." 
   endif
 -%}
 <html lang="{{ request.locale.iso_code }}">
@@ -47,6 +51,9 @@
 <title>{{ daur_title }}{% unless daur_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
 {%- if daur_desc %}<meta name="description" content="{{ daur_desc | escape }}">{% endif %}
 <link rel="canonical" href="{{ canonical_url }}">
+{%- if settings.clarity_id != blank %}
+<script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",{{ settings.clarity_id | strip | json }});</script>
+{%- endif %}
 {%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
 <meta name="theme-color" content="#F5EEE4">
 <script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
@@ -100,10 +107,14 @@
 <meta name="twitter:title" content="{{ daur_title | escape }}">
 <meta name="twitter:description" content="{{ og_desc | escape }}">
 <meta name="twitter:image" content="{{ og_img_url }}">
+{%- comment -%} Google shows a site icon only from a real, crawlable file whose size is a multiple of 48 px; an inline data: icon is ignored {%- endcomment -%}
 {%- if settings.favicon %}
-<link rel="icon" href="{{ settings.favicon | image_url: width: 64 }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ settings.favicon | image_url: width: 192, height: 192, crop: 'center' }}">
+<link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180, crop: 'center' }}">
 {%- else %}
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232A1C14'/%3E%3Cg transform='translate(16.6 16) scale(.1) translate(-62 -100) skewX(-14)' fill='%23F5EEE4'%3E%3Cpath d='M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ 'daur-favicon-192.png' | asset_url }}">
+<link rel="icon" type="image/svg+xml" href="{{ 'daur-favicon.svg' | asset_url }}">
+<link rel="apple-touch-icon" href="{{ 'daur-favicon-180.png' | asset_url }}">
 {%- endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {%- comment -%} fonts load without holding up the first paint; the system fallbacks show until they arrive {%- endcomment -%}
