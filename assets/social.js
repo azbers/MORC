@@ -43,9 +43,81 @@
 
   function stars(r, cls) {
     const w = Math.max(0, Math.min(100, r / 5 * 100));
-    return `<span class="stars ${cls || ''}" role="img" aria-label="${r.toFixed(1)} out of 5"><span class="s-bg">★★★★★</span><span class="s-fg" style="width:${w}%">★★★★★</span></span>`;
+    return `<span class="stars hearts ${cls || ''}" role="img" aria-label="${r.toFixed(1)} out of 5"><span class="s-bg">♥♥♥♥♥</span><span class="s-fg" style="width:${w}%">♥♥♥♥♥</span></span>`;
   }
   EXT.stars = stars;
+
+  /* ---------------- hearts: Instagram style ratings, likes and celebrations ----------------
+     DAUR purple (--daur-purple) is the brand's noticing colour: hearts, likes and celebrations. */
+  const CALM = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const HEART = {
+    css() {
+      if (document.getElementById('daur-hearts-css')) return;
+      const st = document.createElement('style'); st.id = 'daur-hearts-css';
+      st.textContent = `
+:root{--daur-purple:#7C3AED;--daur-purple-2:#A855F7;--daur-purple-rgb:124,58,237}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--daur-purple:#B57CFF;--daur-purple-2:#D8B4FE;--daur-purple-rgb:181,124,255}}
+:root[data-theme="dark"]{--daur-purple:#B57CFF;--daur-purple-2:#D8B4FE;--daur-purple-rgb:181,124,255}
+.stars.hearts{letter-spacing:2px}
+.stars.hearts .s-fg{color:var(--daur-purple);background:linear-gradient(90deg,var(--daur-purple),var(--daur-purple-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hz{font-style:normal;color:var(--daur-purple)}
+.rv-dist .minibar i,.rv-fit .fit-track i{background:var(--daur-purple)}
+.rv-avg .big{color:var(--daur-purple)}
+.star-pick button{font-size:26px;line-height:1;color:var(--line-2);transition:color .2s,transform .2s;background:none;border:0;padding:2px 3px;cursor:pointer;position:relative}
+.star-pick button.on{color:var(--daur-purple);text-shadow:0 0 14px rgba(var(--daur-purple-rgb),.45)}
+.star-pick button:hover{transform:scale(1.15)}
+.star-pick button.pop,.like.pop .lk-h{animation:hpop .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes hpop{0%{transform:scale(1)}25%{transform:scale(.7)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+.like{display:inline-flex;align-items:center;gap:6px;font:400 11px/1 var(--mono);letter-spacing:.1em;color:var(--dim);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;position:relative;transition:border-color .2s,color .2s}
+.like .lk-h{font-size:15px;line-height:1;display:inline-block;color:transparent;-webkit-text-stroke:1.3px currentColor}
+.like:hover{color:var(--daur-purple);border-color:var(--daur-purple)}
+.like.on{color:var(--daur-purple);border-color:rgba(var(--daur-purple-rgb),.5);background:rgba(var(--daur-purple-rgb),.08)}
+.like.on .lk-h{color:var(--daur-purple);-webkit-text-stroke:0}
+.rv-item{position:relative;user-select:none;-webkit-user-select:none}
+.rv-item p,.rv-item h4{user-select:text;-webkit-user-select:text}
+.hp{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;color:var(--daur-purple);font-size:13px;line-height:1;will-change:transform,opacity;animation:hfly .8s ease-out forwards}
+@keyframes hfly{0%{opacity:1;transform:translate(var(--x0),var(--y0)) scale(.6)}100%{opacity:0;transform:translate(var(--x1),var(--y1)) scale(1.1) rotate(var(--r))}}
+.hbig{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;font-size:84px;line-height:1;color:#fff;-webkit-text-stroke:0;background:linear-gradient(135deg,var(--daur-purple-2),var(--daur-purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 18px rgba(var(--daur-purple-rgb),.5));animation:hbig .9s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes hbig{0%{opacity:0;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(.2)}20%{opacity:1;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(1.15)}35%{transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(.95)}60%{opacity:1;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) translate(-50%,-90%) scale(1)}}
+.hrain{position:fixed;top:-40px;pointer-events:none;z-index:9999;color:var(--daur-purple);line-height:1;animation:hrain linear forwards}
+@keyframes hrain{to{transform:translate(var(--dx),110vh) rotate(var(--r));opacity:.2}}
+@media (prefers-reduced-motion:reduce){.star-pick button.pop,.like.pop .lk-h{animation:none}}
+`;
+      document.head.appendChild(st);
+    },
+    // a small burst of hearts from an element
+    burst(el, n) {
+      if (CALM() || !el) return;
+      const b = el.getBoundingClientRect(); const cx = b.left + b.width / 2, cy = b.top + b.height / 2;
+      for (let i = 0; i < n; i++) {
+        const h = document.createElement('i'); h.className = 'hp'; h.textContent = '♥';
+        const a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 34;
+        h.style.cssText = `--x0:${cx}px;--y0:${cy}px;--x1:${cx + Math.cos(a) * d}px;--y1:${cy + Math.sin(a) * d - 14}px;--r:${(Math.random() * 60 - 30) | 0}deg;font-size:${9 + Math.random() * 9}px;opacity:${0.6 + Math.random() * 0.4}`;
+        document.body.appendChild(h); setTimeout(() => h.remove(), 850);
+      }
+    },
+    // the big heart that pops where a note is double tapped
+    big(at) {
+      if (CALM()) return;
+      const h = document.createElement('i'); h.className = 'hbig'; h.textContent = '♥';
+      h.style.cssText = `--x:${at.x}px;--y:${at.y}px`;
+      document.body.appendChild(h); setTimeout(() => h.remove(), 950);
+      HEART.burst({ getBoundingClientRect: () => ({ left: at.x, top: at.y, width: 0, height: 0 }) }, 12);
+    },
+    // celebration: a short shower of purple hearts when a fit note is sent
+    party() {
+      if (CALM()) return;
+      const w = window.innerWidth;
+      for (let i = 0; i < 42; i++) {
+        const h = document.createElement('i'); h.className = 'hrain'; h.textContent = '♥';
+        const dur = 1.6 + Math.random() * 1.4;
+        h.style.cssText = `left:${Math.random() * w}px;font-size:${12 + Math.random() * 22}px;--dx:${(Math.random() * 120 - 60) | 0}px;--r:${(Math.random() * 360 - 180) | 0}deg;animation-duration:${dur}s;animation-delay:${Math.random() * 0.5}s;opacity:${0.55 + Math.random() * 0.45};color:${Math.random() < 0.35 ? 'var(--daur-purple-2)' : 'var(--daur-purple)'}`;
+        document.body.appendChild(h); setTimeout(() => h.remove(), (dur + 0.6) * 1000);
+      }
+    }
+  };
+  EXT.hearts = HEART;
+  if (document.head) HEART.css(); else document.addEventListener('DOMContentLoaded', () => HEART.css());
   EXT.cardExtra = function (p) {
     const s = R.stats(p.id);
     return s.n ? `<div class="card-rate">${stars(s.avg)}<span class="mono">${s.avg.toFixed(1)} (${s.n})</span></div>` : '';
@@ -89,13 +161,13 @@
       <div class="rv-grid">
         <div class="rv-sum">
           ${s.n ? `<div class="rv-avg"><span class="big num">${s.avg.toFixed(1)}</span><div>${stars(s.avg, 'lg')}<span class="mono mute">${s.n} fit note${s.n > 1 ? 's' : ''}</span></div></div>
-          <div class="rv-dist">${s.dist.map((c, i) => `<button class="rv-row" data-f="${5 - i}"><span class="mono">${5 - i} ★</span><span class="minibar"><i style="width:${s.n ? c / s.n * 100 : 0}%"></i></span><span class="mono mute num">${c}</span></button>`).join('')}</div>
+          <div class="rv-dist">${s.dist.map((c, i) => `<button class="rv-row" data-f="${5 - i}"><span class="mono">${5 - i} <i class="hz">♥</i></span><span class="minibar"><i style="width:${s.n ? c / s.n * 100 : 0}%"></i></span><span class="mono mute num">${c}</span></button>`).join('')}</div>
           <div class="rv-fit"><span class="mono mute">Fit</span><div class="fit-track"><i style="left:${fitPos}%"></i></div><div class="fit-l mono"><span>Runs small</span><span>True to size</span><span>Runs large</span></div></div>`
           : `<p class="mute">This pair has just landed, so its first fit notes are still to come. Wearing it? Tell us how it fits, how it feels after a full day, and add a photo if you like. A real person on our team reads every note before it goes live, good or bad.</p>`}
         </div>
         <div class="rv-list">
           <form class="rv-form" id="rvForm" hidden novalidate></form>
-          ${s.n ? `<div class="toolbar" style="margin:0"><div class="filters">${[['all', 'All'], ['5', '5 ★'], ['4', '4 ★'], ['crit', 'Critical'], ['photo', 'With photos']].map(([k, t]) => `<button class="fbtn" data-rf="${k}" aria-pressed="${k === 'all'}">${t}</button>`).join('')}</div>
+          ${s.n ? `<div class="toolbar" style="margin:0"><div class="filters">${[['all', 'All'], ['5', '5 ♥'], ['4', '4 ♥'], ['crit', 'Critical'], ['photo', 'With photos']].map(([k, t]) => `<button class="fbtn" data-rf="${k}" aria-pressed="${k === 'all'}">${t}</button>`).join('')}</div>
             <select class="select" id="rvSort" aria-label="Sort reviews"><option value="new">Newest</option><option value="high">Highest rated</option><option value="low">Lowest rated</option><option value="help">Most helpful</option></select></div>` : ''}
           <div id="rvItems"></div>
         </div>
@@ -108,18 +180,29 @@
       const S = { new: (a, b) => b.at.localeCompare(a.at), high: (a, b) => b.rating - a.rating, low: (a, b) => a.rating - b.rating, help: (a, b) => (b.helpful || 0) - (a.helpful || 0) };
       list.sort(S[sort]);
       const voted = store.get('voted', []);
-      $('#rvItems').innerHTML = list.map((r) => `<article class="rv-item">
+      $('#rvItems').innerHTML = list.map((r) => `<article class="rv-item" data-rv="${r.id}">
         <div class="rv-h">${stars(r.rating)}<span class="mono mute">${new Date(r.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span></div>
         ${r.title ? `<h4>${esc(r.title)}</h4>` : ''}<p>${esc(r.body)}</p>
         ${r.photo ? `<img class="rv-photo" src="${esc(r.photo)}" alt="Photo from ${esc(r.name)}">` : ''}
         <div class="rv-meta mono"><span>${esc(r.name)}${r.city ? ', ' + esc(r.city) : ''}</span>${r.verified ? '<span class="volt">Verified buyer</span>' : ''}${r.size ? `<span>EU ${esc(r.size)}</span>` : ''}${r.fit ? `<span>${{ small: 'Runs small', true: 'True to size', large: 'Runs large' }[r.fit]}</span>` : ''}
-          <button class="rm" data-help="${r.id}" ${voted.includes(r.id) ? 'disabled' : ''}>Helpful (${r.helpful || 0})</button></div>
+          <button class="like${voted.includes(r.id) ? ' on' : ''}" data-help="${r.id}" aria-pressed="${voted.includes(r.id)}" aria-label="Helpful"><span class="lk-h">♥</span><span class="num">${r.helpful || 0}</span></button></div>
         ${r.reply ? `<div class="rv-reply"><span class="mono volt">DAUR replied</span><p>${esc(r.reply)}</p></div>` : ''}
       </article>`).join('') || (s.n ? '<p class="mute">No fit notes match this filter.</p>' : '');
-      $$('[data-help]').forEach((b) => b.addEventListener('click', () => {
-        const all = R.all(); const r = all.find((x) => x.id === b.dataset.help); if (!r) return;
-        r.helpful = (r.helpful || 0) + 1; R.save(all); store.set('voted', store.get('voted', []).concat(r.id)); paintList();
-      }));
+      // Instagram style like: tap the heart, or double tap the note itself
+      const like = (id, at) => {
+        if (store.get('voted', []).includes(id)) { if (at) HEART.big(at); return; }
+        const all = R.all(); const r = all.find((x) => x.id === id); if (!r) return;
+        r.helpful = (r.helpful || 0) + 1; R.save(all); store.set('voted', store.get('voted', []).concat(r.id));
+        const b = $(`[data-help="${CSS.escape(id)}"]`);
+        if (b) { b.classList.add('on', 'pop'); b.setAttribute('aria-pressed', 'true'); $('.num', b).textContent = r.helpful; HEART.burst(b, 10); setTimeout(() => b.classList.remove('pop'), 600); }
+        if (at) HEART.big(at);
+      };
+      $$('[data-help]').forEach((b) => b.addEventListener('click', () => like(b.dataset.help)));
+      $$('[data-rv]').forEach((el) => {
+        let last = 0;
+        el.addEventListener('mousedown', (e) => { if (e.detail > 1) e.preventDefault(); }); // a double tap likes, it does not select text
+        el.addEventListener('pointerup', (e) => { if (e.target.closest('button,a')) return; const t = Date.now(); if (t - last < 320) { like(el.dataset.rv, { el, x: e.clientX, y: e.clientY }); last = 0; } else last = t; });
+      });
     }
     $$('[data-rf], .rv-row').forEach((b) => b.addEventListener('click', () => { filter = b.dataset.rf || b.dataset.f; $$('[data-rf]').forEach((x) => x.setAttribute('aria-pressed', x.dataset.rf === filter)); paintList(); }));
     const so = $('#rvSort'); if (so) so.addEventListener('change', () => { sort = so.value; paintList(); });
@@ -130,7 +213,7 @@
       if (!f.hidden) { f.hidden = true; return; }
       let rating = 0, photo = '';
       f.hidden = false;
-      f.innerHTML = `<div class="f"><label>Your rating</label><div class="star-pick" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-st="${n}" role="radio" aria-checked="false" aria-label="${n} star${n > 1 ? 's' : ''}">★</button>`).join('')}</div><span class="err"></span></div>
+      f.innerHTML = `<div class="f"><label>Your rating</label><div class="star-pick" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-st="${n}" role="radio" aria-checked="false" aria-label="${n} heart${n > 1 ? 's' : ''}">♥</button>`).join('')}</div><span class="err"></span></div>
         <div class="f"><label for="rvTitle">Headline</label><input id="rvTitle" maxlength="80" placeholder="Sum it up in a line"></div>
         <div class="f"><label for="rvBody">Your review</label><textarea id="rvBody" maxlength="1200" placeholder="Comfort, stitching, sizing, how the leather breaks in"></textarea><span class="err"></span></div>
         <div class="f-row"><div class="f"><label for="rvName">Name</label><input id="rvName" maxlength="40" autocomplete="given-name"><span class="err"></span></div><div class="f"><label for="rvCity">City</label><input id="rvCity" maxlength="40" autocomplete="address-level2"></div></div>
@@ -141,12 +224,12 @@
           <div class="f"><label for="rvPhoto">Fit check photo (optional)</label><input id="rvPhoto" type="file" accept="image/*" style="padding-top:13px"></div></div>
         <button class="btn volt" type="submit">Submit for approval</button>
         <p class="form-note">Reviews go live after the DAUR team reads them. We publish critical reviews too.</p>`;
-      $$('[data-st]', f).forEach((b) => b.addEventListener('click', () => { rating = +b.dataset.st; $$('[data-st]', f).forEach((x) => { x.classList.toggle('on', +x.dataset.st <= rating); x.setAttribute('aria-checked', +x.dataset.st === rating); }); }));
+      $$('[data-st]', f).forEach((b) => b.addEventListener('click', () => { rating = +b.dataset.st; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); HEART.burst(b, 4 + rating * 2); $$('[data-st]', f).forEach((x) => { x.classList.toggle('on', +x.dataset.st <= rating); x.setAttribute('aria-checked', +x.dataset.st === rating); }); }));
       $('#rvPhoto').addEventListener('change', async (e) => { const fl = e.target.files[0]; if (!fl) return; try { photo = await resizeImage(fl, 900); toast('Photo attached'); } catch (er) { toast('That image could not be read'); } });
       f.onsubmit = (e) => {
         e.preventDefault();
         const err = (el, m) => { const w = el.closest('.f'); w.classList.toggle('bad', !!m); $('.err', w).textContent = m || ''; return !m; };
-        const ok = [err($('.star-pick', f), rating ? '' : 'Pick a rating.'), err($('#rvBody'), $('#rvBody').value.trim().length < 10 ? 'Write at least a sentence.' : ''), err($('#rvName'), $('#rvName').value.trim() ? '' : 'Add your name.'), err($('#rvEmail'), !$('#rvEmail').value.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('#rvEmail').value.trim()) ? '' : 'Check the email address.')].every(Boolean);
+        const ok = [err($('.star-pick', f), rating ? '' : 'Tap the hearts to rate.'), err($('#rvBody'), $('#rvBody').value.trim().length < 10 ? 'Write at least a sentence.' : ''), err($('#rvName'), $('#rvName').value.trim() ? '' : 'Add your name.'), err($('#rvEmail'), !$('#rvEmail').value.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('#rvEmail').value.trim()) ? '' : 'Check the email address.')].every(Boolean);
         if (!ok) return;
         const oid = $('#rvOrder').value.trim().toUpperCase();
         const verified = !!oid && store.get('orders', []).some((o) => o.id === oid && o.items.some((i) => i.pid === p.id));
@@ -154,6 +237,7 @@
         all.unshift({ id: 'r' + Date.now().toString(36), pid: p.id, vid: v.id, rating, title: $('#rvTitle').value.trim(), body: $('#rvBody').value.trim(), name: $('#rvName').value.trim(), city: $('#rvCity').value.trim(), size: $('#rvSize').value, fit: $('#rvFit').value, photo, order: oid, email: $('#rvEmail').value.trim(), verified, status: 'pending', helpful: 0, at: new Date().toISOString() });
         R.save(all);
         f.innerHTML = '<p class="form-note ok">Received. Your review is in the approval queue and goes live once the team has read it.</p>';
+        HEART.party();
         notice('Thank you, your review is in.', 'The team reads every review before it goes live. Yours will appear on this pair once it is approved.');
       };
       f.scrollIntoView({ behavior: 'smooth', block: 'start' });
