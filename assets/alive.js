@@ -301,7 +301,7 @@
       const btn = document.createElement('button'); btn.type = 'button'; btn.className = sel.className + ' dd-btn';
       btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
       const lab = sel.id && document.querySelector(`label[for="${sel.id}"]`); btn.setAttribute('aria-label', (lab ? lab.textContent : sel.getAttribute('aria-label') || 'Choose') + ', ' + (sel.selectedOptions[0] || {}).textContent);
-      const list = document.createElement('ul'); list.className = 'dd-list'; list.setAttribute('role', 'listbox');
+      const list = document.createElement('ul'); list.className = 'dd-list'; list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', lab ? lab.textContent : sel.getAttribute('aria-label') || 'Options');
       sel.parentNode.insertBefore(wrap, sel); wrap.append(sel, btn, list); sel.classList.add('dd-native'); sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
       let act = 0;
       const paint = () => {
@@ -362,7 +362,14 @@
   on('after', () => {
     const first = !booted;
     document.documentElement.classList.add('drawn');
-    if (!booted) { booted = true; cursor(); pit(); bigWord(); progress(); tilt(); magnets(); bagBump(); }
+    if (!booted) {
+      booted = true; progress(); bagBump();
+      // decoration starts once the page is showing and the phone is free, in small steps, so the first screen is never held up
+      const idle = (fn, t) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: t }) : setTimeout(fn, 200));
+      idle(() => { cursor(); tilt(); magnets(); }, 1200);
+      idle(() => bigWord(), 2500);
+      idle(() => pit(), 3500);
+    }
     const app = document.getElementById('app');
     // the first view shows at once; the soft fade is kept for moving between views
     if (app && !reduce && !first) { app.classList.remove('pg-in'); void app.offsetWidth; app.classList.add('pg-in'); }

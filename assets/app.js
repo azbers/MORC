@@ -62,7 +62,7 @@
     document.documentElement.classList.toggle('grid-1', v);
     try { localStorage.setItem('daur.grid', v ? '1' : '2'); } catch (e) { /* storage blocked */ }
   }
-  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', admin: 'admin.html' };
+  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', notfound: '404.html', admin: 'admin.html' };
   function link(page, param) {
     if (SHOP) return SHOP.link(page, param);
     if (SPA) return '#' + page + (param ? '.' + param : '');
@@ -78,7 +78,7 @@
       const h = location.hash.slice(1);
       const i = h.indexOf('.');
       const page = (i < 0 ? h : h.slice(0, i)) || 'home';
-      return { page: pages[page] ? page : 'home', param: i < 0 ? '' : h.slice(i + 1) };
+      return { page: pages[page] ? page : 'notfound', param: i < 0 ? '' : h.slice(i + 1) };
     }
     return { page: document.body.dataset.page || 'home', param: decodeURIComponent(location.hash.slice(1)) || (SHOP && SHOP.param) || '' };
   }
@@ -192,6 +192,8 @@
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
     const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
+    // the page holds the header's room from the first paint (.hdr-ph), so nothing moves when the header arrives
+    const ph = document.querySelector('.hdr-ph'); if (ph) ph.remove();
     document.body.insertAdjacentHTML('afterbegin', `
       ${hideDefs()}<div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
       <a class="sr-skip" href="#app" style="position:absolute;left:-999px">Skip to content</a>
@@ -204,8 +206,8 @@
           <a class="nav-a link-hide mono mute" href="${link('manifesto')}" data-nav="manifesto.">Our story</a>
           <button class="icon-btn" id="themeBtn" aria-label="Switch to dark leather" aria-pressed="false">${ic('moon')}</button>
           <button class="icon-btn" id="searchBtn" aria-label="Search">${ic('search')}</button>
-          <a class="icon-btn" href="${link('wishlist')}" aria-label="Liked pairs">${ic('heart')}<span class="dot-count" id="wishCount">0</span></a>
-          <button class="icon-btn" id="bagBtn" aria-label="Open bag">${ic('bag')}<span class="dot-count" id="bagCount">0</span></button>
+          <a class="icon-btn" href="${link('wishlist')}">${ic('heart')}<span class="sr-only">Liked pairs</span><span class="dot-count" id="wishCount">0</span></a>
+          <button class="icon-btn" id="bagBtn">${ic('bag')}<span class="sr-only">Open bag, pairs:</span><span class="dot-count" id="bagCount">0</span></button>
         </div>
       </div></header>
       <nav class="mnav" aria-label="Mobile">${navItems.concat([['track', '', 'Track order']]).map(([pg, pr, t], i) => `<a href="${link(pg, pr)}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${t}<span>0${i + 1}</span></a>`).join('')}</nav>`);
@@ -214,15 +216,15 @@
         <div class="ftr-brand"><a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>
           <p>${ONE === 'Men' ? 'Men\'s leather shoes and sneakers, crafted in Pakistan and finished with the DAUR mark. Made to be worn every day, paid for on delivery.' : 'Leather shoes and sneakers, crafted in Pakistan and finished with the DAUR mark. Made to be worn every day, paid for on delivery.'}</p>
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
-        <div class="ftr-col"><h4>Shop${ONE ? ' ' + esc(ONE) : ''}</h4>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
-        <div class="ftr-col"><h4>Help</h4><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h4>House</h4><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
-        <div class="ftr-col"><h4>Reach</h4><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
+        <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
+        <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
       </div></footer>
       <div class="scrim" id="scrim"></div>
-      <aside class="drawer" id="drawer" aria-label="Bag" aria-hidden="true">
+      <aside class="drawer" id="drawer" aria-label="Bag" aria-hidden="true" inert>
         <div class="drawer-h"><span class="mono">Your bag <span id="dCount"></span></span><button class="x-btn" id="bagClose">Close</button></div>
         <div class="drawer-b" id="dBody"></div>
         <div class="drawer-f" id="dFoot"></div>
@@ -283,8 +285,8 @@
     const w = $('#wishCount'); if (w) w.textContent = wish.length;
     paintDrawer();
   }
-  function openBag() { paintDrawer(); document.body.classList.add('bag-open'); $('#drawer').setAttribute('aria-hidden', 'false'); }
-  function closeBag() { document.body.classList.remove('bag-open'); const d = $('#drawer'); if (d) d.setAttribute('aria-hidden', 'true'); }
+  function openBag() { paintDrawer(); document.body.classList.add('bag-open'); const d = $('#drawer'); d.setAttribute('aria-hidden', 'false'); d.inert = false; }
+  function closeBag() { document.body.classList.remove('bag-open'); const d = $('#drawer'); if (d) { d.setAttribute('aria-hidden', 'true'); d.inert = true; } }
   let toastTimer;
   function toast(msg, action, fn) {
     const t = $('#toast'); if (!t) return;
@@ -389,8 +391,8 @@
     const ratio = v.price / C.marketRetail * 100;
     const low = stockOf(v) <= 6 && stockOf(v) > 0;
     return `<article class="card" data-pid="${p.id}" data-vid="${v.id}">
-      <a class="card-media" href="${link('product', p.id + '~' + v.id)}" aria-label="${esc(p.name)} ${esc(v.color)}">
-        ${onSale(v) ? priceTag(v) : `<span class="tag">${tag}</span>`}<span class="idx">${String(i + 1).padStart(2, '0')} / ${esc(lineName(lineOf(p))).toUpperCase()}</span>
+      <a class="card-media" href="${link('product', p.id + '~' + v.id)}"><span class="sr-only">${esc(p.name)} ${esc(v.color)}</span>
+        <span aria-hidden="true">${onSale(v) ? priceTag(v) : `<span class="tag">${tag}</span>`}</span><span class="idx" aria-hidden="true">${String(i + 1).padStart(2, '0')} / ${esc(lineName(lineOf(p))).toUpperCase()}</span>
         <span class="layer rn">${visual(p, v)}</span><span class="layer bp">${visual(p, v, { mode: 'blueprint' })}</span></a>
       <div class="card-body">
         <div class="card-top"><h3><a href="${link('product', p.id + '~' + v.id)}">${esc(p.name)}</a></h3><span class="price">${fmt(v.price)}</span></div>
@@ -527,7 +529,7 @@
 
     <section class="sheet x" id="anatomy"><div class="wrap">
       ${head('Anatomy of a DAUR pair', 'Every detail, earned.', '', 'Tap a point on the drawing. Every DAUR pair passes the same six checks before it earns our seal.')}
-      <div class="anat"><div class="anat-fig"><div class="svgbox">${visual(hero, hv, { mode: 'blueprint' })}${ANAT.map((a, i) => `<button class="hs" style="left:${a.x}%;top:${a.y}%" data-hs="${i}" aria-pressed="${i === 0}" aria-label="${esc(a.t)}"><span>${i + 1}</span></button>`).join('')}</div></div>
+      <div class="anat"><div class="anat-fig"><div class="svgbox">${visual(hero, hv, { mode: 'blueprint' })}${ANAT.map((a, i) => `<button class="hs" style="left:${a.x}%;top:${a.y}%" data-hs="${i}" aria-pressed="${i === 0}"><span>${i + 1}</span><span class="sr-only"> ${esc(a.t)}</span></button>`).join('')}</div></div>
         <div class="anat-list">${ANAT.map((a, i) => `<div class="anat-item ${i === 0 ? 'open' : ''}" data-ai="${i}"><button aria-expanded="${i === 0}"><span class="n">0${i + 1}</span><span class="t">${esc(a.t)}</span><span class="pm">+</span></button><div class="d"><div><p>${esc(a.d)}</p></div></div></div>`).join('')}</div></div>
     </div></section>
 
@@ -560,16 +562,24 @@
         <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I would like help choosing a pair.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask us on WhatsApp</a></div></div>
     </div></div></section>`;
 
-    // hero lens
-    const st = $('#stage'), hero_ = $('#hero');
+    bindLens($('#stage'), $('#hero'));
+    const hero_ = $('#hero');
+    magicType($('h1.magic', hero_));
+    hero_.addEventListener('pointermove', (e) => { const hr = hero_.getBoundingClientRect(); const l = hero_.querySelector('.hero-light'); l.style.setProperty('--mx', (e.clientX - hr.left) + 'px'); l.style.setProperty('--my', (e.clientY - hr.top) + 'px'); });
+    bindCards(app); bindAnat(app);
+  };
+
+  // the x-ray lens and tilt on a drawn pair (home hero, about page)
+  function bindLens(st, hero_) {
+    if (!st || !hero_) return;
     const mv = (e) => {
       const r = st.getBoundingClientRect(); const pt = e.touches ? e.touches[0] : e;
       // under a finger the lens rides a little above the touch point, so the x-ray is not hidden by the finger itself
       const lift = e.pointerType && e.pointerType !== 'mouse' ? 56 : 0;
       st.style.setProperty('--lx', (pt.clientX - r.left) + 'px'); st.style.setProperty('--ly', (pt.clientY - r.top - lift) + 'px');
       const hr = hero_.getBoundingClientRect();
-      hero_.querySelector('.hero-light').style.setProperty('--mx', (pt.clientX - hr.left) + 'px');
-      hero_.querySelector('.hero-light').style.setProperty('--my', (pt.clientY - hr.top) + 'px');
+      (hero_.querySelector('.hero-light') || hero_).style.setProperty('--mx', (pt.clientX - hr.left) + 'px');
+      (hero_.querySelector('.hero-light') || hero_).style.setProperty('--my', (pt.clientY - hr.top) + 'px');
     };
     // a mouse shows the lens while it is over the pair; a finger shows it where it touches and while it slides,
     // and the lens stays a moment after the finger lifts instead of vanishing at once
@@ -591,10 +601,7 @@
       const stop = () => { window.removeEventListener('deviceorientation', onTilt); window.removeEventListener('hashchange', stop); };
       window.addEventListener('hashchange', stop);
     }
-    magicType($('h1.magic', hero_));
-    hero_.addEventListener('pointermove', (e) => { const hr = hero_.getBoundingClientRect(); const l = hero_.querySelector('.hero-light'); l.style.setProperty('--mx', (e.clientX - hr.left) + 'px'); l.style.setProperty('--my', (e.clientY - hr.top) + 'px'); });
-    bindCards(app); bindAnat(app);
-  };
+  }
 
   // the delivery van is itself a sneaker, in house colours, with the day's parcels strapped to the heel
   const VAN = `<svg viewBox="0 0 170 92" focusable="false">
@@ -794,7 +801,7 @@
         if (k === 'price') F.price = 'all'; if (k === 'sale') F.sale = false; if (k === 'instock') F.instock = false; if (k === 'q') F.q = '';
         sync(); paintSide(); paint();
       }));
-      $('#results').innerHTML = r.length ? `<div class="grid">${r.map((x, i) => card(x.p, i, x.v)).join('')}</div>` : `<div class="empty"><span class="mono">Nothing matches those filters</span><button class="btn ghost" id="emptyClear">Clear filters</button></div>`;
+      $('#results').innerHTML = r.length ? `<h2 class="sr-only">${r.length} pair${r.length === 1 ? '' : 's'}</h2><div class="grid">${r.map((x, i) => card(x.p, i, x.v)).join('')}</div>` : `<div class="empty"><span class="mono">Nothing matches those filters</span><button class="btn ghost" id="emptyClear">Clear filters</button></div>`;
       bindCards($('#results'));
       if (window.DAUR_EXT && window.DAUR_EXT.peek) window.DAUR_EXT.peek($('#results'));
       const ec = $('#emptyClear'); if (ec) ec.addEventListener('click', clearAll);
@@ -920,7 +927,8 @@
   }
   V.product = function (param) {
     const [pid, vid] = (param || '').split('~');
-    const p = prod(pid) || P[0];
+    const p = prod(pid) || (SPA && pid ? null : P[0]);
+    if (!p) { V.notfound(); return; } // a pair address that does not exist gets the not found page, never a different pair
     let v = variant(p, vid);
     let size = null, qty = 1, view = 0, views = [];
     pushRecent(p.id);
@@ -939,8 +947,8 @@
       <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></nav>
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}<button class="gal-360" id="spinB" type="button" aria-label="Open the 360 degree view"><span class="g3-ring" aria-hidden="true"></span>360&deg; view</button></div>
-          <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}" aria-label="${x.l} view">${x.h}</button>`).join('')}</div>
+          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}<button class="gal-360" id="spinB" type="button"><span class="g3-ring" aria-hidden="true"></span>360&deg; view<span class="sr-only">, open the turning view</span></button></div>
+          <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}"><span aria-hidden="true">${x.h}</span><span class="sr-only">${x.l} view</span></button>`).join('')}</div>
         </div>
         <div class="buy">
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
@@ -956,7 +964,7 @@
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
           <ul class="trust"><li>Dispatch in 24 hours</li><li>5 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
           <div id="ext-rvcard"></div>
-          <div class="specs"><h4>Specs</h4><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
+          <div class="specs"><h2 class="specs-h">Specs</h2><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
           <div class="acc">
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
@@ -1263,6 +1271,147 @@
             <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
         </div></div></div>
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for DAUR Supply.</p></div>`;
+  };
+
+  /* ---- about ---- */
+  const PHONE = () => { const n = String(C.whatsapp || ''); return n.startsWith('92') ? '0' + n.slice(2, 5) + ' ' + n.slice(5) : n; };
+  V.about = function () {
+    setMeta('About DAUR Supply | Pakistani Men\'s Shoe Brand, Dispatched from Islamabad', 'DAUR Supply is a Pakistani footwear brand for men: leather sneakers, formal shoes and chelsea boots from workshops in Lahore, Sialkot and Kasur, dispatched from Islamabad with Cash on Delivery.');
+    const hero = prod('moc-runner-v1') || P[0], hv = hero.variants[0];
+    const facts = [
+      ['The brand', 'DAUR Supply', 'A Pakistani footwear brand for men, sold online at daursupply.com.'],
+      ['The name', '<bdi lang="ur">دور</bdi>, an era', 'From the Urdu word for an era. Our line is Naya daur.'],
+      ['What we sell', 'Men\'s shoes', 'Leather sneakers, formal shoes, chelsea boots and casual slip ons, crafted in Pakistan.'],
+      ['Made in', 'Lahore, Sialkot, Kasur', 'Finished pairs chosen from the workshops, then checked by hand, pair by pair.'],
+      ['Dispatch', 'Islamabad', 'Every order leaves from Islamabad within 24 hours of confirmation.'],
+      ['Payment', 'Cash on Delivery', 'To every city in Pakistan our couriers reach. Free delivery on ' + C.freeDeliveryPairs + ' pairs.'],
+      ['After delivery', '5 day exchange', 'Size exchange within 5 days, defects covered for 30 days.']
+    ];
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">About DAUR Supply</span><h1>Named for<br>an era.</h1><p class="aside"><bdi lang="ur">دور</bdi> means an era in Urdu. Ours is Naya daur: Pakistani craft, worn with pride.</p></div></section>
+
+    <section class="sheet x ab-intro" id="hero"><div class="hero-light"></div><div class="wrap ab-grid">
+      <div class="ab-copy rv"><span class="eyebrow">Who we are</span>
+        <p class="big">DAUR Supply is a Pakistani footwear brand for men. We choose finished pairs from workshops in Lahore, Sialkot and Kasur, check every one by hand and finish it with our own hardware.</p>
+        <p>Thick matte black cotton laces, an engraved metal lace tag and the DAUR seal: that is how you know a pair is ours. The leather does the rest.</p>
+        <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('manifesto')}">Read our story</a></div></div>
+      <div class="hero-stage ab-stage" id="stage" aria-label="${esc(hero.name)}, move over the pair to see its construction">
+        <div class="layer float">${visual(hero, hv)}</div>
+        <div class="layer bp">${visual(hero, hv, { mode: 'blueprint' })}</div>
+        <div class="ring" data-label="X-RAY / THE CRAFT INSIDE"></div>
+      </div>
+    </div></section>
+
+    <section class="sheet x"><div class="wrap">
+      ${head('In plain words', 'DAUR, at a glance.')}
+      <div class="ctable">${facts.map(([k, v, d], i) => `<div class="crow rv"><span class="k">${ic(['spark', 'bolt', 'box', 'pin', 'truck', 'cash', 'swap'][i])}${k}</span><span class="v">${v}</span><span class="d">${d}</span></div>`).join('')}</div>
+    </div></section>
+
+    <div class="marquee" aria-hidden="true"><div class="marquee-track">${[0, 1].map(() => '<span>Lahore</span><i>+</i><span class="o">Sialkot</span><i>+</i><span>Kasur</span><i>+</i><span class="o">Dispatched from Islamabad</span><i>+</i><span>Naya daur</span><i>+</i>').join('')}</div></div>
+
+    <section class="sheet x"><div class="wrap">
+      ${head('Bench to doorstep', 'How a pair reaches you.')}
+      <div class="van-road" aria-hidden="true"><div class="van">${VAN}</div></div>
+      <div class="steps">${[['Chosen', 'We visit workshops in Lahore, Sialkot and Kasur and choose finished pairs at the bench.'], ['Checked', 'Stitching, leather grain, sole bond and comfort, checked pair by pair.'], ['Re-laced', 'Thick matte black cotton laces go in, with the engraved DAUR lace tag.'], ['Sealed', 'The DAUR seal is clipped to the top eyelet and the pair is boxed.'], ['Delivered', 'We confirm with you, dispatch from Islamabad within 24 hours, and you pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    </div></section>
+
+    <section class="sheet x"><div class="wrap"><div class="signup closer">
+      <h2>Questions first? Ask a person.</h2>
+      <div class="closer-r"><p>WhatsApp or call ${esc(PHONE())}, or email ${esc(C.supportEmail)}. Every order is confirmed with you before it ships.</p>
+        <div class="hero-cta"><a class="btn volt" href="${waChat('Assalam o Alaikum DAUR Supply, I have a question.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="btn ghost" href="${link('contact')}">All contact options</a></div></div>
+    </div></div></section>`;
+    bindLens($('#stage'), $('#hero'));
+  };
+
+  /* ---- contact ---- */
+  V.contact = function () {
+    setMeta('Contact DAUR Supply | WhatsApp, Phone and Email', 'Contact DAUR Supply on WhatsApp or phone ' + PHONE() + ', or email ' + C.supportEmail + '. Orders dispatched from Islamabad with Cash on Delivery across Pakistan.');
+    const ch = [
+      ['whatsapp', 'WhatsApp', PHONE(), 'Fastest for sizing, orders and exchanges.', waChat('Assalam o Alaikum DAUR Supply, I have a question.'), true],
+      ['phone', 'Call', PHONE(), 'Same number as WhatsApp.', 'tel:+' + C.whatsapp],
+      ['mail', 'Email', C.supportEmail, 'For anything that needs photos or detail.', 'mailto:' + C.supportEmail],
+      ['instagram', 'Instagram', '@daursupply', 'Drops and fit checks. Messages open.', 'https://www.instagram.com/daursupply'],
+      ['facebook', 'Facebook', 'facebook.com/daursupply', 'Messages open.', 'https://www.facebook.com/daursupply']
+    ];
+    const form = SHOP ? `<form class="ct-form rv" method="post" action="/contact#ct-form" id="ct-form" accept-charset="UTF-8">
+        <input type="hidden" name="form_type" value="contact"><input type="hidden" name="utf8" value="&#10003;">
+        <span class="eyebrow">Write to us</span>
+        <label><span>Name</span><input name="contact[name]" autocomplete="name" required></label>
+        <label><span>Phone or WhatsApp</span><input name="contact[phone]" type="tel" autocomplete="tel" inputmode="tel"></label>
+        <label><span>Email</span><input name="contact[email]" type="email" autocomplete="email" required></label>
+        <label class="full"><span>Message</span><textarea name="contact[body]" rows="4" required placeholder="Order number, pair, size or question"></textarea></label>
+        <button class="btn volt" type="submit">Send message <span class="arr">&rarr;</span></button>
+      </form>` : '';
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Contact</span><h1>Talk to<br>a person.</h1><p class="aside">Dispatched from Islamabad, delivered across Pakistan. We are an online store, so every order starts here or on WhatsApp.</p></div></section>
+
+    <section class="sheet x"><div class="wrap ct-grid">
+      <div class="ct-list">${ch.map(([i, k, v, d, href, main], n) => `<a class="ct-card rv${main ? ' main' : ''}" href="${href}"${/^https/.test(href) ? ' target="_blank" rel="noopener"' : ''} style="--d:${n * 0.06}s"><span class="ct-ic">${ic(i)}</span><span class="ct-k mono">${k}</span><b class="ct-v">${esc(v)}</b><span class="ct-d">${d}</span><span class="ct-go" aria-hidden="true">${ic('arrow')}</span></a>`).join('')}</div>
+      <div class="ct-art">${polArt('contact')}</div>
+    </div></section>
+
+    <section class="sheet x"><div class="wrap">
+      ${head('Already ordered?', 'The answer may be one tap away.')}
+      <div class="ct-help">${[['truck', 'Track your order', 'Where your pair is right now.', link('track')], ['swap', 'Exchanges and sizing', '5 day size exchange, 30 day defect cover, size guide.', link('contract')], ['shield', 'Policies', 'Delivery, Cash on Delivery, returns and privacy.', link('policies')]].map(([i, t, d, h]) => `<a class="ct-help-i rv" href="${h}"><span class="ct-ic">${ic(i)}</span><b>${t}</b><span>${d}</span><span class="arr">&rarr;</span></a>`).join('')}</div>
+    </div></section>
+
+    ${form ? `<section class="sheet x"><div class="wrap ct-form-w">${form}</div></section>` : ''}`;
+    if (SHOP && /contact_posted=true/.test(location.search)) toast('Message sent. We will reply soon.');
+  };
+
+  /* ---- not found (404) and search ---- */
+  // one search helper for the 404 page and the search page: every word must appear in the pair's name, colour, style or line
+  const findPairs = (q) => {
+    const ws = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!ws.length) return [];
+    return P.filter((p) => p.variants.some((v) => { const hay = [p.name, v.color, p.category, p.audience, p.group, p.description, onSale(v) ? 'sale' : ''].join(' ').toLowerCase(); return ws.every((w) => hay.includes(w)); }));
+  };
+  const QUICK = () => [['bag', 'Shop all pairs', 'Every style, size and colour.', link('shop')], ['truck', 'Track an order', 'Where your pair is right now.', link('track')], ['whatsapp', 'Ask a person', 'WhatsApp ' + PHONE() + '.', link('contact')]];
+  const quickLinks = () => `<div class="ct-help">${QUICK().map(([i, t, d, h]) => `<a class="ct-help-i rv" href="${h}"><span class="ct-ic">${ic(i)}</span><b>${t}</b><span>${d}</span><span class="arr">&rarr;</span></a>`).join('')}</div>`;
+  function searchBox(id, value, hint) {
+    return `<form class="nf-search" id="${id}F" role="search" ${SHOP ? 'action="/search" method="get"' : ''}><label class="sr-only" for="${id}">Search DAUR</label>
+      <span class="nf-ic">${ic('search')}</span><input id="${id}" name="q" type="search" value="${esc(value || '')}" placeholder="${hint}" autocomplete="off"><button class="btn volt" type="submit">Search</button></form>`;
+  }
+  V.notfound = function () {
+    setMeta('Page not found | DAUR Supply', 'This address does not lead to a page on DAUR Supply. Search the collection or go to the shop.');
+    let path = '';
+    try { path = decodeURIComponent(location.pathname + (SPA ? location.hash : '')); } catch (e) { path = location.pathname; }
+    const guess = (path.split(/[\/#.?]/).filter(Boolean).pop() || '').replace(/[-_+]+/g, ' ').replace(/\b(html?|products?|collections?|pages?|notfound)\b/gi, '').trim().slice(0, 40);
+    const start = guess && findPairs(guess).length ? guess : '';
+    app.innerHTML = `<section class="phero nf-hero"><div class="wrap"><span class="eyebrow">404 / Page not found</span><h1>Off the<br>map.</h1><p class="aside">This address does not lead anywhere${path && path.length < 60 ? `: <code class="nf-path">${esc(path)}</code>` : ''}. The pairs are all still here.</p></div>
+      <div class="nf-num" aria-hidden="true"><span>4</span><span class="o">0</span><span>4</span></div></section>
+    <section class="sheet x"><div class="wrap">
+      ${searchBox('nfq', start, 'Try black, derby, chelsea, sale')}
+      <p class="nf-note mono mute" id="nfN" aria-live="polite"></p>
+      <div class="grid nf-grid" id="nfG"></div>
+    </div></section>
+    <section class="sheet x"><div class="wrap">${head('Or go straight to', 'Where to next.')}${quickLinks()}</div></section>`;
+    const q = $('#nfq'), g = $('#nfG'), n = $('#nfN');
+    const paint = () => {
+      const v = q.value.trim(), hits = v ? findPairs(v) : P.slice(0, 4);
+      n.textContent = v ? (hits.length ? `${hits.length} pair${hits.length === 1 ? '' : 's'} match "${v}"` : `No pair matches "${v}". Here is the collection instead.`) : 'Pairs people open first';
+      g.innerHTML = (hits.length ? hits : P.slice(0, 4)).slice(0, 8).map((p, i) => card(p, i)).join('');
+      bindCards(g); reveal();
+    };
+    q.addEventListener('input', paint);
+    $('#nfqF').addEventListener('submit', (e) => { if (!SHOP || !q.value.trim()) { e.preventDefault(); paint(); } });
+    paint();
+  };
+  // Shopify search results page: the server lists the matches (snippets in sections/daur-main.liquid); pairs are drawn as cards, Journal guides as a list
+  V.search = function () {
+    const plain = app.querySelector('.daur-plain'); if (!plain) return;
+    const terms = (plain.dataset.terms || '').trim();
+    const handles = $$('.daur-results li[data-type="product"]', plain).map((li) => li.dataset.handle);
+    const ps = handles.map(prod).filter(Boolean);
+    const arts = $$('.daur-results li[data-type="article"], .daur-results li[data-type="page"]', plain).map((li) => { const a = li.querySelector('a'); return [a.getAttribute('href'), a.textContent, li.dataset.type]; });
+    setMeta(terms ? `Search: ${terms} | DAUR Supply` : 'Search | DAUR Supply', 'Search DAUR Supply men\'s shoes, sneakers and Journal guides.');
+    const total = ps.length + arts.length;
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Search${terms ? ` / ${total} result${total === 1 ? '' : 's'}` : ''}</span><h1>${terms ? `&ldquo;${esc(terms)}&rdquo;` : 'Find your pair.'}</h1><p class="aside">${terms ? (total ? 'Pairs first, then guides from the Journal.' : 'Nothing matched those words. Try a colour, a style or a material.') : 'Search by colour, style or material.'}</p></div></section>
+    <section class="sheet x"><div class="wrap">${searchBox('sq', terms, 'Try black, derby, chelsea, sale')}
+      ${ps.length ? `<div class="grid nf-grid">${ps.map((p, i) => card(p, i)).join('')}</div>` : ''}
+      ${arts.length ? `${head('From the Journal', 'Guides that match.')}<div class="ct-help sr-list">${arts.map(([h, t, ty]) => `<a class="ct-help-i rv" href="${esc(h)}"><span class="ct-ic">${ic(ty === 'article' ? 'bookmark' : 'link')}</span><b>${esc(t)}</b><span>${ty === 'article' ? 'Journal guide' : 'Page'}</span><span class="arr">&rarr;</span></a>`).join('')}</div>` : ''}
+      ${!ps.length && terms ? `<p class="nf-note mono mute">Pairs people open first</p><div class="grid nf-grid">${P.slice(0, 4).map((p, i) => card(p, i)).join('')}</div>` : ''}
+    </div></section>
+    <section class="sheet x"><div class="wrap">${head('Or go straight to', 'Where to next.')}${quickLinks()}</div></section>`;
+    bindCards(app);
   };
 
   /* ---- policies ---- */

@@ -98,3 +98,9 @@ html:not(.drawn) body:not([data-page="page"]) #app > .daur-plain { visibility: h
 html:not(.drawn) body:not([data-page="page"]) #app::after { content: "DAUR"; position: fixed; inset: 0; display: grid; place-items: center; font: 700 clamp(44px, 12vw, 96px)/1 'Space Grotesk', system-ui, sans-serif; letter-spacing: -.05em; font-style: italic; color: rgba(42, 28, 20, .14); opacity: 0; animation: daurMark 1.6s .45s ease-in-out infinite alternate, daurHide 0s 6s forwards; pointer-events: none; }
 @keyframes daurMark { from { opacity: 0; } to { opacity: 1; } }
 @keyframes daurHide { to { visibility: hidden; } }
+/* Shopify's own policy pages (/policies/...) follow the page style */
+.shopify-policy__container { max-width: 860px !important; margin: 0 !important; padding: 0 !important; }
+.shopify-policy__title { text-align: left !important; border-bottom: 1px solid var(--line, rgba(0,0,0,.12)); margin-bottom: 28px; }
+.shopify-policy__title h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(40px, 7vw, 96px) !important; letter-spacing: -.05em; line-height: .9; text-transform: uppercase; margin: 0 0 28px; }
+.shopify-policy__body { line-height: 1.7; }
+.shopify-policy__body a { color: var(--signal, #8A4B22); }

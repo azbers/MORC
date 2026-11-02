@@ -23,8 +23,12 @@
       assign daur_page = 'shop'
     when 'cart'
       assign daur_page = 'cart'
+    when 'search'
+      assign daur_page = 'search'
+    when '404'
+      assign daur_page = 'notfound'
     when 'page'
-      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies' | split: ','
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact' | split: ','
       for pair in views
         assign kv = pair | split: ':'
         if page.handle == kv[0]
@@ -55,6 +59,7 @@
 <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",{{ settings.clarity_id | strip | json }});</script>
 {%- endif %}
 {%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
+{%- if template.name == '404' or template.name == 'search' or template.directory == 'customers' %}<meta name="robots" content="noindex">{% endif %}
 <meta name="theme-color" content="#F5EEE4">
 <script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
 {%- comment -%} Link previews (WhatsApp, Facebook, Instagram DMs, X): every page gets a title, a description and a 1200 x 630 image. Image order: product photo, article photo, the page's own social image, the Social sharing image in Online Store > Preferences, the theme share image setting, then assets/daur-share.jpg. {%- endcomment -%}
@@ -128,6 +133,7 @@
 {{ content_for_header }}
 </head>
 <body data-page="{{ daur_page }}">
+<div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1">{{ content_for_layout }}</main>
 {% render 'daur-data', product: product, daur_param: daur_param %}
 <script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
@@ -135,7 +141,7 @@
 <script src="{{ 'icons.js' | asset_url }}" defer></script>
 <script src="{{ 'kicks.js' | asset_url }}" defer></script>
 <script src="{{ 'pile.js' | asset_url }}" defer></script>
-{%- if daur_page == 'policies' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
+{%- if daur_page == 'policies' or daur_page == 'contact' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'social.js' | asset_url }}" defer></script>
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>

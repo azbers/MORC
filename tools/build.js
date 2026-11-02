@@ -28,9 +28,12 @@ const PAGES = {
   list: ['list.html', 'Join the alert list | DAUR Supply', 'Get DAUR Supply drops, restocks and discounts first on WhatsApp.'],
   feed: ['feed.html', 'The Feed | DAUR Supply', 'Drops, fit checks and the supply line in motion.'],
   policies: ['policies.html', 'Terms, Privacy and Refund Policy | DAUR Supply', 'DAUR Supply terms of service, privacy policy, shipping, Cash on Delivery, returns, exchanges and refunds for orders across Pakistan.'],
+  about: ['about.html', 'About DAUR Supply | Pakistani Men\'s Shoe Brand, Dispatched from Islamabad', 'DAUR Supply is a Pakistani footwear brand for men: leather sneakers, formal shoes and chelsea boots from workshops in Lahore, Sialkot and Kasur, dispatched from Islamabad with Cash on Delivery.'],
+  contact: ['contact.html', 'Contact DAUR Supply | WhatsApp, Phone and Email', 'Contact DAUR Supply on WhatsApp, phone or email. Orders dispatched from Islamabad with Cash on Delivery across Pakistan.'],
+  notfound: ['404.html', 'Page not found | DAUR Supply', 'This address does not lead to a page on DAUR Supply. Search the collection or go to the shop.'],
   admin: ['admin.html', 'Supply Control | DAUR Supply', 'Store admin.']
 };
-const NOINDEX = ['cart', 'checkout', 'order', 'track', 'wishlist', 'admin'];
+const NOINDEX = ['cart', 'checkout', 'order', 'track', 'wishlist', 'admin', 'notfound'];
 const SCRIPTS = ['assets/data.js', 'assets/shoe.js', 'assets/app.js'];
 const OPTIONAL = ['assets/icons.js', 'assets/kicks.js', 'assets/pile.js', 'assets/polart.js', 'assets/social.js', 'assets/admin.js', 'assets/alive.js'];
 
@@ -59,6 +62,7 @@ ${FONTS}
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body data-page="${key}">
+<div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1"><noscript><p style="padding:40px">DAUR Supply needs JavaScript for the bag and checkout. Message our WhatsApp order line to order directly.</p></noscript></main>
 ${scripts.map((s) => `<script src="${s}"></script>`).join('\n')}
 </body>
