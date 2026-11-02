@@ -1,161 +1,90 @@
 {%- comment -%}
   Our Collection: an editorial showcase of models wearing DAUR pairs, for the home page.
-  Every look is a block: a model photo, an optional side pose, the product it shows and the
-  colour worn. Name, collection, colours, sizes, price and link come from the product itself,
-  so a price or stock change in Shopify shows here without editing the section.
-  assets/daur-collection.js places it under the hero and adds the scroll staging; with reduced
-  motion, Lite mode or no script, the looks show as a plain sequence of photographs.
+  Looks come from two places, in this order:
+  1. Look blocks in the theme editor (product, colour worn, model photo, side pose), in block order.
+  2. Every other product in the chosen collection (default: all products), using the model photos
+     set on the product itself: metafields custom.model_photo and custom.model_side_photo.
+  Name, collection, colours, sizes, price and link always come from the product, so a price or
+  stock change in Shopify shows here without editing the section.
+  assets/daur-collection.js places it under the hero and lets visitors move through the looks
+  sideways; the page itself always scrolls freely. With reduced motion, Lite mode or no script,
+  the looks show as a plain sequence of photographs.
 {%- endcomment -%}
 {%- liquid
+  assign src = section.settings.collection | default: collections.all
+  assign used = ','
   assign looks = 0
   for block in section.blocks
     if block.settings.product != blank
-      assign looks = looks | plus: 1
+      assign key = ',' | append: block.settings.product.handle | append: ','
+      unless used contains key
+        assign used = used | append: block.settings.product.handle | append: ','
+        assign looks = looks | plus: 1
+      endunless
     endif
   endfor
+  if section.settings.show_all
+    for p in src.products limit: 24
+      assign key = ',' | append: p.handle | append: ','
+      unless used contains key
+        assign looks = looks | plus: 1
+      endunless
+    endfor
+  endif
 -%}
 {%- if looks > 0 or request.design_mode -%}
-<section class="oc saddle" data-oc data-oc-count="{{ looks }}" aria-labelledby="oc-h-{{ section.id }}" style="--oc-n: {{ looks | at_least: 1 }}">
+<section class="oc saddle" data-oc aria-labelledby="oc-h-{{ section.id }}">
   <header class="oc-head">
     <p class="oc-eyebrow">{{ section.settings.eyebrow | escape }}</p>
     <h2 class="oc-title" id="oc-h-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
     {%- if section.settings.intro != blank %}<p class="oc-intro">{{ section.settings.intro | escape }}</p>{% endif -%}
   </header>
-  <div class="oc-track">
-    <div class="oc-pin">
+  <div class="oc-stage">
+    {%- if looks == 0 -%}
+    <p class="oc-empty">No looks yet. Add a Look block, or turn on "Show every product". This note shows only in the editor.</p>
+    {%- endif -%}
 
-      {%- if looks == 0 -%}
-      <p class="oc-empty">Add a look in the theme editor: choose a product, then a model photo. This note shows only in the editor.</p>
-      {%- endif -%}
-
-      <ol class="oc-looks" role="list">
-      {%- assign n = 0 -%}
-      {%- for block in section.blocks -%}
-        {%- assign p = block.settings.product -%}
-        {%- if p == blank -%}{%- continue -%}{%- endif -%}
+    <ol class="oc-looks" role="list" aria-label="{{ section.settings.eyebrow | escape }}">
+    {%- assign n = 0 -%}
+    {%- assign done = ',' -%}
+    {%- for block in section.blocks -%}
+      {%- assign p = block.settings.product -%}
+      {%- if p == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign key = ',' | append: p.handle | append: ',' -%}
+      {%- if done contains key -%}{%- continue -%}{%- endif -%}
+      {%- assign done = done | append: p.handle | append: ',' -%}
+      {%- assign n = n | plus: 1 -%}
+      {%- assign photo = block.settings.photo | default: p.metafields.custom.model_photo.value -%}
+      {%- assign side = block.settings.side_photo | default: p.metafields.custom.model_side_photo.value -%}
+      {%- capture attrs -%}{{ block.shopify_attributes }}{%- endcapture -%}
+      {%- render 'daur-collection-look', p: p, colour: block.settings.colour, photo: photo, side: side, ai: block.settings.ai_image, label: block.settings.label, n: n, attrs: attrs -%}
+    {%- endfor -%}
+    {%- if section.settings.show_all -%}
+      {%- for p in src.products limit: 24 -%}
+        {%- assign key = ',' | append: p.handle | append: ',' -%}
+        {%- if done contains key -%}{%- continue -%}{%- endif -%}
+        {%- assign done = done | append: p.handle | append: ',' -%}
         {%- assign n = n | plus: 1 -%}
         {%- liquid
-          comment
-            the variant shown: the first one in the colour named on the block, otherwise the first available
-          endcomment
-          assign v = p.selected_or_first_available_variant
-          assign want = block.settings.colour | strip | downcase
-          if want != blank
-            for x in p.variants
-              assign hit = false
-              for o in x.options
-                assign od = o | downcase
-                if od == want
-                  assign hit = true
-                endif
-              endfor
-              if hit
-                assign v = x
-                break
-              endif
-            endfor
+          assign ai = true
+          if p.metafields.custom.model_photo_ai.value == false
+            assign ai = false
           endif
-
-          assign colour_opt = nil
-          assign size_opt = nil
-          for o in p.options_with_values
-            assign on = o.name | downcase
-            if on contains 'colo'
-              assign colour_opt = o
-            elsif on contains 'size'
-              assign size_opt = o
-            endif
-          endfor
-
-          assign label = block.settings.label | strip
-          if label == blank
-            for c in p.collections
-              unless c.handle == 'all' or c.handle == 'frontpage' or c.handle == 'sale'
-                assign label = c.title
-                break
-              endunless
-            endfor
-          endif
-
-          assign shot = block.settings.photo
-          assign shot_kind = 'model'
-          if shot == blank
-            assign shot = v.featured_image | default: p.featured_image
-            assign shot_kind = 'product'
-          endif
-          assign shot_alt = block.settings.photo.alt | default: p.title
         -%}
-        <li class="oc-look" data-oc-i="{{ forloop.index0 }}" data-oc-look="{{ block.id }}" {{ block.shopify_attributes }}>
-          <figure class="oc-fig">
-            <a class="oc-frame{% if shot == blank %} is-ph{% endif %}" href="{{ v.url }}" tabindex="-1" aria-hidden="true">
-              {%- if shot != blank -%}
-                {{ shot | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'oc-img oc-main', alt: '', widths: '480, 720, 960, 1280, 1600', sizes: '(min-width: 900px) 44vw, 86vw' }}
-              {%- else -%}
-                <span class="oc-ph"><span class="oc-ph-k">Model photo needed</span><span class="oc-ph-v">{{ p.title | escape }}{% if want != blank %}, {{ block.settings.colour | escape }}{% endif %}</span><span class="oc-ph-s">Portrait 4:5, at least 1600 x 2000 px</span></span>
-              {%- endif -%}
-              {%- if block.settings.side_photo != blank -%}
-                {{ block.settings.side_photo | image_url: width: 900 | image_tag: loading: 'lazy', class: 'oc-img oc-side', alt: '', widths: '360, 600, 900', sizes: '(min-width: 900px) 24vw, 50vw' }}
-              {%- endif -%}
-            </a>
-            {%- if shot != blank -%}
-            <figcaption class="oc-note">{% if shot_kind == 'product' %}Product photo{% elsif block.settings.ai_image %}AI generated image of {{ p.title | escape }}{% else %}{{ shot_alt | escape }}{% endif %}</figcaption>
-            {%- endif -%}
-          </figure>
-
-          <div class="oc-info">
-            <p class="oc-k"><span class="oc-no">{{ n | prepend: '0' | slice: -2, 2 }}</span>{% if label != blank %}<span class="oc-col">{{ label | escape }}</span>{% endif %}</p>
-            <h3 class="oc-name"><a href="{{ v.url }}">{{ p.title | escape }}</a></h3>
-            <p class="oc-price">
-              <span class="oc-now">{{ v.price | money }}</span>
-              {%- if v.compare_at_price > v.price -%}
-                {%- assign off = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price -%}
-                <s class="oc-was"><span class="sr-only">Was </span>{{ v.compare_at_price | money }}</s><span class="oc-off">{{ off }}% off</span>
-              {%- endif -%}
-            </p>
-            <dl class="oc-spec">
-              {%- if colour_opt -%}
-              <div><dt>{{ colour_opt.name | escape }}</dt><dd>{% for c in colour_opt.values %}<span class="oc-chip{% if c == v.option1 or c == v.option2 or c == v.option3 %} is-on{% endif %}">{{ c | escape }}</span>{% endfor %}</dd></div>
-              {%- endif -%}
-              {%- if size_opt -%}
-              <div><dt>{{ size_opt.name | escape }}{% if colour_opt and want != blank %} <span class="oc-in">in {{ block.settings.colour | escape }}</span>{% endif %}</dt><dd>
-                {%- for s in size_opt.values -%}
-                  {%- liquid
-                    assign ok = false
-                    for x in p.variants
-                      if x.available and x.options contains s
-                        if colour_opt == nil or want == blank
-                          assign ok = true
-                        else
-                          for o in x.options
-                            assign od = o | downcase
-                            if od == want
-                              assign ok = true
-                            endif
-                          endfor
-                        endif
-                      endif
-                    endfor
-                  -%}
-                  <span class="oc-size{% unless ok %} is-out{% endunless %}">{{ s | remove: 'EU ' | escape }}{% unless ok %}<span class="sr-only"> sold out</span>{% endunless %}</span>
-                {%- endfor -%}
-              </dd></div>
-              {%- endif -%}
-            </dl>
-            <a class="oc-cta" href="{{ v.url }}">Shop This Look<span class="sr-only">: {{ p.title | escape }}</span> <span aria-hidden="true">&rarr;</span></a>
-          </div>
-        </li>
+        {%- render 'daur-collection-look', p: p, colour: '', photo: p.metafields.custom.model_photo.value, side: p.metafields.custom.model_side_photo.value, ai: ai, label: '', n: n, attrs: '' -%}
       {%- endfor -%}
-      </ol>
+    {%- endif -%}
+    </ol>
+    <div class="oc-panel" aria-live="polite"></div>
 
-      {%- if looks > 1 -%}
-      <div class="oc-ctl" hidden>
-        <button class="oc-btn" type="button" data-oc-go="-1" aria-label="Previous look">&larr;</button>
-        <span class="oc-count" aria-live="polite"><b>01</b> / {{ looks | prepend: '0' | slice: -2, 2 }}</span>
-        <button class="oc-btn" type="button" data-oc-go="1" aria-label="Next look">&rarr;</button>
-        <span class="oc-bar" aria-hidden="true"><i></i></span>
-      </div>
-      {%- endif -%}
+    {%- if looks > 1 -%}
+    <div class="oc-ctl" hidden>
+      <button class="oc-btn" type="button" data-oc-go="-1" aria-label="Previous look">&larr;</button>
+      <span class="oc-count"><b>01</b> / {{ looks | prepend: '0' | slice: -2, 2 }}</span>
+      <button class="oc-btn" type="button" data-oc-go="1" aria-label="Next look">&rarr;</button>
+      <span class="oc-bar" aria-hidden="true"><i></i></span>
     </div>
+    {%- endif -%}
   </div>
 </section>
 {%- endif -%}
@@ -166,27 +95,31 @@
   "tag": "div",
   "class": "oc-section",
   "limit": 1,
-  "max_blocks": 12,
+  "max_blocks": 24,
   "settings": [
-    { "type": "paragraph", "content": "Models wearing DAUR pairs, shown under the home page hero. Add one look per pair. Visitors scroll or swipe to bring each look into the centre. With reduced motion or Lite mode the looks show as a simple list of photographs." },
+    { "type": "paragraph", "content": "Models wearing DAUR pairs, shown under the home page hero. Visitors swipe, drag or use the arrows to bring each look to the centre; the page itself always scrolls freely. With reduced motion or Lite mode the looks show as a simple list." },
     { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Our Collection" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Worn, not displayed." },
-    { "type": "textarea", "id": "intro", "label": "Intro", "default": "One pair per look, styled on foot. Scroll or swipe to bring the next pair into the light." }
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "One pair per look, styled on foot. Swipe or use the arrows to bring the next pair into the light." },
+    { "type": "header", "content": "Products shown" },
+    { "type": "checkbox", "id": "show_all", "label": "Show every product", "default": true, "info": "After the Look blocks, every other product in the collection below is shown, using the model photos set on the product (Products > the product > Metafields: Model photo, Model side or seated pose)." },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave empty for all products. Up to 24 are shown." }
   ],
   "blocks": [
     {
       "type": "look",
       "name": "Look",
       "settings": [
+        { "type": "paragraph", "content": "Use a block to fix the order of a pair, show a particular colour, or use a different photo from the one on the product." },
         { "type": "product", "id": "product", "label": "Product", "info": "Name, collection, colours, sizes, price and the Shop This Look link come from this product." },
         { "type": "text", "id": "colour", "label": "Colour worn", "info": "Type it exactly as the product's colour option, for example Black Waxed. The price, sizes in stock and link follow this colour. Leave empty for the first available colour." },
-        { "type": "image_picker", "id": "photo", "label": "Model photo", "info": "Portrait 4:5, at least 1600 x 2000 px, shot slightly low so the shoes are clear. Without a photo the product photo is used, or a labelled placeholder." },
+        { "type": "image_picker", "id": "photo", "label": "Model photo", "info": "Portrait 4:5, at least 1600 x 2000 px. Leave empty to use the Model photo set on the product, then the product photo." },
         { "type": "image_picker", "id": "side_photo", "label": "Side or seated pose (optional)", "info": "Shown while this look waits beside the centre. Portrait 4:5." },
-        { "type": "checkbox", "id": "ai_image", "label": "Photo is AI generated", "default": true, "info": "Adds the caption \"AI generated image\" so visitors are not misled." },
+        { "type": "checkbox", "id": "ai_image", "label": "Photo is AI generated", "default": true, "info": "Adds the caption \"AI generated image of\" and the product name, so visitors are not misled." },
         { "type": "text", "id": "label", "label": "Collection label (optional)", "info": "Leave empty to use the product's first collection." }
       ]
     }
   ],
-  "presets": [ { "name": "Our Collection", "blocks": [ { "type": "look" }, { "type": "look" }, { "type": "look" } ] } ]
+  "presets": [ { "name": "Our Collection" } ]
 }
 {% endschema %}
