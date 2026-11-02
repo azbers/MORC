@@ -62,7 +62,7 @@
     document.documentElement.classList.toggle('grid-1', v);
     try { localStorage.setItem('daur.grid', v ? '1' : '2'); } catch (e) { /* storage blocked */ }
   }
-  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', notfound: '404.html', admin: 'admin.html' };
+  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', runway: 'runway.html', notfound: '404.html', admin: 'admin.html' };
   function link(page, param) {
     if (SHOP) return SHOP.link(page, param);
     if (SPA) return '#' + page + (param ? '.' + param : '');
@@ -186,7 +186,7 @@
 
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
-  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['shop', 'sale', 'Sale'], ['offers', '', 'Offers'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
+  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['runway', '', 'Runway'], ['shop', 'sale', 'Sale'], ['offers', '', 'Offers'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
   const NAV_TOP = navItems.length - 2;
   function chrome() {
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
@@ -218,7 +218,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('offers')}">Offers</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -860,73 +860,6 @@
   };
 
   /* ---- product ---- */
-  /* 360 view: with eight or more photos of a colour the photos become a drag spin; otherwise the drawn
-     profile is stacked into a solid and turned on a leather turntable, pausing at the side and three quarter angles */
-  function spin360(p, v) {
-    const imgs = v.images || [], seq = imgs.length >= 8;
-    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const prevFocus = document.activeElement;
-    $$('.spin').forEach((x) => x.remove());
-    const N = 14, layer = (i) => `<div class="sl${i === 0 ? ' face' : i === N - 1 ? ' face back' : ''}" data-l="${i}">${visual(p, v, { index: 0 })}</div>`;
-    document.body.insertAdjacentHTML('beforeend', `<div class="spin" id="spin360" role="dialog" aria-modal="true" aria-label="360 degree view of ${esc(p.name)} in ${esc(v.color)}">
-      <div class="spin-in">
-        <div class="spin-h"><div><span class="eyebrow">360&deg; view</span><h2>${esc(p.name)} <span>${esc(v.color)}</span></h2></div><button class="spin-x" type="button" aria-label="Close the 360 view">&times;</button></div>
-        <div class="spin-stage${seq ? ' seq' : ''}" id="spinStage">
-          <span class="spin-light" aria-hidden="true"></span>
-          <div class="spin-turn"><span class="spin-disc" aria-hidden="true"></span><div class="spin-obj" id="spinObj">${seq ? `<img src="${esc(imgs[0])}" alt="${esc(p.name + ' ' + v.color)}" draggable="false">` : Array.from({ length: N }, (_, i) => layer(i)).join('')}</div></div>
-          <span class="spin-shadow" aria-hidden="true"></span>
-        </div>
-        <div class="spin-f"><span class="mono spin-deg" id="spinDeg">000&deg;</span><span class="spin-hint mono">Drag to turn the pair</span><button class="btn ghost spin-play" type="button" id="spinPlay">${calm ? 'Turn' : 'Pause'}</button></div>
-        <p class="spin-note">${seq ? 'Built from ' + imgs.length + ' photos of this colour.' : 'Turned from the drawn side profile of this pair, so the toe and heel views are an impression rather than photos.'}</p>
-      </div></div>`);
-    const el = $('#spin360'), obj = $('#spinObj'), stage = $('#spinStage'), deg = $('#spinDeg'), play = $('#spinPlay');
-    document.documentElement.classList.add('spin-open');
-    requestAnimationFrame(() => el.classList.add('on'));
-    if (seq) imgs.forEach((src) => { const im = new Image(); im.src = src; });
-    const depth = () => { const d = obj.offsetWidth * 0.13; $$('.sl', obj).forEach((l) => { const i = +l.dataset.l; l.style.transform = `translateZ(${(i / (N - 1) - 0.5) * d}px)`; }); };
-    if (!seq) depth();
-    let ang = 0, tilt = -10, auto = !calm, raf = 0, from = 0, to = 0, t0 = 0, dwell = 0, k = 0, drag = null, resume = 0;
-    const STEPS = [55, 125, 55, 125];
-    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    const draw = () => {
-      const a = ((ang % 360) + 360) % 360;
-      deg.textContent = String(Math.round(a)).padStart(3, '0') + '°';
-      if (seq) { const f = Math.round(a / 360 * imgs.length) % imgs.length; const im = $('img', obj); if (im.dataset.f !== String(f)) { im.dataset.f = f; im.src = imgs[f]; } }
-      else obj.style.transform = `rotateX(${tilt}deg) rotateY(${ang}deg)`;
-      stage.style.setProperty('--ang', ang + 'deg');
-    };
-    const tick = (now) => {
-      if (auto && !drag) {
-        if (!t0) { t0 = now; from = ang; to = ang + STEPS[k % STEPS.length]; }
-        const t = Math.min(1, (now - t0) / 1700);
-        ang = from + (to - from) * ease(t);
-        tilt = -10 - 5 * Math.sin(ang * Math.PI / 180);
-        if (t >= 1) { if (!dwell) dwell = now; if (now - dwell > 1300) { k++; t0 = 0; dwell = 0; } }
-      }
-      draw();
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    const setAuto = (on) => { auto = on; t0 = 0; dwell = 0; play.textContent = on ? 'Pause' : 'Turn'; };
-    play.addEventListener('click', () => setAuto(!auto));
-    stage.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, a: ang }; clearTimeout(resume); stage.setPointerCapture(e.pointerId); stage.classList.add('dragging'); });
-    stage.addEventListener('pointermove', (e) => { if (!drag) return; ang = drag.a + (e.clientX - drag.x) * 0.45; });
-    const up = () => { if (!drag) return; drag = null; stage.classList.remove('dragging'); t0 = 0; dwell = 0; if (auto) { auto = false; resume = setTimeout(() => setAuto(true), 2600); } };
-    stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
-    const key = (e) => { if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') { setAuto(false); ang -= 15; } if (e.key === 'ArrowRight') { setAuto(false); ang += 15; } };
-    const onResize = () => { if (!seq) depth(); };
-    function close() {
-      el.classList.remove('on'); cancelAnimationFrame(raf); clearTimeout(resume);
-      document.removeEventListener('keydown', key); removeEventListener('resize', onResize);
-      document.documentElement.classList.remove('spin-open');
-      setTimeout(() => el.remove(), 350);
-      if (prevFocus && prevFocus.focus) prevFocus.focus();
-    }
-    document.addEventListener('keydown', key); addEventListener('resize', onResize);
-    $('.spin-x', el).addEventListener('click', close);
-    el.addEventListener('click', (e) => { if (e.target === el) close(); });
-    setTimeout(() => $('.spin-x', el).focus(), 60);
-  }
   V.product = function (param) {
     const [pid, vid] = (param || '').split('~');
     const p = prod(pid) || (SPA && pid ? null : P[0]);
@@ -949,7 +882,7 @@
       <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></nav>
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}<button class="gal-360" id="spinB" type="button"><span class="g3-ring" aria-hidden="true"></span>360&deg; view<span class="sr-only">, open the turning view</span></button></div>
+          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}</div>
           <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}"><span aria-hidden="true">${x.h}</span><span class="sr-only">${x.l} view</span></button>`).join('')}</div>
         </div>
         <div class="buy">
@@ -1015,8 +948,7 @@
         }
       });
       g.addEventListener('pointerleave', () => setEdge(0));
-      $('#spinB').addEventListener('click', (e) => { e.stopPropagation(); spin360(p, v); });
-      g.addEventListener('pointermove', (e) => { if (edge || e.target.closest('.gal-360')) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
+      g.addEventListener('pointermove', (e) => { if (edge) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
       g.addEventListener('pointerleave', () => { z.style.transform = ''; g.classList.remove('zooming'); });
       $$('.vsw').forEach((b) => b.addEventListener('click', () => { v = variant(p, b.dataset.v); size = null; qty = 1; history.replaceState(null, '', SPA ? link('product', p.id + '~' + v.id) : '#' + p.id + '~' + v.id); paint(); }));
       $$('.buy .size').forEach((b) => b.addEventListener('click', () => {
@@ -1357,6 +1289,259 @@
 
     ${form ? `<section class="sheet x"><div class="wrap ct-form-w">${form}</div></section>` : ''}`;
     if (SHOP && /contact_posted=true/.test(location.search)) toast('Message sent. We will reply soon.');
+  };
+
+  /* ---- runway ---- */
+  // every pair stands on one studio floor. The chosen pair steps forward and the others fall back out of focus;
+  // Inspect clears the floor, puts numbered points on the pair and opens its details beside it.
+  // A colour shows its own cut out photo when a product image has alt text starting "Runway:" (transparent PNG,
+  // side profile, toe to the right); every other pair is drawn live, so the floor always reads as one set.
+  const RW_ST = 226; // top of the sole line in the drawing (shoe.js)
+  function rwDetails(p) {
+    const S = (SHOE.SHAPES || {})[p.silhouette] || (SHOE.SHAPES || {}).court, sp = p.specs || {}, ST = RW_ST;
+    const said = (k, fallback) => sp[k] ? sp[k].replace(/\.?$/, '. ') + fallback : fallback;
+    const out = [{ t: 'The upper', d: said('Upper', 'Bent at the flex point and checked for cracks and loose grain before we accept the pair.'), x: S.laced ? 352 : 300, y: (S.ey + ST) / 2 + (S.laced ? 14 : 8) }];
+    out.push(S.moc ? { t: 'Moc toe stitching', d: said('Stitch', 'Tight, even spacing all round the toe. A wavy or skipped stitch is a reject at our checking table.'), x: 440, y: (S.ey + S.toe + 30) / 2 }
+      : { t: 'Stitching', d: said('Stitch', 'Even, tight stitching at the toe and heel. A wavy or skipped stitch is a reject at our checking table.'), x: 470, y: (ST - 6 + S.toe + 18) / 2 - 4 });
+    if (S.laced) {
+      // the same points shoe.js uses: the first and last eyelets
+      const x0 = S.tx + 20, y0 = S.ty + 18, x1 = S.ex - 8, y1 = S.ey + 9;
+      out.push({ t: 'Laces and dubrae', d: 'Thick matte black woven cotton laces replace the factory pair, with the laser engraved DAUR dubrae on the bottom row.', x: x1, y: y1 - 5 });
+      out.push({ t: 'Supply Unit seal', d: 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size: exchanges need it attached.', x: x0 - 3, y: y0 + 59 });
+    } else if (S.chelsea) {
+      out.push({ t: 'Elastic side gussets', d: 'Stretch panels on both sides, so the boot slips on without laces and holds the ankle snug.', x: 270, y: (S.dipY + ST - 52) / 2 });
+      out.push({ t: 'Pull tab', d: 'A heel loop to pull the boot on, stitched into the back seam.', x: 95, y: S.heel - 14 });
+    } else if (S.slip) {
+      out.push({ t: 'Elastic gore', d: 'A stretch insert under the vamp, so the shoe slips on and still holds your foot.', x: S.tx - 14, y: S.ty + 16 });
+    } else if (S.loafer) {
+      out.push({ t: 'Saddle strap and tassels', d: 'A stitched saddle strap across the vamp, finished with a knotted tassel pair.', x: S.tx + 44, y: S.ty + 30 });
+    }
+    out.push({ t: 'The sole', d: said('Sole', 'Bonded to the upper and pull tested at toe and heel. Any gap sends the pair back.'), x: 300, y: ST + S.sole * 0.62 });
+    if (out.length < 5 && sp.Lining) out.splice(1, 0, { t: 'Lining', d: sp.Lining.replace(/\.?$/, '.') + ' Felt along the collar, where your heel sits.', x: 122, y: S.heel + 16 });
+    // where each point sits: in the drawing (per cent of the drawing box) and as a share of the shoe's own outline, for photos
+    const T = Math.min(S.heel - (S.chelsea ? 28 : 4), S.ty - 22), B = ST + S.sole + (S.derby ? 12 : 0);
+    return out.slice(0, 5).map((o) => Object.assign(o, { dx: (30 + 0.84 * o.x - 62) / 4.76, dy: (o.y - 30) / 2.82, fx: (o.x - 70) / 4.96, fy: (o.y - T) / (B - T) * 100 }));
+  }
+  const rwArt = (p, v, vb) => v.runway ? `<img src="${esc(v.runway)}" alt="" draggable="false" decoding="async">` : SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, vb ? { viewBox: vb } : {});
+  // a close crop of one detail, for its row in the panel
+  function rwThumb(p, v, o) {
+    if (v.runway) return `<span class="rw-th-i" style="background-image:url('${esc(v.runway)}');background-position:${o.fx.toFixed(1)}% ${o.fy.toFixed(1)}%" aria-hidden="true"></span>`;
+    const X = 30 + 0.84 * o.x, Y = o.y;
+    return rwArt(p, v, `${(X - 76).toFixed(1)} ${(Y - 57).toFixed(1)} 152 114`);
+  }
+  let rwModelJs = null;
+  const rwModelViewer = () => rwModelJs || (rwModelJs = new Promise((ok, no) => {
+    if (window.customElements && customElements.get('model-viewer')) return ok();
+    const s = document.createElement('script'); s.type = 'module'; s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+    s.onload = () => ok(); s.onerror = () => { rwModelJs = null; no(); }; document.head.appendChild(s);
+  }));
+
+  V.runway = function (param) {
+    setMeta('The Runway: Every DAUR Pair Up Close | DAUR Supply', 'Every DAUR Supply pair on one floor. Bring a pair forward and inspect its leather, stitching, sole and hardware, with honest prices, ' + sizeSpan() + ' sizes and Cash on Delivery.');
+    const list = P.slice();
+    if (!list.length) { V.notfound(); return; }
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lite = document.documentElement.classList.contains('lite');
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const vs = list.map((p) => p.variants.find(stockOf) || p.variants[0]);
+    // the line opens on the middle pair, so it stands with pairs on both sides; a link to #handle opens on that pair
+    const want = list.findIndex((p) => p.id === String(param || '').split('~')[0]);
+    const start = want >= 0 ? want : Math.floor((list.length - 1) / 2);
+    let a = start, mode = 'browse', pin = -1, size = null, dets = [];
+    const pairHTML = (p, i) => `<button class="rw-pair" type="button" data-i="${i}" aria-label="${esc(p.name)}, ${esc(vs[i].color)}"><span class="rw-tilt"><span class="rw-zoom"><span class="rw-face">${rwArt(p, vs[i])}</span><span class="rw-pins"></span></span></span></button>`;
+    app.innerHTML = `<section class="rw" id="rw" aria-roledescription="carousel" aria-label="The Runway, every pair up close">
+      <div class="rw-stage" id="rwStage" tabindex="0">
+        <div class="rw-floor" aria-hidden="true"><i class="rw-grid" id="rwGrid"></i></div>
+        <div class="rw-head wrap"><span class="eyebrow">Runway / ${list.length} pairs</span><h1>The Runway.</h1><p>${fine ? 'Click a pair to bring it forward, click it again to inspect it. Arrow keys move along the line.' : 'Tap a pair to bring it forward, tap it again to inspect it. Swipe to move along the line.'}</p></div>
+        <div class="rw-line" id="rwLine">${list.map(pairHTML).join('')}</div>
+        <div class="rw-call" id="rwCall" aria-live="polite"></div>
+        <div class="rw-3d" id="rw3d" hidden></div>
+      </div>
+      <div class="rw-bar wrap">
+        <div class="rw-now" aria-live="polite"><span class="mono" id="rwN"></span><b id="rwName"></b><span class="mono" id="rwPrice"></span></div>
+        <div class="rw-ticks" role="tablist" aria-label="Pairs on the runway">${list.map((p, i) => `<button type="button" role="tab" data-t="${i}" aria-label="${esc(p.name)}"><i></i></button>`).join('')}</div>
+        <div class="rw-acts"><button class="rw-arr" type="button" id="rwPrev" aria-label="Previous pair">${ic('arrow')}</button><button class="rw-arr r" type="button" id="rwNext" aria-label="Next pair">${ic('arrow')}</button><button class="btn volt" type="button" id="rwGo">Inspect this pair</button></div>
+      </div>
+      <aside class="rw-panel" id="rwPanel" aria-label="Details of this pair" hidden></aside>
+    </section>
+    <section class="sheet x"><div class="wrap">
+      ${head('How to read the Runway', 'Look closer before you order.', `<a class="link" href="${link('shop')}">Shop all pairs</a>`, 'Every point on a pair is something we check at the bench in Lahore, Sialkot or Kasur before it earns our seal. Pairs are shown as design renders of each style until their studio photos are added.')}
+      <div class="steps rw-steps">${[['Bring it forward', 'Pick a pair from the line. It steps to the front while the rest fall back.'], ['Inspect', 'The floor clears and numbered points mark the leather, stitching, sole and hardware.'], ['Pick your size', 'Choose your EU size and add it to the bag. You pay in cash at your door.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    </div></section>`;
+
+    const rw = $('#rw'), stage = $('#rwStage'), line = $('#rwLine'), panel = $('#rwPanel'), call = $('#rwCall'), grid = $('#rwGrid'), box3d = $('#rw3d');
+    const pairs = $$('.rw-pair', line), ticks = $$('[data-t]', rw);
+    let W = 0, fw = 0, narrow = false, pw = 0, goneT = 0;
+    const measure = () => {
+      W = stage.clientWidth; narrow = W < 961;
+      pw = narrow ? 0 : Math.min(430, Math.round(W * 0.36));
+      fw = narrow ? Math.min(W * 0.9, 560) : Math.min((W - pw) * 0.66, 720);
+      rw.style.setProperty('--fw', Math.round(fw) + 'px'); rw.style.setProperty('--pw', pw + 'px');
+    };
+    // the camera: where each pair stands for the pair in front
+    function place(stagger) {
+      pairs.forEach((el, i) => {
+        const d = i - a, ad = Math.abs(d), sg = Math.sign(d);
+        let x, z, s = 1, r = 0, o, b;
+        if (mode === 'inspect' && d) { x = sg * (W * 0.55 + ad * 60); z = -900; o = 0; b = lite ? 0 : 12; }
+        else if (!d) { x = mode === 'inspect' && !narrow ? -pw / 2 : 0; z = 0; s = mode === 'inspect' ? (narrow ? 1.1 : 1.08) : 1; o = 1; b = 0; }
+        else { x = sg * (fw * (narrow ? 0.58 : 0.6) + (ad - 1) * fw * (narrow ? 0.34 : 0.4)); z = -ad * (narrow ? 420 : 380); r = -sg * 14; o = ad > 3 ? 0 : [1, 0.9, 0.62, 0.34][ad]; b = lite ? 0 : Math.min(ad * 2.4, 7.2); }
+        el.style.setProperty('--x', x.toFixed(1) + 'px'); el.style.setProperty('--z', z + 'px'); el.style.setProperty('--s', s); el.style.setProperty('--r', r + 'deg'); el.style.opacity = o;
+        el.style.filter = b ? `blur(${b}px)` : 'none';
+        el.style.zIndex = 50 - ad; el.style.transitionDelay = stagger ? (ad * 0.09).toFixed(2) + 's' : '';
+        el.classList.toggle('on', !d); el.tabIndex = o ? 0 : -1; el.setAttribute('aria-hidden', o ? 'false' : 'true');
+        if (o) el.style.visibility = '';
+        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${d ? 'Bring it forward' : mode === 'inspect' ? 'Shown in detail' : 'Inspect this pair'}`);
+      });
+      // pairs that have faded out leave the picture entirely once they are gone, so the browser stops drawing them
+      clearTimeout(goneT); goneT = setTimeout(() => pairs.forEach((el) => { if (el.style.opacity === '0') el.style.visibility = 'hidden'; }), stagger ? 1900 : 950);
+      grid.style.setProperty('--gx', (-a * 72) + 'px');
+      ticks.forEach((t, i) => t.setAttribute('aria-selected', i === a));
+      const p = list[a], v = vs[a];
+      $('#rwN').textContent = String(a + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0');
+      $('#rwName').textContent = p.name;
+      $('#rwPrice').textContent = fmt(v.price) + (onSale(v) ? ' / was ' + fmt(v.compareAt) : '');
+      $('#rwGo').textContent = mode === 'inspect' ? 'Back to the line' : 'Inspect this pair';
+    }
+    // a little depth for the pair in front: a few darker copies behind the face give it thickness when it turns
+    function depth() {
+      $$('.rw-sl', line).forEach((x) => x.remove());
+      if (lite || calm) return;
+      const z = $('.rw-zoom', pairs[a]), face = $('.rw-face', pairs[a]);
+      for (let k = 5; k >= 1; k--) { const sl = document.createElement('span'); sl.className = 'rw-sl'; sl.style.setProperty('--k', k); sl.setAttribute('aria-hidden', 'true'); sl.innerHTML = face.innerHTML; z.insertBefore(sl, face); }
+    }
+    // points sit on the drawing directly; on a photo they are placed on the shoe's outline once the photo has its size
+    function pinsFor(i) {
+      const el = pairs[i], p = list[i], v = vs[i], wrap = $('.rw-pins', el);
+      dets = rwDetails(p);
+      wrap.innerHTML = dets.map((o, k) => `<button class="rw-pin" type="button" data-pin="${k}" style="--i:${k};left:${(v.runway ? o.fx : o.dx).toFixed(2)}%;top:${(v.runway ? o.fy : o.dy).toFixed(2)}%" aria-label="Detail ${k + 1}: ${esc(o.t)}" aria-pressed="false"><span>${k + 1}</span></button>`).join('');
+      $$('.rw-pin', wrap).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); choose(+b.dataset.pin === pin ? -1 : +b.dataset.pin); }));
+    }
+    function choose(k) {
+      pin = k;
+      const el = pairs[a], zm = $('.rw-zoom', el), o = dets[k];
+      $$('.rw-pin', el).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.pin === k));
+      $$('[data-row]', panel).forEach((r) => r.setAttribute('aria-pressed', +r.dataset.row === k));
+      if (k < 0 || !o) { zm.style.setProperty('--zs', 1); call.classList.remove('on'); return; }
+      const v = vs[a];
+      zm.style.transformOrigin = `${(v.runway ? o.fx : o.dx).toFixed(2)}% ${(v.runway ? o.fy : o.dy).toFixed(2)}%`;
+      zm.style.setProperty('--zs', narrow ? 1.4 : 1.5);
+      call.innerHTML = `<span class="mono">${String(k + 1).padStart(2, '0')} / ${String(dets.length).padStart(2, '0')}</span><b>${esc(o.t)}</b><p>${esc(o.d)}</p><div class="rw-call-a"><button type="button" data-cn="-1" aria-label="Previous detail">${ic('arrow')}</button><button type="button" data-cn="1" aria-label="Next detail">${ic('arrow')}</button><button type="button" class="mono" data-cx>Close</button></div>`;
+      call.classList.add('on');
+      $$('[data-cn]', call).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); choose((pin + +b.dataset.cn + dets.length) % dets.length); }));
+      $('[data-cx]', call).addEventListener('click', (e) => { e.stopPropagation(); choose(-1); });
+      const row = $(`[data-row="${k}"]`, panel); if (row && !narrow && row.scrollIntoView) row.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
+    }
+    function paintPanel() {
+      const p = list[a], v = vs[a], st = v.stock || {};
+      const keep = Math.max(0, C.marketRetail - v.price);
+      panel.innerHTML = `<div class="rw-pn-h"><span class="eyebrow">In this pair / ${dets.length} details</span><button class="rw-x" type="button" id="rwX" aria-label="Back to the line">&times;</button></div>
+        <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)} / ${esc(lineName(p.category))}</p>
+        <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol>
+        <div class="rw-math">${onSale(v) ? `<div><span class="k">Sale price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Was</span><span class="num strike">${fmt(v.compareAt)}</span></div><div><span class="k">You save</span><b class="num">${fmt(v.compareAt - v.price)}</b></div>`
+          : `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Typical retail</span><span class="num strike">${fmt(C.marketRetail)}+</span></div><div><span class="k">You keep</span><b class="num">${fmt(keep)}+</b></div>`}</div>
+        ${p.variants.length > 1 ? `<div class="rw-cols"><div class="field-label"><span>Colour / ${esc(v.color)}</span></div><div class="swatches">${p.variants.map((x) => `<button class="sw-b" type="button" style="--c:${esc(x.hex || '#777')}" data-rv="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}</div></div>` : ''}
+        <div class="rw-size"><div class="field-label strong"><span>Size / EU ${size || ''}</span><button type="button" id="rwSg">${ic('ruler')}Size guide</button></div>
+          <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>
+        <button class="btn volt block" type="button" id="rwAdd">${ic('bag')}<span>${size ? 'Add EU ' + size + ' to bag, ' + fmt(v.price) : stockOf(v) ? 'Select a size' : 'Sold out in this colour'}</span></button>
+        <div class="rw-more">${p.model ? `<button class="btn ghost" type="button" id="rw3dB">Turn it in 3D</button>` : ''}<a class="link" href="${link('product', p.id + '~' + v.id)}">Full details</a></div>
+        <p class="rw-note">Add a second pair and delivery is free anywhere in Pakistan. Cash on Delivery, 5 day size exchange.</p>`;
+      $('#rwX').addEventListener('click', () => setMode('browse'));
+      $$('[data-row]', panel).forEach((b) => b.addEventListener('click', () => choose(+b.dataset.row === pin ? -1 : +b.dataset.row)));
+      $$('[data-rv]', panel).forEach((b) => b.addEventListener('click', () => {
+        vs[a] = variant(p, b.dataset.rv); size = null;
+        $('.rw-face', pairs[a]).innerHTML = rwArt(p, vs[a]); depth(); pinsFor(a); prepPhoto(a); paintPanel(); place(); if (pin >= 0) choose(pin);
+      }));
+      $$('.rw-size .size', panel).forEach((b) => b.addEventListener('click', () => { size = +b.dataset.s; const y = panel.scrollTop; paintPanel(); panel.scrollTop = y; }));
+      $('#rwSg').addEventListener('click', () => openModal('sizeGuide'));
+      $('#rwAdd').addEventListener('click', () => {
+        if (!stockOf(v)) return;
+        if (!size) { toast('Pick a size first'); const sz = $('.rw-size .sizes', panel); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
+        addToCart(p.id, v.id, size, 1);
+      });
+      const b3 = $('#rw3dB'); if (b3) b3.addEventListener('click', () => open3d(p));
+    }
+    // a real 3D file (a GLB added to the product's media in Shopify) turns under the finger; nothing is loaded until asked
+    function open3d(p) {
+      box3d.hidden = false; box3d.innerHTML = `<p class="mono">Loading the 3D model</p>`;
+      rwModelViewer().then(() => {
+        box3d.innerHTML = `<model-viewer src="${esc(p.model)}" alt="3D model of ${esc(p.name)}" camera-controls touch-action="pan-y" auto-rotate shadow-intensity="1" exposure="1" interaction-prompt="none"></model-viewer><button class="rw-x" type="button" aria-label="Close the 3D model">&times;</button>`;
+        $('.rw-x', box3d).addEventListener('click', close3d);
+      }).catch(() => { box3d.innerHTML = '<p class="mono">The 3D model could not load. Please try again.</p>'; setTimeout(close3d, 2200); });
+    }
+    function close3d() { box3d.hidden = true; box3d.innerHTML = ''; }
+    function prepPhoto(i) {
+      const im = $('.rw-face img', pairs[i]); if (!im) return;
+      const fit = () => { if (im.naturalWidth) pairs[i].style.setProperty('--ar', (im.naturalWidth / im.naturalHeight).toFixed(3)); };
+      if (im.complete) fit(); else im.addEventListener('load', fit, { once: true });
+    }
+    function setMode(m) {
+      if (m === mode) return;
+      mode = m; pin = -1; size = null;
+      rw.classList.toggle('inspect', m === 'inspect');
+      close3d();
+      const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); call.classList.remove('on');
+      if (m === 'inspect') { pinsFor(a); paintPanel(); panel.hidden = false; requestAnimationFrame(() => panel.classList.add('on')); }
+      else { panel.classList.remove('on'); setTimeout(() => { if (mode === 'browse') panel.hidden = true; }, 450); $$('.rw-pins', line).forEach((w) => { w.innerHTML = ''; }); }
+      place();
+      if (m === 'inspect' && narrow) setTimeout(() => { const r = stage.getBoundingClientRect(); if (r.top < 0 || r.top > 80) window.scrollTo({ top: scrollY + r.top - 70, behavior: calm ? 'auto' : 'smooth' }); }, 60);
+    }
+    function go(i) {
+      i = Math.max(0, Math.min(list.length - 1, i));
+      if (i === a) return;
+      if (mode === 'inspect') { setMode('browse'); }
+      $$('.rw-tilt', line).forEach((t) => { t.style.transform = ''; });
+      a = i; place(); depth();
+      if (!SPA) try { history.replaceState(null, '', '#' + list[a].id); } catch (e) { /* not allowed */ }
+    }
+    pairs.forEach((el, i) => el.addEventListener('click', () => { if (moved) return; if (i !== a) go(i); else setMode(mode === 'inspect' ? mode : 'inspect'); }));
+    ticks.forEach((t) => t.addEventListener('click', () => go(+t.dataset.t)));
+    $('#rwPrev').addEventListener('click', () => go(a - 1));
+    $('#rwNext').addEventListener('click', () => go(a + 1));
+    $('#rwGo').addEventListener('click', () => setMode(mode === 'inspect' ? 'browse' : 'inspect'));
+    stage.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(a + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); }
+      else if (e.key === 'Escape') { if (pin >= 0) choose(-1); else setMode('browse'); }
+    });
+    // a swipe moves along the line; a short tap still counts as a tap
+    let sx = null, sy = 0, moved = false;
+    stage.addEventListener('pointerdown', (e) => { if (e.target.closest('.rw-3d')) return; sx = e.clientX; sy = e.clientY; moved = false; });
+    stage.addEventListener('pointerup', (e) => {
+      if (sx == null) return; const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; go(a + (dx < 0 ? 1 : -1)); setTimeout(() => { moved = false; }, 60); }
+    });
+    // the pair in front turns a little toward the mouse, so it reads as an object rather than a picture
+    if (fine && !calm) {
+      let raf = 0;
+      stage.addEventListener('pointermove', (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0; const r = stage.getBoundingClientRect(), t = $('.rw-tilt', pairs[a]); if (!t) return;
+          const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+          t.style.transform = `rotateY(${(x * (mode === 'inspect' ? 14 : 22)).toFixed(2)}deg) rotateX(${(-y * 8).toFixed(2)}deg)`;
+        });
+      });
+      stage.addEventListener('pointerleave', () => { const t = $('.rw-tilt', pairs[a]); if (t) t.style.transform = ''; });
+    }
+    let rt = 0;
+    const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { const was = narrow; measure(); place(); if (was !== narrow && pin >= 0) choose(pin); }, 120); };
+    addEventListener('resize', onResize);
+    measure();
+    pairs.forEach((_, i) => prepPhoto(i));
+    // the line walks in from the back of the studio the first time it is seen
+    if (calm) { place(); depth(); }
+    else {
+      rw.classList.add('rw-in');
+      pairs.forEach((el) => { el.style.setProperty('--x', '0px'); el.style.setProperty('--z', '-1600px'); el.style.setProperty('--s', 1); el.style.setProperty('--r', '0deg'); el.style.opacity = 0; });
+      requestAnimationFrame(() => requestAnimationFrame(() => { place(true); depth(); setTimeout(() => { rw.classList.remove('rw-in'); pairs.forEach((el) => { el.style.transitionDelay = ''; }); }, 1500); }));
+    }
+    // a device that cannot keep up with the walk in (slow frames) gets the same floor without blur and depth copies
+    if (!lite) {
+      const fr = []; let last = 0;
+      const probe = (t) => { if (last) fr.push(t - last); last = t; if (fr.length < 40 && document.body.contains(rw)) requestAnimationFrame(probe); else if (fr.length) { fr.sort((x, y) => x - y); if (fr[fr.length >> 1] > 34) { lite = true; rw.classList.add('rw-lite'); place(); depth(); } } };
+      requestAnimationFrame(probe);
+    }
   };
 
   /* ---- offers ---- */

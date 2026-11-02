@@ -62,6 +62,8 @@ window.DAUR_SHOPIFY = {
     {%- if product and product.id == p.id %} "seo": { "title": {{ page_title | json }}, "description": {{ page_description | default: '' | json }} },{% endif %}
     "options": [{%- for o in p.options_with_values -%}{ "name": {{ o.name | json }}, "values": {{ o.values | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
     "variants": [{%- for v in p.variants -%}{ "id": {{ v.id }}, "options": {{ v.options | json }}, "price": {{ v.price }}, "cap": {{ v.compare_at_price | default: 0 }}, "qty": {{ v.inventory_quantity | default: 0 }}, "managed": {% if v.inventory_management == 'shopify' %}true{% else %}false{% endif %}, "policy": {{ v.inventory_policy | json }}, "available": {{ v.available }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
+    {%- capture glbs -%}{%- for m in p.media -%}{%- if m.media_type == 'model' -%}{%- assign glb = m.sources | where: 'format', 'glb' | first -%}{%- if glb -%}{{ glb.url | json }},{%- endif -%}{%- endif -%}{%- endfor -%}{%- endcapture %}
+    "models": [{{ glbs | remove_last: ',' }}],
     "images": [{%- for im in p.images -%}{ "src": {{ im | image_url: width: 1400 | json }}, "alt": {{ im.alt | default: '' | json }}, "v": {{ im.variants | map: 'id' | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}]
   }{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
