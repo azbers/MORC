@@ -21,7 +21,7 @@
 {%- case template.name -%}
   {%- when 'index' -%}
     <h1>Men's shoes, crafted in Pakistan.</h1>
-    <p>DAUR Supply is a Pakistani footwear brand for men. Leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Karachi and finished with our own hardware. Cash on Delivery to every city in Pakistan, dispatch within 24 hours and free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs.</p>
+    <p>DAUR Supply is a Pakistani footwear brand for men. Leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Kasur and finished with our own hardware. Dispatched from Islamabad, with Cash on Delivery to every city in Pakistan, dispatch within 24 hours and free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs.</p>
     {{ style_links }}
     <ul class="daur-results">{% for p in collections.all.products limit: 24 %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
   {%- when 'product' -%}

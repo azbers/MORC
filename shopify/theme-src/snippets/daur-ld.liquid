@@ -18,10 +18,49 @@
 {%- capture returns -%}
 {"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":5,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/ReturnShippingFees","refundType":"https://schema.org/ExchangeRefund"}
 {%- endcapture -%}
+{%- comment -%}
+  The brand entity. One Organization (an OnlineStore, since DAUR sells online
+  only and has no shop front) with a fixed @id, so the home page, About and
+  Contact all describe the same brand. sameAs lists only profiles that exist:
+  Instagram and Facebook, plus any line in Theme settings > Search > Other
+  official profiles. The address is the dispatch city only (Islamabad, owner confirmed 2 Nov 2026); no street address.
+{%- endcomment -%}
+{%- liquid
+  assign org_id = root | append: '/#organization'
+  assign site_id = root | append: '/#website'
+  assign same = 'https://www.instagram.com/daursupply,https://www.facebook.com/daursupply'
+  assign extra_lines = settings.same_as_extra | default: '' | newline_to_br | split: '<br />'
+  for l in extra_lines
+    assign u = l | strip
+    if u contains 'https://'
+      assign same = same | append: ',' | append: u
+    endif
+  endfor
+  assign same = same | split: ','
+  assign mail = settings.support_email | default: shop.email
+-%}
+{%- capture org -%}
+{"@type":"OnlineStore","@id":{{ org_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"width":1024,"height":1024},"image":{{ 'daur-share.jpg' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"email":{{ mail | json }},"telephone":{{ phone | prepend: '+' | json }},"address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressRegion":"Islamabad Capital Territory","addressCountry":"PK"},"areaServed":{"@type":"Country","name":"Pakistan"},"sameAs":{{ same | json }},"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ mail | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}
+{%- endcapture -%}
 {%- if template.name == 'index' -%}
 <script type="application/ld+json">
-[{"@context":"https://schema.org","@type":"WebSite","name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }}},
-{"@context":"https://schema.org","@type":"OnlineStore","name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"logo":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"sameAs":["https://www.instagram.com/daursupply","https://www.facebook.com/daursupply"],"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ settings.support_email | default: shop.email | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}]
+{"@context":"https://schema.org","@graph":[{{ org }},
+{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"inLanguage":"en-PK","publisher":{"@id":{{ org_id | json }}}}]}
+</script>
+{%- elsif template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' -%}
+{%- liquid
+  assign purl = root | append: page.url
+  if page.handle == 'about'
+    assign ptype = 'AboutPage'
+  else
+    assign ptype = 'ContactPage'
+  endif
+-%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{{ org }},
+{"@type":{{ ptype | json }},"@id":{{ purl | json }},"url":{{ purl | json }},"name":{{ page.title | json }},"inLanguage":"en-PK","isPartOf":{"@id":{{ site_id | json }}},"about":{"@id":{{ org_id | json }}},"mainEntity":{"@id":{{ org_id | json }}}},
+{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"url":{{ root | append: '/' | json }},"publisher":{"@id":{{ org_id | json }}}},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ page.title | json }}}]}]}
 </script>
 {%- elsif template.name == 'product' -%}
 {%- liquid

@@ -201,7 +201,7 @@ window.DAUR_PRODUCTS = [
       "Stitch": "Stitched cupsole",
       "Sole": "Rubber cupsole",
       "Weight": "Approx. 380 g (EU 42)",
-      "Made in": "Karachi, Pakistan"
+      "Made in": "Pakistan"
     },
     "cost": {
       "vendor": 2400,
@@ -552,7 +552,7 @@ window.DAUR_PRODUCTS = [
       "Stitch": "Apron stitch",
       "Sole": "Vulcanised rubber",
       "Weight": "Approx. 300 g (EU 42)",
-      "Made in": "Karachi, Pakistan"
+      "Made in": "Pakistan"
     },
     "cost": {
       "vendor": 2200,
@@ -613,7 +613,7 @@ window.DAUR_PRODUCTS = [
       "Stitch": "Stitched cupsole",
       "Sole": "Rubber cupsole",
       "Weight": "Approx. 300 g (EU 38)",
-      "Made in": "Karachi, Pakistan"
+      "Made in": "Pakistan"
     },
     "cost": {
       "vendor": 2300,

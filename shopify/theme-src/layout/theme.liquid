@@ -37,8 +37,8 @@
   assign daur_desc = page_description
   if template.name == 'index'
     # a fixed fallback, so the home page never goes out with only the shop name and no description
-    assign daur_title = settings.seo_home_title | default: "Men's Leather Shoes & Sneakers in Pakistan | DAUR Supply"
-    assign daur_desc = settings.seo_home_description | default: "Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan and finished with the DAUR mark. Cash on Delivery to every city, free delivery on 2 pairs."
+    assign daur_title = settings.seo_home_title | default: "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
+    assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Cash on Delivery nationwide and free delivery on 2 pairs."
   endif
   if daur_desc == blank
     assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan. Cash on Delivery to every city in Pakistan." 
@@ -124,7 +124,7 @@
 {{ 'styles.css' | asset_url | stylesheet_tag }}
 {{ 'daur-theme.css' | asset_url | stylesheet_tag }}
 <noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}</style></noscript>
-{% render 'daur-ld', product: product, collection: collection, blog: blog, article: article %}
+{% render 'daur-ld', product: product, collection: collection, blog: blog, article: article, page: page %}
 {{ content_for_header }}
 </head>
 <body data-page="{{ daur_page }}">
