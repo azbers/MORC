@@ -123,7 +123,8 @@
 <link rel="preload" as="image" href="{{ 'leather.jpg' | asset_url }}">
 {{ 'styles.css' | asset_url | stylesheet_tag }}
 {{ 'daur-theme.css' | asset_url | stylesheet_tag }}
-<noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}</style></noscript>
+{%- if template.name == 'index' %}{{ 'daur-collection.css' | asset_url | stylesheet_tag }}{% endif %}
+<noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}#app>.oc-section{display:block!important}</style></noscript>
 {% render 'daur-ld', product: product, collection: collection, blog: blog, article: article, page: page %}
 {{ content_for_header }}
 </head>
@@ -138,6 +139,7 @@
 {%- if daur_page == 'policies' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'social.js' | asset_url }}" defer></script>
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
+{%- if template.name == 'index' %}<script src="{{ 'daur-collection.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'app.js' | asset_url }}" defer></script>
 </body>
 </html>
