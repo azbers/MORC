@@ -259,19 +259,20 @@
   // sections marked .rail pin while the page scrolls and slide their cards sideways
   let rails = [];
   function railMeasure() {
-    rails = [...document.querySelectorAll('section.rail')].map((sec) => {
-      const view = sec.querySelector('.rail-view'), track = sec.querySelector('.rail-track'), pin = sec.querySelector('.rail-pin');
-      track.style.transform = '';
-      const hdr = document.querySelector('.hdr'); sec.style.setProperty('--rail-top', (hdr ? hdr.offsetHeight : 0) + 'px');
-      const cs = getComputedStyle(view);
+    // writes, then reads, then writes, so the page is laid out a fixed number of times however many rails there are
+    const hdr = document.querySelector('.hdr'), hh = hdr ? hdr.offsetHeight : 0;
+    const list = [...document.querySelectorAll('section.rail')].map((sec) => ({ sec, view: sec.querySelector('.rail-view'), track: sec.querySelector('.rail-track'), pin: sec.querySelector('.rail-pin') }));
+    list.forEach((x) => { x.track.style.transform = ''; x.sec.style.setProperty('--rail-top', hh + 'px'); });
+    list.forEach((x) => {
+      const cs = getComputedStyle(x.view);
       // slide until the last card sits inside the right gutter
-      const travel = Math.max(0, track.offsetWidth + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) - view.clientWidth);
+      x.travel = Math.max(0, x.track.offsetWidth + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) - x.view.clientWidth);
       // touch screens swipe the rail natively; pinning a section against a finger feels like a stall
-      const on = travel > 8 && !reduce && fine;
-      sec.classList.toggle('rail-on', on);
-      sec.style.height = on ? (pin.offsetHeight + travel) + 'px' : '';
-      return { sec, track, bar: sec.querySelector('.rail-bar i'), travel, on, off: hdr ? hdr.offsetHeight : 0 };
+      x.on = x.travel > 8 && !reduce && fine;
     });
+    list.forEach((x) => x.sec.classList.toggle('rail-on', x.on));
+    list.forEach((x) => { x.h = x.on ? x.pin.offsetHeight + x.travel : 0; });
+    rails = list.map((x) => { x.sec.style.height = x.on ? x.h + 'px' : ''; return { sec: x.sec, track: x.track, bar: x.sec.querySelector('.rail-bar i'), travel: x.travel, on: x.on, off: hh }; });
     railMove();
   }
   function railMove() {
@@ -301,7 +302,7 @@
       const btn = document.createElement('button'); btn.type = 'button'; btn.className = sel.className + ' dd-btn';
       btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
       const lab = sel.id && document.querySelector(`label[for="${sel.id}"]`); btn.setAttribute('aria-label', (lab ? lab.textContent : sel.getAttribute('aria-label') || 'Choose') + ', ' + (sel.selectedOptions[0] || {}).textContent);
-      const list = document.createElement('ul'); list.className = 'dd-list'; list.setAttribute('role', 'listbox');
+      const list = document.createElement('ul'); list.className = 'dd-list'; list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', lab ? lab.textContent : sel.getAttribute('aria-label') || 'Options');
       sel.parentNode.insertBefore(wrap, sel); wrap.append(sel, btn, list); sel.classList.add('dd-native'); sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
       let act = 0;
       const paint = () => {
@@ -362,7 +363,14 @@
   on('after', () => {
     const first = !booted;
     document.documentElement.classList.add('drawn');
-    if (!booted) { booted = true; cursor(); pit(); bigWord(); progress(); tilt(); magnets(); bagBump(); }
+    if (!booted) {
+      booted = true; progress(); bagBump();
+      // decoration starts once the page is showing and the phone is free, in small steps, so the first screen is never held up
+      const idle = (fn, t) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: t }) : setTimeout(fn, 200));
+      idle(() => { cursor(); tilt(); magnets(); }, 1200);
+      idle(() => bigWord(), 2500);
+      idle(() => pit(), 3500);
+    }
     const app = document.getElementById('app');
     // the first view shows at once; the soft fade is kept for moving between views
     if (app && !reduce && !first) { app.classList.remove('pg-in'); void app.offsetWidth; app.classList.add('pg-in'); }

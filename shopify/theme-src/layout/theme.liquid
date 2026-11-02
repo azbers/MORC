@@ -23,8 +23,12 @@
       assign daur_page = 'shop'
     when 'cart'
       assign daur_page = 'cart'
+    when 'search'
+      assign daur_page = 'search'
+    when '404'
+      assign daur_page = 'notfound'
     when 'page'
-      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies' | split: ','
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers' | split: ','
       for pair in views
         assign kv = pair | split: ':'
         if page.handle == kv[0]
@@ -52,9 +56,11 @@
 {%- if daur_desc %}<meta name="description" content="{{ daur_desc | escape }}">{% endif %}
 <link rel="canonical" href="{{ canonical_url }}">
 {%- if settings.clarity_id != blank %}
-<script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",{{ settings.clarity_id | strip | json }});</script>
+{%- comment -%} Clarity loads after the page has finished loading, so it never competes with the first screen; calls made before then are queued {%- endcomment -%}
+<script>(function(c,l,a,r,i){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};function go(){var t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";l.head.appendChild(t)}function later(){(c.requestIdleCallback||function(f){setTimeout(f,1500)})(go,{timeout:4000})}if(l.readyState==='complete')later();else c.addEventListener('load',later)})(window,document,"clarity","script",{{ settings.clarity_id | strip | json }});</script>
 {%- endif %}
 {%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
+{%- if template.name == '404' or template.name == 'search' or template.directory == 'customers' %}<meta name="robots" content="noindex">{% endif %}
 <meta name="theme-color" content="#F5EEE4">
 <script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
 {%- comment -%} Link previews (WhatsApp, Facebook, Instagram DMs, X): every page gets a title, a description and a 1200 x 630 image. Image order: product photo, article photo, the page's own social image, the Social sharing image in Online Store > Preferences, the theme share image setting, then assets/daur-share.jpg. {%- endcomment -%}
@@ -116,18 +122,18 @@
 <link rel="icon" type="image/svg+xml" href="{{ 'daur-favicon.svg' | asset_url }}">
 <link rel="apple-touch-icon" href="{{ 'daur-favicon-180.png' | asset_url }}">
 {%- endif %}
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-{%- comment -%} fonts load without holding up the first paint; the system fallbacks show until they arrive {%- endcomment -%}
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+{%- comment -%} the three brand fonts are served from the theme itself (no Google Fonts round trips); the heading font is fetched first {%- endcomment -%}
+<link rel="preload" as="font" type="font/woff2" href="{{ 'font-grotesk.woff2' | asset_url }}" crossorigin>
 <link rel="preload" as="image" href="{{ 'leather.jpg' | asset_url }}">
 {{ 'styles.css' | asset_url | stylesheet_tag }}
-{{ 'daur-theme.css' | asset_url | stylesheet_tag }}
+{%- comment -%} the small Shopify only stylesheet is printed inline, so it is not a second file holding up the first paint {%- endcomment -%}
+<style>{% render 'daur-theme-css' %}</style>
 <noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}</style></noscript>
 {% render 'daur-ld', product: product, collection: collection, blog: blog, article: article, page: page %}
 {{ content_for_header }}
 </head>
 <body data-page="{{ daur_page }}">
+<div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1">{{ content_for_layout }}</main>
 {% render 'daur-data', product: product, daur_param: daur_param %}
 <script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
@@ -135,7 +141,7 @@
 <script src="{{ 'icons.js' | asset_url }}" defer></script>
 <script src="{{ 'kicks.js' | asset_url }}" defer></script>
 <script src="{{ 'pile.js' | asset_url }}" defer></script>
-{%- if daur_page == 'policies' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
+{%- if daur_page == 'policies' or daur_page == 'contact' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'social.js' | asset_url }}" defer></script>
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>

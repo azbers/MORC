@@ -10,7 +10,7 @@ const sandbox = { window: {} };
 require('vm').runInNewContext(fs.readFileSync(path.join(root, 'assets/data.js'), 'utf8'), sandbox);
 const C = sandbox.window.DAUR_CONFIG;
 
-const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">';
+const FONTS = '<link rel="preload" as="font" type="font/woff2" href="assets/font-grotesk.woff2" crossorigin>';
 
 const THEME_BOOT = '<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem(\'daur.theme\')===\'dark\')d.dataset.theme=\'dark\';if(localStorage.getItem(\'daur.grid\')===\'1\')d.classList.add(\'grid-1\')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add(\'lite\')}catch(e){}</script>';
 
@@ -28,9 +28,13 @@ const PAGES = {
   list: ['list.html', 'Join the alert list | DAUR Supply', 'Get DAUR Supply drops, restocks and discounts first on WhatsApp.'],
   feed: ['feed.html', 'The Feed | DAUR Supply', 'Drops, fit checks and the supply line in motion.'],
   policies: ['policies.html', 'Terms, Privacy and Refund Policy | DAUR Supply', 'DAUR Supply terms of service, privacy policy, shipping, Cash on Delivery, returns, exchanges and refunds for orders across Pakistan.'],
+  about: ['about.html', 'About DAUR Supply | Pakistani Men\'s Shoe Brand, Dispatched from Islamabad', 'DAUR Supply is a Pakistani footwear brand for men: leather sneakers, formal shoes and chelsea boots from workshops in Lahore, Sialkot and Kasur, dispatched from Islamabad with Cash on Delivery.'],
+  contact: ['contact.html', 'Contact DAUR Supply | WhatsApp, Phone and Email', 'Contact DAUR Supply on WhatsApp, phone or email. Orders dispatched from Islamabad with Cash on Delivery across Pakistan.'],
+  offers: ['offers.html', 'Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.'],
+  notfound: ['404.html', 'Page not found | DAUR Supply', 'This address does not lead to a page on DAUR Supply. Search the collection or go to the shop.'],
   admin: ['admin.html', 'Supply Control | DAUR Supply', 'Store admin.']
 };
-const NOINDEX = ['cart', 'checkout', 'order', 'track', 'wishlist', 'admin'];
+const NOINDEX = ['cart', 'checkout', 'order', 'track', 'wishlist', 'admin', 'notfound'];
 const SCRIPTS = ['assets/data.js', 'assets/shoe.js', 'assets/app.js'];
 const OPTIONAL = ['assets/icons.js', 'assets/kicks.js', 'assets/pile.js', 'assets/polart.js', 'assets/social.js', 'assets/admin.js', 'assets/alive.js'];
 
@@ -59,6 +63,7 @@ ${FONTS}
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body data-page="${key}">
+<div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1"><noscript><p style="padding:40px">DAUR Supply needs JavaScript for the bag and checkout. Message our WhatsApp order line to order directly.</p></noscript></main>
 ${scripts.map((s) => `<script src="${s}"></script>`).join('\n')}
 </body>
@@ -76,12 +81,11 @@ fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nDisallow: /check
 const inline = (f) => fs.readFileSync(path.join(root, f), 'utf8').replace(/<\/script/gi, '<\\/script');
 const js = ['assets/data.js', 'assets/shoe.js'].concat(OPTIONAL.filter((f) => fs.existsSync(path.join(root, f))), ['assets/app.js']);
 // the stylesheet points at the leather tiles next to it; the one file preview carries them inline
-const inlineTiles = (css) => css.replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
+const inlineTiles = (css) => css.replace(/url\("(font-[a-z]+\.woff2)"\)/g, (m, f) => `url("data:font/woff2;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`).replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'dist/preview.html'), `<title>DAUR Supply</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${PAGES.home[2]}">
-${FONTS}
 ${THEME_BOOT}
 <style>${inlineTiles(fs.readFileSync(path.join(root, 'assets/styles.css'), 'utf8'))}</style>
 <main id="app" tabindex="-1"></main>

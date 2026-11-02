@@ -35,6 +35,19 @@ window.DAUR_STATUSES = [
 {%- endfor -%}
 {%- endcapture -%}
 window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
+{%- comment -%} Offers (Content > Metaobjects > Offer): the Offers page lists the ones switched on; anything past its end time is left out here and again in the browser {%- endcomment -%}
+{%- capture offers -%}
+{%- assign now_s = 'now' | date: '%s' | plus: 0 -%}
+{%- for o in shop.metaobjects.offer.values limit: 20 -%}
+{%- assign live = true -%}
+{%- if o.show.value == false -%}{%- assign live = false -%}{%- endif -%}
+{%- if o.ends_at.value -%}{%- assign end_s = o.ends_at.value | date: '%s' | plus: 0 -%}{%- if end_s < now_s -%}{%- assign live = false -%}{%- endif -%}{%- endif -%}
+{%- if live -%}
+{ "id": {{ o.system.handle | json }}, "title": {{ o.title.value | default: '' | json }}, "code": {{ o.code.value | default: '' | strip | upcase | json }}, "details": {{ o.details.value | default: '' | json }}, "min": {{ o.min_spend.value | default: 0 }}, "sort": {{ o.sort.value | default: 99 }}, "ends": {% if o.ends_at.value %}{{ o.ends_at.value | date: '%Y-%m-%dT%H:%M:%S%z' | json }}{% else %}null{% endif %} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_OFFERS = [{{ offers | strip | remove_last: ',' }}];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },
