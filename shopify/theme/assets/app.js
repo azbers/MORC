@@ -105,7 +105,6 @@
     </div></section>
 
     <div id="ext-stories"></div>
-    <div id="ext-collection"></div>
     <section class="sheet x"><div class="wrap">
       ${ae(P?"Shop by style":"Shop by line",`${i} ${P?"style":"line"}${t.length===1?"":"s"}. One signature.`,`<a class="link" href="${f("shop")}">Shop all</a>`)}
       <div class="lines">${t.map((c,m)=>Sa(c,m)).join("")}</div>

@@ -1,18 +1,4 @@
 {
-  "sections": {
-    "main": {
-      "type": "daur-main",
-      "settings": {}
-    },
-    "collection": {
-      "type": "daur-collection",
-      "settings": {
-        "show_all": true
-      }
-    }
-  },
-  "order": [
-    "main",
-    "collection"
-  ]
+  "sections": { "main": { "type": "daur-main", "settings": {} } },
+  "order": ["main"]
 }

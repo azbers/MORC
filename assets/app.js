@@ -515,7 +515,6 @@
     </div></section>
 
     <div id="ext-stories"></div>
-    <div id="ext-collection"></div>
     <section class="sheet x"><div class="wrap">
       ${head(ONE ? 'Shop by style' : 'Shop by line', `${nWord} ${ONE ? 'style' : 'line'}${lines.length === 1 ? '' : 's'}. One signature.`, `<a class="link" href="${link('shop')}">Shop all</a>`)}
       <div class="lines">${lines.map((l, i) => lineCard(l, i)).join('')}</div>

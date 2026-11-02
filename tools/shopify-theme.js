@@ -24,7 +24,7 @@ for (const f of SHARED) {
   if (esbuild && /\.(js|css)$/.test(f)) fs.writeFileSync(to, esbuild.transformSync(fs.readFileSync(from, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code);
   else fs.copyFileSync(from, to);
 }
-if (esbuild) for (const f of ['daur-shopify.js', 'daur-theme.css', 'daur-collection.js', 'daur-collection.css']) { const p = path.join(out, 'assets', f); fs.writeFileSync(p, esbuild.transformSync(fs.readFileSync(p, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code); }
+if (esbuild) for (const f of ['daur-shopify.js', 'daur-theme.css']) { const p = path.join(out, 'assets', f); fs.writeFileSync(p, esbuild.transformSync(fs.readFileSync(p, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code); }
 fs.rmSync(zip, { force: true });
 execFileSync('zip', ['-qr', zip, 'assets', 'config', 'layout', 'locales', 'sections', 'snippets', 'templates'], { cwd: out });
 console.log('theme in', path.relative(root, out), 'and', path.relative(root, zip), (fs.statSync(zip).size / 1024).toFixed(0) + ' KB');
