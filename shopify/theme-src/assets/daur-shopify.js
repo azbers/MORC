@@ -36,7 +36,9 @@
   function toProduct(r) {
     const tags = r.tags || [];
     // images whose alt text starts with "Drawing:" exist only so cart and checkout show a picture; the storefront draws those pairs live
-    r = Object.assign({}, r, { images: (r.images || []).filter((im) => !/^drawing:/i.test(im.alt || '')) });
+    // images whose alt text starts with "Runway:" are cut out photos for the Runway page only (transparent PNG, side profile, toe right)
+    const runway = (r.images || []).filter((im) => /^runway:/i.test(im.alt || ''));
+    r = Object.assign({}, r, { images: (r.images || []).filter((im) => !/^(drawing|runway):/i.test(im.alt || '')) });
     const oi = (re) => r.options.findIndex((o) => re.test(o.name));
     const ci = oi(/colou?r/i), si = oi(/size/i);
     const opt = (v, i) => (i < 0 ? '' : v.options[i]);
@@ -65,7 +67,8 @@
       });
       const first = vs[0] || {};
       const hex = swatch[colour.toLowerCase()] || '#222222';
-      return { id: handleize(colour), color: colour, hex, price: first.price / 100, compareAt: first.cap && first.cap > first.price ? first.cap / 100 : null, stock, sid, palette: palette(hex, soles[colour.toLowerCase()]), images: imgs.map((im) => im.src) };
+      const rw = runway.find((im) => im.v.some((id) => ids.includes(id)) || im.alt.toLowerCase().includes(colour.toLowerCase())) || (runway.length === 1 ? runway[0] : null);
+      return { id: handleize(colour), color: colour, hex, runway: rw ? rw.src : null, price: first.price / 100, compareAt: first.cap && first.cap > first.price ? first.cap / 100 : null, stock, sid, palette: palette(hex, soles[colour.toLowerCase()]), images: imgs.map((im) => im.src) };
     });
     // photos tied to no colour go to every colour that has none of its own
     const loose = r.images.filter((im) => !claimed.has(im.src)).map((im) => im.src);
@@ -75,14 +78,14 @@
     return {
       id: r.handle, name: r.title.replace(/^(DAUR|M\.O\.R\.C\.)\s+/i, ''), audience, group: tagVal(tags, 'group'), category: r.type || 'Footwear',
       silhouette: tagVal(tags, 'silhouette') || 'runner', tag: tagVal(tags, 'badge') || 'Drop 01', createdAt: r.created, sizes,
-      description: body.description, specs: body.specs,
+      description: body.description, specs: body.specs, model: (r.models || [])[0] || null,
       seo: r.seo || null, variants
     };
   }
   window.DAUR_PRODUCTS = (S.raw || []).filter((r) => r.variants.length).map(toProduct);
 
   /* ---------- links ---------- */
-  const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies', about: 'about', contact: 'contact', offers: 'offers' };
+  const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies', about: 'about', contact: 'contact', offers: 'offers', runway: 'runway' };
   // a line or style with a collection of its own links to that collection, so each has an address search engines can list
   const COLL = { men: 'men', women: 'women', kids: 'kids', sale: 'sale', sneakers: 'sneakers', leather: 'leather-shoes', hybrids: 'casual' };
   const has = new Set(S.collections || []);
