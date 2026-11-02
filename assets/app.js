@@ -144,7 +144,28 @@
      C.give.on switches it everywhere, C.give.pct is the share of profit (at least 5).
      The share is of our profit, never of the price, and nothing is added to the price.
      Slices are pooled and given every quarter to verified cases; the records go on the Our giving page. */
-  const GIVE = Object.assign({ on: true, pct: 5 }, C.give || {});
+  const GIVE = Object.assign({ on: true, pct: 5, causes: ['School fees', 'Medical bills', 'Food rations'], quarter: null }, C.give || {});
+  GIVE.causes = (GIVE.causes || []).map((x) => String(x).trim()).filter(Boolean).slice(0, 4);
+  // calendar quarter, for example "October to December 2026"; the giving happens at its end
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const quarterOf = (d) => { d = d || new Date(); const q = Math.floor(d.getMonth() / 3); return { key: d.getFullYear() + '-Q' + (q + 1), label: MONTHS[q * 3] + ' to ' + MONTHS[q * 3 + 2] + ' ' + d.getFullYear() }; };
+  // the buyer's vote for this quarter's cause; it travels with the order (cart attribute "Slice cause" on Shopify)
+  const sliceVote = (v) => { if (v === undefined) { const x = store.get('sliceVote', ''); return GIVE.causes.includes(x) ? x : ''; } store.set('sliceVote', v); };
+  window.DAUR_SLICE_VOTE = () => (GIVE.on ? sliceVote() : '');
+  function votePicker() {
+    if (!GIVE.on || GIVE.causes.length < 2) return '';
+    const cur = sliceVote();
+    return `<fieldset class="sl-vote"><legend>Where should this quarter's slice go? <span>Your vote travels with your order.</span></legend>
+      <div class="sl-opts">${GIVE.causes.map((c) => `<button type="button" class="sl-opt" data-vote="${esc(c)}" aria-pressed="${c === cur}">${esc(c)}</button>`).join('')}</div></fieldset>`;
+  }
+  function bindVote(root) {
+    $$('.sl-opt', root || document).forEach((b) => b.addEventListener('click', () => {
+      const v = b.getAttribute('aria-pressed') === 'true' ? '' : b.dataset.vote;
+      sliceVote(v);
+      $$('.sl-opt', root || document).forEach((x) => x.setAttribute('aria-pressed', x.dataset.vote === v));
+      if (v) toast('Your vote: ' + v + '. Thank you.');
+    }));
+  }
   // a loaf seen from the side; the last slice is its own piece so the cut can lift it away
   let loafN = 0;
   function loaf(label, cls) {
@@ -180,7 +201,7 @@
       <div class="sl-hero" data-recut>${loaf(GIVE.pct + '%', 'big')}</div>
       <h2 class="sl-h">A slice of this pair is not ours to keep.</h2>
       <p>On every pair we sell, we set aside at least ${GIVE.pct}% of the profit we make, not of the price you pay, and give it to verified cases of need that we check ourselves.</p>
-      <ul class="sl-list"><li><b>Your price stays the same.</b> The slice comes out of our side, never added to yours.</li><li><b>Given every quarter.</b> We pool the slices and give them each quarter to verified cases of need, after our own checks.</li><li><b>Published in full.</b> The details of every giving go on this site and on our social pages.</li><li><b>No marketing budget.</b> The slice is given, not spent on ads.</li></ul>
+      <ul class="sl-list"><li><b>Your price stays the same.</b> The slice comes out of our side, never added to yours.</li><li><b>Given every quarter.</b> We pool the slices and give them each quarter to verified cases of need, after our own checks.</li><li><b>Buyers choose the cause.</b> In your bag you can vote for where this quarter's slice goes. The cause with the most votes from buyers gets it.</li><li><b>Published in full.</b> The details of every giving go on this site and on our social pages, and every buyer of the quarter hears where their slice went.</li><li><b>No marketing budget.</b> The slice is given, not spent on ads.</li></ul>
       <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
       <a class="link" href="${link('giving')}">How our giving works</a>`;
     m.classList.add('on');
@@ -1039,7 +1060,7 @@
       <div class="wrap"><div class="two cart-page"><div class="main">${freeMeter(t.n)}${t.lines.map((d) => lineHTML(d, true)).join('')}
         <a class="link" href="${link('shop')}" style="display:inline-block;margin-top:24px">Continue shopping</a></div>
         <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout, Cash on Delivery <span class="arr">&rarr;</span></a><p class="form-note">One delivery fee for all of Pakistan, confirmed at checkout.</p></aside></div></div>`;
-      bindLines(app); bindPromo(paint);
+      bindLines(app); bindPromo(paint); bindVote(app);
     }
     rerender = () => { paintCounts(); paint(); };
     paint();
@@ -1053,7 +1074,7 @@
       <div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>
       <div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
-      ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>` : ''}
+      ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>${votePicker()}` : ''}
       <div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>`;
   }
   function bindPromo(cb) {
@@ -1104,7 +1125,7 @@
       $('#coSide').innerHTML = `<div class="mini-items">${t.lines.map((d) => `<div class="mini-item"><span class="th">${visual(d.p, d.v)}<em>${d.l.qty}</em></span><span><b>${esc(d.p.name)}</b><br><span class="meta">${esc(d.v.color)} / EU ${d.l.size}</span></span><span class="num">${fmt(d.total)}</span></div>`).join('')}</div>
         ${summary(t, true)}<p class="form-note">Delivered anywhere in Pakistan in ${C.delivery.days} after dispatch.</p>
         <button class="btn volt block" type="submit" id="place">Place order, pay ${fmt(t.total)} on delivery</button><a class="link" href="${link('cart')}" style="justify-self:start">Edit bag</a>`;
-      bindPromo(side);
+      bindPromo(side); bindVote(app);
     };
     rerender = () => { paintCounts(); side(); };
     f.city.addEventListener('change', side);
@@ -1128,7 +1149,7 @@
       const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), via: f.via.value, waUpdates: f.waUpdates.checked },
         address: { city: f.city.value.trim(), area: f.area.value.trim(), address: f.address.value.trim(), landmark: f.landmark.value.trim(), postal: f.postal.value.trim(), note: f.note.value.trim() },
         items: t.lines.map((d) => ({ pid: d.p.id, name: d.p.name, color: d.v.color, size: d.l.size, qty: d.l.qty, price: d.v.price })),
-        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: 'Cash on Delivery' };
+        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: 'Cash on Delivery', sliceCause: window.DAUR_SLICE_VOTE() };
       const orders = store.get('orders', []); orders.unshift(order); store.set('orders', orders);
       t.lines.forEach((d) => { d.v.received = d.v.received || Object.assign({}, d.v.stock); d.v.stock[d.l.size] = Math.max(0, (d.v.stock[d.l.size] || 0) - d.l.qty); });
       store.set('catalog', ALL);
@@ -1670,6 +1691,8 @@
       <div class="steps gv-steps">${[['You buy a pair', 'At the same price as always. Nothing is added for charity.'], ['We cut the slice', `At least ${GIVE.pct}% of the profit we make on that pair, worked out on the price you finally pay.`], ['We give it every quarter', 'The slices are pooled and given each quarter, so the help is large enough to matter, to verified cases of need after our own checks.'], ['We publish it', 'Date, amount and the case, on this page and on our social pages. It is never a marketing budget.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
+    ${quarterHTML()}
+
     ${rec.length ? `<section class="sheet x"><div class="wrap">
       ${head('The record', fmt(sum) + ' given so far.', '', 'Every giving we make is listed here with its date and amount.')}
       <div class="gv-rec">${rec.map((r) => `<article class="gv-item rv">${r.photo ? `<img src="${esc(r.photo)}" alt="${esc(r.where || 'Giving record')}" loading="lazy" width="600" height="450">` : ''}<span class="mono mute">${esc(day(r.date))}</span><b>${esc(fmt(+r.amount))}</b>${r.where ? `<h3>${esc(r.where)}</h3>` : ''}${r.note ? `<p>${esc(r.note)}</p>` : ''}</article>`).join('')}</div>
@@ -1680,8 +1703,28 @@
       <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. The people we give to are our neighbours, not a campaign, and every case is treated with dignity.</p>
       <a class="btn volt" href="${link('shop')}" style="justify-self:start">Shop the collection <span class="arr">&rarr;</span></a></div></div></section>`;
     cutWhenSeen(app);
+    bindVote(app);
+    const pile = $('.gv-pile', app);
+    if (pile && 'IntersectionObserver' in window) { const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { pile.classList.add('on'); io.disconnect(); } }, { threshold: 0.3 }); io.observe(pile); } else if (pile) pile.classList.add('on');
     reveal();
   };
+  // this quarter: a slice for every pair sold so far and the buyers' votes, both counted from real orders
+  // (shop metafields daur.slice_quarter / slice_pairs / slice_votes, refreshed by a daily routine); nothing shows until there is a count for the current quarter
+  function quarterHTML() {
+    const q = quarterOf();
+    const Q = GIVE.quarter && GIVE.quarter.key === q.key ? GIVE.quarter : null;
+    const n = Q ? Math.max(0, Math.floor(+Q.pairs || 0)) : 0;
+    const votes = Q && Q.votes ? Q.votes : {};
+    const total = GIVE.causes.reduce((a, c) => a + (+votes[c] || 0), 0);
+    const shown = Math.min(n, 120);
+    return `<section class="sheet x"><div class="wrap">
+      ${head('This quarter / ' + q.label, n ? `${n} slice${n === 1 ? '' : 's'} so far.` : 'The loaf for this quarter.', '', n ? 'One slice for every pair bought this quarter. At the end of the quarter they are given together, to one verified case of need.' : 'Every pair bought this quarter adds a slice. At the end of the quarter they are given together, to one verified case of need.')}
+      ${n ? `<div class="gv-pile" aria-label="${n} slices">${Array.from({ length: shown }, (_, i) => `<i style="--i:${i}"></i>`).join('')}${n > shown ? `<span class="mono">+ ${n - shown}</span>` : ''}</div>` : ''}
+      ${GIVE.causes.length > 1 ? `<div class="gv-vote"><h3>Buyers choose where it goes.</h3><p>Vote in your bag before checkout. The cause with the most votes from this quarter's buyers receives the slice.</p>
+        ${total ? `<ul class="gv-bars">${GIVE.causes.map((c) => { const v = +votes[c] || 0; const pc = Math.round(v / total * 100); return `<li><span>${esc(c)}</span><b>${pc}%</b><i style="--w:${pc}%"></i></li>`; }).join('')}</ul><p class="mono mute">${total} vote${total === 1 ? '' : 's'} so far</p>` : ''}
+        ${votePicker()}</div>` : ''}
+    </div></section>`;
+  }
   V.offers = function () {
     setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.');
     const offers = liveOffers();
@@ -1860,11 +1903,12 @@
       ['How do I pick my size?', 'Use the size guide on any product page. Our leather pairs run true to size; if you are between sizes, go up.'],
       ['Do you deliver to my city?', 'Yes. We deliver to every city and town in Pakistan that our courier reaches, in ' + C.delivery.days + ', for ' + fmt(C.delivery.fee) + ', or free on ' + C.freeDeliveryPairs + ' pairs or more.'],
       ['How long does delivery take?', 'We dispatch within 24 hours of confirming your order. Delivery then takes ' + C.delivery.days + ' in most cities. Remote areas and public holidays can take longer.'],
+      ...(GIVE.on ? [['Where does the 5% go?', 'At least ' + GIVE.pct + '% of the profit we make on every pair is set aside, never added to your price. Every quarter we give it to one verified case of need, chosen by the votes of that quarter\'s buyers, and publish the record on the Our giving page.']] : []),
       ['How do I use a coupon code?', 'Enter it in the bag or at checkout. One saving applies per order: free delivery or your code, whichever saves you more. Gift offers are added on top.']
     ];
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our promise</span><h1>What every pair promises.</h1><p class="aside">Printed on the manifest card in every box. If we break a line, we make it right.</p></div></section>
       <div class="wrap"><div class="terms">
-        <nav><a href="#dispatch" data-jump="dispatch">01 Dispatch</a><a href="#delivery" data-jump="delivery">02 Delivery</a><a href="#cod" data-jump="cod">03 Cash on Delivery</a><a href="#exchanges" data-jump="exchanges">04 Exchanges</a><a href="#defects" data-jump="defects">05 Defects</a><a href="#sizing" data-jump="sizing">06 Size guide</a><a href="#faq" data-jump="faq">07 FAQ</a></nav>
+        <nav><a href="#dispatch" data-jump="dispatch">01 Dispatch</a><a href="#delivery" data-jump="delivery">02 Delivery</a><a href="#cod" data-jump="cod">03 Cash on Delivery</a><a href="#exchanges" data-jump="exchanges">04 Exchanges</a><a href="#defects" data-jump="defects">05 Defects</a>${GIVE.on ? '<a href="#slice" data-jump="slice">06 The slice</a>' : ''}<a href="#sizing" data-jump="sizing">${GIVE.on ? '07' : '06'} Size guide</a><a href="#faq" data-jump="faq">${GIVE.on ? '08' : '07'} FAQ</a></nav>
         <div class="body">
           <section class="clause" id="dispatch"><span class="no">01 / Dispatch</span><div class="c"><h2>Confirmed, then out within 24 hours.</h2><p>Every order is confirmed by phone call or WhatsApp before it ships. Once confirmed, the pair is inspected, re-laced, sealed and handed to the courier within 24 hours. Orders confirmed on Sunday or a public holiday dispatch the next working day.</p></div></section>
           <section class="clause" id="delivery"><span class="no">02 / Delivery</span><div class="c"><h2>Every city in Pakistan. One flat fee.</h2>
@@ -1873,8 +1917,9 @@
           <section class="clause" id="cod"><span class="no">03 / Cash on Delivery</span><div class="c"><h2>Pay when the box is in your hands.</h2><ul><li>No advance payment and no card needed. There is no COD surcharge.</li><li>Pay the rider the exact total shown on your confirmation.</li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li><li>Refusing a confirmed parcel without a reason costs us two courier legs. Repeat refusals lose COD access.</li></ul></div></section>
           <section class="clause" id="exchanges"><span class="no">04 / Exchanges</span><div class="c"><h2>Five days to swap the size.</h2><ul><li>Message us within 5 days of delivery with your order number.</li><li>The pair must be unworn outside, in the original box, with the Supply Unit seal still attached.</li><li>Send it back to us with the courier of your choice. Once it reaches us and passes the check, your new size is dispatched.</li><li>If the size you need is sold out, we refund the item price to your bank or wallet account.</li><li>Sale pairs cannot be exchanged for size. Defects within 30 days are still covered.</li></ul></div></section>
           <section class="clause" id="defects"><span class="no">05 / Defects</span><div class="c"><h2>30 days on stitching and sole.</h2><p>If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp. We replace the pair, or refund it if no replacement is available. Wear and tear, scuffs and misuse are not defects.</p></div></section>
-          <section class="clause" id="sizing"><span class="no">06 / Size guide</span><div class="c"><h2>Measure, then match.</h2>${sizeTable()}<p>Measure your foot heel to toe while standing. Pick the size whose length is equal to or just above your measurement.</p></div></section>
-          <section class="clause" id="faq"><span class="no">07 / FAQ</span><div class="c faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></section>
+          ${GIVE.on ? `<section class="clause" id="slice"><span class="no">06 / The slice</span><div class="c"><h2>A slice of every pair is not ours to keep.</h2><ul><li>At least ${GIVE.pct}% of the profit we make on every pair is set aside for people in need. It is a share of our profit, never added to your price.</li><li>Every quarter the slices are given together to one verified case of need, after our own checks.</li><li>Buyers vote in the bag for the cause. The most chosen cause receives the quarter's slice.</li><li>Date, amount and the case are published on <a class="link" href="${link('giving')}">Our giving</a> and on our social pages, and every buyer of the quarter is told where it went.</li></ul></div></section>` : ''}
+          <section class="clause" id="sizing"><span class="no">${GIVE.on ? '07' : '06'} / Size guide</span><div class="c"><h2>Measure, then match.</h2>${sizeTable()}<p>Measure your foot heel to toe while standing. Pick the size whose length is equal to or just above your measurement.</p></div></section>
+          <section class="clause" id="faq"><span class="no">${GIVE.on ? '08' : '07'} / FAQ</span><div class="c faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></section>
         </div></div></div>`;
     if (param) { const t = document.getElementById(param); if (t) setTimeout(() => t.scrollIntoView(), 30); }
   };

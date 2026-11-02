@@ -161,6 +161,13 @@
         "step": 1,
         "default": 5,
         "info": "The pledge is at least 5% of profit, never of the price. Record each quarterly giving in Content > Metaobjects > Giving record; it appears on the Our giving page."
+      },
+      {
+        "type": "text",
+        "id": "give_causes",
+        "label": "Causes buyers can vote for",
+        "default": "School fees, Medical bills, Food rations",
+        "info": "Two to four causes, separated by commas. Buyers vote in the bag; the vote reaches each order as Slice cause. Change the list only between quarters."
       }
     ]
   }

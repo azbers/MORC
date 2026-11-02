@@ -111,6 +111,9 @@
       await fetch(base + '/cart/clear.js', { method: 'POST', headers: { Accept: 'application/json' } });
       const r = await fetch(base + '/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ items }) });
       if (!r.ok) { const e = await r.json().catch(() => ({})); A.toast(e.description || 'A size in your bag just sold out. Please check the bag.'); return; }
+      // the buyer's vote for this quarter's charity slice goes on the order as "Slice cause"
+      const vote = window.DAUR_SLICE_VOTE ? window.DAUR_SLICE_VOTE() : '';
+      await fetch(base + '/cart/update.js', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ attributes: { 'Slice cause': vote } }) }).catch(() => {});
       const code = A.coupon;
       location.href = code ? base + '/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent(base + '/checkout') : base + '/checkout';
     } catch (e) { A.toast('Checkout could not open. Please try again.'); }
