@@ -1880,12 +1880,19 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 .rw-head h1 { font: 500 clamp(40px, 6.4vw, 104px)/.86 var(--display); letter-spacing: -.05em; text-transform: uppercase; }
 .rw-head p { color: var(--mute); font-size: 14px; max-width: 36ch; }
 .rw.inspect .rw-head { opacity: 0; transform: translateY(-12px); }
-.rw-line { position: absolute; inset: 0; perspective: 1300px; perspective-origin: 50% 34%; }
-.rw-pair { position: absolute; left: 50%; bottom: 15%; width: var(--fw, 60vw); margin-left: calc(var(--fw, 60vw) / -2); aspect-ratio: var(--ar, 476 / 282); transform-origin: 50% 100%;
+.rw-line { position: absolute; inset: 0; perspective: 1300px; perspective-origin: 50% 34%; transition: transform .55s var(--rw-ease); }
+.rw.dragging .rw-line { transition: none; }
+.rw-stage { cursor: grab; }
+.rw.dragging .rw-stage { cursor: grabbing; }
+.rw-pair { position: absolute; left: 50%; bottom: 7%; cursor: pointer; width: var(--fw, 60vw); margin-left: calc(var(--fw, 60vw) / -2); aspect-ratio: var(--ar, 476 / 282); transform-origin: 50% 100%;
   transform: translate3d(var(--x, 0px), var(--y, 0px), var(--z, 0px)) rotateY(var(--r, 0deg)) scale(var(--s, 1)); transition: transform 1s var(--rw-ease), opacity .8s var(--rw-ease), filter .8s var(--rw-ease); }
 .rw-in .rw-pair { transition-duration: 1.5s, 1.2s, 1.2s; }
-.rw-pair.on { transform-style: preserve-3d; cursor: zoom-in; }
-.rw.inspect .rw-pair.on { cursor: default; }
+.rw-pair.on { transform-style: preserve-3d; }
+/* with the details open, only the pair itself and its points take clicks; a click on the floor around it closes the details */
+.rw.inspect .rw-pair.on { pointer-events: none; cursor: default; }
+.rw.inspect .rw-pair.on .rw-face svg *, .rw.inspect .rw-pair.on .rw-face img, .rw.inspect .rw-pin { pointer-events: auto; }
+.rw.inspect .rw-stage { cursor: default; }
+.rw-sl { pointer-events: none; }
 .rw-pair:focus-visible { outline: none; }
 .rw-pair:focus-visible .rw-face { outline: 1px dashed var(--signal); outline-offset: 4px; border-radius: 14px; }
 .rw-tilt, .rw-zoom { position: absolute; inset: 0; transform-style: preserve-3d; }
@@ -1972,7 +1979,7 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 .rw-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 960px) {
   .rw { --rwh: clamp(440px, 68svh, 600px); }
-  .rw-pair { bottom: 13%; }
+  .rw-pair { bottom: 6%; }
   .rw-bar { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "now prev next" "ticks ticks ticks" "go go go"; column-gap: 8px; row-gap: 10px; padding-block: 14px 18px; }
   .rw-now { grid-area: now; } .rw-ticks { grid-area: ticks; } .rw-acts { display: contents; }
   #rwPrev { grid-area: prev; } #rwNext { grid-area: next; } #rwGo { grid-area: go; width: 100%; }
@@ -1997,5 +2004,14 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
   .rw-pair, .rw-tilt, .rw-zoom, .rw-grid, .rw-panel, .rw-call, .rw-head { transition-duration: .01s !important; }
   .rw-pin, .rw-pin::before { animation: none !important; }
 }
-/* with the Runway in the top row, mid size screens give the header's Our story link to the nav (it stays in the footer) */
-@media (min-width: 861px) and (max-width: 1180px) { .hdr-r .link-hide { display: none; } }
+/* the feed: a photo with its own background sits in a fixed square frame, the same size on every reel */
+.reel-stage.photo .layer { translate: 0 0; padding: 0; }
+.reel-photo { position: relative; width: min(72vw, 44vh, 460px); aspect-ratio: 1; border-radius: 22px; overflow: hidden; display: grid; background: #F3EFE8; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06); transition: transform .7s var(--ease); }
+.reel-stage.photo .layer .reel-photo img { grid-area: 1 / 1; position: relative; width: 100%; height: 100%; object-fit: contain; transform: none; filter: none; }
+/* the same photo, blurred, fills the frame behind it, so a wide or tall photo never leaves empty bands */
+.reel-stage.photo .layer .reel-photo img.rp-bg { object-fit: cover; filter: blur(18px) saturate(1.05); transform: scale(1.15); opacity: .85; }
+.reel-stage.photo:hover .layer img:not(.rp-bg), .reel-stage.photo:focus-visible .layer img:not(.rp-bg) { transform: none; filter: none; }
+.reel-stage.photo:hover .reel-photo, .reel-stage.photo:focus-visible .reel-photo { transform: translateY(-2%) scale(1.03); }
+@media (min-width: 901px) { .reel-photo { width: min(46vh, 480px); } }
+/* the short menu: one line per link */
+.nav a { white-space: nowrap; }

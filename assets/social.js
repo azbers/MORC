@@ -365,7 +365,10 @@
     });
     document.getElementById('app').innerHTML = `<h1 class="sr-only">The DAUR Supply feed: new pairs and price cuts</h1><div class="feed" id="feed">${reels.map((r, i) => r.text
       ? `<section class="reel txt"><div class="reel-in">${r.text.map((t, j) => `<p class="${j % 2 ? 'volt' : ''}" style="animation-delay:${j * .25}s">${esc(t)}</p>`).join('')}<span class="mono mute">Swipe up</span></div></section>`
-      : `<section class="reel" data-i="${i}" style="--glow:${esc(r.v.hex || '#333')}"><a class="reel-stage" href="${link('product', r.p.id + '~' + r.v.id)}" aria-label="Open ${esc(r.p.name)} in ${esc(r.v.color)}"><div class="layer rn float">${visual(r.p, r.v)}</div><div class="layer scan">${visual(r.p, r.v, { mode: 'blueprint' })}</div><span class="reel-peek mono">View the pair <span class="arr">&rarr;</span></span></a>
+      : `<section class="reel" data-i="${i}" style="--glow:${esc(r.v.hex || '#333')}"><a class="reel-stage${r.v.images && r.v.images.length ? ' photo' : ''}" href="${link('product', r.p.id + '~' + r.v.id)}" aria-label="Open ${esc(r.p.name)} in ${esc(r.v.color)}">${r.v.images && r.v.images.length
+        // a photo keeps its own background, so it sits in one calm square frame of fixed size instead of filling the reel
+        ? `<div class="layer rn"><span class="reel-photo"><img class="rp-bg" src="${esc(r.v.images[0])}" alt="" aria-hidden="true" loading="lazy" decoding="async">${visual(r.p, r.v)}</span></div>`
+        : `<div class="layer rn float">${visual(r.p, r.v)}</div><div class="layer scan">${visual(r.p, r.v, { mode: 'blueprint' })}</div>`}<span class="reel-peek mono">View the pair <span class="arr">&rarr;</span></span></a>
         <div class="reel-cap"><span class="mono"><b>@daursupply</b> / ${esc(r.p.audience)}${r.p.group ? ' / ' + esc(r.p.group) : ''}</span>
           <h2>${esc(r.p.name)}</h2><p>${esc(r.v.color)}${r.p.description ? '. ' + esc(r.p.description.split('.')[0]) + '.' : ''}</p>
           <span class="mono mute">#DAURsupply #${esc(r.p.category)} #ValueFlex</span>

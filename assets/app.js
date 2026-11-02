@@ -186,8 +186,9 @@
 
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
-  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['runway', '', 'Runway'], ['shop', 'sale', 'Sale'], ['offers', '', 'Offers'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
-  const NAV_TOP = navItems.length - 2;
+  // the menu stays short: the styles live in the Shop all filters, and Offers and the Feed live in the footer
+  const navItems = [['shop', '', 'Shop all'], ['runway', '', 'Runway'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
+  const NAV_TOP = 3;
   function chrome() {
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
@@ -218,7 +219,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -1300,7 +1301,7 @@
   function rwDetails(p) {
     const S = (SHOE.SHAPES || {})[p.silhouette] || (SHOE.SHAPES || {}).court, sp = p.specs || {}, ST = RW_ST;
     const said = (k, fallback) => sp[k] ? sp[k].replace(/\.?$/, '. ') + fallback : fallback;
-    const out = [{ t: 'The upper', d: said('Upper', 'Bent at the flex point and checked for cracks and loose grain before we accept the pair.'), x: S.laced ? 352 : 300, y: (S.ey + ST) / 2 + (S.laced ? 14 : 8) }];
+    const out = [{ t: 'The upper', d: said('Upper', 'Bent at the flex point and checked for cracks and loose grain before we accept the pair.'), x: S.laced ? 352 : S.loafer ? 170 : S.chelsea || S.slip ? 380 : 300, y: (S.ey + ST) / 2 + (S.laced ? 14 : S.chelsea ? 20 : 8) }];
     out.push(S.moc ? { t: 'Moc toe stitching', d: said('Stitch', 'Tight, even spacing all round the toe. A wavy or skipped stitch is a reject at our checking table.'), x: 440, y: (S.ey + S.toe + 30) / 2 }
       : { t: 'Stitching', d: said('Stitch', 'Even, tight stitching at the toe and heel. A wavy or skipped stitch is a reject at our checking table.'), x: 470, y: (ST - 6 + S.toe + 18) / 2 - 4 });
     if (S.laced) {
@@ -1352,7 +1353,7 @@
     app.innerHTML = `<section class="rw" id="rw" aria-roledescription="carousel" aria-label="The Runway, every pair up close">
       <div class="rw-stage" id="rwStage" tabindex="0">
         <div class="rw-floor" aria-hidden="true"><i class="rw-grid" id="rwGrid"></i></div>
-        <div class="rw-head wrap"><span class="eyebrow">Runway / ${list.length} pairs</span><h1>The Runway.</h1><p>${fine ? 'Click a pair to bring it forward, click it again to inspect it. Arrow keys move along the line.' : 'Tap a pair to bring it forward, tap it again to inspect it. Swipe to move along the line.'}</p></div>
+        <div class="rw-head wrap"><span class="eyebrow">Runway / ${list.length} pairs</span><h1>The Runway.</h1><p>${fine ? 'Click a pair to see its details, click around it to come back. Drag or scroll sideways to move along the line.' : 'Tap a pair to see its details, tap around it to come back. Swipe to move along the line.'}</p></div>
         <div class="rw-line" id="rwLine">${list.map(pairHTML).join('')}</div>
         <div class="rw-call" id="rwCall" aria-live="polite"></div>
         <div class="rw-3d" id="rw3d" hidden></div>
@@ -1366,7 +1367,7 @@
     </section>
     <section class="sheet x"><div class="wrap">
       ${head('How to read the Runway', 'Look closer before you order.', `<a class="link" href="${link('shop')}">Shop all pairs</a>`, 'Every point on a pair is something we check at the bench in Lahore, Sialkot or Kasur before it earns our seal. Pairs are shown as design renders of each style until their studio photos are added.')}
-      <div class="steps rw-steps">${[['Bring it forward', 'Pick a pair from the line. It steps to the front while the rest fall back.'], ['Inspect', 'The floor clears and numbered points mark the leather, stitching, sole and hardware.'], ['Pick your size', 'Choose your EU size and add it to the bag. You pay in cash at your door.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+      <div class="steps rw-steps">${[['Move along the line', 'Drag, swipe or scroll sideways. The pair in front is sharp while the rest fall back.'], ['Open the details', 'Click a pair: the floor clears and numbered points mark the leather, stitching, sole and hardware.'], ['Pick your size', 'Choose your EU size and add it to the bag. You pay in cash at your door.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>`;
 
     const rw = $('#rw'), stage = $('#rwStage'), line = $('#rwLine'), panel = $('#rwPanel'), call = $('#rwCall'), grid = $('#rwGrid'), box3d = $('#rw3d');
@@ -1391,7 +1392,7 @@
         el.style.zIndex = 50 - ad; el.style.transitionDelay = stagger ? (ad * 0.09).toFixed(2) + 's' : '';
         el.classList.toggle('on', !d); el.tabIndex = o ? 0 : -1; el.setAttribute('aria-hidden', o ? 'false' : 'true');
         if (o) el.style.visibility = '';
-        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${d ? 'Bring it forward' : mode === 'inspect' ? 'Shown in detail' : 'Inspect this pair'}`);
+        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${mode === 'inspect' && !d ? 'Shown in detail' : 'See its details'}`);
       });
       // pairs that have faded out leave the picture entirely once they are gone, so the browser stops drawing them
       clearTimeout(goneT); goneT = setTimeout(() => pairs.forEach((el) => { if (el.style.opacity === '0') el.style.visibility = 'hidden'; }), stagger ? 1900 : 950);
@@ -1486,15 +1487,30 @@
       place();
       if (m === 'inspect' && narrow) setTimeout(() => { const r = stage.getBoundingClientRect(); if (r.top < 0 || r.top > 80) window.scrollTo({ top: scrollY + r.top - 70, behavior: calm ? 'auto' : 'smooth' }); }, 60);
     }
+    // moving along the line; with the details open, the next pair opens straight into its details
     function go(i) {
       i = Math.max(0, Math.min(list.length - 1, i));
       if (i === a) return;
-      if (mode === 'inspect') { setMode('browse'); }
+      const keep = mode === 'inspect';
       $$('.rw-tilt', line).forEach((t) => { t.style.transform = ''; });
-      a = i; place(); depth();
+      if (keep) { const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); $('.rw-pins', pairs[a]).innerHTML = ''; call.classList.remove('on'); close3d(); pin = -1; size = null; }
+      a = i;
+      if (keep) { pinsFor(a); const y = panel.scrollTop; paintPanel(); panel.scrollTop = narrow ? y : 0; }
+      place(); depth();
       if (!SPA) try { history.replaceState(null, '', '#' + list[a].id); } catch (e) { /* not allowed */ }
     }
-    pairs.forEach((el, i) => el.addEventListener('click', () => { if (moved) return; if (i !== a) go(i); else setMode(mode === 'inspect' ? mode : 'inspect'); }));
+    // one click on any pair opens its details; a click anywhere around it closes them again
+    pairs.forEach((el, i) => el.addEventListener('click', (e) => {
+      if (moved) return;
+      e.stopPropagation();
+      if (i !== a) go(i);
+      if (mode !== 'inspect') setMode('inspect');
+    }));
+    stage.addEventListener('click', (e) => {
+      if (moved || mode !== 'inspect') return;
+      if (e.target.closest('.rw-pair.on, .rw-call, .rw-3d')) return;
+      setMode('browse');
+    });
     ticks.forEach((t) => t.addEventListener('click', () => go(+t.dataset.t)));
     $('#rwPrev').addEventListener('click', () => go(a - 1));
     $('#rwNext').addEventListener('click', () => go(a + 1));
@@ -1504,13 +1520,40 @@
       else if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); }
       else if (e.key === 'Escape') { if (pin >= 0) choose(-1); else setMode('browse'); }
     });
-    // a swipe moves along the line; a short tap still counts as a tap
-    let sx = null, sy = 0, moved = false;
-    stage.addEventListener('pointerdown', (e) => { if (e.target.closest('.rw-3d')) return; sx = e.clientX; sy = e.clientY; moved = false; });
-    stage.addEventListener('pointerup', (e) => {
-      if (sx == null) return; const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
-      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; go(a + (dx < 0 ? 1 : -1)); setTimeout(() => { moved = false; }, 60); }
+    // dragging (finger or mouse) slides the whole line with the pointer, and letting go settles on the nearest pair
+    let sx = null, sy = 0, dx = 0, moved = false, dragging = false;
+    const stepW = () => fw * (narrow ? 0.58 : 0.6);
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.button > 0 || e.target.closest('.rw-3d, .rw-call')) return;
+      sx = e.clientX; sy = e.clientY; dx = 0; moved = false; dragging = false;
     });
+    stage.addEventListener('pointermove', (e) => {
+      if (sx == null) return;
+      dx = e.clientX - sx; const dy = e.clientY - sy;
+      if (!dragging) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return; dragging = true; rw.classList.add('dragging'); try { stage.setPointerCapture(e.pointerId); } catch (er) { /* fine */ } }
+      // resistance at both ends of the line
+      const end = (a === 0 && dx > 0) || (a === list.length - 1 && dx < 0);
+      line.style.transform = `translate3d(${(end ? dx * 0.25 : dx * 0.9).toFixed(1)}px, 0, 0)`;
+    });
+    const release = () => {
+      if (sx == null) return; sx = null;
+      if (!dragging) return;
+      dragging = false; rw.classList.remove('dragging'); moved = true; setTimeout(() => { moved = false; }, 80);
+      const steps = Math.round(-dx / stepW()) || (Math.abs(dx) > 44 ? (dx < 0 ? 1 : -1) : 0);
+      line.style.transform = '';
+      if (steps) go(a + steps);
+    };
+    stage.addEventListener('pointerup', release); stage.addEventListener('pointercancel', release);
+    // a trackpad or a sideways mouse wheel (or Shift and the wheel) moves along the line; up and down still scroll the page
+    let wAcc = 0, wLock = 0;
+    stage.addEventListener('wheel', (e) => {
+      const x = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+      if (!x) return;
+      e.preventDefault();
+      if (Date.now() < wLock) return;
+      wAcc += x;
+      if (Math.abs(wAcc) > 50) { go(a + (wAcc > 0 ? 1 : -1)); wAcc = 0; wLock = Date.now() + 420; }
+    }, { passive: false });
     // the pair in front turns a little toward the mouse, so it reads as an object rather than a picture
     if (fine && !calm) {
       let raf = 0;
