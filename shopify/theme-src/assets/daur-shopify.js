@@ -2,8 +2,8 @@
    Runs before app.js. Turns the products Shopify prints into the page
    (snippets/daur-data.liquid) into the catalog shape the storefront uses,
    maps every storefront link to a Shopify address, and hands the bag to
-   Shopify checkout. Reviews are sent to the store owner through the Shopify
-   contact form. */
+   Shopify checkout. Fit notes are emailed to the store owner through the
+   Shopify contact form; the owner approves them in Content > Metaobjects. */
 (function () {
   'use strict';
   const S = window.DAUR_SHOPIFY;
@@ -120,34 +120,69 @@
     if (location.hash === '#go-checkout') { history.replaceState(null, '', location.pathname); checkout(); }
   });
 
-  /* ---------- reviews reach the owner by email through the contact form ---------- */
-  const LABEL = { reviews: 'New review to check' };
+  /* ---------- fit notes reach the owner by email through the Shopify contact form ----------
+     A storefront cannot write metaobjects, so each fit note is emailed to the store contact
+     address, laid out field by field like Content > Metaobjects > Fit note. The quiet
+     background send is checked: when Shopify answers with its spam check (hCaptcha) or any
+     error, the same note is sent again as a normal form post so the customer can pass the
+     check and land back on the pair. Before this check, challenged sends were lost silently. */
+  const LABEL = { reviews: 'New fit note to approve' };
   const sent = {};
-  S.forward = function (key, list) {
-    if (!LABEL[key] || !Array.isArray(list) || !list.length) return;
-    // a new review is added to the front of the list; anything else is appended
-    const item = key === 'reviews' ? list.filter((r) => r.status === 'pending').sort((a, b) => String(b.at).localeCompare(String(a.at)))[0] : list[list.length - 1];
-    if (!item) return;
+  function fitNoteFields(key, item) {
     const A = window.DAUR_API;
-    const sig = key + JSON.stringify(item);
-    if (sent[sig]) return; sent[sig] = 1;
-    // laid out to match the Fit note fields in Shopify (Content > Metaobjects > Fit note)
     const FIT = { small: 'Runs small', true: 'True to size', large: 'Runs large' };
     const pr = A.prod(item.pid); const vr = pr && A.variant(pr, item.vid);
     const lines = key === 'reviews' ? [
-      'Product: ' + (pr ? pr.name : item.pid), 'Colour: ' + (vr ? vr.color : item.vid || ''), 'Stars: ' + item.rating,
+      'Status: Pending (change to Approved to show it on the site)',
+      'Product: ' + (pr ? pr.name : item.pid), 'Product link: ' + location.origin + location.pathname,
+      'Colour: ' + (vr ? vr.color : item.vid || ''), 'Stars: ' + item.rating,
       'Customer name: ' + (item.name || ''), 'City: ' + (item.city || ''), 'Headline: ' + (item.title || ''), 'Review text: ' + (item.body || ''),
       'Size worn (EU): ' + (item.size || ''), 'Fit: ' + (FIT[item.fit] || ''), 'Order number given: ' + (item.order || 'none'),
-      'Photo: ' + (item.photo ? 'attached on the site; ask the customer to send it on WhatsApp' : 'none'), 'Date: ' + String(item.at || '').slice(0, 10)
+      'Customer email: ' + (item.email || 'not given'),
+      'Photo: ' + (item.photo ? 'chosen on the site but not sent by email; ask the customer to send it on WhatsApp' : 'none'), 'Date: ' + String(item.at || '').slice(0, 10)
     ] : Object.keys(item).map((k) => k + ': ' + (typeof item[k] === 'object' ? JSON.stringify(item[k]) : item[k]));
-    const f = new URLSearchParams();
-    f.append('form_type', 'contact'); f.append('utf8', '✓');
-    f.append('contact[email]', item.email || C.supportEmail);
-    f.append('contact[name]', item.name || item.wa || 'Website visitor');
-    f.append('contact[subject]', LABEL[key]);
-    f.append('contact[body]', LABEL[key] + '\n\n' + lines.join('\n') + '\n\nPage: ' + location.href);
-    fetch(base + '/contact', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: f.toString() }).catch(() => { /* WhatsApp stays the fallback */ });
+    const subject = LABEL[key] + (pr ? ': ' + pr.name : '');
+    return [
+      ['form_type', 'contact'], ['utf8', '\u2713'],
+      ['contact[email]', item.email || C.supportEmail],
+      ['contact[name]', item.name || item.wa || 'Website visitor'],
+      ['contact[subject]', subject],
+      ['contact[body]', subject + '\n\n' + lines.join('\n')]
+    ];
+  }
+  // the fallback: a real form post, so Shopify can show its spam check and then return to the pair
+  function postForm(fields) {
+    const back = location.pathname + '?fitnote=sent#reviews';
+    const form = document.createElement('form');
+    form.method = 'post'; form.action = base + '/contact'; form.style.display = 'none';
+    fields.concat([['return_to', back]]).forEach(([k, v]) => { const i = document.createElement('input'); i.type = 'hidden'; i.name = k; i.value = v; form.appendChild(i); });
+    document.body.appendChild(form); form.submit();
+  }
+  S.forward = function (key, list) {
+    if (!LABEL[key] || !Array.isArray(list) || !list.length) return;
+    // a new fit note is added to the front of the list
+    // each note is sent once, even when the list is saved again later (Helpful votes save it too)
+    let done = []; try { done = JSON.parse(localStorage.getItem('daur.fnsent') || '[]'); } catch (e) { /* storage blocked */ }
+    const item = list.filter((r) => r.status === 'pending' && r.id && done.indexOf(r.id) === -1).sort((a, b) => String(b.at).localeCompare(String(a.at)))[0];
+    if (!item || sent[item.id]) return; sent[item.id] = 1;
+    try { localStorage.setItem('daur.fnsent', JSON.stringify(done.concat(item.id).slice(-50))); } catch (e) { /* storage blocked */ }
+    const fields = fitNoteFields(key, item);
+    const body = new URLSearchParams(); fields.forEach(([k, v]) => body.append(k, v));
+    fetch(base + '/contact', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'text/html' }, body: body.toString(), credentials: 'same-origin' })
+      .then((r) => {
+        const u = r.url || '';
+        // Shopify sends a successful contact post on to a page marked contact_posted=true
+        if (r.ok && u.indexOf('contact_posted=true') > -1 && u.indexOf('challenge') === -1) return;
+        postForm(fields);
+      })
+      .catch(() => postForm(fields));
   };
+  // back from the spam check: confirm the note arrived
+  if (/[?&]fitnote=sent/.test(location.search) && /[?&]contact_posted=true/.test(location.search)) {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(() => {
+      const A = window.DAUR_API; if (A && A.toast) A.toast('Thank you. Your fit note reached the DAUR team and goes live once approved.');
+    }, 400));
+  }
 
   /* ---------- views Shopify handles itself ---------- */
   const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };

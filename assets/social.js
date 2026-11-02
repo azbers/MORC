@@ -136,6 +136,7 @@
         <div class="f-row"><div class="f"><label for="rvName">Name</label><input id="rvName" maxlength="40" autocomplete="given-name"><span class="err"></span></div><div class="f"><label for="rvCity">City</label><input id="rvCity" maxlength="40" autocomplete="address-level2"></div></div>
         <div class="f-row"><div class="f"><label for="rvSize">Size bought</label><select id="rvSize"><option value="">Select</option>${p.sizes.map((x) => `<option>${x}</option>`).join('')}</select></div>
           <div class="f"><label for="rvFit">Fit</label><select id="rvFit"><option value="">Select</option><option value="small">Runs small</option><option value="true">True to size</option><option value="large">Runs large</option></select></div></div>
+        <div class="f"><label for="rvEmail">Email (optional, never shown)</label><input id="rvEmail" type="email" maxlength="80" autocomplete="email" placeholder="So the team can reply or verify your order"><span class="err"></span></div>
         <div class="f-row"><div class="f"><label for="rvOrder">Order number (optional)</label><input id="rvOrder" placeholder="DAUR-XXXXXXX"></div>
           <div class="f"><label for="rvPhoto">Fit check photo (optional)</label><input id="rvPhoto" type="file" accept="image/*" style="padding-top:13px"></div></div>
         <button class="btn volt" type="submit">Submit for approval</button>
@@ -145,12 +146,12 @@
       f.onsubmit = (e) => {
         e.preventDefault();
         const err = (el, m) => { const w = el.closest('.f'); w.classList.toggle('bad', !!m); $('.err', w).textContent = m || ''; return !m; };
-        const ok = [err($('.star-pick', f), rating ? '' : 'Pick a rating.'), err($('#rvBody'), $('#rvBody').value.trim().length < 10 ? 'Write at least a sentence.' : ''), err($('#rvName'), $('#rvName').value.trim() ? '' : 'Add your name.')].every(Boolean);
+        const ok = [err($('.star-pick', f), rating ? '' : 'Pick a rating.'), err($('#rvBody'), $('#rvBody').value.trim().length < 10 ? 'Write at least a sentence.' : ''), err($('#rvName'), $('#rvName').value.trim() ? '' : 'Add your name.'), err($('#rvEmail'), !$('#rvEmail').value.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('#rvEmail').value.trim()) ? '' : 'Check the email address.')].every(Boolean);
         if (!ok) return;
         const oid = $('#rvOrder').value.trim().toUpperCase();
         const verified = !!oid && store.get('orders', []).some((o) => o.id === oid && o.items.some((i) => i.pid === p.id));
         const all = R.all();
-        all.unshift({ id: 'r' + Date.now().toString(36), pid: p.id, vid: v.id, rating, title: $('#rvTitle').value.trim(), body: $('#rvBody').value.trim(), name: $('#rvName').value.trim(), city: $('#rvCity').value.trim(), size: $('#rvSize').value, fit: $('#rvFit').value, photo, order: oid, verified, status: 'pending', helpful: 0, at: new Date().toISOString() });
+        all.unshift({ id: 'r' + Date.now().toString(36), pid: p.id, vid: v.id, rating, title: $('#rvTitle').value.trim(), body: $('#rvBody').value.trim(), name: $('#rvName').value.trim(), city: $('#rvCity').value.trim(), size: $('#rvSize').value, fit: $('#rvFit').value, photo, order: oid, email: $('#rvEmail').value.trim(), verified, status: 'pending', helpful: 0, at: new Date().toISOString() });
         R.save(all);
         f.innerHTML = '<p class="form-note ok">Received. Your review is in the approval queue and goes live once the team has read it.</p>';
         notice('Thank you, your review is in.', 'The team reads every review before it goes live. Yours will appear on this pair once it is approved.');
