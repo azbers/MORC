@@ -48,38 +48,38 @@
   EXT.stars = stars;
 
   /* ---------------- hearts: Instagram style ratings, likes and celebrations ----------------
-     DAUR purple (--daur-purple) is the brand's noticing colour: hearts, likes and celebrations. */
+     Hearts are a deep blood red (--daur-heart): ratings, likes and celebrations. */
   const CALM = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const HEART = {
     css() {
       if (document.getElementById('daur-hearts-css')) return;
       const st = document.createElement('style'); st.id = 'daur-hearts-css';
       st.textContent = `
-:root{--daur-purple:#7C3AED;--daur-purple-2:#A855F7;--daur-purple-rgb:124,58,237}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--daur-purple:#B57CFF;--daur-purple-2:#D8B4FE;--daur-purple-rgb:181,124,255}}
-:root[data-theme="dark"]{--daur-purple:#B57CFF;--daur-purple-2:#D8B4FE;--daur-purple-rgb:181,124,255}
+:root{--daur-heart:#9B0F1E;--daur-heart-2:#C8102E;--daur-heart-rgb:155,15,30}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--daur-heart:#D7263D;--daur-heart-2:#F0475B;--daur-heart-rgb:215,38,61}}
+:root[data-theme="dark"]{--daur-heart:#D7263D;--daur-heart-2:#F0475B;--daur-heart-rgb:215,38,61}
 .stars.hearts{letter-spacing:2px}
-.stars.hearts .s-fg{color:var(--daur-purple);background:linear-gradient(90deg,var(--daur-purple),var(--daur-purple-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hz{font-style:normal;color:var(--daur-purple)}
-.rv-dist .minibar i,.rv-fit .fit-track i{background:var(--daur-purple)}
-.rv-avg .big{color:var(--daur-purple)}
+.stars.hearts .s-fg{color:var(--daur-heart);background:linear-gradient(90deg,var(--daur-heart),var(--daur-heart-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hz{font-style:normal;color:var(--daur-heart)}
+.rv-dist .minibar i,.rv-fit .fit-track i{background:var(--daur-heart)}
+.rv-avg .big{color:var(--daur-heart)}
 .star-pick button{font-size:26px;line-height:1;color:var(--line-2);transition:color .2s,transform .2s;background:none;border:0;padding:2px 3px;cursor:pointer;position:relative}
-.star-pick button.on{color:var(--daur-purple);text-shadow:0 0 14px rgba(var(--daur-purple-rgb),.45)}
+.star-pick button.on{color:var(--daur-heart);text-shadow:0 0 14px rgba(var(--daur-heart-rgb),.45)}
 .star-pick button:hover{transform:scale(1.15)}
 .star-pick button.pop,.like.pop .lk-h{animation:hpop .55s cubic-bezier(.2,1.6,.4,1)}
 @keyframes hpop{0%{transform:scale(1)}25%{transform:scale(.7)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
 .like{display:inline-flex;align-items:center;gap:6px;font:400 11px/1 var(--mono);letter-spacing:.1em;color:var(--dim);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;position:relative;transition:border-color .2s,color .2s}
 .like .lk-h{font-size:15px;line-height:1;display:inline-block;color:transparent;-webkit-text-stroke:1.3px currentColor}
-.like:hover{color:var(--daur-purple);border-color:var(--daur-purple)}
-.like.on{color:var(--daur-purple);border-color:rgba(var(--daur-purple-rgb),.5);background:rgba(var(--daur-purple-rgb),.08)}
-.like.on .lk-h{color:var(--daur-purple);-webkit-text-stroke:0}
+.like:hover{color:var(--daur-heart);border-color:var(--daur-heart)}
+.like.on{color:var(--daur-heart);border-color:rgba(var(--daur-heart-rgb),.5);background:rgba(var(--daur-heart-rgb),.08)}
+.like.on .lk-h{color:var(--daur-heart);-webkit-text-stroke:0}
 .rv-item{position:relative;user-select:none;-webkit-user-select:none}
 .rv-item p,.rv-item h4{user-select:text;-webkit-user-select:text}
-.hp{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;color:var(--daur-purple);font-size:13px;line-height:1;will-change:transform,opacity;animation:hfly .8s ease-out forwards}
+.hp{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;color:var(--daur-heart);font-size:13px;line-height:1;will-change:transform,opacity;animation:hfly .8s ease-out forwards}
 @keyframes hfly{0%{opacity:1;transform:translate(var(--x0),var(--y0)) scale(.6)}100%{opacity:0;transform:translate(var(--x1),var(--y1)) scale(1.1) rotate(var(--r))}}
-.hbig{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;font-size:84px;line-height:1;color:#fff;-webkit-text-stroke:0;background:linear-gradient(135deg,var(--daur-purple-2),var(--daur-purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 18px rgba(var(--daur-purple-rgb),.5));animation:hbig .9s cubic-bezier(.2,1.4,.4,1) forwards}
+.hbig{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;font-size:84px;line-height:1;color:#fff;-webkit-text-stroke:0;background:linear-gradient(135deg,var(--daur-heart-2),var(--daur-heart));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 18px rgba(var(--daur-heart-rgb),.5));animation:hbig .9s cubic-bezier(.2,1.4,.4,1) forwards}
 @keyframes hbig{0%{opacity:0;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(.2)}20%{opacity:1;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(1.15)}35%{transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(.95)}60%{opacity:1;transform:translate(var(--x),var(--y)) translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) translate(-50%,-90%) scale(1)}}
-.hrain{position:fixed;top:-40px;pointer-events:none;z-index:9999;color:var(--daur-purple);line-height:1;animation:hrain linear forwards}
+.hrain{position:fixed;top:-40px;pointer-events:none;z-index:9999;color:var(--daur-heart);line-height:1;animation:hrain linear forwards}
 @keyframes hrain{to{transform:translate(var(--dx),110vh) rotate(var(--r));opacity:.2}}
 @media (prefers-reduced-motion:reduce){.star-pick button.pop,.like.pop .lk-h{animation:none}}
 `;
@@ -104,14 +104,14 @@
       document.body.appendChild(h); setTimeout(() => h.remove(), 950);
       HEART.burst({ getBoundingClientRect: () => ({ left: at.x, top: at.y, width: 0, height: 0 }) }, 12);
     },
-    // celebration: a short shower of purple hearts when a fit note is sent
+    // celebration: a short shower of red hearts when a fit note is sent
     party() {
       if (CALM()) return;
       const w = window.innerWidth;
       for (let i = 0; i < 42; i++) {
         const h = document.createElement('i'); h.className = 'hrain'; h.textContent = '♥';
         const dur = 1.6 + Math.random() * 1.4;
-        h.style.cssText = `left:${Math.random() * w}px;font-size:${12 + Math.random() * 22}px;--dx:${(Math.random() * 120 - 60) | 0}px;--r:${(Math.random() * 360 - 180) | 0}deg;animation-duration:${dur}s;animation-delay:${Math.random() * 0.5}s;opacity:${0.55 + Math.random() * 0.45};color:${Math.random() < 0.35 ? 'var(--daur-purple-2)' : 'var(--daur-purple)'}`;
+        h.style.cssText = `left:${Math.random() * w}px;font-size:${12 + Math.random() * 22}px;--dx:${(Math.random() * 120 - 60) | 0}px;--r:${(Math.random() * 360 - 180) | 0}deg;animation-duration:${dur}s;animation-delay:${Math.random() * 0.5}s;opacity:${0.55 + Math.random() * 0.45};color:${Math.random() < 0.35 ? 'var(--daur-heart-2)' : 'var(--daur-heart)'}`;
         document.body.appendChild(h); setTimeout(() => h.remove(), (dur + 0.6) * 1000);
       }
     }
