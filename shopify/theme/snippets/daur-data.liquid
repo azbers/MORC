@@ -19,7 +19,8 @@ window.DAUR_CONFIG = {
   coupons: {},
   audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
-  announce: {{ settings.announcement | default: '' | json }}
+  announce: {{ settings.announcement | default: '' | json }},
+  give: { on: {% if settings.give_on == false %}false{% else %}true{% endif %}, pct: {{ settings.give_pct | default: 5 }} }
 };
 window.DAUR_STATUSES = [
 {%- for a in blogs['status'].articles limit: 12 -%}
@@ -48,6 +49,15 @@ window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
 {%- endfor -%}
 {%- endcapture -%}
 window.DAUR_OFFERS = [{{ offers | strip | remove_last: ',' }}];
+{%- comment -%} Giving records (Content > Metaobjects > Giving record): the Our giving page lists every one with an amount {%- endcomment -%}
+{%- capture giving -%}
+{%- for g in shop.metaobjects.giving_record.values limit: 100 -%}
+{%- if g.amount.value -%}
+{ "date": {{ g.date.value | date: '%Y-%m-%d' | default: '' | json }}, "amount": {{ g.amount.value | default: 0 }}, "where": {{ g.where.value | default: '' | json }}, "note": {{ g.note.value | default: '' | json }}, "photo": {% if g.proof.value %}{{ g.proof.value | image_url: width: 900 | json }}{% else %}null{% endif %} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_GIVING = [{{ giving | strip | remove_last: ',' }}];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },

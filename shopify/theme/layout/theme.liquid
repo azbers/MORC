@@ -28,7 +28,7 @@
     when '404'
       assign daur_page = 'notfound'
     when 'page'
-      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers,runway:runway' | split: ','
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers,runway:runway,giving:giving' | split: ','
       for pair in views
         assign kv = pair | split: ':'
         if page.handle == kv[0]

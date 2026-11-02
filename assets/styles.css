@@ -2017,3 +2017,65 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 .nav a { white-space: nowrap; }
 /* footer between 861 and 1199 px: the contact column takes one more grid column so the email address fits */
 @media (min-width: 861px) and (max-width: 1199px) { .ftr-brand { grid-column: 1 / 4; } .ftr-col:has(.ilink) { grid-column: span 3; } }
+
+/* ---- the slice: a share of our profit on every pair goes to people in need ---- */
+.loaf { display: block; width: 64px; height: auto; overflow: visible; flex: none; }
+.loaf .lf-knife { stroke: var(--bone); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+.loaf .lf-slice { transform-box: view-box; transform-origin: 116px 52px; }
+.loaf .lf-face { opacity: 0; }
+.loaf .lf-amt { font: 600 9.5px var(--mono); fill: var(--signal); opacity: 0; letter-spacing: .02em; }
+.loaf.cut .lf-knife { animation: lf-knife .7s var(--ease) forwards; }
+.loaf.cut .lf-slice { animation: lf-slice .8s .6s var(--ease) forwards; }
+.loaf.cut .lf-face { animation: lf-in .3s .65s forwards; }
+.loaf.cut .lf-amt { animation: lf-amt .5s 1.2s var(--ease) forwards; }
+@keyframes lf-knife { 0% { opacity: 1; stroke-dashoffset: 1; } 70% { opacity: 1; stroke-dashoffset: 0; } 100% { opacity: 0; stroke-dashoffset: 0; } }
+@keyframes lf-slice { to { transform: translateX(7px) rotate(9deg); } }
+@keyframes lf-in { to { opacity: 1; } }
+@keyframes lf-amt { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.loaf.mini { width: 26px; display: inline-block; vertical-align: -3px; margin-right: 8px; }
+.loaf.mini .lf-knife, .loaf.mini .lf-amt { display: none; }
+.loaf.mini.cut .lf-slice, .loaf.mini .lf-slice { animation: none; transform: translateX(6px) rotate(9deg); }
+.loaf.mini .lf-face { animation: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .loaf.cut .lf-knife { animation: none; opacity: 0; }
+  .loaf.cut .lf-slice { animation: none; transform: translateX(7px) rotate(9deg); }
+  .loaf.cut .lf-face, .loaf.cut .lf-amt { animation: none; opacity: 1; }
+}
+
+/* product page: a quiet line under the price, not a banner */
+.slice-note { display: flex; align-items: center; gap: 14px; width: 100%; margin: 14px 0 2px; padding: 10px 0; background: none; border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: inherit; text-align: left; cursor: pointer; font: inherit; }
+.slice-note .loaf { width: 58px; }
+.slice-note .sl-t { display: grid; gap: 3px; min-width: 0; }
+.slice-note .sl-t b { font: 500 14.5px/1.3 var(--body); color: var(--bone); }
+.slice-note .sl-t span { font-size: 13px; line-height: 1.4; color: var(--mute); }
+.slice-note:hover .sl-t b, .slice-note:focus-visible .sl-t b { color: var(--signal); }
+.slice-note:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+/* the explainer sheet */
+.slice-m .sl-hero { display: grid; place-items: center; padding: 18px 0 4px; cursor: pointer; }
+.loaf.big { width: min(260px, 70%); }
+.slice-m .sl-h { font: 500 clamp(22px, 3vw, 28px)/1.15 var(--display); letter-spacing: -.02em; margin: 0; }
+.slice-m p { margin: 0; color: var(--text-2); line-height: 1.55; }
+.sl-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.sl-list li { padding-left: 16px; position: relative; color: var(--text-2); line-height: 1.5; font-size: 14.5px; }
+.sl-list li::before { content: ''; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; background: var(--signal); }
+.slice-m .hadith p { font-size: clamp(20px, 2.4vw, 26px) !important; }
+
+/* bag summary */
+.sum-give { display: flex; align-items: flex-start; gap: 2px; margin: 4px 0 0; font-size: 13px; line-height: 1.45; color: var(--signal); }
+.sum-give .loaf.mini { margin-top: 1px; }
+
+/* Our giving page */
+.gv-hero .wrap { display: grid; gap: 14px; }
+@media (min-width: 1000px) { .gv-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.gv-loaf { justify-self: start; background: none; border: 0; padding: 18px 0 0; cursor: pointer; width: min(420px, 100%); }
+.gv-loaf .loaf { width: 100%; }
+.gv-loaf .lf-amt { font-size: 7px; }
+.gv-rec { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); }
+.gv-item { display: grid; gap: 6px; padding: 18px; border: 1px solid var(--line); background: var(--card); }
+.gv-item img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; margin-bottom: 6px; }
+.gv-item b { font: 500 26px/1 var(--display); letter-spacing: -.02em; }
+.gv-item h3 { font: 500 15px/1.3 var(--body); margin: 0; }
+.gv-item p { margin: 0; color: var(--mute); font-size: 14px; line-height: 1.5; }
+.gv-why { display: grid; gap: 22px; max-width: 760px; }
+.gv-why p { margin: 0; color: var(--text-2); line-height: 1.6; font-size: 16px; }

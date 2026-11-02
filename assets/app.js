@@ -62,7 +62,7 @@
     document.documentElement.classList.toggle('grid-1', v);
     try { localStorage.setItem('daur.grid', v ? '1' : '2'); } catch (e) { /* storage blocked */ }
   }
-  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', runway: 'runway.html', notfound: '404.html', admin: 'admin.html' };
+  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', runway: 'runway.html', giving: 'giving.html', notfound: '404.html', admin: 'admin.html' };
   function link(page, param) {
     if (SHOP) return SHOP.link(page, param);
     if (SPA) return '#' + page + (param ? '.' + param : '');
@@ -140,6 +140,52 @@
     const retail = n * C.marketRetail;
     return { lines, subtotal, before, sale: before - subtotal, discount, couponErr, cp, delivery, free, total, retail, n };
   }
+  /* ---- the slice: at least 5% of our profit on every pair goes to people in need ----
+     C.give.on switches it everywhere, C.give.pct is the share of profit (at least 5).
+     The share is of our profit, never of the price, and nothing is added to the price.
+     Slices are pooled and given every quarter to verified cases; the records go on the Our giving page. */
+  const GIVE = Object.assign({ on: true, pct: 5 }, C.give || {});
+  // a loaf seen from the side; the last slice is its own piece so the cut can lift it away
+  let loafN = 0;
+  function loaf(label, cls) {
+    const k = 'lf' + (++loafN);
+    const shape = 'M8 53 Q3 53 3 46 C2 30 12 12 34 8 C48 5 72 5 88 8 C108 12 118 28 117 46 Q117 53 111 53 Z';
+    return `<svg class="loaf ${cls || ''}" viewBox="0 0 120 60" aria-hidden="true" focusable="false"><defs>
+      <linearGradient id="${k}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C98A4B"/><stop offset=".55" stop-color="#A4642F"/><stop offset="1" stop-color="#6E3E1C"/></linearGradient>
+      <clipPath id="${k}a"><rect x="0" y="0" width="96" height="60"/></clipPath><clipPath id="${k}b"><rect x="96" y="0" width="24" height="60"/></clipPath></defs>
+      <g class="lf-body" clip-path="url(#${k}a)"><path d="${shape}" fill="url(#${k}c)"/><path d="M26 18 q8 -4 14 3 M48 13 q8 -4 14 3 M70 13 q8 -4 14 3" fill="none" stroke="#F0D3A6" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><rect class="lf-face" x="90" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
+      <g class="lf-slice" clip-path="url(#${k}b)"><path d="${shape}" fill="url(#${k}c)"/><rect class="lf-face" x="96" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
+      <line class="lf-knife" x1="96" y1="-2" x2="96" y2="58" pathLength="1"/>
+      ${label ? `<text class="lf-amt" x="113" y="2" text-anchor="end">${esc(label)}</text>` : ''}
+    </svg>`;
+  }
+  // plays the cut once, when the loaf first comes into view; a tap plays it again
+  function cutWhenSeen(root) {
+    const els = $$('.loaf', root || document);
+    if (!els.length) return;
+    const play = (el) => { el.classList.remove('cut'); void el.getBoundingClientRect(); el.classList.add('cut'); };
+    if (!('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('cut')); return; }
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { setTimeout(() => play(e.target), 350); io.unobserve(e.target); } }), { threshold: 0.6 });
+    els.forEach((e) => io.observe(e));
+    els.forEach((e) => { const b = e.closest('[data-recut]'); if (b) b.addEventListener('click', () => play(e)); });
+  }
+  function openSlice() {
+    let m = document.getElementById('sliceSheet');
+    if (!m) {
+      document.body.insertAdjacentHTML('beforeend', '<div class="modal slice-m" id="sliceSheet" role="dialog" aria-modal="true" aria-label="The slice"><div class="panel"></div></div>');
+      m = document.getElementById('sliceSheet');
+      m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('on'); });
+    }
+    $('.panel', m).innerHTML = `<div class="field-label"><span>The slice</span><button class="x-btn" data-close>Close</button></div>
+      <div class="sl-hero" data-recut>${loaf(GIVE.pct + '%', 'big')}</div>
+      <h2 class="sl-h">A slice of this pair is not ours to keep.</h2>
+      <p>On every pair we sell, we set aside at least ${GIVE.pct}% of the profit we make, not of the price you pay, and give it to verified cases of need that we check ourselves.</p>
+      <ul class="sl-list"><li><b>Your price stays the same.</b> The slice comes out of our side, never added to yours.</li><li><b>Given every quarter.</b> We pool the slices and give them each quarter to verified cases of need, after our own checks.</li><li><b>Published in full.</b> The details of every giving go on this site and on our social pages.</li><li><b>No marketing budget.</b> The slice is given, not spent on ads.</li></ul>
+      <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
+      <a class="link" href="${link('giving')}">How our giving works</a>`;
+    m.classList.add('on');
+    cutWhenSeen(m);
+  }
   function addToCart(pid, vid, size, qty) {
     const p = prod(pid), v = variant(p, vid);
     const max = (v.stock || {})[size] || 0;
@@ -149,7 +195,7 @@
     if (add <= 0) { toast('No more stock in EU ' + size); return false; }
     if (ex) ex.qty += add; else cart.push({ pid, vid: v.id, size: +size, qty: add });
     saveCart();
-    toast(`${p.name}, EU ${size} added`, 'View bag', openBag);
+    toast(GIVE.on ? `${p.name}, EU ${size} added. A slice of it goes to someone in need.` : `${p.name}, EU ${size} added`, 'View bag', openBag);
     return true;
   }
   function toggleWish(pid) {
@@ -219,7 +265,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -889,6 +935,7 @@
         <div class="buy">
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
             <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>`}</div>
+            ${GIVE.on ? `<button class="slice-note" id="sliceB" type="button" aria-haspopup="dialog" data-recut>${loaf(GIVE.pct + '%')}<span class="sl-t"><b>A slice of this pair goes to someone in need.</b><span>At least ${GIVE.pct}% of our profit on it. Your price stays the same.</span></span></button>` : ''}
             <p class="blurb">${esc(p.description)}</p></div>
           <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg(window.DAUR_KICKS.kindOf(p), window.DAUR_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
           <div><div class="field-label strong"><span>Select size / EU ${size || ''}</span><button id="sgBtn">${ic('ruler')}Size guide</button></div>
@@ -966,6 +1013,7 @@
       $('#wishB').addEventListener('click', () => { toggleWish(p.id); $('#wishB span').textContent = wish.includes(p.id) ? 'Liked' : 'Like'; });
       $('#shareB').addEventListener('click', () => shareLink(absLink('product', p.id + '~' + v.id), 'DAUR ' + p.name + ' / ' + v.color, `DAUR ${p.name} in ${v.color}, ${fmt(v.price)} with Cash on Delivery.`));
       $('#sgBtn').addEventListener('click', () => openModal('sizeGuide'));
+      const sl = $('#sliceB'); if (sl) { sl.addEventListener('click', openSlice); cutWhenSeen(sl.parentNode); }
       const sb = $('#stickyBuy'), bt = $('#add');
       const io = new IntersectionObserver(([en]) => sb.classList.toggle('on', !en.isIntersecting && en.boundingClientRect.top < 0));
       io.observe(bt);
@@ -1005,6 +1053,7 @@
       <div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>
       <div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
+      ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>` : ''}
       <div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>`;
   }
   function bindPromo(cb) {
@@ -1203,7 +1252,8 @@
             <p class="big">At least 5% of our profit goes to charity, from every pair we sell.</p>
             <p>We set aside a minimum of 5% of the profit we make, not of the price you pay, and give it only to verified and genuine cases of need. We check every case ourselves before we give. It is not a marketing budget and it is never added to your price.</p>
             <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
-            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
+            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p>
+            <a class="link" href="${link('giving')}">How our giving works</a></div>
         </div></div></div>
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for DAUR Supply.</p></div>`;
   };
@@ -1602,6 +1652,35 @@
     const ms = new Date(iso).getTime() - Date.now(); if (!(ms > 0)) return '';
     const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
     return d >= 7 ? 'Ends ' + new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Ends in ' + (d ? d + 'd ' : '') + h + 'h ' + m + 'm';
+  };
+  /* ---- our giving: how the slice works, and the record of every giving once there is one ----
+     Records come from Shopify (Content > Metaobjects > Giving record, printed as window.DAUR_GIVING).
+     With no record yet the page explains the pledge only and promises nothing it cannot show. */
+  V.giving = function () {
+    setMeta('Our Giving: At Least 5% of Profit to People in Need | DAUR Supply', 'On every DAUR Supply pair we set aside at least ' + GIVE.pct + '% of our profit, never added to your price, and give it every quarter to verified cases of need in Pakistan.');
+    const rec = (Array.isArray(window.DAUR_GIVING) ? window.DAUR_GIVING : []).filter((r) => r && +r.amount > 0).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    const sum = rec.reduce((a, r) => a + +r.amount, 0);
+    const day = (d) => { const x = new Date(d + 'T12:00:00'); return isNaN(x) ? '' : x.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); };
+    app.innerHTML = `<section class="phero gv-hero"><div class="wrap"><span class="eyebrow">Our giving / at least ${GIVE.pct}% of profit</span><h1>The slice.</h1>
+      <p class="aside">Every pair we sell carries a share that is not ours to keep. We cut it from our profit, never from your price, and give it to people in need.</p>
+      <button class="gv-loaf" type="button" data-recut aria-label="Play the cut again">${loaf(GIVE.pct + '%')}</button></div></section>
+
+    <section class="sheet x"><div class="wrap">
+      ${head('How it works', 'Same price. A slice set aside.')}
+      <div class="steps gv-steps">${[['You buy a pair', 'At the same price as always. Nothing is added for charity.'], ['We cut the slice', `At least ${GIVE.pct}% of the profit we make on that pair, worked out on the price you finally pay.`], ['We give it every quarter', 'The slices are pooled and given each quarter, so the help is large enough to matter, to verified cases of need after our own checks.'], ['We publish it', 'Date, amount and the case, on this page and on our social pages. It is never a marketing budget.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    </div></section>
+
+    ${rec.length ? `<section class="sheet x"><div class="wrap">
+      ${head('The record', fmt(sum) + ' given so far.', '', 'Every giving we make is listed here with its date and amount.')}
+      <div class="gv-rec">${rec.map((r) => `<article class="gv-item rv">${r.photo ? `<img src="${esc(r.photo)}" alt="${esc(r.where || 'Giving record')}" loading="lazy" width="600" height="450">` : ''}<span class="mono mute">${esc(day(r.date))}</span><b>${esc(fmt(+r.amount))}</b>${r.where ? `<h3>${esc(r.where)}</h3>` : ''}${r.note ? `<p>${esc(r.note)}</p>` : ''}</article>`).join('')}</div>
+    </div></section>` : ''}
+
+    <section class="sheet x"><div class="wrap"><div class="gv-why">
+      <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
+      <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. The people we give to are our neighbours, not a campaign, and every case is treated with dignity.</p>
+      <a class="btn volt" href="${link('shop')}" style="justify-self:start">Shop the collection <span class="arr">&rarr;</span></a></div></div></section>`;
+    cutWhenSeen(app);
+    reveal();
   };
   V.offers = function () {
     setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.');

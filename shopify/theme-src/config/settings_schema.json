@@ -141,5 +141,27 @@
         "info": "From clarity.microsoft.com, for example z6zmhh4wyo. Clarity records how visitors scroll and click; mention it in your privacy policy. Leave empty to turn it off."
       }
     ]
+  },
+  {
+    "name": "Giving (the slice)",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "give_on",
+        "label": "Show the charity slice",
+        "default": true,
+        "info": "Shows the slice on product pages, in the bag, in the footer and on the Our giving page. Turn it off if the pledge is paused."
+      },
+      {
+        "type": "range",
+        "id": "give_pct",
+        "label": "Share of profit given (%)",
+        "min": 5,
+        "max": 50,
+        "step": 1,
+        "default": 5,
+        "info": "The pledge is at least 5% of profit, never of the price. Record each quarterly giving in Content > Metaobjects > Giving record; it appears on the Our giving page."
+      }
+    ]
   }
 ]
