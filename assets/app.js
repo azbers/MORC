@@ -217,7 +217,7 @@
         <div class="ftr-col"><h4>Shop${ONE ? ' ' + esc(ONE) : ''}</h4>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h4>Help</h4><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
         <div class="ftr-col"><h4>House</h4><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
-        <div class="ftr-col"><h4>Reach</h4><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Delivering across Pakistan</span></div>
+        <div class="ftr-col"><h4>Reach</h4><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
       </div></footer>
@@ -543,7 +543,7 @@
     <section class="sheet x"><div class="wrap">
       ${head('Bench to doorstep', 'Five steps to your door.')}
       <div class="van-road" aria-hidden="true"><div class="van">${VAN}</div></div>
-      <div class="steps">${[['Chosen', 'We visit workshops in Lahore, Sialkot and Karachi and choose finished pairs at the bench.'], ['Checked', 'Stitching, leather grain, sole bond and comfort, checked pair by pair. Most samples never make it.'], ['Re-laced', 'Thick matte black cotton laces go in, with the engraved DAUR dubrae.'], ['Sealed', 'The Supply Unit seal is clipped to the top eyelet. Boxed in tissue with the manifest card.'], ['Delivered', 'We confirm with you, then hand it to the courier within 24 hours. You pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+      <div class="steps">${[['Chosen', 'We visit workshops in Lahore, Sialkot and Kasur and choose finished pairs at the bench.'], ['Checked', 'Stitching, leather grain, sole bond and comfort, checked pair by pair. Most samples never make it.'], ['Re-laced', 'Thick matte black cotton laces go in, with the engraved DAUR dubrae.'], ['Sealed', 'The Supply Unit seal is clipped to the top eyelet. Boxed in tissue with the manifest card.'], ['Delivered', 'We confirm with you, then hand it to the courier within 24 hours. You pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
     <section class="sheet x"><div class="wrap">
@@ -552,7 +552,7 @@
     </div></section>
 
     ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', b: [
-      ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We make leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Karachi and finished with our own hardware. Branded, not labeled: the DAUR mark sits on the laces and the seal, and the leather does the talking.`],
+      ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We make leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Kasur and finished with our own hardware. Branded, not labeled: the DAUR mark sits on the laces and the seal, and the leather does the talking.`],
       ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirmation, free delivery on two pairs and a 5 day size exchange.']],
       l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]).concat(sale.length ? [[link('shop', 'sale'), 'Sale']] : []) })}
     <section class="sheet x"><div class="wrap"><div class="signup closer">
@@ -1239,14 +1239,14 @@
     </a>`;
   }
   V.manifesto = function () {
-    setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply is a Pakistani footwear brand: men\'s leather shoes and sneakers crafted in Lahore, Sialkot and Karachi, checked by hand and finished with the DAUR mark.');
+    setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply is a Pakistani footwear brand: men\'s leather shoes and sneakers crafted in Lahore, Sialkot and Kasur, checked by hand and finished with the DAUR mark.');
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our story</span><h1>Naya daur.</h1><p class="aside">A new era for the shoes Pakistan makes, and the men who wear them.</p></div></section>
       <div class="wrap"><div class="manifesto">
         <nav class="rail"><a href="#m1" data-jump="m1">01 Made here</a><a href="#m2" data-jump="m2">02 Branded, not labeled</a><a href="#m3" data-jump="m3">03 Luxury, made wearable</a><a href="#m4" data-jump="m4">04 Our charity pledge</a></nav>
         <div class="body">
           <div class="mblock" id="m1"><span class="eyebrow">01</span><h2>Made Here. Worn Everywhere.</h2>
             <p class="big">Pakistan has cut and stitched fine leather for generations. Its craft deserves a name of its own.</p>
-            <p>In the workshops of Lahore, Sialkot and Karachi, skilled hands shape leather into shoes that rarely carry their makers' pride to the shelf. DAUR exists to change that. We choose the best of that work, check every pair by hand, finish it with our own hardware and bring it to your door under one name you can be proud to wear.</p>
+            <p>In the workshops of Lahore, Sialkot and Kasur, skilled hands shape leather into shoes that rarely carry their makers' pride to the shelf. DAUR exists to change that. We choose the best of that work, check every pair by hand, finish it with our own hardware and bring it to your door under one name you can be proud to wear.</p>
             <p class="verdict">Crafted in Pakistan. Signed DAUR.</p></div>
           <div class="mblock" id="m2"><span class="eyebrow">02</span><h2>Branded, Not Labeled.</h2>
             <p class="big">Our mark lives on the hardware, not across the shoe.</p>
