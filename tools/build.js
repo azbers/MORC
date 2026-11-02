@@ -30,6 +30,7 @@ const PAGES = {
   policies: ['policies.html', 'Terms, Privacy and Refund Policy | DAUR Supply', 'DAUR Supply terms of service, privacy policy, shipping, Cash on Delivery, returns, exchanges and refunds for orders across Pakistan.'],
   about: ['about.html', 'About DAUR Supply | Pakistani Men\'s Shoe Brand, Dispatched from Islamabad', 'DAUR Supply is a Pakistani footwear brand for men: leather sneakers, formal shoes and chelsea boots from workshops in Lahore, Sialkot and Kasur, dispatched from Islamabad with Cash on Delivery.'],
   contact: ['contact.html', 'Contact DAUR Supply | WhatsApp, Phone and Email', 'Contact DAUR Supply on WhatsApp, phone or email. Orders dispatched from Islamabad with Cash on Delivery across Pakistan.'],
+  offers: ['offers.html', 'Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.'],
   notfound: ['404.html', 'Page not found | DAUR Supply', 'This address does not lead to a page on DAUR Supply. Search the collection or go to the shop.'],
   admin: ['admin.html', 'Supply Control | DAUR Supply', 'Store admin.']
 };

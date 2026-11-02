@@ -82,7 +82,7 @@
   window.DAUR_PRODUCTS = (S.raw || []).filter((r) => r.variants.length).map(toProduct);
 
   /* ---------- links ---------- */
-  const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies', about: 'about', contact: 'contact' };
+  const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies', about: 'about', contact: 'contact', offers: 'offers' };
   // a line or style with a collection of its own links to that collection, so each has an address search engines can list
   const COLL = { men: 'men', women: 'women', kids: 'kids', sale: 'sale', sneakers: 'sneakers', leather: 'leather-shoes', hybrids: 'casual' };
   const has = new Set(S.collections || []);

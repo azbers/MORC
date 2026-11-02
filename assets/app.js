@@ -62,7 +62,7 @@
     document.documentElement.classList.toggle('grid-1', v);
     try { localStorage.setItem('daur.grid', v ? '1' : '2'); } catch (e) { /* storage blocked */ }
   }
-  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', notfound: '404.html', admin: 'admin.html' };
+  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', notfound: '404.html', admin: 'admin.html' };
   function link(page, param) {
     if (SHOP) return SHOP.link(page, param);
     if (SPA) return '#' + page + (param ? '.' + param : '');
@@ -186,7 +186,7 @@
 
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
-  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['shop', 'sale', 'Sale'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
+  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['shop', 'sale', 'Sale'], ['offers', '', 'Offers'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
   const NAV_TOP = navItems.length - 2;
   function chrome() {
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
@@ -218,7 +218,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('offers')}">Offers</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -1358,6 +1358,74 @@
     ${form ? `<section class="sheet x"><div class="wrap ct-form-w">${form}</div></section>` : ''}`;
     if (SHOP && /contact_posted=true/.test(location.search)) toast('Message sent. We will reply soon.');
   };
+
+  /* ---- offers ---- */
+  // live codes come from Shopify (Content > Metaobjects > Offer, printed as window.DAUR_OFFERS); the static preview builds them from data.js
+  function liveOffers() {
+    const now = Date.now();
+    let list = Array.isArray(window.DAUR_OFFERS) ? window.DAUR_OFFERS.slice() : null;
+    if (!list) {
+      list = Object.entries(C.coupons || {}).map(([code, c], i) => ({ id: code.toLowerCase(), title: c.label || code, code, details: (c.type === 'percent' ? c.value + '% off' : fmt(c.value) + ' off') + ' your order' + (c.min ? ' of ' + fmt(c.min) + ' or more' : '') + '.', min: c.min || 0, ends: null, sort: i + 1 }));
+      list.push({ id: 'free-delivery', title: 'Free delivery on ' + (C.freeDeliveryPairs === 2 ? 'two' : C.freeDeliveryPairs) + ' pairs', code: '', details: 'Order ' + C.freeDeliveryPairs + ' pairs or more and delivery anywhere in Pakistan is free. No code needed.', min: 0, ends: null, sort: 50 });
+    }
+    return list.filter((o) => !o.ends || new Date(o.ends).getTime() > now).sort((a, b) => (a.sort || 99) - (b.sort || 99));
+  }
+  const untilText = (iso) => {
+    const ms = new Date(iso).getTime() - Date.now(); if (!(ms > 0)) return '';
+    const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+    return d >= 7 ? 'Ends ' + new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Ends in ' + (d ? d + 'd ' : '') + h + 'h ' + m + 'm';
+  };
+  V.offers = function () {
+    setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.');
+    const offers = liveOffers();
+    const sale = P.filter((p) => p.variants.some(onSale)).map((p) => [p, p.variants.find(onSale)]);
+    const best = sale.length ? Math.max(...sale.map(([, v]) => pct(v))) : 0;
+    const count = offers.length + (sale.length ? 1 : 0);
+    const applyHref = (code) => SHOP ? '/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent('/collections/all') : link('shop');
+    const card = (o, i) => `<article class="of-card rv${o.code ? ' has-code' : ''}" style="--d:${i * 0.08}s">
+        <span class="of-ic">${ic(o.code ? 'ticket' : 'truck')}</span>
+        <span class="of-k mono">${o.code ? 'Code' : 'Automatic'}${o.min ? ' / min ' + fmt(o.min) : ''}</span>
+        <h3>${esc(o.title)}</h3>
+        ${o.details ? `<p>${esc(o.details)}</p>` : ''}
+        ${o.code ? `<div class="of-code"><button class="of-copy" type="button" data-code="${esc(o.code)}" aria-label="Copy code ${esc(o.code)}"><b>${esc(o.code)}</b><span class="mono">Copy</span></button>
+          <a class="btn volt" href="${applyHref(o.code)}">${SHOP ? 'Apply and shop' : 'Shop now'} <span class="arr">&rarr;</span></a></div>` : `<a class="btn ghost" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a>`}
+        ${o.ends ? `<span class="of-end mono" data-ends="${esc(o.ends)}">${untilText(o.ends)}</span>` : ''}
+        <i class="of-notch l" aria-hidden="true"></i><i class="of-notch r" aria-hidden="true"></i>
+      </article>`;
+    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">Offers / ${count} live</span><h1>Offers.</h1><p class="aside">Every live code and deal in one place, straight from our store.${best ? ` Pairs up to ${best}% off.` : ''} Cash on Delivery on every order.</p></div>
+      <div class="of-float" aria-hidden="true">${['%', 'Rs', '%', 'Rs', '%'].map((t, i) => `<span style="--i:${i}">${t}</span>`).join('')}</div></section>
+
+    <section class="sheet x"><div class="wrap">
+      ${head('Codes and deals', offers.length ? 'Use it at checkout.' : 'No codes right now.', '', offers.length ? 'One saving applies per order: codes and free delivery do not stack, so the bigger saving is the one you get.' : 'There is no live code at the moment. Sale pairs below are already reduced, no code needed.')}
+      ${offers.length ? `<div class="of-grid">${offers.map(card).join('')}</div>` : ''}
+    </div></section>
+
+    ${sale.length ? `<div class="marquee" aria-hidden="true"><div class="marquee-track">${[0, 1].map(() => sale.map(([p, v]) => `<span>${esc(p.name)}</span><i>+</i><span class="o">${pct(v)}% off</span><i>+</i>`).join('')).join('')}</div></div>
+    <section class="sheet x"><div class="wrap">
+      ${head('On sale now', 'Already reduced.', `<a class="link" href="${link('shop', 'sale')}">All sale pairs</a>`, 'No code needed: the price you see is the price you pay. Sale pairs are final for size, and defects are still covered for 30 days.')}
+      <div class="grid">${sale.map(([p, v], i) => card_(p, i, v)).join('')}</div>
+    </div></section>` : ''}
+
+    <section class="sheet x"><div class="wrap">
+      ${head('How it works', 'Three steps to the saving.')}
+      <div class="steps of-steps">${[['Pick your pairs', 'Add your size to the bag. Two pairs or more and delivery is free.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    </div></section>
+
+    <section class="sheet x"><div class="wrap"><div class="signup closer">
+      <h2>First to hear about the next code.</h2>
+      <div class="closer-r"><p>New codes and drops go out on Instagram first. Questions about a code? Ask on WhatsApp ${esc(PHONE())}.</p>
+        <div class="hero-cta"><a class="btn volt" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener">${ic('instagram')}Follow @daursupply</a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I have a question about a discount code.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask on WhatsApp</a></div></div>
+    </div></div></section>`;
+    bindCards(app);
+    $$('.of-copy', app).forEach((b) => b.addEventListener('click', () => {
+      const code = b.dataset.code;
+      const done = () => { b.classList.add('ok'); $('.mono', b).textContent = 'Copied'; toast('Code ' + code + ' copied'); setTimeout(() => { b.classList.remove('ok'); $('.mono', b).textContent = 'Copy'; }, 1800); };
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(code).then(done, () => toast('Code: ' + code)); else toast('Code: ' + code);
+    }));
+    const ends = $$('[data-ends]', app);
+    if (ends.length) { const tick = () => { if (!document.body.contains(ends[0])) return clearInterval(t); ends.forEach((e) => { e.textContent = untilText(e.dataset.ends) || 'Ended'; }); }; const t = setInterval(tick, 30000); }
+  };
+  const card_ = (p, i, v) => card(p, i, v);
 
   /* ---- not found (404) and search ---- */
   // one search helper for the 404 page and the search page: every word must appear in the pair's name, colour, style or line
