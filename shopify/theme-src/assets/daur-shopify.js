@@ -197,16 +197,36 @@
   EXT.views.order = function () { location.replace(S.routes.account); };
   EXT.views.track = function (param) {
     const A = window.DAUR_API; const esc = A.esc;
-    A.setMeta('Track your order | DAUR Supply', 'Track a DAUR Supply Cash on Delivery order with your order number, phone number or email. No account or password needed.');
-    // Shopify only opens an order to someone who proves it is theirs, so the quickest path with no sign in is our
-    // own team on WhatsApp; the private order link from the confirmation message and a one time code stay as options
-    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair.</h1><p class="aside">Type your order number, phone number or email. No account and no password needed.</p></div></section>
-      <div class="wrap" style="padding-block:40px 96px">
-        <form class="track-one" id="tf" novalidate>
-          <div class="f-ic"><input id="tq" placeholder="#1001, 03XX XXXXXXX or you@email.com" autocomplete="off" aria-label="Order number, phone number or email"></div>
-          <button class="btn volt" type="submit">Track my order</button></form>
-        <p class="form-note">This opens WhatsApp with your details filled in. A person from our team replies with the status and the courier link.</p>
-        <div class="tcard" style="margin-top:28px"><div class="tcour"><div><span class="mono mute">Prefer to check yourself?</span><p>Your order confirmation email and message carry a private link to your order page, with every update and the courier link. Lost it? Open your orders with a one time code sent to your email, no password.</p></div><a class="btn ghost" href="${esc(S.routes.account)}">Open my orders <span class="arr">&rarr;</span></a></div></div></div>`;
+    A.setMeta('Track your order | DAUR Supply', 'See the status of your DAUR Supply order: confirmed, dispatched with the courier, or delivered. Sign in with a one time code, track the parcel with Leopards, or ask us on WhatsApp.');
+    // Shopify shows an order only to the person who placed it: the order page (one time code by email, no password)
+    // carries the live status, the order details and the courier tracking number once the pair is dispatched
+    const steps = [['check', 'Confirmed', 'We call or WhatsApp you to confirm the order.'], ['box', 'Packed and dispatched', 'Usually within 24 hours. You get the courier tracking number.'], ['truck', 'With the courier', 'Follow the parcel on the courier page.'], ['home', 'Delivered', 'Pay the rider in cash when the box is in your hands.']];
+    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair.</h1><p class="aside">See your order status, the order details and the courier tracking number. Three ways, pick the one that suits you.</p></div></section>
+      <div class="wrap trk" style="padding-block:36px 96px">
+        <ol class="trk-steps" aria-label="What your order page shows">${steps.map(([i, t, d], k) => `<li><span class="trk-n mono">0${k + 1}</span><b>${t}</b><span>${d}</span></li>`).join('')}</ol>
+        <div class="trk-g">
+          <div class="tcard trk-c trk-main"><span class="mono mute">1 / Your order page</span><h2>See your order status</h2>
+            <p>Sign in with the email you ordered with. We send a one time code, no password. You see every order with its status, the items, the total and the courier tracking number once the pair is dispatched.</p>
+            <a class="btn volt" href="${esc(S.routes.account)}">Open my orders <span class="arr">&rarr;</span></a>
+            <p class="form-note">The order confirmation email also carries a direct link to your order page.</p></div>
+          <form class="tcard trk-c" id="lcs" novalidate><span class="mono mute">2 / The courier</span><h2>Track with Leopards</h2>
+            <p>Have the tracking number from your dispatch message? Type it here. We copy it and open the Leopards tracking page, where you paste it.</p>
+            <div class="f-ic"><input id="lcsN" inputmode="text" placeholder="Tracking number, for example LE7..." autocomplete="off" aria-label="Leopards tracking number"></div>
+            <button class="btn ghost" type="submit">Open Leopards tracking <span class="arr">&rarr;</span></button></form>
+          <form class="tcard trk-c" id="tf" novalidate><span class="mono mute">3 / Our team</span><h2>Ask us on WhatsApp</h2>
+            <p>Ordered with a phone number, or no email to hand? Type your order number or phone number and a person from our team replies with the status.</p>
+            <div class="f-ic"><input id="tq" placeholder="#1001 or 03XX XXXXXXX" autocomplete="off" aria-label="Order number, phone number or email"></div>
+            <button class="btn ghost" type="submit">Ask on WhatsApp <span class="arr">&rarr;</span></button></form>
+        </div></div>`;
+    const lcs = document.getElementById('lcs');
+    lcs.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const n = document.getElementById('lcsN').value.trim();
+      const go = () => window.open('https://leopardscourier.com/leopards-tracking', '_blank', 'noopener');
+      if (!n) { go(); return; }
+      const done = () => { A.toast('Tracking number copied. Paste it on the Leopards page.'); go(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(n).then(done, go); else go();
+    });
     const tf = document.getElementById('tf'), tq = document.getElementById('tq');
     if (param) tq.value = param;
     tf.addEventListener('submit', (e) => {

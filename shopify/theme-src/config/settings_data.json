@@ -8,7 +8,12 @@
     "free_delivery_pairs": 2,
     "market_retail": 12000,
     "low_stock_at": 2,
-    "currency_label": "Rs."
+    "currency_label": "Rs.",
+    "test_photos": true,
+    "img_workshop": "shopify://shop_images/photo-1787005241178-c9006ea9610b.jpg",
+    "img_checked": "shopify://shop_images/photo-1573832959141-4f798a677b7d.jpg",
+    "img_door": "shopify://shop_images/photo-1653868249587-284b275a1c67_33d0a27d-995e-40e2-a8c7-4cc5c175009a.jpg",
+    "img_guide": "shopify://shop_images/photo-1563434649554-58f91d22ec2c_de3a3a4d-9758-4a82-b78e-94a2c9a5d5b7.jpg"
   },
   "presets": {}
 }

@@ -47,6 +47,7 @@
     camera: '<path d="M4 8h3l1.5-2.5h7L17 8h3v11H4V8z"/><circle cx="12" cy="13.2" r="3.5"/>',
     home: '<path d="M4 11l8-6.5 8 6.5V20H4v-9z"/><path d="M10 20v-5h4v5"/>',
     play: '<path d="M8 5.5v13l10.5-6.5L8 5.5z"/>',
+    pause: '<path d="M9 5.5v13M15 5.5v13"/>',
     flame: '<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.8 3.4-5.4 3.4-9.3 2.7 1.4 4.6 4 4.6 6.6.9-.5 1.6-1.6 1.7-2.8 1.8 1.6 3.3 3.6 3.3 5.9 0 3.4-2.6 5.8-6.5 5.8z"/>'
   };
   window.DAUR_ICON = (name, extra) => S(P[name] || P.spark, extra);

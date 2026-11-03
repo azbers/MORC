@@ -8,6 +8,8 @@
   const C = window.DAUR_CONFIG;
   // on Shopify (theme/snippets/daur-data.liquid) the catalog and settings come from the store itself
   const SHOP = window.DAUR_SHOPIFY || null;
+  // sample photos never show on the live theme, even if the review setting was left on when it was published
+  try { if (window.Shopify && window.Shopify.theme && window.Shopify.theme.role === 'main') window.DAUR_TEST_PHOTOS = null; } catch (e) { /* keep */ }
   // the admin panel saves catalog edits in this browser; they replace the file catalog here
   if (!SHOP) try { const saved = JSON.parse(localStorage.getItem('daur.catalog') || 'null'); if (Array.isArray(saved) && saved.length) window.DAUR_PRODUCTS = saved; } catch (e) { /* storage blocked */ }
   // admin settings (Supply Control > Settings) override the file defaults
@@ -33,6 +35,8 @@
   // only the lines on sale now (data.js audiences) reach the shop, and a line with no pairs is never shown
   C.audiences = (C.audiences || ['Men']).filter((a) => ALL.some((p) => !p.hidden && p.audience === a));
   const P = ALL.filter((p) => !p.hidden && C.audiences.includes(p.audience));
+  // a review theme can carry sample photos (Unsplash) per pair to test layouts before real photos exist; never on the live theme
+  if (window.DAUR_TEST_PHOTOS && window.DAUR_TEST_PHOTOS.products) ALL.forEach((p) => { const t = window.DAUR_TEST_PHOTOS.products[p.id]; if (t && t.length) p.variants.forEach((v) => { v.images = t.slice(); }); });
   // with one line the shop is organised by style (Sneakers, Leather, Hybrids) instead of by audience
   const ONE = C.audiences.length === 1 ? C.audiences[0] : null;
   const CATS = [...new Set(P.map((p) => p.category))].sort((a, b) => P.filter((p) => p.category === b).length - P.filter((p) => p.category === a).length);
@@ -99,7 +103,7 @@
     if (v.images && v.images.length) {
       const k = opts.mode === 'blueprint' ? 1 : opts.index || 0;
       const src = v.images[Math.min(k, v.images.length - 1)];
-      return `<img src="${esc(src)}" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
+      return `<img src="${esc(/(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=1000' : src)}" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
     }
     return SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, opts);
   }
@@ -183,19 +187,20 @@
       <clipPath id="${k}a"><rect x="0" y="0" width="96" height="60"/></clipPath><clipPath id="${k}b"><rect x="96" y="0" width="24" height="60"/></clipPath></defs>
       <g class="lf-body" clip-path="url(#${k}a)"><path d="${shape}" fill="url(#${k}c)"/><path d="M26 18 q8 -4 14 3 M48 13 q8 -4 14 3 M70 13 q8 -4 14 3" fill="none" stroke="#F0D3A6" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><rect class="lf-face" x="90" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
       <g class="lf-slice" clip-path="url(#${k}b)"><path d="${shape}" fill="url(#${k}c)"/><rect class="lf-face" x="96" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
+      <g class="lf-crumbs" fill="#C98A4B"><circle cx="94.5" cy="54" r="1.3"/><circle cx="97.5" cy="55" r="1"/><circle cx="96" cy="53.5" r=".8"/></g>
       <line class="lf-knife" x1="96" y1="-2" x2="96" y2="58" pathLength="1"/>
       ${label ? `<text class="lf-amt" x="113" y="2" text-anchor="end">${esc(label)}</text>` : ''}
     </svg>`;
   }
-  // plays the cut once, when the loaf first comes into view; a tap plays it again
+  // the knife keeps cutting, live, while a loaf is on screen: the slice comes away with its share, goes, and the loaf is whole again.
+  // Off screen it rests. With reduced motion the loaf simply shows the slice already cut. A tap starts the cut again.
   function cutWhenSeen(root) {
-    const els = $$('.loaf', root || document);
+    const els = $$('.loaf:not(.mini)', root || document);
     if (!els.length) return;
-    const play = (el) => { el.classList.remove('cut'); void el.getBoundingClientRect(); el.classList.add('cut'); };
-    if (!('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('cut')); return; }
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { setTimeout(() => play(e.target), 350); io.unobserve(e.target); } }), { threshold: 0.6 });
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach((e) => e.classList.add('cut')); return; }
+    const io = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('live', e.isIntersecting)), { threshold: 0.35 });
     els.forEach((e) => io.observe(e));
-    els.forEach((e) => { const b = e.closest('[data-recut]'); if (b) b.addEventListener('click', () => play(e)); });
+    els.forEach((e) => { const b = e.closest('[data-recut]'); if (b) b.addEventListener('click', () => { e.classList.toggle('live', false); void e.getBoundingClientRect(); e.classList.add('live'); }); });
   }
   function openSlice() {
     let m = document.getElementById('sliceSheet');
@@ -263,18 +268,22 @@
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
   // the menu stays short: the styles live in the Shop all filters, and Offers and the Feed live in the footer
-  const navItems = [['shop', '', 'Shop all'], ['runway', '', 'Runway'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
-  const NAV_TOP = 3;
+  const navItems = [['shop', '', 'Shop all'], ['shop', 'sneakers', 'Sneakers'], ['shop', 'hybrids', 'Casual'], ['shop', 'leather', 'Leather shoes'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
+  const NAV_TOP = 5;
   function chrome() {
-    const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
-    const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
+    // three promises a Pakistani buyer looks for first, held still so they can be read
+    const tb = (C.announce ? [esc(C.announce)] : []).concat(['Cash on Delivery across Pakistan', 'Free delivery on ' + C.freeDeliveryPairs + ' pairs or more', C.exchangeDays ? C.exchangeDays + ' day size exchange' : '5 day size exchange']);
+    // every live code from Content > Metaobjects > Offer rides in the bar and opens the Offers page
+    let codes = [];
+    try { codes = liveOffers().filter((o) => o.code).map((o) => `<a class="f-tb-code" href="${link('offers')}">Code <b>${esc(o.code)}</b>: ${esc(o.title)}</a>`); } catch (e) { codes = []; }
+    const tbAll = codes.concat(tb), tbRun = tbAll.map((t) => `<span class="f-tb">${t}</span>`).join('<i aria-hidden="true">/</i>') + '<i aria-hidden="true">/</i>';
     const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
     // the page holds the header's room from the first paint (.hdr-ph), so nothing moves when the header arrives
     const ph = document.querySelector('.hdr-ph'); if (ph) ph.remove();
     document.body.insertAdjacentHTML('afterbegin', `
       ${hideDefs()}<div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
       <a class="sr-skip" href="#app" style="position:absolute;left:-999px">Skip to content</a>
-      <div class="ticker" aria-label="Store notices"><div class="ticker-track">${tk}</div></div>
+      ${window.DAUR_TEST_PHOTOS ? '<div class="f-review" role="note">Review theme: sample photos from Unsplash for layout testing. They are not DAUR pairs.</div>' : ''}<div class="ticker f-tbar f-run" aria-label="Store notices"><div class="f-run-t">${tbRun}<span class="f-run-copy" aria-hidden="true">${tbRun}</span></div></div>
       <header class="hdr"><div class="wrap">
         <nav class="nav" aria-label="Primary">${navItems.slice(0, NAV_TOP).map(([pg, pr, t]) => `<a href="${link(pg, pr)}" data-nav="${pg}.${pr}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${pr === 'sale' ? '<i aria-hidden="true"></i>' : ''}${t}</a>`).join('')}</nav>
         <button class="menu-btn" aria-label="Menu" aria-expanded="false" id="menuBtn"><span></span><span></span></button>
@@ -295,7 +304,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -583,99 +592,143 @@
   function guide(g) {
     if (!g) return '';
     return `<section class="sheet x guide"><div class="wrap"><div class="guide-g">
-      <div class="guide-h rv"><span class="eyebrow">${esc(g.e)}</span><h2>${esc(g.h)}</h2></div>
+      <div class="guide-h rv"><span class="eyebrow">${esc(g.e)}</span><h2>${esc(g.h)}</h2>${g.img && simg(g.img) ? `<figure class="guide-fig">${photo(g.img, g.alt || '', { sizes: '(max-width: 860px) 100vw, 40vw' })}</figure>` : ''}</div>
       <div class="guide-b">${g.b.map(([h, t]) => `${h ? `<h3>${esc(h)}</h3>` : ''}<p>${esc(typeof t === 'function' ? t() : t)}</p>`).join('')}
         ${g.faq ? `<div class="faq">${g.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>` : ''}
         ${g.l ? `<div class="guide-l">${g.l.map(([u, t]) => `<a class="chip" href="${u}">${esc(t)} ${ic('arrow')}</a>`).join('')}</div>` : ''}</div>
     </div></div></section>`;
   }
+  // "Find your pair" tiles: hovering a tile walks through the pairs of that style; on a phone each tile walks on its own while it is on screen
+  function cycleTiles(root) {
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches, hover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    $$('.f-cyc', root).forEach((t) => {
+      const items = $$('.f-cy', t), dots = $$('.f-cy-d i', t), name = $('.f-cy-n', t);
+      if (items.length < 2) return;
+      let i = 0, timer = 0;
+      const step = () => {
+        const prev = items[i]; i = (i + 1) % items.length;
+        prev.classList.remove('on'); prev.classList.add('off');
+        setTimeout(() => prev.classList.remove('off'), 700);
+        items[i].classList.add('on');
+        dots.forEach((d, j) => d.classList.toggle('on', j === i));
+        if (name) name.textContent = items[i].dataset.n;
+      };
+      const start = (wait) => { if (!timer) { step(); timer = setInterval(step, wait); } };
+      const stop = () => { clearInterval(timer); timer = 0; };
+      if (hover) { t.addEventListener('mouseenter', () => start(1300)); t.addEventListener('mouseleave', stop); t.addEventListener('focus', () => start(1300)); t.addEventListener('blur', stop); }
+      else if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) start(2600); else stop(); }, { threshold: 0.5 }).observe(t);
+    });
+  }
   function head(eyebrow, title, aside, lede) {
     return `<div class="shead rv"><span class="eyebrow">${eyebrow}</span><h2>${title}</h2>${aside ? `<div class="aside">${aside}</div>` : ''}${lede ? `<p class="lede">${lede}</p>` : ''}</div>`;
+  }
+
+  /* ---- brand foundation: the story, the four pillars and the photographs that carry them ----
+     Real photos are set in Theme settings > Brand photos (C.img). A review theme may also carry sample photos
+     (window.DAUR_TEST_PHOTOS, Unsplash, for layout testing only); they never load on the live theme. */
+  const TP = window.DAUR_TEST_PHOTOS || null;
+  const simg = (k) => (C.img && C.img[k]) || (TP && TP.site && TP.site[k]) || '';
+  // Shopify's image server resizes on request, so phones download a small file and wide screens a sharp one
+  const cdnW = (src, w) => /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=' + w : src;
+  const srcset = (src) => /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) ? [480, 800, 1200, 1800].map((w) => cdnW(src, w) + ' ' + w + 'w').join(', ') : '';
+  function photo(k, alt, o) {
+    o = o || {};
+    const src = typeof k === 'string' && !/[/.]/.test(k) ? simg(k) : k;
+    if (!src) return '';
+    const ss = srcset(src);
+    return `<img src="${esc(cdnW(src, 1200))}"${ss ? ` srcset="${esc(ss)}" sizes="${esc(o.sizes || '100vw')}"` : ''} alt="${esc(alt || '')}" width="1600" height="1200" ${o.eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+  }
+  const STORY = 'In the workshops of Lahore, Sialkot and Kasur, skilled hands make fine leather shoes every day. Too often that work leaves the bench without a name, and the buyer pays for a label instead. DAUR exists to change that. We visit the workshops, choose finished pairs at the bench, check every pair by hand, finish it with our own hardware and bring it to your door at an honest price.';
+  const PILLARS = [
+    { i: 'pin', t: 'Local craft', d: 'Chosen at the bench in Lahore, Sialkot and Kasur. The money stays with Pakistani craftspeople.' },
+    { i: 'check', t: 'Checked by hand', d: 'Six checks on every pair, from the flex of the upper to the bond of the sole, before it earns the DAUR seal.' },
+    { i: 'tag', t: 'Honest price', d: 'You pay for the shoe, not for a label. Real prices only, and a sale price is always a price we really charged.' },
+    { i: 'spark', t: 'The slice', d: 'At least 5% of our profit, given every quarter to verified people in need, and published.' }
+  ];
+  const STEPS = [
+    { k: 'workshop', i: 'pin', t: 'Chosen at the bench', d: 'We visit workshops in Lahore, Sialkot and Kasur and choose finished pairs where they are made.' },
+    { k: 'checked', i: 'check', t: 'Checked by hand', d: 'Stitching, leather grain, sole bond and comfort, pair by pair. A pair that fails a check does not ship.' },
+    { k: 'door', i: 'truck', t: 'At your door', d: 'Finished with our hardware, sealed, boxed and dispatched from Islamabad within 24 hours. You pay when it reaches you.' }
+  ];
+  function lastGiving() {
+    const rec = (Array.isArray(window.DAUR_GIVING) ? window.DAUR_GIVING : []).filter((r) => r && +r.amount > 0).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    if (!rec.length) return '<p class="f-slice-note mono">The first giving is published at the end of this quarter.</p>';
+    const r = rec[0], d = new Date(r.date + 'T12:00:00');
+    return `<p class="f-slice-note mono">Latest: ${esc(fmt(+r.amount))}${r.where ? ' to ' + esc(r.where) : ''}${isNaN(d) ? '' : ', ' + esc(d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }))}</p>`;
   }
 
   /* ---------------- views ---------------- */
   const V = {};
 
   V.home = function () {
-    setMeta(ONE === 'Men' ? 'Men\'s Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply' : 'Leather Shoes & Sneakers Online in Pakistan | DAUR Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers, chelsea boots and casual shoes' : 'Leather shoes and sneakers') + ', crafted in Pakistan and finished with the DAUR mark. From ' + fmt(Math.min(...P.map(minPrice))) + ', Cash on Delivery to every city, free delivery on 2 pairs.',
-      { '@context': 'https://schema.org', '@type': 'OnlineStore', name: 'DAUR Supply', alternateName: 'DAUR', url: C.domain, description: 'Pakistani footwear brand for men: leather shoes, sneakers and chelsea boots, crafted in Pakistan.', sameAs: ['https://www.instagram.com/daursupply', 'https://www.facebook.com/daursupply'], contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', telephone: '+' + C.whatsapp, email: C.supportEmail, areaServed: 'PK' } });
+    setMeta(ONE === 'Men' ? 'Men\'s Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply' : 'Leather Shoes & Sneakers Online in Pakistan | DAUR Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers, chelsea boots and casual shoes' : 'Leather shoes and sneakers') + ' from workshops in Lahore, Sialkot and Kasur, checked pair by pair by DAUR Supply. Cash on Delivery across Pakistan, dispatch within 24 hours, 5 day size exchange.', [
+      { '@context': 'https://schema.org', '@type': 'OnlineStore', name: 'DAUR Supply', alternateName: 'DAUR', url: C.domain, description: 'Pakistani footwear brand for men: leather shoes, sneakers and chelsea boots, chosen at workshops in Lahore, Sialkot and Kasur, checked by hand and delivered across Pakistan with Cash on Delivery.', areaServed: { '@type': 'Country', name: 'Pakistan' } }]);
     const hero = prod('moc-runner-v1') || P[0], hv = hero.variants[0];
     const drop = P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 8);
     const lines = ONE ? CATS.map((c) => ({ key: c, ps: P.filter((p) => p.category === c) })) : C.audiences.map((a) => ({ key: a, ps: P.filter((p) => p.audience === a) }));
-    const nWord = ['One', 'Two', 'Three', 'Four', 'Five', 'Six'][lines.length - 1] || lines.length;
-    const sale = P.filter(anySale);
+    const tileImg = { Sneakers: 'sneakers', Hybrids: 'casual', Leather: 'leather' };
     app.innerHTML = `
-    <section class="hero" id="hero"><div class="hero-light"></div><div class="wrap">
-      <h1 class="magic" aria-label="Wear the craft. Own the room."><span class="row" aria-hidden="true"><span>Wear the craft.</span></span><span class="row" aria-hidden="true"><span class="ghost">Own</span> <span>the room.</span></span></h1>
-      <div class="hero-side">
-        <p><strong>The ${esc(hero.name)}.</strong> Pebbled full grain leather, a hand guided moc toe and a cushioned dual density sole made for long days. Finished with the engraved DAUR mark.</p>
-        <div class="hero-cta"><a class="btn volt" href="${link('product', hero.id)}">Shop the ${esc(hero.name.replace(/ v\d+$/i, ''))}, ${fmt(hv.price)} <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('shop')}">Explore all</a></div>
-        <span class="hint">${!matchMedia('(pointer: coarse)').matches ? 'Move over the pair to see how it is built' : window.DeviceOrientationEvent && DeviceOrientationEvent.requestPermission ? 'Slide a finger over the pair to see inside, then tilt your phone' : 'Slide a finger over the pair to see inside'}</span>
-      </div>
-      <div class="hero-stage" id="stage" aria-label="${esc(hero.name)}, move over the pair to see its construction">
-        <div class="layer float">${visual(hero, hv)}</div>
-        <div class="layer bp">${visual(hero, hv, { mode: 'blueprint' })}</div>
-        <div class="ring" data-label="X-RAY / THE CRAFT INSIDE"></div>
-      </div>
-      <div class="hero-foot">
-        <div><span class="k">DAUR price</span><span class="v num volt">${fmt(hv.price)}</span></div>
-        ${SELL.retailAnchor ? `<div><span class="k">Typical retail</span><span class="v num strike">${fmt(C.marketRetail)}+</span></div>` : SELL.perWear > 0 ? `<div><span class="k">Per wear</span><span class="v num">About ${fmt(Math.round(hv.price / (SELL.perWear * 52)))}</span></div>` : ''}
-        <div><span class="k">Payment</span><span class="v">On delivery</span></div>
-        <div><span class="k">Delivery</span><span class="v">Free on ${C.freeDeliveryPairs} pairs</span></div>
-      </div>
+    <div id="homeRw" class="home-rw"></div>
+
+    <section class="f-pillars" aria-label="What DAUR stands for"><div class="wrap"><ul>
+      ${PILLARS.map((x) => `<li class="rv"><span class="f-pi" aria-hidden="true">${ic(x.i)}</span><div><h2>${x.t}</h2><p>${x.d}</p></div></li>`).join('')}
+    </ul></div></section>
+
+    <section class="sheet f-sec"><div class="wrap">
+      ${head(ONE ? 'Shop by style' : 'Shop by line', 'Find your pair.', `<a class="link" href="${link('shop')}">Shop all</a>`)}
+      <div class="f-tiles">${lines.map((l) => {
+        const k = tileImg[l.key], from = l.ps.length ? Math.min(...l.ps.map(minPrice)) : 0, p0 = l.ps[0];
+        const vs = l.ps.flatMap((p) => p.variants.slice(0, 2).map((v) => [p, v])).slice(0, 6);
+        return `<a class="f-tile f-cyc rv" href="${link('shop', l.key.toLowerCase())}"><span class="f-tile-m">${p0 ? `<span class="f-tile-draw">${vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v)}</span>`).join('')}</span>` : k && simg(k) ? photo(k, '', { sizes: '(max-width: 700px) 100vw, 33vw' }) : ''}</span>${vs.length > 1 ? `<span class="f-cy-n mono" aria-hidden="true">${esc(vs[0][0].name)}</span><span class="f-cy-d" aria-hidden="true">${vs.map((_, j) => `<i${j ? '' : ' class="on"'}></i>`).join('')}</span>` : ''}
+          <span class="f-tile-t"><b>${esc({ Sneakers: 'Sneakers', Leather: 'Leather shoes', Hybrids: 'Casual' }[l.key] || lineName(l.key))}</b><span>${l.ps.length} style${l.ps.length === 1 ? '' : 's'}${from ? ', from ' + fmt(from) : ''}</span></span><span class="f-tile-a" aria-hidden="true">${ic('arrow')}</span></a>`;
+      }).join('')}</div>
     </div></section>
 
-    <div id="ext-stories"></div>
-    <section class="sheet x"><div class="wrap">
-      ${head(ONE ? 'Shop by style' : 'Shop by line', `${nWord} ${ONE ? 'style' : 'line'}${lines.length === 1 ? '' : 's'}. One signature.`, `<a class="link" href="${link('shop')}">Shop all</a>`)}
-      <div class="lines">${lines.map((l, i) => lineCard(l, i)).join('')}</div>
-    </div></section>
-
-    <section class="sheet x" id="drop"><div class="wrap">
-      ${head('Drop 01 / ' + drop.length + ' pairs', 'The collection.', `<a class="link" href="${link('shop')}">Filter and sort</a>`, matchMedia('(hover: hover)').matches ? 'Hover a pair to see how it is built. Pick your size and add it straight from here.' : 'Tap a pair for photos, colours and sizes. Your size, at your door, paid on arrival.')}
+    <section class="sheet f-sec" id="drop"><div class="wrap">
+      ${head('The collection', 'Every pair, checked by hand.', `<a class="link" href="${link('shop')}">Filter and sort</a>`)}
       <div class="grid" id="homeGrid">${drop.map((p, i) => card(p, i)).join('')}</div>
     </div></section>
 
-    <section class="sheet x" id="anatomy"><div class="wrap">
-      ${head('Anatomy of a DAUR pair', 'Every detail, earned.', '', 'Tap a point on the drawing. Every DAUR pair passes the same six checks before it earns our seal.')}
-      <div class="anat"><div class="anat-fig"><div class="svgbox">${visual(hero, hv, { mode: 'blueprint' })}${ANAT.map((a, i) => `<button class="hs" style="left:${a.x}%;top:${a.y}%" data-hs="${i}" aria-pressed="${i === 0}"><span>${i + 1}</span><span class="sr-only"> ${esc(a.t)}</span></button>`).join('')}</div></div>
-        <div class="anat-list">${ANAT.map((a, i) => `<div class="anat-item ${i === 0 ? 'open' : ''}" data-ai="${i}"><button aria-expanded="${i === 0}"><span class="n">0${i + 1}</span><span class="t">${esc(a.t)}</span><span class="pm">+</span></button><div class="d"><div><p>${esc(a.d)}</p></div></div></div>`).join('')}</div></div>
+    <section class="sheet f-sec f-story"><div class="wrap">
+      <div class="f-story-h rv"><span class="eyebrow">From the bench to your door</span><h2>Real craft has a home. It is here.</h2>
+        <p>${STORY}</p><a class="link" href="${link('manifesto')}">Read our story</a></div>
+      <ol class="f-steps">${STEPS.map((s, i) => `<li class="f-step rv"><span class="f-step-m">${simg(s.k) ? photo(s.k, '', { sizes: '(max-width: 700px) 100vw, 33vw' }) : `<span class="f-step-ph">${ic(s.i)}</span>`}</span>
+        <span class="mono f-n">0${i + 1}</span><h3>${s.t}</h3><p>${s.d}</p></li>`).join('')}</ol>
     </div></section>
 
-    <div class="marquee" aria-hidden="true"><div class="marquee-track">${[0, 1].map(() => '<span>Crafted in Pakistan</span><i>+</i><span class="o">Branded, not labeled</span><i>+</i><span>Full grain</span><i>+</i><span class="o">Paid on delivery</span><i>+</i><span>Naya daur</span><i>+</i>').join('')}</div></div>
-
-
-    ${sale.length ? `<section class="sheet x rail" id="saleRail"><div class="rail-pin"><div class="wrap rail-head">${head('Price cuts', 'Lower price. Same craft.', `<a class="link" href="${link('shop', 'sale')}">All sale pairs</a>`)}</div>
-      <div class="rail-view"><div class="rail-track">${sale.slice(0, 10).map((p, i) => card(p, i, p.variants.find(onSale))).join('')}
-        <a class="rail-all" href="${link('shop', 'sale')}"><span class="mono">${sale.length} pair${sale.length === 1 ? '' : 's'} on sale</span><b>See all<br>price cuts</b>${ic('arrow')}</a></div></div>
-      <div class="wrap rail-foot"><span class="rail-bar"><i></i></span><span class="mono mute">Scroll to browse</span></div></div></section>` : ''}
-
-    <section class="sheet x"><div class="wrap">
-      ${head('Bench to doorstep', 'Five steps to your door.')}
-      <div class="van-road" aria-hidden="true"><div class="van">${VAN}</div></div>
-      <div class="steps">${[['Chosen', 'We visit workshops in Lahore, Sialkot and Kasur and choose finished pairs at the bench.'], ['Checked', 'Stitching, leather grain, sole bond and comfort, checked pair by pair. Most samples never make it.'], ['Re-laced', 'Thick matte black cotton laces go in, with the engraved DAUR dubrae.'], ['Sealed', 'The Supply Unit seal is clipped to the top eyelet. Boxed in tissue with the manifest card.'], ['Delivered', 'We confirm with you, then hand it to the courier within 24 hours. You pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    <section class="sheet f-sec" id="anatomy"><div class="wrap">
+      ${head('The craft, up close', 'Every detail, earned.', '', 'Tap a point on the drawing. Every DAUR pair passes the same six checks before it earns our seal.')}
+      <div class="anat"><div class="anat-fig"><div class="svgbox">${SHOE.render({ name: hero.name, colorway: hv.color, silhouette: hero.silhouette, palette: hv.palette }, { mode: 'blueprint' })}${ANAT.map((a, i) => `<button class="hs" style="left:${a.x}%;top:${a.y}%" data-hs="${i}" aria-pressed="${i === 0}" aria-label="${esc(a.t)}"><span>${i + 1}</span></button>`).join('')}</div></div>
+        <div class="anat-list">${ANAT.map((a, i) => `<div class="anat-item ${i === 0 ? 'open' : ''}" data-ai="${i}"><button aria-expanded="${i === 0}"><span class="n">0${i + 1}</span><span class="t">${esc(a.t)}</span><span class="pm" aria-hidden="true">+</span></button><div class="d"><p>${esc(a.d)}</p></div></div>`).join('')}</div></div>
     </div></section>
 
-    <section class="sheet x"><div class="wrap">
-      ${head('The DAUR promise', 'What every pair promises.', `<a class="link" href="${link('contract')}">Read in full</a>`)}
-      <div class="ctable">${CONTRACT.map((r, i) => `<div class="crow"><span class="k">${ic(['clock', 'truck', 'cash', 'tag', 'swap', 'shield'][i])}${r[0]}</span><span class="v">${r[1]}</span><span class="d">${r[2]}</span></div>`).join('')}</div>
-    </div></section>
+    ${GIVE.on ? `<section class="f-slice"><div class="wrap">
+      <button class="f-slice-loaf" type="button" data-recut aria-label="Play the cut again">${loaf(GIVE.pct + '%', 'big')}</button>
+      <div class="f-slice-t rv"><span class="eyebrow">The slice</span><h2>A slice of every pair is not ours to keep.</h2>
+        <p>At least ${GIVE.pct}% of our profit, never added to your price, is pooled and given every quarter to verified people in need. We check every case ourselves and publish every giving.</p>
+        ${lastGiving()}
+        <a class="btn f-light" href="${link('giving')}">How our giving works <span class="arr">&rarr;</span></a></div>
+    </div></section>` : ''}
 
-    ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', b: [
-      ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We make leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Kasur and finished with our own hardware. Branded, not labeled: the DAUR mark sits on the laces and the seal, and the leather does the talking.`],
-      ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirmation, free delivery on two pairs and a 5 day size exchange.']],
-      l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]).concat(sale.length ? [[link('shop', 'sale'), 'Sale']] : []) })}
-    <section class="sheet x"><div class="wrap"><div class="signup closer">
+    <div id="ext-stories"></div>
+
+    ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', img: 'guide', alt: 'A pair of brown leather dress shoes', b: [
+      ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We choose leather sneakers, formal shoes, chelsea boots and casual slip ons at workshops in Lahore, Sialkot and Kasur, check every pair by hand and finish it with our own hardware: matte cotton laces, an engraved metal lace tag and the Supply Unit seal.`],
+      ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirming your order, with a 5 day size exchange on unworn pairs.']],
+      l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]) })}
+
+    <section class="sheet f-sec"><div class="wrap"><div class="signup closer">
       <h2>Your next pair, at your door.</h2>
-      <div class="closer-r"><p>Pick your size tonight. We confirm, dispatch within 24 hours and you pay the rider when the box is in your hands. Free delivery on ${C.freeDeliveryPairs} pairs.</p>
-        <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I would like help choosing a pair.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask us on WhatsApp</a></div></div>
+      <div class="closer-r"><p>Pick your size tonight. We confirm by call or WhatsApp, dispatch within 24 hours and you pay the rider when the box is in your hands. Free delivery on ${C.freeDeliveryPairs} pairs.</p>
+        <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I would like help choosing a pair.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask on WhatsApp</a></div></div>
     </div></div></section>`;
-
-    bindLens($('#stage'), $('#hero'));
-    const hero_ = $('#hero');
-    magicType($('h1.magic', hero_));
-    hero_.addEventListener('pointermove', (e) => { const hr = hero_.getBoundingClientRect(); const l = hero_.querySelector('.hero-light'); l.style.setProperty('--mx', (e.clientX - hr.left) + 'px'); l.style.setProperty('--my', (e.clientY - hr.top) + 'px'); });
-    bindCards(app); bindAnat(app);
+    // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'} / Naya daur</span>
+      <h1>Pakistan's craft,<br>chosen by hand.</h1>
+      <p>${fine ? 'Click a pair to choose your size. Drag or scroll sideways to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</p>
+      <div class="hero-cta"><a class="btn ghost" href="${link('shop')}">Shop all <span class="arr">&rarr;</span></a><a class="link" href="${link('manifesto')}">Our story</a></div>` });
+    bindCards(app); bindAnat(app); cutWhenSeen(app); cycleTiles(app);
   };
 
   // the x-ray lens and tilt on a drawn pair (home hero, about page)
@@ -988,11 +1041,12 @@
       const related = P.filter((x) => x.id !== p.id && x.audience === p.audience).sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 4);
       const recent = store.get('recent', []).filter((x) => x !== p.id).map(prod).filter(Boolean).slice(0, 4);
       app.innerHTML = `
-      <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></nav>
+      <div class="wrap pdp-wrap">
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}</div>
-          <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}"><span aria-hidden="true">${x.h}</span><span class="sr-only">${x.l} view</span></button>`).join('')}</div>
+          <div class="gal-main stage" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span>
+            <div class="gal-track" id="galTrack" role="region" tabindex="0" aria-label="Photos of ${esc(p.name)}${views.length > 1 ? `, ${views.length} in all. Swipe or use the arrow keys` : ''}">${views.map((x, i) => `<div class="gal-slide${x.grid ? ' grid-bg' : ''}" role="group" aria-label="${i + 1} of ${views.length}"><div class="zoomable">${i ? x.h : x.h.replace('loading="lazy"', 'fetchpriority="high"')}</div></div>`).join('')}</div>
+            ${views.length > 1 ? `<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span><div class="gal-dots">${views.map((x, i) => `<button class="gal-dot" type="button" data-view="${i}" aria-current="${i === view}" aria-label="Show photo ${i + 1} of ${views.length}"></button>`).join('')}</div>` : ''}</div>
         </div>
         <div class="buy">
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
@@ -1009,7 +1063,6 @@
             <button class="btn ghost block" id="buyNow">Buy now, pay on delivery</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
           <ul class="trust"><li>Dispatch in 24 hours</li><li>5 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
-          ${ladder(p, v)}
           <div id="ext-rvcard"></div>
           <div class="specs"><h2 class="specs-h">Specs</h2><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
@@ -1017,8 +1070,10 @@
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
             <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Five day size exchange on unworn full price pairs with the seal attached. Sale pairs are final for size; defects are covered for 30 days on every pair. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
           </div>
+          ${ladder(p, v)}
         </div>
       </div></div>
+      <section class="f-pillars f-pillars-pdp" aria-label="Why DAUR"><div class="wrap"><ul>${PILLARS.map((x) => `<li><span class="f-pi" aria-hidden="true">${ic(x.i)}</span><div><h2>${x.t}</h2><p>${x.d}</p></div></li>`).join('')}</ul></div></section>
       <div id="ext-reviews"></div>
       ${related.length ? `<section class="sheet x"><div class="wrap">${head('Complete the rotation', ONE ? 'More pairs like this.' : 'More from ' + esc(p.audience) + '.')}<div class="grid">${related.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
       ${recent.length ? `<section class="sheet x"><div class="wrap">${head('Recently viewed', 'Still thinking?')}<div class="grid">${recent.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
@@ -1028,27 +1083,29 @@
     function bind() {
       bindCards(app);
       hook('pdp', { p, v });
-      const g = $('#galMain'), z = $('#zoom');
-      // swap the photo in place, with a short slide in the direction of travel, instead of repainting the page
-      const show = (i, dir) => {
-        if (i === view) return;
-        view = (i + views.length) % views.length;
-        z.innerHTML = views[view].h;
-        g.classList.toggle('grid-bg', !!views[view].grid);
-        $('.corner.tl', g).textContent = views[view].l;
-        $('.corner.br', g).textContent = String(view + 1).padStart(2, '0') + ' / ' + String(views.length).padStart(2, '0');
-        $$('[data-view]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.view === view));
-        const k = z.firstElementChild;
-        if (k && k.animate) k.animate([{ opacity: 0, transform: `translateX(${(dir || 1) * 6}%)` }, { opacity: 1, transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      const g = $('#galMain'), tr = $('#galTrack'), dots = $$('.gal-dot', g);
+      const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const zoomOf = () => tr.children[view] && tr.children[view].firstElementChild;
+      const unzoom = () => { $$('.zoomable', tr).forEach((z) => { z.style.transform = ''; }); g.classList.remove('zooming'); };
+      // the lines follow the finger: each one grows as its photo slides in, live while swiping
+      const live = () => {
+        const f = tr.scrollLeft / Math.max(1, tr.clientWidth), n = Math.max(0, Math.min(views.length - 1, Math.round(f)));
+        dots.forEach((d, i) => d.style.setProperty('--a', Math.max(0, 1 - Math.abs(f - i)).toFixed(3)));
+        if (n !== view) { view = n; unzoom(); dots.forEach((d, i) => d.setAttribute('aria-current', i === view)); }
       };
-      $$('[data-view]').forEach((b) => b.addEventListener('click', () => show(+b.dataset.view, +b.dataset.view > view ? 1 : -1)));
+      let lf = 0;
+      tr.addEventListener('scroll', () => { if (!lf) lf = requestAnimationFrame(() => { lf = 0; live(); }); }, { passive: true });
+      if (view) tr.scrollLeft = view * tr.clientWidth; // a repaint (size, quantity) keeps the photo the shopper was looking at
+      live();
+      const show = (i) => { i = (i + views.length) % views.length; tr.scrollTo({ left: i * tr.clientWidth, behavior: calm ? 'auto' : 'smooth' }); };
+      dots.forEach((b) => b.addEventListener('click', () => show(+b.dataset.view)));
       // resting the mouse near the far left or right edge turns to the previous or next photo on its own
       let edge = 0, edgeT = 0;
       const setEdge = (d) => {
         if (d === edge) return;
         edge = d; clearTimeout(edgeT);
         g.classList.toggle('edge-l', d < 0); g.classList.toggle('edge-r', d > 0);
-        const step = (wait) => { edgeT = setTimeout(() => { if (!edge) return; show(view + edge, edge); step(1300); }, wait); };
+        const step = (wait) => { edgeT = setTimeout(() => { if (!edge) return; show(view + edge); step(1300); }, wait); };
         if (d) step(380);
       };
       g.addEventListener('pointermove', (e) => {
@@ -1056,12 +1113,12 @@
           const x = (e.clientX - g.getBoundingClientRect().left) / g.offsetWidth;
           const d = x < 0.14 ? -1 : x > 0.86 ? 1 : 0;
           setEdge(d);
-          if (d) { z.style.transform = ''; g.classList.remove('zooming'); return; }
+          if (d) { unzoom(); return; }
         }
       });
       g.addEventListener('pointerleave', () => setEdge(0));
-      g.addEventListener('pointermove', (e) => { if (edge) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
-      g.addEventListener('pointerleave', () => { z.style.transform = ''; g.classList.remove('zooming'); });
+      g.addEventListener('pointermove', (e) => { if (edge || e.pointerType !== 'mouse' || e.target.closest('.gal-dots')) return; const z = zoomOf(); if (!z) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
+      g.addEventListener('pointerleave', unzoom);
       $$('.vsw').forEach((b) => b.addEventListener('click', () => { v = variant(p, b.dataset.v); size = null; qty = 1; history.replaceState(null, '', SPA ? link('product', p.id + '~' + v.id) : '#' + p.id + '~' + v.id); paint(); }));
       $$('.buy .size').forEach((b) => b.addEventListener('click', () => {
         if (b.dataset.out) { size = null; soldOut(+b.dataset.s); return; }
@@ -1295,32 +1352,30 @@
     </a>`;
   }
   V.manifesto = function () {
-    setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply is a Pakistani footwear brand: men\'s leather shoes and sneakers crafted in Lahore, Sialkot and Kasur, checked by hand and finished with the DAUR mark.');
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our story</span><h1>Naya daur.</h1><p class="aside">A new era for the shoes Pakistan makes, and the men who wear them.</p></div></section>
-      <div class="wrap"><div class="manifesto">
-        <nav class="rail"><a href="#m1" data-jump="m1">01 Made here</a><a href="#m2" data-jump="m2">02 Branded, not labeled</a><a href="#m3" data-jump="m3">03 Luxury, made wearable</a><a href="#m4" data-jump="m4">04 Our charity pledge</a></nav>
-        <div class="body">
-          <div class="mblock" id="m1"><span class="eyebrow">01</span><h2>Made Here. Worn Everywhere.</h2>
-            <p class="big">Pakistan has cut and stitched fine leather for generations. Its craft deserves a name of its own.</p>
-            <p>In the workshops of Lahore, Sialkot and Kasur, skilled hands shape leather into shoes that rarely carry their makers' pride to the shelf. DAUR exists to change that. We choose the best of that work, check every pair by hand, finish it with our own hardware and bring it to your door under one name you can be proud to wear.</p>
-            <p class="verdict">Crafted in Pakistan. Signed DAUR.</p></div>
-          <div class="mblock" id="m2"><span class="eyebrow">02</span><h2>Branded, Not Labeled.</h2>
-            <p class="big">Our mark lives on the hardware, not across the shoe.</p>
-            <p>The engraved DAUR dubrae on the laces and the Supply Unit seal on the top eyelet are how you know a pair is ours. There is no oversized logo and no loud print. Just clean leather, tight stitching and a silhouette that speaks for itself, the way the most confident pieces always have.</p>
-            <p>Before a pair earns our seal, we check its stitching, leather grain, sole bond and comfort. If it is not right, it does not ship.</p></div>
-          <div class="mblock" id="m3"><span class="eyebrow">03</span><h2>Luxury, Made Wearable.</h2>
-            <div class="pillars"><div><b>Materials you can name</b><p>Every upper, lining and sole is listed plainly on the product page.</p></div><div><b>Checked by hand</b><p>Six checks on every pair, from the flex of the upper to the bond of the sole.</p></div><div><b>Paid on delivery</b><p>Cash on Delivery to every city in Pakistan, with a 5 day size exchange.</p></div></div>
-            <p class="big">Premium should feel like this: solid in the hand, easy on the foot, and fair on the wallet.</p>
-            <p class="verdict">Welcome to the new daur.</p>
-            <a class="btn volt" href="${link('shop')}" style="justify-self:start">Shop the collection <span class="arr">&rarr;</span></a></div>
-          <div class="mblock" id="m4"><span class="eyebrow">04</span><h2>Our Charity Pledge</h2>
-            <p class="big">At least 5% of our profit goes to charity, from every pair we sell.</p>
-            <p>We set aside a minimum of 5% of the profit we make, not of the price you pay, and give it only to verified and genuine cases of need. We check every case ourselves before we give. It is not a marketing budget and it is never added to your price.</p>
-            <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
-            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p>
-            <a class="link" href="${link('giving')}">How our giving works</a></div>
-        </div></div></div>
+    setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply chooses men\'s leather shoes and sneakers at workshops in Lahore, Sialkot and Kasur, checks every pair by hand, finishes it with its own hardware and gives at least 5% of profit every quarter.');
+    const CH = [
+      { id: 'why', n: 'Why DAUR', k: 'bench', h: 'Real craft has a home. It is here.', big: 'Pakistan makes fine leather shoes. DAUR gives that work a name you can trust.', p: [STORY, 'Daur means era. Naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.'] },
+      { id: 'workshops', n: 'The workshops', k: 'workshop', h: 'Lahore, Sialkot and Kasur.', big: 'Every DAUR pair is chosen at a workshop in one of these three cities.', p: ['Punjab is one of the centres of Pakistan\'s leather footwear trade, with production mainly in and around Lahore and Sialkot. The country has around 800 tanneries, and a widely cited 2016 report counted more than 500,000 people working in its leather industry.', 'We do not own these workshops and we do not claim to make the shoes ourselves. Our work is to find the best of what they make, choose it pair by pair and stand behind it with our name.'], src: [['SOMO, Leather products from Pakistan, 2021', 'https://www.somo.nl/nl/wp-content/uploads/sites/2/2021/04/Leather-products-from-Pakistan-mapping-paper.pdf']] },
+      { id: 'checks', n: 'Our checks', k: 'checked', h: 'Six checks before the seal.', big: 'If a pair is not right, it does not ship.', list: ANAT.map((a) => [a.t, a.d]) },
+      { id: 'finish', n: 'The DAUR finish', k: 'tools', h: 'Branded, not labeled.', big: 'Our mark lives on the hardware, not across the shoe.', list: [['Matte cotton laces', 'Thick matte black woven cotton laces replace the factory laces.'], ['Engraved dubrae', 'A laser engraved DAUR metal tag on the bottom lace row.'], ['Supply Unit seal', 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.'], ['The box', 'A sturdy box, tissue wrap and a card that explains how your pair reached you.']] },
+      { id: 'slice', n: 'The slice', k: '', h: 'A share that is not ours to keep.', big: 'At least ' + GIVE.pct + '% of our profit, never of your price, given every quarter.', p: ['We pool the slice from every pair and give it at the end of each quarter to verified cases of need that we check ourselves. Every giving is published on Our giving, with its date and amount. We never show the faces of the people we help.'], quote: true, cta: ['giving', 'How our giving works'] },
+      { id: 'claims', n: 'What we do not claim', k: '', h: 'Honest, even about our limits.', big: 'Trust is built on what we can show, so we leave out what we cannot.', list: [['Not handmade by DAUR', 'Skilled workshops make the pairs. We choose, check and finish them.'], ['No green claims', 'We do not call our shoes carbon free or eco friendly. We cannot prove it yet.'], ['No invented discounts', 'A crossed out price is always a price we really charged.'], ['Leather stated per pair', 'Each product page lists the upper, lining and sole as the workshop confirms them.']] }
+    ];
+    app.innerHTML = `<section class="f-hero f-hero-s${simg('bench') ? ' has-photo' : ''}"><div class="f-hero-media" aria-hidden="true">${photo('bench', '', { eager: true })}</div>
+      <div class="wrap f-hero-in"><span class="f-kicker">Our story</span><h1>Naya daur.</h1><p>Pakistan's craft, chosen by hand and brought to your door.</p></div></section>
+      <nav class="f-chips wrap" aria-label="Chapters">${CH.map((c, i) => `<a href="#${c.id}" data-jump="${c.id}"><span class="mono">0${i + 1}</span>${c.n}</a>`).join('')}</nav>
+      ${CH.map((c, i) => `<section class="sheet f-sec f-ch${i % 2 ? ' rev' : ''}" id="${c.id}"><div class="wrap f-ch-g">
+        <div class="f-ch-m rv">${c.k && simg(c.k) ? photo(c.k, '', { sizes: '(max-width: 860px) 100vw, 50vw' }) : c.id === 'slice' ? `<span class="f-ch-loaf" data-recut>${loaf(GIVE.pct + '%', 'big')}</span>` : `<span class="f-ch-n">0${i + 1}</span>`}</div>
+        <div class="f-ch-t rv"><span class="eyebrow">0${i + 1} / ${c.n}</span><h2>${c.h}</h2><p class="big">${c.big}</p>
+          ${(c.p || []).map((t) => `<p>${esc(t)}</p>`).join('')}
+          ${c.list ? `<dl class="f-list">${c.list.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
+          ${c.quote ? '<blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>' : ''}
+          ${c.src ? `<p class="f-src mono">Source: ${c.src.map(([t, u]) => `<a class="link" href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(', ')}</p>` : ''}
+          ${c.cta ? `<a class="link" href="${link(c.cta[0])}">${c.cta[1]}</a>` : ''}</div>
+      </div></section>`).join('')}
+      <section class="sheet f-sec"><div class="wrap"><div class="signup closer"><h2>Welcome to the new daur.</h2><div class="closer-r"><p>Every pair is checked by hand, paid for on delivery and covered by a 5 day size exchange.</p><div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('contract')}">Our promise</a></div></div></div></div></section>
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for DAUR Supply.</p></div>`;
+    cutWhenSeen(app);
   };
 
   /* ---- about ---- */
@@ -1452,41 +1507,45 @@
     s.onload = () => ok(); s.onerror = () => { rwModelJs = null; no(); }; document.head.appendChild(s);
   }));
 
-  V.runway = function (param) {
-    setMeta('The Runway: Every DAUR Pair Up Close | DAUR Supply', 'Every DAUR Supply pair on one floor. Bring a pair forward and inspect its leather, stitching, sole and hardware, with honest prices, ' + sizeSpan() + ' sizes and Cash on Delivery.');
+  // the Runway lives in the home page hero now; the old page address sends visitors there
+  V.runway = function () { location.replace(link('home')); if (SPA) route(); };
+
+  // the line of pairs, drawn into any host. It never ends: after the last pair comes the first again.
+  // One click on a pair opens what you need to buy it (colour, size, add to bag, like); the checked details
+  // and the numbered points on the pair only appear when asked for.
+  function runway(host, opt) {
+    opt = opt || {};
     const list = P.slice();
-    if (!list.length) { V.notfound(); return; }
+    if (!host || !list.length) return;
+    const n = list.length, ring = (i) => ((i % n) + n) % n;
+    // the shortest way round the ring from pair a to pair i
+    const off = (i, from) => { let d = ring(i) - from; if (d > n / 2) d -= n; else if (d < -n / 2) d += n; return d; };
     const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let lite = document.documentElement.classList.contains('lite');
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     const vs = list.map((p) => p.variants.find(stockOf) || p.variants[0]);
-    // the line opens on the middle pair, so it stands with pairs on both sides; a link to #handle opens on that pair
-    const want = list.findIndex((p) => p.id === String(param || '').split('~')[0]);
-    const start = want >= 0 ? want : Math.floor((list.length - 1) / 2);
-    let a = start, mode = 'browse', pin = -1, size = null, dets = [];
+    let a = 0, mode = 'browse', pin = -1, size = null, dets = [], detOpen = false, gpos = 0;
     const pairHTML = (p, i) => `<button class="rw-pair" type="button" data-i="${i}" aria-label="${esc(p.name)}, ${esc(vs[i].color)}"><span class="rw-tilt"><span class="rw-zoom"><span class="rw-face">${rwArt(p, vs[i])}</span><span class="rw-pins"></span></span></span></button>`;
-    app.innerHTML = `<section class="rw" id="rw" aria-roledescription="carousel" aria-label="The Runway, every pair up close">
+    const likeB = (pid, cls) => `<button class="rw-like ${cls || ''}" type="button" data-wish="${pid}" aria-pressed="${wish.includes(pid)}" aria-label="Like this pair">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button>`;
+    host.innerHTML = `<section class="rw rw-home" id="rw" aria-roledescription="carousel" aria-label="Every DAUR pair, one after another">
       <div class="rw-stage" id="rwStage" tabindex="0">
         <div class="rw-floor" aria-hidden="true"><i class="rw-grid" id="rwGrid"></i></div>
-        <div class="rw-head wrap"><span class="eyebrow">Runway / ${list.length} pairs</span><h1>The Runway.</h1><p>${fine ? 'Click a pair to see its details, click around it to come back. Drag or scroll sideways to move along the line.' : 'Tap a pair to see its details, tap around it to come back. Swipe to move along the line.'}</p></div>
+        <div class="rw-head wrap">${opt.head || ''}</div>
         <div class="rw-line" id="rwLine">${list.map(pairHTML).join('')}</div>
         <div class="rw-call" id="rwCall" aria-live="polite"></div>
         <div class="rw-3d" id="rw3d" hidden></div>
       </div>
       <div class="rw-bar wrap">
         <div class="rw-now" aria-live="polite"><span class="mono" id="rwN"></span><b id="rwName"></b><span class="mono" id="rwPrice"></span></div>
-        <div class="rw-ticks" role="tablist" aria-label="Pairs on the runway">${list.map((p, i) => `<button type="button" role="tab" data-t="${i}" aria-label="${esc(p.name)}"><i></i></button>`).join('')}</div>
-        <div class="rw-acts"><button class="rw-arr" type="button" id="rwPrev" aria-label="Previous pair">${ic('arrow')}</button><button class="rw-arr r" type="button" id="rwNext" aria-label="Next pair">${ic('arrow')}</button><button class="btn volt" type="button" id="rwGo">Inspect this pair</button></div>
+        <div class="rw-ticks" role="tablist" aria-label="Pairs in the line">${list.map((p, i) => `<button type="button" role="tab" data-t="${i}" aria-label="${esc(p.name)}"><i></i></button>`).join('')}</div>
+        <div class="rw-acts">${calm ? '' : `<button class="rw-arr rw-pp" type="button" id="rwPlay" aria-pressed="false" aria-label="Pause the line">${ic('pause', 'pp-pa')}${ic('play', 'pp-pl')}</button>`}<button class="rw-arr" type="button" id="rwPrev" aria-label="Previous pair">${ic('arrow')}</button><button class="rw-arr r" type="button" id="rwNext" aria-label="Next pair">${ic('arrow')}</button><span class="rw-like-w" id="rwLikeW"></span><button class="btn volt" type="button" id="rwGo">Choose this pair</button></div>
       </div>
-      <aside class="rw-panel" id="rwPanel" aria-label="Details of this pair" hidden></aside>
-    </section>
-    <section class="sheet x"><div class="wrap">
-      ${head('How to read the Runway', 'Look closer before you order.', `<a class="link" href="${link('shop')}">Shop all pairs</a>`, 'Every point on a pair is something we check at the bench in Lahore, Sialkot or Kasur before it earns our seal. Pairs are shown as design renders of each style until their studio photos are added.')}
-      <div class="steps rw-steps">${[['Move along the line', 'Drag, swipe or scroll sideways. The pair in front is sharp while the rest fall back.'], ['Open the details', 'Click a pair: the floor clears and numbered points mark the leather, stitching, sole and hardware.'], ['Pick your size', 'Choose your EU size and add it to the bag. You pay in cash at your door.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
-    </div></section>`;
+      <aside class="rw-panel" id="rwPanel" aria-label="Choose your size and colour" hidden></aside>
+    </section>`;
 
-    const rw = $('#rw'), stage = $('#rwStage'), line = $('#rwLine'), panel = $('#rwPanel'), call = $('#rwCall'), grid = $('#rwGrid'), box3d = $('#rw3d');
+    const rw = $('#rw', host), stage = $('#rwStage', host), line = $('#rwLine', host), panel = $('#rwPanel', host), call = $('#rwCall', host), grid = $('#rwGrid', host), box3d = $('#rw3d', host);
     const pairs = $$('.rw-pair', line), ticks = $$('[data-t]', rw);
+    const alive = () => document.body.contains(rw);
     let W = 0, fw = 0, narrow = false, pw = 0, goneT = 0;
     const measure = () => {
       W = stage.clientWidth; narrow = W < 961;
@@ -1494,30 +1553,38 @@
       fw = narrow ? Math.min(W * 0.9, 560) : Math.min((W - pw) * 0.66, 720);
       rw.style.setProperty('--fw', Math.round(fw) + 'px'); rw.style.setProperty('--pw', pw + 'px');
     };
-    // the camera: where each pair stands for the pair in front
+    // the camera: where each pair stands for the pair in front, measured the short way round the ring
     function place(stagger) {
       pairs.forEach((el, i) => {
-        const d = i - a, ad = Math.abs(d), sg = Math.sign(d);
+        const d = off(i, a), ad = Math.abs(d), sg = Math.sign(d);
         let x, z, s = 1, r = 0, o, b;
         if (mode === 'inspect' && d) { x = sg * (W * 0.55 + ad * 60); z = -900; o = 0; b = lite ? 0 : 12; }
         else if (!d) { x = mode === 'inspect' && !narrow ? -pw / 2 : 0; z = 0; s = mode === 'inspect' ? (narrow ? 1.1 : 1.08) : 1; o = 1; b = 0; }
         else { x = sg * (fw * (narrow ? 0.58 : 0.6) + (ad - 1) * fw * (narrow ? 0.34 : 0.4)); z = -ad * (narrow ? 420 : 380); r = -sg * 14; o = ad > 3 ? 0 : [1, 0.9, 0.62, 0.34][ad]; b = lite ? 0 : Math.min(ad * 2.4, 7.2); }
-        el.style.setProperty('--x', x.toFixed(1) + 'px'); el.style.setProperty('--z', z + 'px'); el.style.setProperty('--s', s); el.style.setProperty('--r', r + 'deg'); el.style.opacity = o;
+        // a pair that wraps from one end of the line to the other travels unseen
+        const wrapped = el._d != null && Math.abs(d - el._d) > n / 2 && !stagger;
+        el._d = d;
+        if (wrapped) { el.style.transition = 'none'; el.style.opacity = 0; void el.offsetWidth; }
+        el.style.setProperty('--x', x.toFixed(1) + 'px'); el.style.setProperty('--z', z + 'px'); el.style.setProperty('--s', s); el.style.setProperty('--r', r + 'deg');
+        if (wrapped) { void el.offsetWidth; el.style.transition = ''; }
+        el.style.opacity = o;
         el.style.filter = b ? `blur(${b}px)` : 'none';
         el.style.zIndex = 50 - ad; el.style.transitionDelay = stagger ? (ad * 0.09).toFixed(2) + 's' : '';
         el.classList.toggle('on', !d); el.tabIndex = o ? 0 : -1; el.setAttribute('aria-hidden', o ? 'false' : 'true');
         if (o) el.style.visibility = '';
-        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${mode === 'inspect' && !d ? 'Shown in detail' : 'See its details'}`);
+        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${mode === 'inspect' && !d ? 'Chosen' : 'Choose this pair'}`);
       });
       // pairs that have faded out leave the picture entirely once they are gone, so the browser stops drawing them
       clearTimeout(goneT); goneT = setTimeout(() => pairs.forEach((el) => { if (el.style.opacity === '0') el.style.visibility = 'hidden'; }), stagger ? 1900 : 950);
-      grid.style.setProperty('--gx', (-a * 72) + 'px');
+      grid.style.setProperty('--gx', (-gpos * 72) + 'px');
       ticks.forEach((t, i) => t.setAttribute('aria-selected', i === a));
       const p = list[a], v = vs[a];
-      $('#rwN').textContent = String(a + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0');
-      $('#rwName').textContent = p.name;
-      $('#rwPrice').textContent = fmt(v.price) + (onSale(v) ? ' / was ' + fmt(v.compareAt) : '');
-      $('#rwGo').textContent = mode === 'inspect' ? 'Back to the line' : 'Inspect this pair';
+      $('#rwN', rw).textContent = String(a + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0');
+      $('#rwName', rw).textContent = p.name;
+      $('#rwPrice', rw).textContent = fmt(v.price) + (onSale(v) ? ' / was ' + fmt(v.compareAt) : '');
+      $('#rwGo', rw).textContent = mode === 'inspect' ? 'Back to the line' : 'Choose this pair';
+      const lw = $('#rwLikeW', rw);
+      if (lw.dataset.pid !== p.id) { lw.dataset.pid = p.id; lw.innerHTML = likeB(p.id, 'rw-arr'); $('[data-wish]', lw).addEventListener('click', (e) => { e.stopPropagation(); hold(); toggleWish(p.id); }); }
     }
     // a little depth for the pair in front: a few darker copies behind the face give it thickness when it turns
     function depth() {
@@ -1526,10 +1593,11 @@
       const z = $('.rw-zoom', pairs[a]), face = $('.rw-face', pairs[a]);
       for (let k = 5; k >= 1; k--) { const sl = document.createElement('span'); sl.className = 'rw-sl'; sl.style.setProperty('--k', k); sl.setAttribute('aria-hidden', 'true'); sl.innerHTML = face.innerHTML; z.insertBefore(sl, face); }
     }
-    // points sit on the drawing directly; on a photo they are placed on the shoe's outline once the photo has its size
+    // the numbered points sit on the pair only while its details are open
     function pinsFor(i) {
       const el = pairs[i], p = list[i], v = vs[i], wrap = $('.rw-pins', el);
       dets = rwDetails(p);
+      if (!detOpen) { wrap.innerHTML = ''; return; }
       wrap.innerHTML = dets.map((o, k) => `<button class="rw-pin" type="button" data-pin="${k}" style="--i:${k};left:${(v.runway ? o.fx : o.dx).toFixed(2)}%;top:${(v.runway ? o.fy : o.dy).toFixed(2)}%" aria-label="Detail ${k + 1}: ${esc(o.t)}" aria-pressed="false"><span>${k + 1}</span></button>`).join('');
       $$('.rw-pin', wrap).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); choose(+b.dataset.pin === pin ? -1 : +b.dataset.pin); }));
     }
@@ -1548,35 +1616,44 @@
       $('[data-cx]', call).addEventListener('click', (e) => { e.stopPropagation(); choose(-1); });
       const row = $(`[data-row="${k}"]`, panel); if (row && !narrow && row.scrollIntoView) row.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
     }
+    // what you need to buy the pair comes first; the checked details wait behind one tap
     function paintPanel() {
       const p = list[a], v = vs[a], st = v.stock || {};
       const keep = Math.max(0, C.marketRetail - v.price);
-      panel.innerHTML = `<div class="rw-pn-h"><span class="eyebrow">In this pair / ${dets.length} details</span><button class="rw-x" type="button" id="rwX" aria-label="Back to the line">&times;</button></div>
-        <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)} / ${esc(lineName(p.category))}</p>
-        <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol>
+      panel.innerHTML = `<div class="rw-pn-h"><span class="eyebrow">${esc(lineName(p.category))} / ${String(a + 1).padStart(2, '0')} of ${String(n).padStart(2, '0')}</span><div class="rw-pn-a">${likeB(p.id, 'rw-x')}<button class="rw-x" type="button" id="rwX" aria-label="Back to the line">&times;</button></div></div>
+        <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)}</p>
         <div class="rw-math">${onSale(v) ? `<div><span class="k">Sale price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Was</span><span class="num strike">${fmt(v.compareAt)}</span></div><div><span class="k">You save</span><b class="num">${fmt(v.compareAt - v.price)}</b></div>`
           : SELL.retailAnchor ? `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Typical retail</span><span class="num strike">${fmt(C.marketRetail)}+</span></div><div><span class="k">You keep</span><b class="num">${fmt(keep)}+</b></div>` : `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Delivery</span><b class="num">Free on ${C.freeDeliveryPairs}</b></div><div><span class="k">Pay</span><b class="num">On delivery</b></div>`}</div>
         ${p.variants.length > 1 ? `<div class="rw-cols"><div class="field-label"><span>Colour / ${esc(v.color)}</span></div><div class="swatches">${p.variants.map((x) => `<button class="sw-b" type="button" style="--c:${esc(x.hex || '#777')}" data-rv="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}</div></div>` : ''}
         <div class="rw-size"><div class="field-label strong"><span>Size / EU ${size || ''}</span><button type="button" id="rwSg">${ic('ruler')}Size guide</button></div>
-          <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>
+          <div class="sizes">${p.sizes.map((s) => { const q = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${q ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${q ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>
         <button class="btn volt block" type="button" id="rwAdd">${ic('bag')}<span>${size ? 'Add EU ' + size + ' to bag, ' + fmt(v.price) : stockOf(v) ? 'Select a size' : 'Sold out in this colour'}</span></button>
+        <details class="rw-dd"${detOpen ? ' open' : ''}><summary><span>What we check on this pair</span><span class="mono">${dets.length} points</span></summary>
+          <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol></details>
         <div class="rw-more">${p.model ? `<button class="btn ghost" type="button" id="rw3dB">Turn it in 3D</button>` : ''}<a class="link" href="${link('product', p.id + '~' + v.id)}">Full details</a></div>
         <p class="rw-note">Add a second pair and delivery is free anywhere in Pakistan. Cash on Delivery, 5 day size exchange.</p>`;
-      $('#rwX').addEventListener('click', () => setMode('browse'));
+      $('#rwX', panel).addEventListener('click', () => setMode('browse'));
+      $('[data-wish]', panel).addEventListener('click', () => toggleWish(p.id));
+      $('.rw-dd', panel).addEventListener('toggle', (e) => {
+        const o = e.target.open; if (o === detOpen) return;
+        detOpen = o; if (!o) choose(-1); pinsFor(a);
+      });
       $$('[data-row]', panel).forEach((b) => b.addEventListener('click', () => choose(+b.dataset.row === pin ? -1 : +b.dataset.row)));
       $$('[data-rv]', panel).forEach((b) => b.addEventListener('click', () => {
         vs[a] = variant(p, b.dataset.rv); size = null;
         $('.rw-face', pairs[a]).innerHTML = rwArt(p, vs[a]); depth(); pinsFor(a); prepPhoto(a); paintPanel(); place(); if (pin >= 0) choose(pin);
       }));
       $$('.rw-size .size', panel).forEach((b) => b.addEventListener('click', () => { size = +b.dataset.s; const y = panel.scrollTop; paintPanel(); panel.scrollTop = y; }));
-      $('#rwSg').addEventListener('click', () => openModal('sizeGuide'));
-      $('#rwAdd').addEventListener('click', () => {
+      $('#rwSg', panel).addEventListener('click', () => openModal('sizeGuide'));
+      $('#rwAdd', panel).addEventListener('click', () => {
         if (!stockOf(v)) return;
         if (!size) { toast('Pick a size first'); const sz = $('.rw-size .sizes', panel); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
         addToCart(p.id, v.id, size, 1);
       });
-      const b3 = $('#rw3dB'); if (b3) b3.addEventListener('click', () => open3d(p));
+      const b3 = $('#rw3dB', panel); if (b3) b3.addEventListener('click', () => open3d(p));
     }
+    // opening a detail from the pair itself opens the details list too
+    const openDets = () => { if (detOpen) return; detOpen = true; const dd = $('.rw-dd', panel); if (dd) dd.open = true; pinsFor(a); };
     // a real 3D file (a GLB added to the product's media in Shopify) turns under the finger; nothing is loaded until asked
     function open3d(p) {
       box3d.hidden = false; box3d.innerHTML = `<p class="mono">Loading the 3D model</p>`;
@@ -1593,67 +1670,80 @@
     }
     function setMode(m) {
       if (m === mode) return;
-      mode = m; pin = -1; size = null;
+      mode = m; pin = -1; size = null; detOpen = false;
       rw.classList.toggle('inspect', m === 'inspect');
       close3d();
       const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); call.classList.remove('on');
       if (m === 'inspect') { pinsFor(a); paintPanel(); panel.hidden = false; requestAnimationFrame(() => panel.classList.add('on')); }
-      else { panel.classList.remove('on'); setTimeout(() => { if (mode === 'browse') panel.hidden = true; }, 450); $$('.rw-pins', line).forEach((w) => { w.innerHTML = ''; }); }
+      else { panel.classList.remove('on'); setTimeout(() => { if (mode === 'browse') panel.hidden = true; }, 450); $$('.rw-pins', line).forEach((w) => { w.innerHTML = ''; }); hold(); }
       place();
       if (m === 'inspect' && narrow) setTimeout(() => { const r = stage.getBoundingClientRect(); if (r.top < 0 || r.top > 80) window.scrollTo({ top: scrollY + r.top - 70, behavior: calm ? 'auto' : 'smooth' }); }, 60);
     }
-    // moving along the line; with the details open, the next pair opens straight into its details
+    // moving along the line, round and round; with a pair chosen, the next pair opens straight into its options
     function go(i) {
-      i = Math.max(0, Math.min(list.length - 1, i));
-      if (i === a) return;
+      const d = off(i, a);
+      if (!d) return;
       const keep = mode === 'inspect';
       $$('.rw-tilt', line).forEach((t) => { t.style.transform = ''; });
       if (keep) { const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); $('.rw-pins', pairs[a]).innerHTML = ''; call.classList.remove('on'); close3d(); pin = -1; size = null; }
-      a = i;
+      a = ring(a + d); gpos += d;
       if (keep) { pinsFor(a); const y = panel.scrollTop; paintPanel(); panel.scrollTop = narrow ? y : 0; }
       place(); depth();
-      if (!SPA) try { history.replaceState(null, '', '#' + list[a].id); } catch (e) { /* not allowed */ }
     }
-    // one click on any pair opens its details; a click anywhere around it closes them again
+    // the line moves on by itself, slowly, until someone touches it; it rests while the pointer is over it,
+    // while a pair is open, while it is off screen or the tab is hidden, and never moves for reduced motion
+    let paused = false, over = false, seen = true, quietTill = 0;
+    const hold = () => { quietTill = Date.now() + 9000; };
+    const pp = $('#rwPlay', rw);
+    if (pp) pp.addEventListener('click', (e) => { e.stopPropagation(); paused = !paused; pp.setAttribute('aria-pressed', paused); pp.setAttribute('aria-label', paused ? 'Play the line' : 'Pause the line'); });
+    if (!calm) {
+      const auto = setInterval(() => {
+        if (!alive()) { clearInterval(auto); return; }
+        if (paused || over || !seen || mode !== 'browse' || document.hidden || Date.now() < quietTill || sx != null) return;
+        go(a + 1);
+      }, 4200);
+      if (fine) { stage.addEventListener('pointerenter', () => { over = true; }); stage.addEventListener('pointerleave', () => { over = false; }); }
+      stage.addEventListener('focusin', () => { over = true; }); stage.addEventListener('focusout', () => { over = false; });
+      if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[0].isIntersecting; }, { threshold: 0.35 }).observe(stage);
+    }
+    // one click on any pair opens its options; a click anywhere around it closes them again
     pairs.forEach((el, i) => el.addEventListener('click', (e) => {
       if (moved) return;
-      e.stopPropagation();
+      e.stopPropagation(); hold();
       if (i !== a) go(i);
       if (mode !== 'inspect') setMode('inspect');
     }));
     stage.addEventListener('click', (e) => {
       if (moved || mode !== 'inspect') return;
-      if (e.target.closest('.rw-pair.on, .rw-call, .rw-3d')) return;
+      if (e.target.closest('.rw-pair.on, .rw-call, .rw-3d, .rw-head a')) return;
       setMode('browse');
     });
-    ticks.forEach((t) => t.addEventListener('click', () => go(+t.dataset.t)));
-    $('#rwPrev').addEventListener('click', () => go(a - 1));
-    $('#rwNext').addEventListener('click', () => go(a + 1));
-    $('#rwGo').addEventListener('click', () => setMode(mode === 'inspect' ? 'browse' : 'inspect'));
+    ticks.forEach((t) => t.addEventListener('click', () => { hold(); go(+t.dataset.t); }));
+    $('#rwPrev', rw).addEventListener('click', () => { hold(); go(a - 1); });
+    $('#rwNext', rw).addEventListener('click', () => { hold(); go(a + 1); });
+    $('#rwGo', rw).addEventListener('click', () => { hold(); setMode(mode === 'inspect' ? 'browse' : 'inspect'); });
     stage.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); go(a + 1); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); hold(); go(a + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); hold(); go(a - 1); }
       else if (e.key === 'Escape') { if (pin >= 0) choose(-1); else setMode('browse'); }
     });
     // dragging (finger or mouse) slides the whole line with the pointer, and letting go settles on the nearest pair
     let sx = null, sy = 0, dx = 0, moved = false, dragging = false;
     const stepW = () => fw * (narrow ? 0.58 : 0.6);
     stage.addEventListener('pointerdown', (e) => {
-      if (e.button > 0 || e.target.closest('.rw-3d, .rw-call')) return;
+      if (e.button > 0 || e.target.closest('.rw-3d, .rw-call, .rw-head a')) return;
       sx = e.clientX; sy = e.clientY; dx = 0; moved = false; dragging = false;
     });
     stage.addEventListener('pointermove', (e) => {
       if (sx == null) return;
       dx = e.clientX - sx; const dy = e.clientY - sy;
-      if (!dragging) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return; dragging = true; rw.classList.add('dragging'); try { stage.setPointerCapture(e.pointerId); } catch (er) { /* fine */ } }
-      // resistance at both ends of the line
-      const end = (a === 0 && dx > 0) || (a === list.length - 1 && dx < 0);
-      line.style.transform = `translate3d(${(end ? dx * 0.25 : dx * 0.9).toFixed(1)}px, 0, 0)`;
+      if (!dragging) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return; dragging = true; hold(); rw.classList.add('dragging'); try { stage.setPointerCapture(e.pointerId); } catch (er) { /* fine */ } }
+      line.style.transform = `translate3d(${(dx * 0.9).toFixed(1)}px, 0, 0)`;
     });
     const release = () => {
       if (sx == null) return; sx = null;
       if (!dragging) return;
-      dragging = false; rw.classList.remove('dragging'); moved = true; setTimeout(() => { moved = false; }, 80);
+      dragging = false; rw.classList.remove('dragging'); moved = true; setTimeout(() => { moved = false; }, 80); hold();
       const steps = Math.round(-dx / stepW()) || (Math.abs(dx) > 44 ? (dx < 0 ? 1 : -1) : 0);
       line.style.transform = '';
       if (steps) go(a + steps);
@@ -1664,7 +1754,7 @@
     stage.addEventListener('wheel', (e) => {
       const x = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
       if (!x) return;
-      e.preventDefault();
+      e.preventDefault(); hold();
       if (Date.now() < wLock) return;
       wAcc += x;
       if (Math.abs(wAcc) > 50) { go(a + (wAcc > 0 ? 1 : -1)); wAcc = 0; wLock = Date.now() + 420; }
@@ -1683,7 +1773,7 @@
       stage.addEventListener('pointerleave', () => { const t = $('.rw-tilt', pairs[a]); if (t) t.style.transform = ''; });
     }
     let rt = 0;
-    const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { const was = narrow; measure(); place(); if (was !== narrow && pin >= 0) choose(pin); }, 120); };
+    const onResize = () => { if (!alive()) { removeEventListener('resize', onResize); return; } clearTimeout(rt); rt = setTimeout(() => { const was = narrow; measure(); place(); if (was !== narrow && pin >= 0) choose(pin); }, 120); };
     addEventListener('resize', onResize);
     measure();
     pairs.forEach((_, i) => prepPhoto(i));
@@ -1697,10 +1787,10 @@
     // a device that cannot keep up with the walk in (slow frames) gets the same floor without blur and depth copies
     if (!lite) {
       const fr = []; let last = 0;
-      const probe = (t) => { if (last) fr.push(t - last); last = t; if (fr.length < 40 && document.body.contains(rw)) requestAnimationFrame(probe); else if (fr.length) { fr.sort((x, y) => x - y); if (fr[fr.length >> 1] > 34) { lite = true; rw.classList.add('rw-lite'); place(); depth(); } } };
+      const probe = (t) => { if (last) fr.push(t - last); last = t; if (fr.length < 40 && alive()) requestAnimationFrame(probe); else if (fr.length) { fr.sort((x, y) => x - y); if (fr[fr.length >> 1] > 34) { lite = true; rw.classList.add('rw-lite'); place(); depth(); } } };
       requestAnimationFrame(probe);
     }
-  };
+  }
 
   /* ---- offers ---- */
   // live codes come from Shopify (Content > Metaobjects > Offer, printed as window.DAUR_OFFERS); the static preview builds them from data.js
