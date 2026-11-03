@@ -16,7 +16,7 @@
 {"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":{{ settings.delivery_fee | default: 0 }},"currency":{{ shop.currency | json }}},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"PK"}{% if tmax > 0 %},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":{{ tmin }},"maxValue":{{ tmax }},"unitCode":"DAY"}}{% endif %}}
 {%- endcapture -%}
 {%- capture returns -%}
-{"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":5,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/ReturnFeesCustomerResponsibility","refundType":"https://schema.org/ExchangeRefund"}
+{"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":5,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/ReturnShippingFees","refundType":"https://schema.org/ExchangeRefund"}
 {%- endcapture -%}
 {%- comment -%}
   The brand entity. One Organization (an OnlineStore, since DAUR sells online
@@ -40,29 +40,25 @@
   assign mail = settings.support_email | default: shop.email
 -%}
 {%- capture org -%}
-{"@type":"OnlineStore","@id":{{ org_id | json }},"name":{{ shop.name | json }},"alternateName":["DAUR","دور سپلائی","Daur Supply"],"knowsLanguage":["en","ur"],"url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"width":1024,"height":1024},"image":{{ 'daur-share.jpg' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"email":{{ mail | json }},"telephone":{{ phone | prepend: '+' | json }},"address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressRegion":"Islamabad Capital Territory","addressCountry":"PK"},"areaServed":{"@type":"Country","name":"Pakistan"},"sameAs":{{ same | json }},"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ mail | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}
+{"@type":"OnlineStore","@id":{{ org_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"width":1024,"height":1024},"image":{{ 'daur-share.jpg' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"email":{{ mail | json }},"telephone":{{ phone | prepend: '+' | json }},"address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressRegion":"Islamabad Capital Territory","addressCountry":"PK"},"areaServed":{"@type":"Country","name":"Pakistan"},"sameAs":{{ same | json }},"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ mail | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}
 {%- endcapture -%}
 {%- if template.name == 'index' -%}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{{ org }},
-{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"alternateName":["DAUR","دور سپلائی"],"url":{{ root | append: '/' | json }},"inLanguage":"en-PK","publisher":{"@id":{{ org_id | json }}}}]}
+{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"inLanguage":"en-PK","publisher":{"@id":{{ org_id | json }}}}]}
 </script>
-{%- elsif template.name == 'page' and page.handle != 'liked' and page.handle != 'track' and page.handle != 'alerts' and page.handle != 'runway' -%}
+{%- elsif template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' -%}
 {%- liquid
   assign purl = root | append: page.url
-  case page.handle
-    when 'about', 'manifesto'
-      assign ptype = 'AboutPage'
-    when 'contact'
-      assign ptype = 'ContactPage'
-    else
-      assign ptype = 'WebPage'
-  endcase
-  assign pdesc = page.metafields.global.description_tag | default: page.content | strip_html | strip_newlines | truncate: 300
+  if page.handle == 'about'
+    assign ptype = 'AboutPage'
+  else
+    assign ptype = 'ContactPage'
+  endif
 -%}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{{ org }},
-{"@type":{{ ptype | json }},"@id":{{ purl | json }},"url":{{ purl | json }},"name":{{ page.title | json }},"description":{{ pdesc | json }},"inLanguage":"en-PK","isPartOf":{"@id":{{ site_id | json }}},"about":{"@id":{{ org_id | json }}}{% if ptype != 'WebPage' %},"mainEntity":{"@id":{{ org_id | json }}}{% endif %}},
+{"@type":{{ ptype | json }},"@id":{{ purl | json }},"url":{{ purl | json }},"name":{{ page.title | json }},"inLanguage":"en-PK","isPartOf":{"@id":{{ site_id | json }}},"about":{"@id":{{ org_id | json }}},"mainEntity":{"@id":{{ org_id | json }}}},
 {"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"url":{{ root | append: '/' | json }},"publisher":{"@id":{{ org_id | json }}}},
 {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ page.title | json }}}]}]}
 </script>
@@ -137,10 +133,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ blog.title | json }}}]}]
 </script>
 {%- elsif template.name == 'collection' -%}
-{%- assign curl = root | append: collection.url -%}
 <script type="application/ld+json">
-[{"@context":"https://schema.org","@type":"CollectionPage","@id":{{ curl | json }},"url":{{ curl | json }},"name":{{ collection.title | json }},"description":{{ collection.description | default: page_description | strip_html | strip_newlines | truncate: 300 | json }},"inLanguage":"en-PK","isPartOf":{"@type":"WebSite","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }}},
-"mainEntity":{"@type":"ItemList","numberOfItems":{{ collection.products_count }},"itemListElement":[{%- for p in collection.products limit: 48 -%}{"@type":"ListItem","position":{{ forloop.index }},"url":{{ root | append: p.url | json }},"name":{{ p.title | json }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}},
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ collection.title | json }}}]}]
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ collection.title | json }}}]}
 </script>
 {%- endif -%}

@@ -44,11 +44,6 @@
     assign daur_title = settings.seo_home_title | default: "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
     assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Cash on Delivery nationwide and free delivery on 2 pairs."
   endif
-  if template.name == 'collection' and collection.handle == 'all'
-    # Shopify names this address "Products"; it is the whole line, so it gets a title and description of its own
-    assign daur_title = "Men's Shoes in Pakistan: Leather Shoes, Sneakers & Chelsea Boots"
-    assign daur_desc = "Every DAUR Supply pair in one place: men's leather sneakers, formal shoes, chelsea boots and casual slip ons, crafted in Pakistan and checked by hand. Cash on Delivery to every city."
-  endif
   if daur_desc == blank
     assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan. Cash on Delivery to every city in Pakistan." 
   endif
@@ -71,7 +66,7 @@
   if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers'
     assign daur_noindex = true
   elsif template.name == 'page'
-    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts' or page.handle == 'runway'
+    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts'
       assign daur_noindex = true
     endif
   endif

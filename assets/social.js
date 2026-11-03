@@ -268,7 +268,7 @@
     // value flex share button
     const share = $('#shareB');
     if (share && !$('#flexB')) {
-      share.insertAdjacentHTML('afterend', `<button class="act flexact" id="flexB">${window.DAUR_ICON ? window.DAUR_ICON('bolt') : ''}<span>Share as a picture</span></button>`);
+      share.insertAdjacentHTML('afterend', `<button class="act flexact" id="flexB">${window.DAUR_ICON ? window.DAUR_ICON('bolt') : ''}<span>Share the value flex card</span></button>`);
       $('#flexB').addEventListener('click', () => flexCard(p, v));
     }
   });
@@ -376,7 +376,7 @@
     const sale = P.flatMap((p) => p.variants.filter(onSale).map((v) => [p, v]));
     const fresh = P.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 3);
     const sets = [
-      { id: 'drop01', label: 'The line', cover: men[0], slides: men.map((p) => ({ p, v: p.variants[0], kicker: 'The line / ' + p.category, title: p.name, sub: p.variants[0].color + ' / ' + fmt(p.variants[0].price) })) },
+      { id: 'drop01', label: 'Drop 01', cover: men[0], slides: men.map((p) => ({ p, v: p.variants[0], kicker: 'Drop 01 / ' + p.category, title: p.name, sub: p.variants[0].color + ' / ' + fmt(p.variants[0].price) })) },
       C.sell && C.sell.retailAnchor === false ? null : { id: 'flex', label: 'Value flex', text: 'Rs', icon: 'cash', slides: [{ big: fmt(C.marketRetail) + '+', kicker: 'Typical retail', title: 'For a comparable pair.', strike: true }, { big: fmt(men[0].variants[0].price), kicker: 'DAUR price', title: 'Full grain. Checked by hand.', volt: true }, { big: fmt(C.marketRetail - men[0].variants[0].price), kicker: 'The difference', title: 'Spend it on the fit.' }] },
       { id: 'unbox', label: 'Unboxing', text: 'Box', icon: 'box', slides: [{ kit: 'box', kicker: 'Unboxing / 01', title: 'Matte black corrugated box.' }, { kit: 'tissue', kicker: 'Unboxing / 02', title: 'Grid tissue. First tear.' }, { kit: 'card', kicker: 'Unboxing / 03', title: 'The manifest card.' }, { kit: 'hw', kicker: 'Unboxing / 04', title: 'Dubrae and the Supply Unit seal.' }] },
       { id: 'qa', label: 'QA table', text: 'QA', icon: 'shield', slides: [['Chosen', 'Picked at the bench, pair by pair.'], ['Checked', 'Stitch, grain, bond, comfort. Most never make it.'], ['Re-laced', 'Matte cotton laces. Engraved dubrae.'], ['Sealed', 'Dubrae, seal, tissue, card, box.'], ['Dispatched', 'Confirmed, then out in 24 hours.']].map(([t, s], i) => ({ kicker: 'QA / step 0' + (i + 1), title: t, sub: s, big: '0' + (i + 1) })) }
@@ -482,7 +482,7 @@
       const v = p.variants.find(onSale) || p.variants[0];
       reels.push({ p, v });
       if (k === 1) reels.push({ text: ['Full grain leather.', 'Checked by hand.', 'Signed DAUR.', 'Paid on delivery.'] });
-      if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Naya daur.'] });
+      if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Drop 01 is live.'] });
     });
     document.getElementById('app').innerHTML = `<h1 class="sr-only">The DAUR Supply feed: new pairs and price cuts</h1><div class="feed" id="feed">${reels.map((r, i) => r.text
       ? `<section class="reel txt"><div class="reel-in">${r.text.map((t, j) => `<p class="${j % 2 ? 'volt' : ''}" style="animation-delay:${j * .25}s">${esc(t)}</p>`).join('')}<span class="mono mute">Swipe up</span></div></section>`

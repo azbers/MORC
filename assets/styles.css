@@ -884,7 +884,7 @@ body[data-page="feed"] .ftr, body[data-page="feed"] .ticker { display: none; }
 /* ---------- fit wall ---------- */
 .fitwall { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .fit { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--ink-3); display: grid; place-items: center; }
-.fit img { width: 100%; height: 100%; object-fit: contain; transition: transform .8s var(--ease); }
+.fit img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
 .fit:hover img { transform: scale(1.05); }
 .fit-o { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px; display: grid; gap: 4px; background: linear-gradient(transparent, rgba(var(--shadow-rgb), .85)); }
 .fit-o b { font: 500 14px/1.2 var(--display); }
@@ -940,7 +940,7 @@ textarea.code { width: 100%; height: 420px; background: var(--ink-2); border: 1p
 @media (max-width: 700px) { .ocard summary { grid-template-columns: 1fr 1fr; } .ocard-b { grid-template-columns: 1fr; } .reel-cap { right: 80px; } }
 
 /* real product photos */
-.card-media img, .thumb img, .vth img, .th img, .ring-i img, .athumb img, .lc-art img, .ed-prev img, .fit img { width: 100%; height: 100%; object-fit: contain; }
+.card-media img, .thumb img, .vth img, .th img, .ring-i img, .athumb img, .lc-art img, .ed-prev img, .fit img { width: 100%; height: 100%; object-fit: cover; }
 .gal-main img, .sv-art img, .reel-stage img { width: 100%; height: 100%; object-fit: contain; }
 .card-media .layer:has(img) { padding: 0; }
 .athumb { aspect-ratio: 4 / 3; overflow: hidden; }
@@ -2299,83 +2299,6 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
   .rw-home.inspect .rw-ticks { display: none; }
 }
 
-/* ---- who it is for, and help with a size when buying for someone (2026-11) ---- */
-.f-for-l { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
-.f-for-l a { height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; gap: 8px; padding: 20px 18px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--ink-2); transition: border-color .25s, transform .35s var(--ease); }
-.f-for-l a:hover { border-color: var(--signal); transform: translateY(-2px); }
-.f-for-l .f-n { color: var(--signal); font-size: 10.5px; letter-spacing: .14em; }
-.f-for-l h3 { font: 600 18px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
-.f-for-l p { font: 400 14px/1.55 var(--body); color: var(--text-2); margin: 0; }
-.f-for-l .link { justify-self: start; margin-top: 6px; }
-.f-gift { margin-top: 16px; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 18px 20px; border: 1px dashed var(--line-2); border-radius: 16px; }
-.f-gift p { margin: 0; font: 400 14px/1.55 var(--body); color: var(--text-2); }
-.f-gift p b { color: var(--text); }
-.f-gift .btn { white-space: nowrap; }
-.gift-note { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 0; font-size: 13px; line-height: 1.5; color: var(--text-2); }
-.gift-note .ic { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--signal); }
-.gift-note b { color: var(--text); }
-@media (max-width: 1100px) { .f-for-l { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 760px) {
-  .f-for-l { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 78%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; margin-inline: calc(var(--gutter-l, 16px) * -1); padding-inline: var(--gutter-l, 16px); scroll-padding-inline: var(--gutter-l, 16px); scrollbar-width: none; }
-  .f-for-l::-webkit-scrollbar { display: none; }
-  .f-for-l li { scroll-snap-align: start; }
-  .f-gift { grid-template-columns: 44px minmax(0, 1fr); }
-  .f-gift .btn { grid-column: 1 / -1; justify-self: start; }
-}
-@media (max-width: 560px) { .rw-home .f-kx { display: none; } }
-
-/* ---- one heading voice on every page (2026-11): sentence case, the weight and spacing of the home headline ---- */
-.phero h1, .buy-head h1, .split { text-transform: none; font-weight: 600; letter-spacing: -.035em; line-height: .94; }
-.phero h1 { font-size: clamp(40px, 6.4vw, 96px); }
-.split { font-size: clamp(44px, 7vw, 112px); }
-.buy-head h1 { font-size: clamp(34px, 4.2vw, 60px); }
-/* the home sections below the line of pairs are laid out only when they come near the screen, so the first screen is ready sooner */
-#homeRw ~ section { content-visibility: auto; contain-intrinsic-size: auto 900px; }
-
-/* ---------- photos shown whole (2026-11-03) ----------
-   A product photo is never cropped by its frame. It sits whole in the frame, and the space around it is filled
-   with a tiny, softened copy of the same photo (24 px wide from the Shopify CDN), so the frame never looks empty. */
-.card-media .layer, .thumb, .th, .pd, .lc-art, .athumb, .ed-prev, .ring-i, .vth, .fit { grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
-.card-media img.pf, .th img.pf, .thumb img.pf, .ring-i img.pf, .athumb img.pf, .lc-art img.pf, .ed-prev img.pf, .vth img.pf, .fit img.pf {
-  object-fit: contain; background: linear-gradient(rgba(var(--bg-rgb), .3), rgba(var(--bg-rgb), .3)), var(--ph) center / cover no-repeat, var(--ink-3);
-}
-.fit:hover img { transform: none; }
-/* the shop parade: photos float a little less, so nothing is cut at the edge of the strip */
-.parade { height: 148px; }
-.pd { padding: 14px 18px; }
-.pd > img { animation-name: bob-s; border-radius: 6px; }
-@keyframes bob-s { 50% { transform: translateY(-4px); } }
-@media (max-width: 760px) { .parade { height: 112px; } }
-@media (max-width: 560px) { .parade { height: 96px; } .pd { padding: 10px 12px; } }
-
-/* ---------- product page: no breadcrumb, photos as a swipe carousel with live lines ---------- */
-.pdp-wrap .pdp { padding-top: 18px; }
-@media (max-width: 860px) { .pdp-wrap .pdp { padding-top: 10px; } }
-.gal-track { position: absolute; inset: 0; z-index: 1; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; border-radius: inherit; outline: none; }
-.gal-track::-webkit-scrollbar { display: none; }
-.gal-track:focus-visible { box-shadow: inset 0 0 0 2px var(--signal); }
-.gal-slide { flex: 0 0 100%; position: relative; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); padding: 4%; scroll-snap-align: center; scroll-snap-stop: always; }
-.gal-slide.grid-bg { background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px, var(--ink-2); }
-.gal-slide > .zoomable { width: 100%; height: 100%; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; }
-.gal-slide > .zoomable > img, .gal-slide > .zoomable > svg { width: 100%; height: 100%; object-fit: contain; }
-.gal-main .stage-badge, .gal-main .ptag { z-index: 3; }
-.gal-main .gal-edge { z-index: 2; }
-.gal-dots { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 4; display: flex; align-items: center; gap: 2px; padding: 0 8px; border-radius: 999px; background: rgba(42, 28, 20, .32); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.gal-dot { --a: 0; width: calc(14px + 18px * var(--a)); height: 26px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
-.gal-dot::before { content: ""; width: calc(100% - 6px); height: 3px; border-radius: 3px; background: #F6F1E8; opacity: calc(.45 + .55 * var(--a)); }
-.gal-dot:focus-visible { outline: 2px solid #F6F1E8; outline-offset: -4px; border-radius: 6px; }
-.gal-main.zooming .gal-dots { opacity: 0; pointer-events: none; }
-.gal-dots { transition: opacity .25s; }
-@media (prefers-reduced-motion: reduce) { .gal-track { scroll-behavior: auto; } }
-/* feed on phones: the square frame is sized from the space above the reel text, so the text never covers the photo */
-@media (max-width: 900px) {
-  .reel-stage.photo .layer { grid-template: minmax(0, 1fr) / minmax(0, 1fr); align-items: start; justify-items: center; padding-top: 1%; }
-  .reel-stage.photo .reel-photo { height: min(76%, 72vw, 460px); width: auto; }
-}
-@media (max-width: 900px) and (max-height: 700px) { .reel-stage.photo .reel-photo { height: min(50%, 72vw); } }
-/* the lines sit under the photo, never on it */
-.gal-main:has(.gal-dots) .gal-slide { padding-bottom: 46px; }
-
 /* ---------- the slice, cut live (2026-11-03) ----------
    One 5 second cycle, looped while the loaf is on screen: the knife saws down, crumbs fall, the slice tips away
    with its share, holds, then leaves (it is given), and the loaf is whole again for the next cut. */
@@ -2417,13 +2340,24 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
   .loaf.live .lf-crumbs circle, .loaf.mini.cut .lf-crumbs circle { animation: none; opacity: 0; }
 }
 
-/* ---------- Urdu lines (2026-11-03): right to left, in a Nastaliq face where the device has one ---------- */
-.ur, [lang="ur"] { font-family: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Urdu Typesetting", "Noto Naskh Arabic", "Geeza Pro", "Segoe UI", Tahoma, serif; letter-spacing: 0; text-transform: none; }
-p.ur, h2.ur { direction: rtl; text-align: right; line-height: 2.1; }
-.ftr-brand p.ur { font-size: 13px; opacity: .8; margin-top: 10px; }
-.f-ur { margin-top: 28px; padding: 22px 24px; border-radius: 16px; background: rgba(var(--fg-rgb), .03); border: 1px solid var(--line); }
-.f-ur h2.ur { font-size: clamp(20px, 2.4vw, 26px); font-weight: 600; margin: 0 0 6px; }
-.f-ur p.ur { font-size: 16px; color: var(--text-2); margin: 0; }
-.f-ur-r { margin: 12px 0 0; font-size: 11px; letter-spacing: .06em; color: var(--dim); }
-.pdp-ur { font-size: 15px; color: var(--text-2); margin: 6px 0 0; }
-.f-ur-r { text-transform: none; }
+/* ---------- product page: no breadcrumb, photos as a swipe carousel with live lines ---------- */
+.pdp-wrap .pdp { padding-top: 18px; }
+@media (max-width: 860px) { .pdp-wrap .pdp { padding-top: 10px; } }
+.gal-track { position: absolute; inset: 0; z-index: 1; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; border-radius: inherit; outline: none; }
+.gal-track::-webkit-scrollbar { display: none; }
+.gal-track:focus-visible { box-shadow: inset 0 0 0 2px var(--signal); }
+.gal-slide { flex: 0 0 100%; position: relative; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); padding: 4%; scroll-snap-align: center; scroll-snap-stop: always; }
+.gal-slide.grid-bg { background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px, var(--ink-2); }
+.gal-slide > .zoomable { width: 100%; height: 100%; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; }
+.gal-slide > .zoomable > img, .gal-slide > .zoomable > svg { width: 100%; height: 100%; object-fit: contain; }
+.gal-main .stage-badge, .gal-main .ptag { z-index: 3; }
+.gal-main .gal-edge { z-index: 2; }
+.gal-dots { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 4; display: flex; align-items: center; gap: 2px; padding: 0 8px; border-radius: 999px; background: rgba(42, 28, 20, .32); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.gal-dot { --a: 0; width: calc(14px + 18px * var(--a)); height: 26px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
+.gal-dot::before { content: ""; width: calc(100% - 6px); height: 3px; border-radius: 3px; background: #F6F1E8; opacity: calc(.45 + .55 * var(--a)); }
+.gal-dot:focus-visible { outline: 2px solid #F6F1E8; outline-offset: -4px; border-radius: 6px; }
+.gal-main.zooming .gal-dots { opacity: 0; pointer-events: none; }
+.gal-dots { transition: opacity .25s; }
+@media (prefers-reduced-motion: reduce) { .gal-track { scroll-behavior: auto; } }
+/* the lines sit under the photo, never on it */
+.gal-main:has(.gal-dots) .gal-slide { padding-bottom: 46px; }
