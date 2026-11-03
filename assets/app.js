@@ -267,8 +267,8 @@
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
   // the menu stays short: the styles live in the Shop all filters, and Offers and the Feed live in the footer
-  const navItems = [['shop', '', 'Shop all'], ['runway', '', 'Runway'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
-  const NAV_TOP = 3;
+  const navItems = [['shop', '', 'Shop all'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
+  const NAV_TOP = 2;
   function chrome() {
     // three promises a Pakistani buyer looks for first, held still so they can be read
     const tb = (C.announce ? [esc(C.announce)] : []).concat(['Cash on Delivery across Pakistan', 'Free delivery on ' + C.freeDeliveryPairs + ' pairs or more', C.exchangeDays ? C.exchangeDays + ' day size exchange' : '5 day size exchange']);
@@ -299,7 +299,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -642,15 +642,7 @@
     const lines = ONE ? CATS.map((c) => ({ key: c, ps: P.filter((p) => p.category === c) })) : C.audiences.map((a) => ({ key: a, ps: P.filter((p) => p.audience === a) }));
     const tileImg = { Sneakers: 'sneakers', Hybrids: 'casual', Leather: 'leather' };
     app.innerHTML = `
-    <section class="f-hero${simg('hero') ? ' has-photo' : ''}" id="hero">
-      <div class="f-hero-media" aria-hidden="true">${simg('hero') ? photo('hero', '', { eager: true, sizes: '100vw' }) : `<div class="f-hero-draw">${visual(hero, hv)}</div>`}</div>
-      <div class="wrap f-hero-in">
-        <span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'} / Naya daur</span>
-        <h1>Pakistan's craft,<br>chosen by hand.</h1>
-        <p>From the workshops of Lahore, Sialkot and Kasur, checked pair by pair and brought to your door. You pay when the box is in your hands.</p>
-        <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost f-ghost" href="${link('manifesto')}">Our story</a></div>
-      </div>
-    </section>
+    <div id="homeRw" class="home-rw"></div>
 
     <section class="f-pillars" aria-label="What DAUR stands for"><div class="wrap"><ul>
       ${PILLARS.map((x) => `<li class="rv"><span class="f-pi" aria-hidden="true">${ic(x.i)}</span><div><h2>${x.t}</h2><p>${x.d}</p></div></li>`).join('')}
@@ -703,6 +695,12 @@
       <div class="closer-r"><p>Pick your size tonight. We confirm by call or WhatsApp, dispatch within 24 hours and you pay the rider when the box is in your hands. Free delivery on ${C.freeDeliveryPairs} pairs.</p>
         <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I would like help choosing a pair.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask on WhatsApp</a></div></div>
     </div></div></section>`;
+    // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'} / Naya daur</span>
+      <h1>Pakistan's craft,<br>chosen by hand.</h1>
+      <p>${fine ? 'Click a pair to choose your size. Drag or scroll sideways to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</p>
+      <div class="hero-cta"><a class="btn ghost" href="${link('shop')}">Shop all <span class="arr">&rarr;</span></a><a class="link" href="${link('manifesto')}">Our story</a></div>` });
     bindCards(app); bindAnat(app); cutWhenSeen(app);
   };
 
@@ -1479,41 +1477,45 @@
     s.onload = () => ok(); s.onerror = () => { rwModelJs = null; no(); }; document.head.appendChild(s);
   }));
 
-  V.runway = function (param) {
-    setMeta('The Runway: Every DAUR Pair Up Close | DAUR Supply', 'Every DAUR Supply pair on one floor. Bring a pair forward and inspect its leather, stitching, sole and hardware, with honest prices, ' + sizeSpan() + ' sizes and Cash on Delivery.');
+  // the Runway lives in the home page hero now; the old page address sends visitors there
+  V.runway = function () { location.replace(link('home')); if (SPA) route(); };
+
+  // the line of pairs, drawn into any host. It never ends: after the last pair comes the first again.
+  // One click on a pair opens what you need to buy it (colour, size, add to bag, like); the checked details
+  // and the numbered points on the pair only appear when asked for.
+  function runway(host, opt) {
+    opt = opt || {};
     const list = P.slice();
-    if (!list.length) { V.notfound(); return; }
+    if (!host || !list.length) return;
+    const n = list.length, ring = (i) => ((i % n) + n) % n;
+    // the shortest way round the ring from pair a to pair i
+    const off = (i, from) => { let d = ring(i) - from; if (d > n / 2) d -= n; else if (d < -n / 2) d += n; return d; };
     const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let lite = document.documentElement.classList.contains('lite');
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     const vs = list.map((p) => p.variants.find(stockOf) || p.variants[0]);
-    // the line opens on the middle pair, so it stands with pairs on both sides; a link to #handle opens on that pair
-    const want = list.findIndex((p) => p.id === String(param || '').split('~')[0]);
-    const start = want >= 0 ? want : Math.floor((list.length - 1) / 2);
-    let a = start, mode = 'browse', pin = -1, size = null, dets = [];
+    let a = 0, mode = 'browse', pin = -1, size = null, dets = [], detOpen = false, gpos = 0;
     const pairHTML = (p, i) => `<button class="rw-pair" type="button" data-i="${i}" aria-label="${esc(p.name)}, ${esc(vs[i].color)}"><span class="rw-tilt"><span class="rw-zoom"><span class="rw-face">${rwArt(p, vs[i])}</span><span class="rw-pins"></span></span></span></button>`;
-    app.innerHTML = `<section class="rw" id="rw" aria-roledescription="carousel" aria-label="The Runway, every pair up close">
+    const likeB = (pid, cls) => `<button class="rw-like ${cls || ''}" type="button" data-wish="${pid}" aria-pressed="${wish.includes(pid)}" aria-label="Like this pair">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button>`;
+    host.innerHTML = `<section class="rw rw-home" id="rw" aria-roledescription="carousel" aria-label="Every DAUR pair, one after another">
       <div class="rw-stage" id="rwStage" tabindex="0">
         <div class="rw-floor" aria-hidden="true"><i class="rw-grid" id="rwGrid"></i></div>
-        <div class="rw-head wrap"><span class="eyebrow">Runway / ${list.length} pairs</span><h1>The Runway.</h1><p>${fine ? 'Click a pair to see its details, click around it to come back. Drag or scroll sideways to move along the line.' : 'Tap a pair to see its details, tap around it to come back. Swipe to move along the line.'}</p></div>
+        <div class="rw-head wrap">${opt.head || ''}</div>
         <div class="rw-line" id="rwLine">${list.map(pairHTML).join('')}</div>
         <div class="rw-call" id="rwCall" aria-live="polite"></div>
         <div class="rw-3d" id="rw3d" hidden></div>
       </div>
       <div class="rw-bar wrap">
         <div class="rw-now" aria-live="polite"><span class="mono" id="rwN"></span><b id="rwName"></b><span class="mono" id="rwPrice"></span></div>
-        <div class="rw-ticks" role="tablist" aria-label="Pairs on the runway">${list.map((p, i) => `<button type="button" role="tab" data-t="${i}" aria-label="${esc(p.name)}"><i></i></button>`).join('')}</div>
-        <div class="rw-acts"><button class="rw-arr" type="button" id="rwPrev" aria-label="Previous pair">${ic('arrow')}</button><button class="rw-arr r" type="button" id="rwNext" aria-label="Next pair">${ic('arrow')}</button><button class="btn volt" type="button" id="rwGo">Inspect this pair</button></div>
+        <div class="rw-ticks" role="tablist" aria-label="Pairs in the line">${list.map((p, i) => `<button type="button" role="tab" data-t="${i}" aria-label="${esc(p.name)}"><i></i></button>`).join('')}</div>
+        <div class="rw-acts">${calm ? '' : `<button class="rw-arr rw-pp" type="button" id="rwPlay" aria-pressed="false" aria-label="Pause the line">${ic('pause', 'pp-pa')}${ic('play', 'pp-pl')}</button>`}<button class="rw-arr" type="button" id="rwPrev" aria-label="Previous pair">${ic('arrow')}</button><button class="rw-arr r" type="button" id="rwNext" aria-label="Next pair">${ic('arrow')}</button><span class="rw-like-w" id="rwLikeW"></span><button class="btn volt" type="button" id="rwGo">Choose this pair</button></div>
       </div>
-      <aside class="rw-panel" id="rwPanel" aria-label="Details of this pair" hidden></aside>
-    </section>
-    <section class="sheet x"><div class="wrap">
-      ${head('How to read the Runway', 'Look closer before you order.', `<a class="link" href="${link('shop')}">Shop all pairs</a>`, 'Every point on a pair is something we check at the bench in Lahore, Sialkot or Kasur before it earns our seal. Pairs are shown as design renders of each style until their studio photos are added.')}
-      <div class="steps rw-steps">${[['Move along the line', 'Drag, swipe or scroll sideways. The pair in front is sharp while the rest fall back.'], ['Open the details', 'Click a pair: the floor clears and numbered points mark the leather, stitching, sole and hardware.'], ['Pick your size', 'Choose your EU size and add it to the bag. You pay in cash at your door.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
-    </div></section>`;
+      <aside class="rw-panel" id="rwPanel" aria-label="Choose your size and colour" hidden></aside>
+    </section>`;
 
-    const rw = $('#rw'), stage = $('#rwStage'), line = $('#rwLine'), panel = $('#rwPanel'), call = $('#rwCall'), grid = $('#rwGrid'), box3d = $('#rw3d');
+    const rw = $('#rw', host), stage = $('#rwStage', host), line = $('#rwLine', host), panel = $('#rwPanel', host), call = $('#rwCall', host), grid = $('#rwGrid', host), box3d = $('#rw3d', host);
     const pairs = $$('.rw-pair', line), ticks = $$('[data-t]', rw);
+    const alive = () => document.body.contains(rw);
     let W = 0, fw = 0, narrow = false, pw = 0, goneT = 0;
     const measure = () => {
       W = stage.clientWidth; narrow = W < 961;
@@ -1521,30 +1523,38 @@
       fw = narrow ? Math.min(W * 0.9, 560) : Math.min((W - pw) * 0.66, 720);
       rw.style.setProperty('--fw', Math.round(fw) + 'px'); rw.style.setProperty('--pw', pw + 'px');
     };
-    // the camera: where each pair stands for the pair in front
+    // the camera: where each pair stands for the pair in front, measured the short way round the ring
     function place(stagger) {
       pairs.forEach((el, i) => {
-        const d = i - a, ad = Math.abs(d), sg = Math.sign(d);
+        const d = off(i, a), ad = Math.abs(d), sg = Math.sign(d);
         let x, z, s = 1, r = 0, o, b;
         if (mode === 'inspect' && d) { x = sg * (W * 0.55 + ad * 60); z = -900; o = 0; b = lite ? 0 : 12; }
         else if (!d) { x = mode === 'inspect' && !narrow ? -pw / 2 : 0; z = 0; s = mode === 'inspect' ? (narrow ? 1.1 : 1.08) : 1; o = 1; b = 0; }
         else { x = sg * (fw * (narrow ? 0.58 : 0.6) + (ad - 1) * fw * (narrow ? 0.34 : 0.4)); z = -ad * (narrow ? 420 : 380); r = -sg * 14; o = ad > 3 ? 0 : [1, 0.9, 0.62, 0.34][ad]; b = lite ? 0 : Math.min(ad * 2.4, 7.2); }
-        el.style.setProperty('--x', x.toFixed(1) + 'px'); el.style.setProperty('--z', z + 'px'); el.style.setProperty('--s', s); el.style.setProperty('--r', r + 'deg'); el.style.opacity = o;
+        // a pair that wraps from one end of the line to the other travels unseen
+        const wrapped = el._d != null && Math.abs(d - el._d) > n / 2 && !stagger;
+        el._d = d;
+        if (wrapped) { el.style.transition = 'none'; el.style.opacity = 0; void el.offsetWidth; }
+        el.style.setProperty('--x', x.toFixed(1) + 'px'); el.style.setProperty('--z', z + 'px'); el.style.setProperty('--s', s); el.style.setProperty('--r', r + 'deg');
+        if (wrapped) { void el.offsetWidth; el.style.transition = ''; }
+        el.style.opacity = o;
         el.style.filter = b ? `blur(${b}px)` : 'none';
         el.style.zIndex = 50 - ad; el.style.transitionDelay = stagger ? (ad * 0.09).toFixed(2) + 's' : '';
         el.classList.toggle('on', !d); el.tabIndex = o ? 0 : -1; el.setAttribute('aria-hidden', o ? 'false' : 'true');
         if (o) el.style.visibility = '';
-        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${mode === 'inspect' && !d ? 'Shown in detail' : 'See its details'}`);
+        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${mode === 'inspect' && !d ? 'Chosen' : 'Choose this pair'}`);
       });
       // pairs that have faded out leave the picture entirely once they are gone, so the browser stops drawing them
       clearTimeout(goneT); goneT = setTimeout(() => pairs.forEach((el) => { if (el.style.opacity === '0') el.style.visibility = 'hidden'; }), stagger ? 1900 : 950);
-      grid.style.setProperty('--gx', (-a * 72) + 'px');
+      grid.style.setProperty('--gx', (-gpos * 72) + 'px');
       ticks.forEach((t, i) => t.setAttribute('aria-selected', i === a));
       const p = list[a], v = vs[a];
-      $('#rwN').textContent = String(a + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0');
-      $('#rwName').textContent = p.name;
-      $('#rwPrice').textContent = fmt(v.price) + (onSale(v) ? ' / was ' + fmt(v.compareAt) : '');
-      $('#rwGo').textContent = mode === 'inspect' ? 'Back to the line' : 'Inspect this pair';
+      $('#rwN', rw).textContent = String(a + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0');
+      $('#rwName', rw).textContent = p.name;
+      $('#rwPrice', rw).textContent = fmt(v.price) + (onSale(v) ? ' / was ' + fmt(v.compareAt) : '');
+      $('#rwGo', rw).textContent = mode === 'inspect' ? 'Back to the line' : 'Choose this pair';
+      const lw = $('#rwLikeW', rw);
+      if (lw.dataset.pid !== p.id) { lw.dataset.pid = p.id; lw.innerHTML = likeB(p.id, 'rw-arr'); $('[data-wish]', lw).addEventListener('click', (e) => { e.stopPropagation(); hold(); toggleWish(p.id); }); }
     }
     // a little depth for the pair in front: a few darker copies behind the face give it thickness when it turns
     function depth() {
@@ -1553,10 +1563,11 @@
       const z = $('.rw-zoom', pairs[a]), face = $('.rw-face', pairs[a]);
       for (let k = 5; k >= 1; k--) { const sl = document.createElement('span'); sl.className = 'rw-sl'; sl.style.setProperty('--k', k); sl.setAttribute('aria-hidden', 'true'); sl.innerHTML = face.innerHTML; z.insertBefore(sl, face); }
     }
-    // points sit on the drawing directly; on a photo they are placed on the shoe's outline once the photo has its size
+    // the numbered points sit on the pair only while its details are open
     function pinsFor(i) {
       const el = pairs[i], p = list[i], v = vs[i], wrap = $('.rw-pins', el);
       dets = rwDetails(p);
+      if (!detOpen) { wrap.innerHTML = ''; return; }
       wrap.innerHTML = dets.map((o, k) => `<button class="rw-pin" type="button" data-pin="${k}" style="--i:${k};left:${(v.runway ? o.fx : o.dx).toFixed(2)}%;top:${(v.runway ? o.fy : o.dy).toFixed(2)}%" aria-label="Detail ${k + 1}: ${esc(o.t)}" aria-pressed="false"><span>${k + 1}</span></button>`).join('');
       $$('.rw-pin', wrap).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); choose(+b.dataset.pin === pin ? -1 : +b.dataset.pin); }));
     }
@@ -1575,35 +1586,44 @@
       $('[data-cx]', call).addEventListener('click', (e) => { e.stopPropagation(); choose(-1); });
       const row = $(`[data-row="${k}"]`, panel); if (row && !narrow && row.scrollIntoView) row.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
     }
+    // what you need to buy the pair comes first; the checked details wait behind one tap
     function paintPanel() {
       const p = list[a], v = vs[a], st = v.stock || {};
       const keep = Math.max(0, C.marketRetail - v.price);
-      panel.innerHTML = `<div class="rw-pn-h"><span class="eyebrow">In this pair / ${dets.length} details</span><button class="rw-x" type="button" id="rwX" aria-label="Back to the line">&times;</button></div>
-        <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)} / ${esc(lineName(p.category))}</p>
-        <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol>
+      panel.innerHTML = `<div class="rw-pn-h"><span class="eyebrow">${esc(lineName(p.category))} / ${String(a + 1).padStart(2, '0')} of ${String(n).padStart(2, '0')}</span><div class="rw-pn-a">${likeB(p.id, 'rw-x')}<button class="rw-x" type="button" id="rwX" aria-label="Back to the line">&times;</button></div></div>
+        <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)}</p>
         <div class="rw-math">${onSale(v) ? `<div><span class="k">Sale price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Was</span><span class="num strike">${fmt(v.compareAt)}</span></div><div><span class="k">You save</span><b class="num">${fmt(v.compareAt - v.price)}</b></div>`
           : SELL.retailAnchor ? `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Typical retail</span><span class="num strike">${fmt(C.marketRetail)}+</span></div><div><span class="k">You keep</span><b class="num">${fmt(keep)}+</b></div>` : `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Delivery</span><b class="num">Free on ${C.freeDeliveryPairs}</b></div><div><span class="k">Pay</span><b class="num">On delivery</b></div>`}</div>
         ${p.variants.length > 1 ? `<div class="rw-cols"><div class="field-label"><span>Colour / ${esc(v.color)}</span></div><div class="swatches">${p.variants.map((x) => `<button class="sw-b" type="button" style="--c:${esc(x.hex || '#777')}" data-rv="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}</div></div>` : ''}
         <div class="rw-size"><div class="field-label strong"><span>Size / EU ${size || ''}</span><button type="button" id="rwSg">${ic('ruler')}Size guide</button></div>
-          <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>
+          <div class="sizes">${p.sizes.map((s) => { const q = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${q ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${q ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>
         <button class="btn volt block" type="button" id="rwAdd">${ic('bag')}<span>${size ? 'Add EU ' + size + ' to bag, ' + fmt(v.price) : stockOf(v) ? 'Select a size' : 'Sold out in this colour'}</span></button>
+        <details class="rw-dd"${detOpen ? ' open' : ''}><summary><span>What we check on this pair</span><span class="mono">${dets.length} points</span></summary>
+          <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol></details>
         <div class="rw-more">${p.model ? `<button class="btn ghost" type="button" id="rw3dB">Turn it in 3D</button>` : ''}<a class="link" href="${link('product', p.id + '~' + v.id)}">Full details</a></div>
         <p class="rw-note">Add a second pair and delivery is free anywhere in Pakistan. Cash on Delivery, 5 day size exchange.</p>`;
-      $('#rwX').addEventListener('click', () => setMode('browse'));
+      $('#rwX', panel).addEventListener('click', () => setMode('browse'));
+      $('[data-wish]', panel).addEventListener('click', () => toggleWish(p.id));
+      $('.rw-dd', panel).addEventListener('toggle', (e) => {
+        const o = e.target.open; if (o === detOpen) return;
+        detOpen = o; if (!o) choose(-1); pinsFor(a);
+      });
       $$('[data-row]', panel).forEach((b) => b.addEventListener('click', () => choose(+b.dataset.row === pin ? -1 : +b.dataset.row)));
       $$('[data-rv]', panel).forEach((b) => b.addEventListener('click', () => {
         vs[a] = variant(p, b.dataset.rv); size = null;
         $('.rw-face', pairs[a]).innerHTML = rwArt(p, vs[a]); depth(); pinsFor(a); prepPhoto(a); paintPanel(); place(); if (pin >= 0) choose(pin);
       }));
       $$('.rw-size .size', panel).forEach((b) => b.addEventListener('click', () => { size = +b.dataset.s; const y = panel.scrollTop; paintPanel(); panel.scrollTop = y; }));
-      $('#rwSg').addEventListener('click', () => openModal('sizeGuide'));
-      $('#rwAdd').addEventListener('click', () => {
+      $('#rwSg', panel).addEventListener('click', () => openModal('sizeGuide'));
+      $('#rwAdd', panel).addEventListener('click', () => {
         if (!stockOf(v)) return;
         if (!size) { toast('Pick a size first'); const sz = $('.rw-size .sizes', panel); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
         addToCart(p.id, v.id, size, 1);
       });
-      const b3 = $('#rw3dB'); if (b3) b3.addEventListener('click', () => open3d(p));
+      const b3 = $('#rw3dB', panel); if (b3) b3.addEventListener('click', () => open3d(p));
     }
+    // opening a detail from the pair itself opens the details list too
+    const openDets = () => { if (detOpen) return; detOpen = true; const dd = $('.rw-dd', panel); if (dd) dd.open = true; pinsFor(a); };
     // a real 3D file (a GLB added to the product's media in Shopify) turns under the finger; nothing is loaded until asked
     function open3d(p) {
       box3d.hidden = false; box3d.innerHTML = `<p class="mono">Loading the 3D model</p>`;
@@ -1620,67 +1640,80 @@
     }
     function setMode(m) {
       if (m === mode) return;
-      mode = m; pin = -1; size = null;
+      mode = m; pin = -1; size = null; detOpen = false;
       rw.classList.toggle('inspect', m === 'inspect');
       close3d();
       const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); call.classList.remove('on');
       if (m === 'inspect') { pinsFor(a); paintPanel(); panel.hidden = false; requestAnimationFrame(() => panel.classList.add('on')); }
-      else { panel.classList.remove('on'); setTimeout(() => { if (mode === 'browse') panel.hidden = true; }, 450); $$('.rw-pins', line).forEach((w) => { w.innerHTML = ''; }); }
+      else { panel.classList.remove('on'); setTimeout(() => { if (mode === 'browse') panel.hidden = true; }, 450); $$('.rw-pins', line).forEach((w) => { w.innerHTML = ''; }); hold(); }
       place();
       if (m === 'inspect' && narrow) setTimeout(() => { const r = stage.getBoundingClientRect(); if (r.top < 0 || r.top > 80) window.scrollTo({ top: scrollY + r.top - 70, behavior: calm ? 'auto' : 'smooth' }); }, 60);
     }
-    // moving along the line; with the details open, the next pair opens straight into its details
+    // moving along the line, round and round; with a pair chosen, the next pair opens straight into its options
     function go(i) {
-      i = Math.max(0, Math.min(list.length - 1, i));
-      if (i === a) return;
+      const d = off(i, a);
+      if (!d) return;
       const keep = mode === 'inspect';
       $$('.rw-tilt', line).forEach((t) => { t.style.transform = ''; });
       if (keep) { const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); $('.rw-pins', pairs[a]).innerHTML = ''; call.classList.remove('on'); close3d(); pin = -1; size = null; }
-      a = i;
+      a = ring(a + d); gpos += d;
       if (keep) { pinsFor(a); const y = panel.scrollTop; paintPanel(); panel.scrollTop = narrow ? y : 0; }
       place(); depth();
-      if (!SPA) try { history.replaceState(null, '', '#' + list[a].id); } catch (e) { /* not allowed */ }
     }
-    // one click on any pair opens its details; a click anywhere around it closes them again
+    // the line moves on by itself, slowly, until someone touches it; it rests while the pointer is over it,
+    // while a pair is open, while it is off screen or the tab is hidden, and never moves for reduced motion
+    let paused = false, over = false, seen = true, quietTill = 0;
+    const hold = () => { quietTill = Date.now() + 9000; };
+    const pp = $('#rwPlay', rw);
+    if (pp) pp.addEventListener('click', (e) => { e.stopPropagation(); paused = !paused; pp.setAttribute('aria-pressed', paused); pp.setAttribute('aria-label', paused ? 'Play the line' : 'Pause the line'); });
+    if (!calm) {
+      const auto = setInterval(() => {
+        if (!alive()) { clearInterval(auto); return; }
+        if (paused || over || !seen || mode !== 'browse' || document.hidden || Date.now() < quietTill || sx != null) return;
+        go(a + 1);
+      }, 4200);
+      if (fine) { stage.addEventListener('pointerenter', () => { over = true; }); stage.addEventListener('pointerleave', () => { over = false; }); }
+      stage.addEventListener('focusin', () => { over = true; }); stage.addEventListener('focusout', () => { over = false; });
+      if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[0].isIntersecting; }, { threshold: 0.35 }).observe(stage);
+    }
+    // one click on any pair opens its options; a click anywhere around it closes them again
     pairs.forEach((el, i) => el.addEventListener('click', (e) => {
       if (moved) return;
-      e.stopPropagation();
+      e.stopPropagation(); hold();
       if (i !== a) go(i);
       if (mode !== 'inspect') setMode('inspect');
     }));
     stage.addEventListener('click', (e) => {
       if (moved || mode !== 'inspect') return;
-      if (e.target.closest('.rw-pair.on, .rw-call, .rw-3d')) return;
+      if (e.target.closest('.rw-pair.on, .rw-call, .rw-3d, .rw-head a')) return;
       setMode('browse');
     });
-    ticks.forEach((t) => t.addEventListener('click', () => go(+t.dataset.t)));
-    $('#rwPrev').addEventListener('click', () => go(a - 1));
-    $('#rwNext').addEventListener('click', () => go(a + 1));
-    $('#rwGo').addEventListener('click', () => setMode(mode === 'inspect' ? 'browse' : 'inspect'));
+    ticks.forEach((t) => t.addEventListener('click', () => { hold(); go(+t.dataset.t); }));
+    $('#rwPrev', rw).addEventListener('click', () => { hold(); go(a - 1); });
+    $('#rwNext', rw).addEventListener('click', () => { hold(); go(a + 1); });
+    $('#rwGo', rw).addEventListener('click', () => { hold(); setMode(mode === 'inspect' ? 'browse' : 'inspect'); });
     stage.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); go(a + 1); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); hold(); go(a + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); hold(); go(a - 1); }
       else if (e.key === 'Escape') { if (pin >= 0) choose(-1); else setMode('browse'); }
     });
     // dragging (finger or mouse) slides the whole line with the pointer, and letting go settles on the nearest pair
     let sx = null, sy = 0, dx = 0, moved = false, dragging = false;
     const stepW = () => fw * (narrow ? 0.58 : 0.6);
     stage.addEventListener('pointerdown', (e) => {
-      if (e.button > 0 || e.target.closest('.rw-3d, .rw-call')) return;
+      if (e.button > 0 || e.target.closest('.rw-3d, .rw-call, .rw-head a')) return;
       sx = e.clientX; sy = e.clientY; dx = 0; moved = false; dragging = false;
     });
     stage.addEventListener('pointermove', (e) => {
       if (sx == null) return;
       dx = e.clientX - sx; const dy = e.clientY - sy;
-      if (!dragging) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return; dragging = true; rw.classList.add('dragging'); try { stage.setPointerCapture(e.pointerId); } catch (er) { /* fine */ } }
-      // resistance at both ends of the line
-      const end = (a === 0 && dx > 0) || (a === list.length - 1 && dx < 0);
-      line.style.transform = `translate3d(${(end ? dx * 0.25 : dx * 0.9).toFixed(1)}px, 0, 0)`;
+      if (!dragging) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return; dragging = true; hold(); rw.classList.add('dragging'); try { stage.setPointerCapture(e.pointerId); } catch (er) { /* fine */ } }
+      line.style.transform = `translate3d(${(dx * 0.9).toFixed(1)}px, 0, 0)`;
     });
     const release = () => {
       if (sx == null) return; sx = null;
       if (!dragging) return;
-      dragging = false; rw.classList.remove('dragging'); moved = true; setTimeout(() => { moved = false; }, 80);
+      dragging = false; rw.classList.remove('dragging'); moved = true; setTimeout(() => { moved = false; }, 80); hold();
       const steps = Math.round(-dx / stepW()) || (Math.abs(dx) > 44 ? (dx < 0 ? 1 : -1) : 0);
       line.style.transform = '';
       if (steps) go(a + steps);
@@ -1691,7 +1724,7 @@
     stage.addEventListener('wheel', (e) => {
       const x = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
       if (!x) return;
-      e.preventDefault();
+      e.preventDefault(); hold();
       if (Date.now() < wLock) return;
       wAcc += x;
       if (Math.abs(wAcc) > 50) { go(a + (wAcc > 0 ? 1 : -1)); wAcc = 0; wLock = Date.now() + 420; }
@@ -1710,7 +1743,7 @@
       stage.addEventListener('pointerleave', () => { const t = $('.rw-tilt', pairs[a]); if (t) t.style.transform = ''; });
     }
     let rt = 0;
-    const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { const was = narrow; measure(); place(); if (was !== narrow && pin >= 0) choose(pin); }, 120); };
+    const onResize = () => { if (!alive()) { removeEventListener('resize', onResize); return; } clearTimeout(rt); rt = setTimeout(() => { const was = narrow; measure(); place(); if (was !== narrow && pin >= 0) choose(pin); }, 120); };
     addEventListener('resize', onResize);
     measure();
     pairs.forEach((_, i) => prepPhoto(i));
@@ -1724,10 +1757,10 @@
     // a device that cannot keep up with the walk in (slow frames) gets the same floor without blur and depth copies
     if (!lite) {
       const fr = []; let last = 0;
-      const probe = (t) => { if (last) fr.push(t - last); last = t; if (fr.length < 40 && document.body.contains(rw)) requestAnimationFrame(probe); else if (fr.length) { fr.sort((x, y) => x - y); if (fr[fr.length >> 1] > 34) { lite = true; rw.classList.add('rw-lite'); place(); depth(); } } };
+      const probe = (t) => { if (last) fr.push(t - last); last = t; if (fr.length < 40 && alive()) requestAnimationFrame(probe); else if (fr.length) { fr.sort((x, y) => x - y); if (fr[fr.length >> 1] > 34) { lite = true; rw.classList.add('rw-lite'); place(); depth(); } } };
       requestAnimationFrame(probe);
     }
-  };
+  }
 
   /* ---- offers ---- */
   // live codes come from Shopify (Content > Metaobjects > Offer, printed as window.DAUR_OFFERS); the static preview builds them from data.js

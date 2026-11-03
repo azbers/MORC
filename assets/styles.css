@@ -2255,3 +2255,46 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 @media (max-width: 860px) { .f-ch-g { grid-template-columns: 1fr; } .f-ch.rev .f-ch-m { order: 0; } .f-ch-m { aspect-ratio: 16 / 11; } .f-list > div { grid-template-columns: 1fr; gap: 4px; } }
 :root[data-theme="dark"] .f-slice { background: var(--ink-3); }
 :root[data-theme="dark"] .f-pillars { background: var(--ink-2); }
+
+/* ---- the Runway as the home hero (2026-11) ---- */
+.rw-home { --rwh: clamp(560px, calc(100svh - 150px), 820px); }
+.rw-home .rw-head { gap: 10px; max-width: var(--max); }
+.rw-home .rw-head .f-kicker { color: var(--signal); }
+.rw-home .rw-head h1 { font: 600 clamp(34px, 5.2vw, 80px)/.94 var(--display); letter-spacing: -.035em; text-transform: none; max-width: 15ch; margin: 0; }
+.rw-home .rw-head p { max-width: 40ch; }
+.rw-home .rw-head .hero-cta { pointer-events: auto; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.rw-home .rw-head .hero-cta .btn { min-height: 42px; }
+.rw-acts .rw-like-w { display: contents; }
+.rw-like { display: grid; place-items: center; transition: border-color .25s, color .25s, background .25s; }
+.rw-like .ic { width: 19px; height: 19px; }
+.rw-like:hover .ic.h-o { color: #ff3b5c; }
+.rw-like[aria-pressed="true"] { border-color: rgba(255, 59, 92, .5); background: rgba(255, 59, 92, .08); }
+.rw-pn-a { display: flex; gap: 8px; }
+.rw-pp .pp-pl, .rw-pp[aria-pressed="true"] .pp-pa { display: none; }
+.rw-pp[aria-pressed="true"] .pp-pl { display: block; }
+.rw-dd { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.rw-dd summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; cursor: pointer; font: 500 15px/1.2 var(--display); }
+.rw-dd summary::-webkit-details-marker { display: none; }
+.rw-dd summary .mono { color: var(--mute); font-size: 10.5px; display: inline-flex; align-items: center; gap: 8px; }
+.rw-dd summary .mono::after { content: "+"; font: 400 18px/1 var(--mono); color: var(--signal); transition: transform .3s var(--rw-ease); }
+.rw-dd[open] summary .mono::after { transform: rotate(45deg); }
+.rw-dd summary:hover, .rw-dd summary:focus-visible { color: var(--signal); }
+.rw-dd .rw-dets li:last-child button { border-bottom: 0; }
+@media (max-width: 960px) {
+  .rw-home { --rwh: clamp(520px, 78svh, 640px); }
+  .rw-bar { grid-template-columns: minmax(0, 1fr) auto auto auto auto; grid-template-areas: "now play prev next like" "ticks ticks ticks ticks ticks" "go go go go go"; }
+  #rwPlay { grid-area: play; } #rwLikeW > .rw-like { grid-area: like; }
+}
+@media (max-width: 560px) {
+  .rw-home .rw-head { padding-top: 20px; }
+  .rw-home .rw-head p { font-size: 13px; }
+  .rw-bar { column-gap: 6px; }
+}
+.rw-arr.rw-like .ic, .rw-arr.rw-pp .ic { transform: none; }
+.rw.inspect .rw-head .hero-cta { pointer-events: none; visibility: hidden; transition: visibility 0s .5s; }
+@media (max-width: 960px) {
+  /* with a pair chosen on a phone, the floor shrinks so the pair and its sizes sit on one screen */
+  .rw-home .rw-stage { transition: height .5s var(--rw-ease); }
+  .rw-home.inspect .rw-stage { height: clamp(270px, 40svh, 340px); }
+  .rw-home.inspect .rw-ticks { display: none; }
+}
