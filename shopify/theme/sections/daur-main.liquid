@@ -20,10 +20,29 @@
 <div class="wrap daur-plain"{% if template.name == 'search' %} data-terms="{{ search.terms | escape }}"{% endif %}>
 {%- case template.name -%}
   {%- when 'index' -%}
-    <h1>Men's shoes, crafted in Pakistan.</h1>
-    <p>DAUR Supply is a Pakistani footwear brand for men. Leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Kasur and finished with our own hardware. Dispatched from Islamabad, with Cash on Delivery to every city in Pakistan, dispatch within 24 hours and free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs.</p>
+    <h1>Pakistan's craft, chosen by hand.</h1>
+    <p>DAUR Supply is a Pakistani footwear brand for men. We choose leather sneakers, formal shoes, chelsea boots and casual slip ons at workshops in Lahore, Sialkot and Kasur, check every pair by hand, finish it with our own hardware and bring it to your door. Dispatched from Islamabad, with Cash on Delivery to every city in Pakistan, dispatch within 24 hours of confirmation and free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs.</p>
+    <h2>What DAUR stands for</h2>
+    <ul>
+      <li><strong>Local craft.</strong> Chosen at the bench in Lahore, Sialkot and Kasur. The money stays with Pakistani craftspeople.</li>
+      <li><strong>Checked by hand.</strong> Six checks on every pair, from the flex of the upper to the bond of the sole.</li>
+      <li><strong>Honest price.</strong> You pay for the shoe, not for a label. A sale price is always a price we really charged.</li>
+      <li><strong>The slice.</strong> At least 5% of our profit, never added to your price, given every quarter to verified people in need and published.</li>
+    </ul>
+    <h2>For every man in your life. Including you.</h2>
+    <ul>
+      <li><strong>For yourself:</strong> sneakers for every day, a derby for the office and the wedding season, an easy slip on for Friday.</li>
+      <li><strong>For your son:</strong> clean leather sneakers for college and the weekend, in sizes EU 40 to 45.</li>
+      <li><strong>For your husband:</strong> a full grain derby or a chelsea boot that works with a suit and with shalwar kameez.</li>
+      <li><strong>For your father:</strong> soft leather casual shoes and slip ons that go on easily.</li>
+      <li><strong>For a brother or a friend:</strong> a full price pair can be exchanged within 5 days if the size is not right.</li>
+    </ul>
+    <p>Not sure of his size? Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size, or <a href="https://wa.me/{{ settings.whatsapp | default: '923199628735' }}">ask us on WhatsApp</a>.</p>
+    <h2>Shop by style</h2>
     {{ style_links }}
+    <h2>The collection</h2>
     <ul class="daur-results">{% for p in collections.all.products limit: 24 %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
+    <p><a href="/pages/manifesto">Read our story</a>, <a href="/pages/contract">our promise on delivery and exchanges</a> and <a href="/pages/giving">how our giving works</a>.</p>
   {%- when 'product' -%}
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {% for c in product.collections limit: 1 %}<a href="{{ c.url }}">{{ c.title }}</a> / {% endfor %}{{ product.title }}</nav>
     <h1>{{ product.title }}</h1>
@@ -34,8 +53,9 @@
     {%- for o in product.options_with_values -%}<p>{{ o.name }}: {{ o.values | join: ', ' }}</p>{%- endfor -%}
     <p>Cash on Delivery to every city in Pakistan. Dispatch within 24 hours of confirmation, delivery in {{ settings.delivery_days }}. Free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs, 5 day size exchange{% if product.compare_at_price > product.price %} does not apply to sale pairs; defects are covered for 30 days{% endif %}.</p>
   {%- when 'collection' -%}
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {{ collection.title }}</nav>
-    <h1>{{ collection.title }}</h1>
+    {%- if collection.handle == 'all' %}{% assign ctitle = "Men's shoes" %}{% else %}{% assign ctitle = collection.title %}{% endif -%}
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {{ ctitle }}</nav>
+    <h1>{{ ctitle }}</h1>
     {%- if collection.description != blank %}<div class="rte">{{ collection.description }}</div>{% endif %}
     {%- paginate collection.products by 48 -%}
     <ul class="daur-results">{% for p in collection.products %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}{% unless p.available %} Sold out{% endunless %}</li>{% endfor %}</ul>
