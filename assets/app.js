@@ -588,11 +588,32 @@
   function guide(g) {
     if (!g) return '';
     return `<section class="sheet x guide"><div class="wrap"><div class="guide-g">
-      <div class="guide-h rv"><span class="eyebrow">${esc(g.e)}</span><h2>${esc(g.h)}</h2></div>
+      <div class="guide-h rv"><span class="eyebrow">${esc(g.e)}</span><h2>${esc(g.h)}</h2>${g.img && simg(g.img) ? `<figure class="guide-fig">${photo(g.img, g.alt || '', { sizes: '(max-width: 860px) 100vw, 40vw' })}</figure>` : ''}</div>
       <div class="guide-b">${g.b.map(([h, t]) => `${h ? `<h3>${esc(h)}</h3>` : ''}<p>${esc(typeof t === 'function' ? t() : t)}</p>`).join('')}
         ${g.faq ? `<div class="faq">${g.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>` : ''}
         ${g.l ? `<div class="guide-l">${g.l.map(([u, t]) => `<a class="chip" href="${u}">${esc(t)} ${ic('arrow')}</a>`).join('')}</div>` : ''}</div>
     </div></div></section>`;
+  }
+  // "Find your pair" tiles: hovering a tile walks through the pairs of that style; on a phone each tile walks on its own while it is on screen
+  function cycleTiles(root) {
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches, hover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    $$('.f-cyc', root).forEach((t) => {
+      const items = $$('.f-cy', t), dots = $$('.f-cy-d i', t), name = $('.f-cy-n', t);
+      if (items.length < 2) return;
+      let i = 0, timer = 0;
+      const step = () => {
+        const prev = items[i]; i = (i + 1) % items.length;
+        prev.classList.remove('on'); prev.classList.add('off');
+        setTimeout(() => prev.classList.remove('off'), 700);
+        items[i].classList.add('on');
+        dots.forEach((d, j) => d.classList.toggle('on', j === i));
+        if (name) name.textContent = items[i].dataset.n;
+      };
+      const start = (wait) => { if (!timer) { step(); timer = setInterval(step, wait); } };
+      const stop = () => { clearInterval(timer); timer = 0; };
+      if (hover) { t.addEventListener('mouseenter', () => start(1300)); t.addEventListener('mouseleave', stop); t.addEventListener('focus', () => start(1300)); t.addEventListener('blur', stop); }
+      else if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) start(2600); else stop(); }, { threshold: 0.5 }).observe(t);
+    });
   }
   function head(eyebrow, title, aside, lede) {
     return `<div class="shead rv"><span class="eyebrow">${eyebrow}</span><h2>${title}</h2>${aside ? `<div class="aside">${aside}</div>` : ''}${lede ? `<p class="lede">${lede}</p>` : ''}</div>`;
@@ -653,7 +674,8 @@
       ${head(ONE ? 'Shop by style' : 'Shop by line', 'Find your pair.', `<a class="link" href="${link('shop')}">Shop all</a>`)}
       <div class="f-tiles">${lines.map((l) => {
         const k = tileImg[l.key], from = l.ps.length ? Math.min(...l.ps.map(minPrice)) : 0, p0 = l.ps[0];
-        return `<a class="f-tile rv" href="${link('shop', l.key.toLowerCase())}"><span class="f-tile-m">${k && simg(k) ? photo(k, '', { sizes: '(max-width: 700px) 100vw, 33vw' }) : p0 ? `<span class="f-tile-draw">${visual(p0, p0.variants[0])}</span>` : ''}</span>
+        const vs = l.ps.flatMap((p) => p.variants.slice(0, 2).map((v) => [p, v])).slice(0, 6);
+        return `<a class="f-tile f-cyc rv" href="${link('shop', l.key.toLowerCase())}"><span class="f-tile-m">${p0 ? `<span class="f-tile-draw">${vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v)}</span>`).join('')}</span>` : k && simg(k) ? photo(k, '', { sizes: '(max-width: 700px) 100vw, 33vw' }) : ''}</span>${vs.length > 1 ? `<span class="f-cy-n mono" aria-hidden="true">${esc(vs[0][0].name)}</span><span class="f-cy-d" aria-hidden="true">${vs.map((_, j) => `<i${j ? '' : ' class="on"'}></i>`).join('')}</span>` : ''}
           <span class="f-tile-t"><b>${esc({ Sneakers: 'Sneakers', Leather: 'Leather shoes', Hybrids: 'Casual' }[l.key] || lineName(l.key))}</b><span>${l.ps.length} style${l.ps.length === 1 ? '' : 's'}${from ? ', from ' + fmt(from) : ''}</span></span><span class="f-tile-a" aria-hidden="true">${ic('arrow')}</span></a>`;
       }).join('')}</div>
     </div></section>
@@ -686,7 +708,7 @@
 
     <div id="ext-stories"></div>
 
-    ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', b: [
+    ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', img: 'guide', alt: 'A pair of brown leather dress shoes', b: [
       ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We choose leather sneakers, formal shoes, chelsea boots and casual slip ons at workshops in Lahore, Sialkot and Kasur, check every pair by hand and finish it with our own hardware: matte cotton laces, an engraved metal lace tag and the Supply Unit seal.`],
       ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirming your order, with a 5 day size exchange on unworn pairs.']],
       l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]) })}
@@ -702,7 +724,7 @@
       <h1>Pakistan's craft,<br>chosen by hand.</h1>
       <p>${fine ? 'Click a pair to choose your size. Drag or scroll sideways to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</p>
       <div class="hero-cta"><a class="btn ghost" href="${link('shop')}">Shop all <span class="arr">&rarr;</span></a><a class="link" href="${link('manifesto')}">Our story</a></div>` });
-    bindCards(app); bindAnat(app); cutWhenSeen(app);
+    bindCards(app); bindAnat(app); cutWhenSeen(app); cycleTiles(app);
   };
 
   // the x-ray lens and tilt on a drawn pair (home hero, about page)

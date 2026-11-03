@@ -257,6 +257,11 @@
         "label": "Our story: the DAUR finish (laces, tag, seal, box)"
       },
       {
+        "type": "image_picker",
+        "id": "img_guide",
+        "label": "Home: photo beside \"Men's shoes, crafted in Pakistan.\""
+      },
+      {
         "type": "checkbox",
         "id": "test_photos",
         "label": "Show sample photos (review themes only)",
