@@ -268,18 +268,22 @@
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
   // the menu stays short: the styles live in the Shop all filters, and Offers and the Feed live in the footer
-  const navItems = [['shop', '', 'Shop all'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
-  const NAV_TOP = 2;
+  const navItems = [['shop', '', 'Shop all'], ['shop', 'sneakers', 'Sneakers'], ['shop', 'hybrids', 'Casual'], ['shop', 'leather', 'Leather shoes'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
+  const NAV_TOP = 5;
   function chrome() {
     // three promises a Pakistani buyer looks for first, held still so they can be read
     const tb = (C.announce ? [esc(C.announce)] : []).concat(['Cash on Delivery across Pakistan', 'Free delivery on ' + C.freeDeliveryPairs + ' pairs or more', C.exchangeDays ? C.exchangeDays + ' day size exchange' : '5 day size exchange']);
+    // every live code from Content > Metaobjects > Offer rides in the bar and opens the Offers page
+    let codes = [];
+    try { codes = liveOffers().filter((o) => o.code).map((o) => `<a class="f-tb-code" href="${link('offers')}">Code <b>${esc(o.code)}</b>: ${esc(o.title)}</a>`); } catch (e) { codes = []; }
+    const tbAll = codes.concat(tb), tbRun = tbAll.map((t) => `<span class="f-tb">${t}</span>`).join('<i aria-hidden="true">/</i>') + '<i aria-hidden="true">/</i>';
     const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
     // the page holds the header's room from the first paint (.hdr-ph), so nothing moves when the header arrives
     const ph = document.querySelector('.hdr-ph'); if (ph) ph.remove();
     document.body.insertAdjacentHTML('afterbegin', `
       ${hideDefs()}<div class="gridlines" aria-hidden="true"><div class="wrap"><span></span><span></span><span></span><span></span></div></div>
       <a class="sr-skip" href="#app" style="position:absolute;left:-999px">Skip to content</a>
-      ${window.DAUR_TEST_PHOTOS ? '<div class="f-review" role="note">Review theme: sample photos from Unsplash for layout testing. They are not DAUR pairs.</div>' : ''}<div class="ticker f-tbar" aria-label="Store notices">${tb.map((t, i) => `<span class="f-tb${i ? ' f-tb2' : ''}">${t}</span>`).join('<i aria-hidden="true">/</i>')}</div>
+      ${window.DAUR_TEST_PHOTOS ? '<div class="f-review" role="note">Review theme: sample photos from Unsplash for layout testing. They are not DAUR pairs.</div>' : ''}<div class="ticker f-tbar f-run" aria-label="Store notices"><div class="f-run-t">${tbRun}<span class="f-run-copy" aria-hidden="true">${tbRun}</span></div></div>
       <header class="hdr"><div class="wrap">
         <nav class="nav" aria-label="Primary">${navItems.slice(0, NAV_TOP).map(([pg, pr, t]) => `<a href="${link(pg, pr)}" data-nav="${pg}.${pr}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${pr === 'sale' ? '<i aria-hidden="true"></i>' : ''}${t}</a>`).join('')}</nav>
         <button class="menu-btn" aria-label="Menu" aria-expanded="false" id="menuBtn"><span></span><span></span></button>

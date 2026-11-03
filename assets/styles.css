@@ -2410,3 +2410,33 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 .f-cy-d i.on { background: var(--signal); }
 .f-cyc .f-tile-draw { inset: 14% 8% 28%; }
 .f-cy-n { opacity: .85; }
+
+/* ---------- 2026-11-03: moving top bar with live codes, wider menu, clearer tracking ---------- */
+.f-tbar.f-run { justify-content: flex-start; padding: 0; }
+.f-run-t { display: flex; align-items: center; gap: 18px; width: max-content; white-space: nowrap; animation: tick 46s linear infinite; padding-left: 18px; }
+.f-run-copy { display: contents; }
+.f-tbar.f-run:hover .f-run-t, .f-tbar.f-run:focus-within .f-run-t { animation-play-state: paused; }
+.f-tbar.f-run .f-tb { position: static; opacity: 1; animation: none; }
+.f-tbar.f-run i { display: inline; }
+.f-tb-code { color: inherit; text-decoration: none; }
+.f-tb-code b { color: #F3C98B; font-weight: 600; letter-spacing: .16em; }
+.f-tb-code:hover b, .f-tb-code:focus-visible b { text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) { .f-run-t { animation: none; } }
+/* the header menu now carries the three styles; it stays on one line and gives way below 1180 px */
+.nav { flex-wrap: nowrap; gap: clamp(12px, 1.3vw, 24px); }
+@media (min-width: 861px) and (max-width: 1240px) { .nav { gap: 12px; padding-right: 8px; } .nav a { letter-spacing: .08em; font-size: 10.5px; } .nav a.nav-sale { padding: 6px 10px; } }
+@media (min-width: 861px) and (max-width: 1019px) { .nav a[href*="sneakers"], .nav a[href*="hybrids"], .nav a[href*="leather"] { display: none; } }
+/* tracking */
+.trk-steps { list-style: none; margin: 0 0 22px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; counter-reset: none; }
+.trk-steps li { display: grid; gap: 4px; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: rgba(var(--fg-rgb), .02); }
+.trk-steps .trk-n { color: var(--signal); font-size: 11px; }
+.trk-steps b { font: 600 15px/1.2 var(--display); }
+.trk-steps span:last-child { font-size: 13px; color: var(--text-2, var(--mute)); line-height: 1.45; }
+.trk-g { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 16px; align-items: start; }
+.trk-c { gap: 12px; margin: 0; }
+.trk-c h2 { font: 600 clamp(20px, 2vw, 26px)/1.1 var(--display); letter-spacing: -.02em; margin: 0; }
+.trk-c p { margin: 0; font-size: 14px; line-height: 1.55; }
+.trk-c .mono.mute { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; }
+.trk-main { border-color: var(--signal); }
+@media (max-width: 900px) { .trk-g { grid-template-columns: 1fr; } .trk-steps { grid-template-columns: 1fr 1fr; } }
+.trk .f-ic input { padding-left: 16px; width: 100%; }
