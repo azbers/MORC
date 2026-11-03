@@ -147,6 +147,7 @@
 <div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1">{{ content_for_layout }}</main>
 {% render 'daur-data', product: product, daur_param: daur_param %}
+{%- if settings.test_photos and theme.role != 'main' %}{% render 'daur-test-photos' %}{% endif %}
 <script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
 <script src="{{ 'shoe.js' | asset_url }}" defer></script>
 <script src="{{ 'icons.js' | asset_url }}" defer></script>

@@ -203,5 +203,66 @@
         "info": "Two to four causes, separated by commas. Buyers vote in the bag; the vote reaches each order as Slice cause. Change the list only between quarters."
       }
     ]
+  },
+  {
+    "name": "Brand photos",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Real DAUR photographs for the home page and Our story. An empty slot falls back to a sample photo on a review theme, or to the drawn pair."
+      },
+      {
+        "type": "image_picker",
+        "id": "img_hero",
+        "label": "Home hero (wide, 2400 px)"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_sneakers",
+        "label": "Style tile: Sneakers (portrait)"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_casual",
+        "label": "Style tile: Casual (portrait)"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_leather",
+        "label": "Style tile: Leather shoes (portrait)"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_workshop",
+        "label": "Story: at the workshop"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_checked",
+        "label": "Story: checked by hand"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_door",
+        "label": "Story: at your door"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_bench",
+        "label": "Our story header (wide)"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_tools",
+        "label": "Our story: the DAUR finish (laces, tag, seal, box)"
+      },
+      {
+        "type": "checkbox",
+        "id": "test_photos",
+        "label": "Show sample photos (review themes only)",
+        "info": "Unsplash photos used to test layouts before real photos exist. They never show on the live theme, but switch this off before you publish.",
+        "default": true
+      }
+    ]
   }
 ]
