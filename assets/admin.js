@@ -444,7 +444,7 @@
         return { pairs, last, bought, dropped, due };
       };
       const rows = leads.map((l) => ({ l, ...info(l) })).filter((x) => view === 'all' || (view === 'due' && x.due) || (view === 'drop' && x.dropped && !x.bought) || (view === 'bought' && x.bought));
-      const pairText = (x) => { const v = x.p.variants.find((y) => y.price === x.now) || x.p.variants[0]; const sizes = x.p.sizes.filter((s) => (v.stock || {})[s] > 0); return `• DAUR ${x.p.name} (${v.color})\n  ${x.was && x.now < x.was ? `Was ${fmt(x.was)}, now ${fmt(x.now)}` : fmt(x.now)} / retail ${fmt(Cfg.marketRetail)}+\n  ${sizes.length ? 'Sizes in stock: EU ' + sizes.join(', ') : 'Sold out, reply to join the restock list'}\n  ${Cfg.domain}/product.html#${x.p.id}~${v.id}`; };
+      const pairText = (x) => { const v = x.p.variants.find((y) => y.price === x.now) || x.p.variants[0]; const sizes = x.p.sizes.filter((s) => (v.stock || {})[s] > 0); return `• DAUR ${x.p.name} (${v.color})\n  ${x.was && x.now < x.was ? `Was ${fmt(x.was)}, now ${fmt(x.now)}` : fmt(x.now)}${Cfg.sell && Cfg.sell.retailAnchor === false ? '' : ` / retail ${fmt(Cfg.marketRetail)}+`}\n  ${sizes.length ? 'Sizes in stock: EU ' + sizes.join(', ') : 'Sold out, reply to join the restock list'}\n  ${Cfg.domain}/product.html#${x.p.id}~${v.id}`; };
       const msg = (kind, x, code, pct, until) => {
         const list = (kind === 'drop' ? x.pairs.filter((y) => y.was && y.now < y.was) : x.pairs).map(pairText).join('\n\n');
         const open = 'Assalam o Alaikum! This is DAUR Supply.';

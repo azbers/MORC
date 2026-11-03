@@ -21,6 +21,8 @@ window.DAUR_CONFIG = {
      everywhere, and a line with no products is hidden too. To relaunch, add 'Women' and 'Kids' back. */
   audiences: ['Men'],
   lowStockAt: 2,
+  /* Honest price framing: the typical retail comparison, the line ladder on product pages and price per wear (days a week, 0 hides it). */
+  sell: { retailAnchor: false, ladder: true, perWear: 3 },  // retailAnchor off by owner decision 3 Nov 2026
   adminPasscode: 'supplyunit'          // preview lock only; a live store needs a server login
 };
 

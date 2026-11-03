@@ -28,7 +28,7 @@
     when '404'
       assign daur_page = 'notfound'
     when 'page'
-      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers' | split: ','
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers,runway:runway,giving:giving' | split: ','
       for pair in views
         assign kv = pair | split: ':'
         if page.handle == kv[0]
@@ -60,7 +60,18 @@
 <script>(function(c,l,a,r,i){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};function go(){var t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";l.head.appendChild(t)}function later(){(c.requestIdleCallback||function(f){setTimeout(f,1500)})(go,{timeout:4000})}if(l.readyState==='complete')later();else c.addEventListener('load',later)})(window,document,"clarity","script",{{ settings.clarity_id | strip | json }});</script>
 {%- endif %}
 {%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
-{%- if template.name == '404' or template.name == 'search' or template.directory == 'customers' %}<meta name="robots" content="noindex">{% endif %}
+{%- comment -%} utility pages carry no search value: the bag, liked pairs, order tracking and the retired alert list {%- endcomment -%}
+{%- liquid
+  assign daur_noindex = false
+  if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers'
+    assign daur_noindex = true
+  elsif template.name == 'page'
+    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts'
+      assign daur_noindex = true
+    endif
+  endif
+-%}
+{%- if daur_noindex %}<meta name="robots" content="noindex">{% endif %}
 <meta name="theme-color" content="#F5EEE4">
 <script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
 {%- comment -%} Link previews (WhatsApp, Facebook, Instagram DMs, X): every page gets a title, a description and a 1200 x 630 image. Image order: product photo, article photo, the page's own social image, the Social sharing image in Online Store > Preferences, the theme share image setting, then assets/daur-share.jpg. {%- endcomment -%}

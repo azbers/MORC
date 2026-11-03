@@ -19,7 +19,10 @@ window.DAUR_CONFIG = {
   coupons: {},
   audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
-  announce: {{ settings.announcement | default: '' | json }}
+  sell: { retailAnchor: {% if settings.retail_anchor %}true{% else %}false{% endif %}, ladder: {% if settings.price_ladder == false %}false{% else %}true{% endif %}, perWear: {% if settings.per_wear_days == blank %}3{% else %}{{ settings.per_wear_days }}{% endif %} },
+  announce: {{ settings.announcement | default: '' | json }},
+  give: { on: {% if settings.give_on == false %}false{% else %}true{% endif %}, pct: {{ settings.give_pct | default: 5 }}, causes: {{ settings.give_causes | default: 'School fees, Medical bills, Food rations' | split: ',' | json }},
+    quarter: {% if shop.metafields.daur.slice_quarter.value %}{ "key": {{ shop.metafields.daur.slice_quarter.value | json }}, "pairs": {{ shop.metafields.daur.slice_pairs.value | default: 0 }}, "votes": {% if shop.metafields.daur.slice_votes.value %}{{ shop.metafields.daur.slice_votes.value | json }}{% else %}{}{% endif %} }{% else %}null{% endif %} }
 };
 window.DAUR_STATUSES = [
 {%- for a in blogs['status'].articles limit: 12 -%}
@@ -48,6 +51,15 @@ window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
 {%- endfor -%}
 {%- endcapture -%}
 window.DAUR_OFFERS = [{{ offers | strip | remove_last: ',' }}];
+{%- comment -%} Giving records (Content > Metaobjects > Giving record): the Our giving page lists every one with an amount {%- endcomment -%}
+{%- capture giving -%}
+{%- for g in shop.metaobjects.giving_record.values limit: 100 -%}
+{%- if g.amount.value -%}
+{ "date": {{ g.date.value | date: '%Y-%m-%d' | default: '' | json }}, "amount": {{ g.amount.value | default: 0 }}, "where": {{ g.where.value | default: '' | json }}, "note": {{ g.note.value | default: '' | json }}, "photo": {% if g.proof.value %}{{ g.proof.value | image_url: width: 900 | json }}{% else %}null{% endif %} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_GIVING = [{{ giving | strip | remove_last: ',' }}];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },
@@ -62,6 +74,8 @@ window.DAUR_SHOPIFY = {
     {%- if product and product.id == p.id %} "seo": { "title": {{ page_title | json }}, "description": {{ page_description | default: '' | json }} },{% endif %}
     "options": [{%- for o in p.options_with_values -%}{ "name": {{ o.name | json }}, "values": {{ o.values | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
     "variants": [{%- for v in p.variants -%}{ "id": {{ v.id }}, "options": {{ v.options | json }}, "price": {{ v.price }}, "cap": {{ v.compare_at_price | default: 0 }}, "qty": {{ v.inventory_quantity | default: 0 }}, "managed": {% if v.inventory_management == 'shopify' %}true{% else %}false{% endif %}, "policy": {{ v.inventory_policy | json }}, "available": {{ v.available }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
+    {%- capture glbs -%}{%- for m in p.media -%}{%- if m.media_type == 'model' -%}{%- assign glb = m.sources | where: 'format', 'glb' | first -%}{%- if glb -%}{{ glb.url | json }},{%- endif -%}{%- endif -%}{%- endfor -%}{%- endcapture %}
+    "models": [{{ glbs | remove_last: ',' }}],
     "images": [{%- for im in p.images -%}{ "src": {{ im | image_url: width: 1400 | json }}, "alt": {{ im.alt | default: '' | json }}, "v": {{ im.variants | map: 'id' | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}]
   }{% unless forloop.last %},{% endunless %}
 {%- endfor -%}

@@ -62,7 +62,7 @@
     document.documentElement.classList.toggle('grid-1', v);
     try { localStorage.setItem('daur.grid', v ? '1' : '2'); } catch (e) { /* storage blocked */ }
   }
-  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', notfound: '404.html', admin: 'admin.html' };
+  const pages = { home: 'index.html', shop: 'shop.html', product: 'product.html', cart: 'cart.html', checkout: 'checkout.html', order: 'order.html', manifesto: 'manifesto.html', contract: 'contract.html', track: 'track.html', wishlist: 'wishlist.html', list: 'list.html', feed: 'feed.html', policies: 'policies.html', about: 'about.html', contact: 'contact.html', offers: 'offers.html', runway: 'runway.html', giving: 'giving.html', notfound: '404.html', admin: 'admin.html' };
   function link(page, param) {
     if (SHOP) return SHOP.link(page, param);
     if (SPA) return '#' + page + (param ? '.' + param : '');
@@ -138,7 +138,81 @@
     const delivery = !n || free ? 0 : C.delivery.fee; // one flat fee for all of Pakistan
     const total = subtotal - discount + (delivery || 0);
     const retail = n * C.marketRetail;
-    return { lines, subtotal, before, sale: before - subtotal, discount, couponErr, cp, delivery, free, total, retail, n };
+    // what the buyer keeps: only money that really stays in their pocket (sale cut, code, delivery we carry)
+    const shipKept = n && free ? C.delivery.fee : 0;
+    const kept = before - subtotal + discount + shipKept;
+    return { lines, subtotal, before, sale: before - subtotal, discount, couponErr, cp, delivery, free, total, retail, n, shipKept, kept };
+  }
+  /* ---- the slice: at least 5% of our profit on every pair goes to people in need ----
+     C.give.on switches it everywhere, C.give.pct is the share of profit (at least 5).
+     The share is of our profit, never of the price, and nothing is added to the price.
+     Slices are pooled and given every quarter to verified cases; the records go on the Our giving page. */
+  /* ---- selling: honest price framing, switched in Theme settings > Selling ----
+     retailAnchor: the typical retail comparison; ladder: where a pair sits in the line (real prices of
+     real pairs, dearest first); perWear: price per wear at this many days a week for a year (0 hides it). */
+  const SELL = Object.assign({ retailAnchor: false, ladder: true, perWear: 3 }, C.sell || {});
+  const GIVE = Object.assign({ on: true, pct: 5, causes: ['School fees', 'Medical bills', 'Food rations'], quarter: null }, C.give || {});
+  GIVE.causes = (GIVE.causes || []).map((x) => String(x).trim()).filter(Boolean).slice(0, 4);
+  // calendar quarter, for example "October to December 2026"; the giving happens at its end
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const quarterOf = (d) => { d = d || new Date(); const q = Math.floor(d.getMonth() / 3); return { key: d.getFullYear() + '-Q' + (q + 1), label: MONTHS[q * 3] + ' to ' + MONTHS[q * 3 + 2] + ' ' + d.getFullYear() }; };
+  // the buyer's vote for this quarter's cause; it travels with the order (cart attribute "Slice cause" on Shopify)
+  const sliceVote = (v) => { if (v === undefined) { const x = store.get('sliceVote', ''); return GIVE.causes.includes(x) ? x : ''; } store.set('sliceVote', v); };
+  window.DAUR_SLICE_VOTE = () => (GIVE.on ? sliceVote() : '');
+  function votePicker() {
+    if (!GIVE.on || GIVE.causes.length < 2) return '';
+    const cur = sliceVote();
+    return `<fieldset class="sl-vote"><legend>Where should this quarter's slice go? <span>Your vote travels with your order.</span></legend>
+      <div class="sl-opts">${GIVE.causes.map((c) => `<button type="button" class="sl-opt" data-vote="${esc(c)}" aria-pressed="${c === cur}">${esc(c)}</button>`).join('')}</div></fieldset>`;
+  }
+  function bindVote(root) {
+    $$('.sl-opt', root || document).forEach((b) => b.addEventListener('click', () => {
+      const v = b.getAttribute('aria-pressed') === 'true' ? '' : b.dataset.vote;
+      sliceVote(v);
+      $$('.sl-opt', root || document).forEach((x) => x.setAttribute('aria-pressed', x.dataset.vote === v));
+      if (v) toast('Your vote: ' + v + '. Thank you.');
+    }));
+  }
+  // a loaf seen from the side; the last slice is its own piece so the cut can lift it away
+  let loafN = 0;
+  function loaf(label, cls) {
+    const k = 'lf' + (++loafN);
+    const shape = 'M8 53 Q3 53 3 46 C2 30 12 12 34 8 C48 5 72 5 88 8 C108 12 118 28 117 46 Q117 53 111 53 Z';
+    return `<svg class="loaf ${cls || ''}" viewBox="0 0 120 60" aria-hidden="true" focusable="false"><defs>
+      <linearGradient id="${k}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C98A4B"/><stop offset=".55" stop-color="#A4642F"/><stop offset="1" stop-color="#6E3E1C"/></linearGradient>
+      <clipPath id="${k}a"><rect x="0" y="0" width="96" height="60"/></clipPath><clipPath id="${k}b"><rect x="96" y="0" width="24" height="60"/></clipPath></defs>
+      <g class="lf-body" clip-path="url(#${k}a)"><path d="${shape}" fill="url(#${k}c)"/><path d="M26 18 q8 -4 14 3 M48 13 q8 -4 14 3 M70 13 q8 -4 14 3" fill="none" stroke="#F0D3A6" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><rect class="lf-face" x="90" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
+      <g class="lf-slice" clip-path="url(#${k}b)"><path d="${shape}" fill="url(#${k}c)"/><rect class="lf-face" x="96" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
+      <line class="lf-knife" x1="96" y1="-2" x2="96" y2="58" pathLength="1"/>
+      ${label ? `<text class="lf-amt" x="113" y="2" text-anchor="end">${esc(label)}</text>` : ''}
+    </svg>`;
+  }
+  // plays the cut once, when the loaf first comes into view; a tap plays it again
+  function cutWhenSeen(root) {
+    const els = $$('.loaf', root || document);
+    if (!els.length) return;
+    const play = (el) => { el.classList.remove('cut'); void el.getBoundingClientRect(); el.classList.add('cut'); };
+    if (!('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('cut')); return; }
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { setTimeout(() => play(e.target), 350); io.unobserve(e.target); } }), { threshold: 0.6 });
+    els.forEach((e) => io.observe(e));
+    els.forEach((e) => { const b = e.closest('[data-recut]'); if (b) b.addEventListener('click', () => play(e)); });
+  }
+  function openSlice() {
+    let m = document.getElementById('sliceSheet');
+    if (!m) {
+      document.body.insertAdjacentHTML('beforeend', '<div class="modal slice-m" id="sliceSheet" role="dialog" aria-modal="true" aria-label="The slice"><div class="panel"></div></div>');
+      m = document.getElementById('sliceSheet');
+      m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('on'); });
+    }
+    $('.panel', m).innerHTML = `<div class="field-label"><span>The slice</span><button class="x-btn" data-close>Close</button></div>
+      <div class="sl-hero" data-recut>${loaf(GIVE.pct + '%', 'big')}</div>
+      <h2 class="sl-h">A slice of this pair is not ours to keep.</h2>
+      <p>On every pair we sell, we set aside at least ${GIVE.pct}% of the profit we make, not of the price you pay, and give it to verified cases of need that we check ourselves.</p>
+      <ul class="sl-list"><li><b>Your price stays the same.</b> The slice comes out of our side, never added to yours.</li><li><b>Given every quarter.</b> We pool the slices and give them each quarter to verified cases of need, after our own checks.</li><li><b>Buyers choose the cause.</b> In your bag you can vote for where this quarter's slice goes. The cause with the most votes from buyers gets it.</li><li><b>Published in full.</b> The details of every giving go on this site and on our social pages, and every buyer of the quarter hears where their slice went.</li><li><b>No marketing budget.</b> The slice is given, not spent on ads.</li></ul>
+      <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
+      <a class="link" href="${link('giving')}">How our giving works</a>`;
+    m.classList.add('on');
+    cutWhenSeen(m);
   }
   function addToCart(pid, vid, size, qty) {
     const p = prod(pid), v = variant(p, vid);
@@ -149,7 +223,9 @@
     if (add <= 0) { toast('No more stock in EU ' + size); return false; }
     if (ex) ex.qty += add; else cart.push({ pid, vid: v.id, size: +size, qty: add });
     saveCart();
-    toast(`${p.name}, EU ${size} added`, 'View bag', openBag);
+    const n = pairs(), fee = C.delivery.fee || 0, gap = C.freeDeliveryPairs - n;
+    const ship = !fee ? '' : gap === 1 ? ` One more pair and delivery is on us.` : gap <= 0 && n - add < C.freeDeliveryPairs ? ` Delivery is now on us: you keep ${fmt(fee)}.` : '';
+    toast(ship ? `EU ${size} added.${ship}` : GIVE.on ? `${p.name}, EU ${size} added. A slice of it goes to someone in need.` : `${p.name}, EU ${size} added`, 'View bag', openBag);
     return true;
   }
   function toggleWish(pid) {
@@ -186,8 +262,9 @@
 
   /* ---------------- chrome ---------------- */
   const lineLinks = (ONE ? CATS : C.audiences).map((a) => ['shop', a.toLowerCase(), lineName(a)]);
-  const navItems = [['shop', '', 'Shop all']].concat(lineLinks.slice(0, 3), [['shop', 'sale', 'Sale'], ['offers', '', 'Offers'], ['feed', '', 'Feed'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']]);
-  const NAV_TOP = navItems.length - 2;
+  // the menu stays short: the styles live in the Shop all filters, and Offers and the Feed live in the footer
+  const navItems = [['shop', '', 'Shop all'], ['runway', '', 'Runway'], ['shop', 'sale', 'Sale'], ['manifesto', '', 'Our story'], ['contract', '', 'Our promise']];
+  const NAV_TOP = 3;
   function chrome() {
     const tick = (C.announce ? ['<b>' + esc(C.announce) + '</b>'] : []).concat(['<b>Drop 01</b> is live', 'Cash on Delivery across Pakistan', 'Free delivery on two pairs', 'Dispatch within 24 hours', '5 day size exchange', 'Branded, not labeled', 'At least 5% of profit to verified charity']);
     const tk = tick.concat(tick).map((t) => `<span>${t} &nbsp;+</span>`).join('');
@@ -218,7 +295,7 @@
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
-        <div class="ftr-col"><h2>House</h2><a href="${link('offers')}">Offers</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
+        <div class="ftr-col"><h2>House</h2><a href="${link('runway')}">The Runway</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/pages/contact">Contact</a><a href="/blogs/journal">Journal</a>' : ''}<a href="${link('wishlist')}">Liked pairs</a><a href="${link('policies', 'terms')}">Terms of service</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'refunds')}">Returns and refunds</a></div>
         <div class="ftr-col"><h2>Reach</h2><a class="ilink" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('0' + String(C.whatsapp).replace(/^92/, '').replace(/^(\d{3})(\d+)$/, '$1 $2'))}</a><span class="ilink">${ic('mail')}${esc(C.supportEmail)}</span><span class="ilink">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
         <div class="ftr-big" aria-hidden="true">DAUR</div>
         <div class="ftr-base"><span>&copy; 2026 DAUR Supply. Crafted in Pakistan.</span><span>Payment: Cash on Delivery</span><span>Naya daur.</span></div>
@@ -322,9 +399,40 @@
     if (nat) nat.onclick = () => navigator.share({ title, text: text || title, url }).catch((er) => { if (!er || er.name !== 'AbortError') toast('This browser blocked the app list. Use the options above.'); });
     m.classList.add('on');
   }
+  // "You kept": the real money that stays with the buyer on this bag, line by line, never a made up figure
+  function keptBox(t) {
+    const rows = [];
+    if (t.sale) rows.push(['Sale prices', t.sale]);
+    if (t.discount) rows.push([coupon || 'Code', t.discount]);
+    if (t.shipKept) rows.push(['Delivery on us', t.shipKept]);
+    if (!rows.length) return '';
+    return `<div class="kept" role="status"><div class="kept-h"><span>You kept</span><b class="num">${fmt(t.kept)}</b></div><ul>${rows.map(([k, x]) => `<li><span>${esc(k)}</span><span class="num">${fmt(x)}</span></li>`).join('')}</ul></div>`;
+  }
+  // price per wear, as an honest conditional: this price, worn this many days a week for one year
+  function perWear(price) {
+    if (!(SELL.perWear > 0) || !price) return '';
+    const d = SELL.perWear;
+    return `<p class="per-wear mono">About ${fmt(Math.round(price / (d * 52)))} a wear, worn ${d} day${d > 1 ? 's' : ''} a week for a year</p>`;
+  }
+  // where this pair sits in the line: real prices of real pairs, dearest first, this pair in the middle when it can be
+  function ladder(p, v) {
+    if (!SELL.ladder) return '';
+    const rows = P.filter((x) => x.audience === p.audience && x.variants.some(stockOf)).map((x) => ({ x, price: x.id === p.id ? v.price : minPrice(x) }));
+    if (!rows.some((r) => r.x.id === p.id)) rows.push({ x: p, price: v.price });
+    if (rows.length < 3) return '';
+    rows.sort((a, b) => b.price - a.price || a.x.name.localeCompare(b.x.name));
+    const i = rows.findIndex((r) => r.x.id === p.id);
+    const from = Math.max(0, Math.min(i - 1, rows.length - 3));
+    const pick = rows.slice(from, from + 3);
+    return `<div class="ladder"><div class="field-label"><span>Where it sits in the line</span><span>Real prices, dearest first</span></div><ol>${pick.map((r) => {
+      const me = r.x.id === p.id, d = r.price - v.price;
+      return `<li${me ? ' class="me" aria-current="true"' : ''}>${me ? `<span class="ld-n">${esc(r.x.name)}</span>` : `<a class="ld-n" href="${link('product', r.x.id)}">${esc(r.x.name)}</a>`}<span class="ld-t mono">${me ? 'This pair' : esc(lineName(r.x.category))}</span><span class="ld-p num">${fmt(r.price)}</span>${me ? '' : `<span class="ld-d mono">${d > 0 ? '+' : '&minus;'}${fmt(Math.abs(d))}</span>`}</li>`;
+    }).join('')}</ol></div>`;
+  }
   function freeMeter(n) {
     const need = Math.max(0, C.freeDeliveryPairs - n);
-    return `<div class="free-meter"><span class="mono">${need ? `Add ${need} more pair${need > 1 ? 's' : ''} for free delivery` : '<span class="volt">Free delivery unlocked</span>'}</span><div class="minibar"><i class="v" style="width:${Math.min(100, n / C.freeDeliveryPairs * 100)}%"></i></div></div>`;
+    const fee = C.delivery.fee || 0;
+    return `<div class="free-meter"><span class="mono">${need ? `Add ${need} more pair${need > 1 ? 's' : ''} and delivery is on us${fee ? `: you keep ${fmt(fee)}` : ''}` : `<span class="volt">Delivery is on us${fee ? `. You keep ${fmt(fee)}` : ''}</span>`}</span><div class="minibar"><i class="v" style="width:${Math.min(100, n / C.freeDeliveryPairs * 100)}%"></i></div></div>`;
   }
   function lineHTML(d, big) {
     const { p, v, l } = d; const max = (v.stock || {})[l.size] || 0;
@@ -364,7 +472,7 @@
     $('#dFoot').innerHTML = `
       ${t.sale ? `<div class="sum-row save"><span>Sale savings</span><span>&minus; ${fmt(t.sale)}</span></div>` : ''}
       <div class="sum-row total"><span>Subtotal</span><span>${fmt(t.subtotal)}</span></div>
-      <div class="sum-row mute" style="font-size:12px"><span>Saved against typical retail of ${fmt(C.marketRetail)} a pair</span><span class="volt">${fmt(t.retail - t.subtotal)}</span></div>
+      ${keptBox(t)}${SELL.retailAnchor ? `<div class="sum-row mute" style="font-size:12px"><span>Saved against typical retail of ${fmt(C.marketRetail)} a pair</span><span class="volt">${fmt(t.retail - t.subtotal)}</span></div>` : ''}
       <a class="btn volt block" href="${link('checkout')}">Checkout, Cash on Delivery <span class="arr">&rarr;</span></a>
       <a class="btn ghost block" href="${link('cart')}">View full bag</a>`;
     bindLines(body);
@@ -389,6 +497,7 @@
     const sz = p.sizes.map((s) => { const n = (v.stock || {})[s] || 0; return `<button class="size" data-s="${s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-pressed="false" aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('');
     const tag = onSale(v) || /^drop/i.test(p.tag || '') ? '' : `<span class="chip ${p.tag === 'Limited' ? 'v' : ''}">${esc(p.tag)}</span>`;
     const ratio = v.price / C.marketRetail * 100;
+    const pw = SELL.perWear > 0 ? Math.round(v.price / (SELL.perWear * 52)) : 0;
     const low = stockOf(v) <= 6 && stockOf(v) > 0;
     return `<article class="card" data-pid="${p.id}" data-vid="${v.id}">
       <a class="card-media" href="${link('product', p.id + '~' + v.id)}"><span class="sr-only">${esc(p.name)} ${esc(v.color)}</span>
@@ -397,9 +506,9 @@
       <div class="card-body">
         <div class="card-top"><h3><a href="${link('product', p.id + '~' + v.id)}">${esc(p.name)}</a></h3><span class="price">${fmt(v.price)}</span></div>
         ${window.DAUR_EXT && window.DAUR_EXT.cardExtra ? window.DAUR_EXT.cardExtra(p) : ''}
-        <div class="card-sub"><span>${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span>` : `<span class="was">Retail <span class="strike">${Math.round(C.marketRetail).toLocaleString('en-US')}+</span></span>`}</div>
+        <div class="card-sub"><span>${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span>` : SELL.retailAnchor ? `<span class="was">Retail <span class="strike">${Math.round(C.marketRetail).toLocaleString('en-US')}+</span></span>` : pw ? `<span class="was">About ${fmt(pw)} a wear</span>` : ''}</div>
         <div class="swatches">${p.variants.map((x) => `<button class="sw-b" style="--c:${x.hex}" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}<span class="mono mute" style="font-size:10px">${p.variants.length} colour${p.variants.length > 1 ? 's' : ''}</span></div>
-        <div class="minibar" title="Our price against typical retail"><i class="v" style="width:${ratio}%"></i></div>
+        ${SELL.retailAnchor ? `<div class="minibar" title="Our price against typical retail"><i class="v" style="width:${ratio}%"></i></div>` : ''}
         <div class="sizes">${sz}</div>
         <div class="card-acts"><button class="card-add" data-add>${stockOf(v) ? 'Select size' : 'Sold out'}</button><button class="card-add wish-b" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" aria-label="Save to wishlist">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button></div>
         ${low ? `<span class="mono volt" style="font-size:10px">Only ${stockOf(v)} pairs left</span>` : ''}
@@ -510,7 +619,7 @@
       </div>
       <div class="hero-foot">
         <div><span class="k">DAUR price</span><span class="v num volt">${fmt(hv.price)}</span></div>
-        <div><span class="k">Typical retail</span><span class="v num strike">${fmt(C.marketRetail)}+</span></div>
+        ${SELL.retailAnchor ? `<div><span class="k">Typical retail</span><span class="v num strike">${fmt(C.marketRetail)}+</span></div>` : SELL.perWear > 0 ? `<div><span class="k">Per wear</span><span class="v num">About ${fmt(Math.round(hv.price / (SELL.perWear * 52)))}</span></div>` : ''}
         <div><span class="k">Payment</span><span class="v">On delivery</span></div>
         <div><span class="k">Delivery</span><span class="v">Free on ${C.freeDeliveryPairs} pairs</span></div>
       </div>
@@ -860,73 +969,6 @@
   };
 
   /* ---- product ---- */
-  /* 360 view: with eight or more photos of a colour the photos become a drag spin; otherwise the drawn
-     profile is stacked into a solid and turned on a leather turntable, pausing at the side and three quarter angles */
-  function spin360(p, v) {
-    const imgs = v.images || [], seq = imgs.length >= 8;
-    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const prevFocus = document.activeElement;
-    $$('.spin').forEach((x) => x.remove());
-    const N = 14, layer = (i) => `<div class="sl${i === 0 ? ' face' : i === N - 1 ? ' face back' : ''}" data-l="${i}">${visual(p, v, { index: 0 })}</div>`;
-    document.body.insertAdjacentHTML('beforeend', `<div class="spin" id="spin360" role="dialog" aria-modal="true" aria-label="360 degree view of ${esc(p.name)} in ${esc(v.color)}">
-      <div class="spin-in">
-        <div class="spin-h"><div><span class="eyebrow">360&deg; view</span><h2>${esc(p.name)} <span>${esc(v.color)}</span></h2></div><button class="spin-x" type="button" aria-label="Close the 360 view">&times;</button></div>
-        <div class="spin-stage${seq ? ' seq' : ''}" id="spinStage">
-          <span class="spin-light" aria-hidden="true"></span>
-          <div class="spin-turn"><span class="spin-disc" aria-hidden="true"></span><div class="spin-obj" id="spinObj">${seq ? `<img src="${esc(imgs[0])}" alt="${esc(p.name + ' ' + v.color)}" draggable="false">` : Array.from({ length: N }, (_, i) => layer(i)).join('')}</div></div>
-          <span class="spin-shadow" aria-hidden="true"></span>
-        </div>
-        <div class="spin-f"><span class="mono spin-deg" id="spinDeg">000&deg;</span><span class="spin-hint mono">Drag to turn the pair</span><button class="btn ghost spin-play" type="button" id="spinPlay">${calm ? 'Turn' : 'Pause'}</button></div>
-        <p class="spin-note">${seq ? 'Built from ' + imgs.length + ' photos of this colour.' : 'Turned from the drawn side profile of this pair, so the toe and heel views are an impression rather than photos.'}</p>
-      </div></div>`);
-    const el = $('#spin360'), obj = $('#spinObj'), stage = $('#spinStage'), deg = $('#spinDeg'), play = $('#spinPlay');
-    document.documentElement.classList.add('spin-open');
-    requestAnimationFrame(() => el.classList.add('on'));
-    if (seq) imgs.forEach((src) => { const im = new Image(); im.src = src; });
-    const depth = () => { const d = obj.offsetWidth * 0.13; $$('.sl', obj).forEach((l) => { const i = +l.dataset.l; l.style.transform = `translateZ(${(i / (N - 1) - 0.5) * d}px)`; }); };
-    if (!seq) depth();
-    let ang = 0, tilt = -10, auto = !calm, raf = 0, from = 0, to = 0, t0 = 0, dwell = 0, k = 0, drag = null, resume = 0;
-    const STEPS = [55, 125, 55, 125];
-    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    const draw = () => {
-      const a = ((ang % 360) + 360) % 360;
-      deg.textContent = String(Math.round(a)).padStart(3, '0') + '°';
-      if (seq) { const f = Math.round(a / 360 * imgs.length) % imgs.length; const im = $('img', obj); if (im.dataset.f !== String(f)) { im.dataset.f = f; im.src = imgs[f]; } }
-      else obj.style.transform = `rotateX(${tilt}deg) rotateY(${ang}deg)`;
-      stage.style.setProperty('--ang', ang + 'deg');
-    };
-    const tick = (now) => {
-      if (auto && !drag) {
-        if (!t0) { t0 = now; from = ang; to = ang + STEPS[k % STEPS.length]; }
-        const t = Math.min(1, (now - t0) / 1700);
-        ang = from + (to - from) * ease(t);
-        tilt = -10 - 5 * Math.sin(ang * Math.PI / 180);
-        if (t >= 1) { if (!dwell) dwell = now; if (now - dwell > 1300) { k++; t0 = 0; dwell = 0; } }
-      }
-      draw();
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    const setAuto = (on) => { auto = on; t0 = 0; dwell = 0; play.textContent = on ? 'Pause' : 'Turn'; };
-    play.addEventListener('click', () => setAuto(!auto));
-    stage.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, a: ang }; clearTimeout(resume); stage.setPointerCapture(e.pointerId); stage.classList.add('dragging'); });
-    stage.addEventListener('pointermove', (e) => { if (!drag) return; ang = drag.a + (e.clientX - drag.x) * 0.45; });
-    const up = () => { if (!drag) return; drag = null; stage.classList.remove('dragging'); t0 = 0; dwell = 0; if (auto) { auto = false; resume = setTimeout(() => setAuto(true), 2600); } };
-    stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
-    const key = (e) => { if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') { setAuto(false); ang -= 15; } if (e.key === 'ArrowRight') { setAuto(false); ang += 15; } };
-    const onResize = () => { if (!seq) depth(); };
-    function close() {
-      el.classList.remove('on'); cancelAnimationFrame(raf); clearTimeout(resume);
-      document.removeEventListener('keydown', key); removeEventListener('resize', onResize);
-      document.documentElement.classList.remove('spin-open');
-      setTimeout(() => el.remove(), 350);
-      if (prevFocus && prevFocus.focus) prevFocus.focus();
-    }
-    document.addEventListener('keydown', key); addEventListener('resize', onResize);
-    $('.spin-x', el).addEventListener('click', close);
-    el.addEventListener('click', (e) => { if (e.target === el) close(); });
-    setTimeout(() => $('.spin-x', el).focus(), 60);
-  }
   V.product = function (param) {
     const [pid, vid] = (param || '').split('~');
     const p = prod(pid) || (SPA && pid ? null : P[0]);
@@ -949,12 +991,14 @@
       <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></nav>
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}<button class="gal-360" id="spinB" type="button"><span class="g3-ring" aria-hidden="true"></span>360&deg; view<span class="sr-only">, open the turning view</span></button></div>
+          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}</div>
           <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}"><span aria-hidden="true">${x.h}</span><span class="sr-only">${x.l} view</span></button>`).join('')}</div>
         </div>
         <div class="buy">
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
-            <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>`}</div>
+            <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : SELL.retailAnchor ? `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>` : ''}</div>
+            ${perWear(v.price)}
+            ${GIVE.on ? `<button class="slice-note" id="sliceB" type="button" aria-haspopup="dialog" data-recut>${loaf(GIVE.pct + '%')}<span class="sl-t"><b>A slice of this pair goes to someone in need.</b><span>At least ${GIVE.pct}% of our profit on it. Your price stays the same.</span></span></button>` : ''}
             <p class="blurb">${esc(p.description)}</p></div>
           <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg(window.DAUR_KICKS.kindOf(p), window.DAUR_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
           <div><div class="field-label strong"><span>Select size / EU ${size || ''}</span><button id="sgBtn">${ic('ruler')}Size guide</button></div>
@@ -965,6 +1009,7 @@
             <button class="btn ghost block" id="buyNow">Buy now, pay on delivery</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
           <ul class="trust"><li>Dispatch in 24 hours</li><li>5 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
+          ${ladder(p, v)}
           <div id="ext-rvcard"></div>
           <div class="specs"><h2 class="specs-h">Specs</h2><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
           <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
@@ -1015,8 +1060,7 @@
         }
       });
       g.addEventListener('pointerleave', () => setEdge(0));
-      $('#spinB').addEventListener('click', (e) => { e.stopPropagation(); spin360(p, v); });
-      g.addEventListener('pointermove', (e) => { if (edge || e.target.closest('.gal-360')) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
+      g.addEventListener('pointermove', (e) => { if (edge) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
       g.addEventListener('pointerleave', () => { z.style.transform = ''; g.classList.remove('zooming'); });
       $$('.vsw').forEach((b) => b.addEventListener('click', () => { v = variant(p, b.dataset.v); size = null; qty = 1; history.replaceState(null, '', SPA ? link('product', p.id + '~' + v.id) : '#' + p.id + '~' + v.id); paint(); }));
       $$('.buy .size').forEach((b) => b.addEventListener('click', () => {
@@ -1033,6 +1077,7 @@
       $('#wishB').addEventListener('click', () => { toggleWish(p.id); $('#wishB span').textContent = wish.includes(p.id) ? 'Liked' : 'Like'; });
       $('#shareB').addEventListener('click', () => shareLink(absLink('product', p.id + '~' + v.id), 'DAUR ' + p.name + ' / ' + v.color, `DAUR ${p.name} in ${v.color}, ${fmt(v.price)} with Cash on Delivery.`));
       $('#sgBtn').addEventListener('click', () => openModal('sizeGuide'));
+      const sl = $('#sliceB'); if (sl) { sl.addEventListener('click', openSlice); cutWhenSeen(sl.parentNode); }
       const sb = $('#stickyBuy'), bt = $('#add');
       const io = new IntersectionObserver(([en]) => sb.classList.toggle('on', !en.isIntersecting && en.boundingClientRect.top < 0));
       io.observe(bt);
@@ -1058,7 +1103,7 @@
       <div class="wrap"><div class="two cart-page"><div class="main">${freeMeter(t.n)}${t.lines.map((d) => lineHTML(d, true)).join('')}
         <a class="link" href="${link('shop')}" style="display:inline-block;margin-top:24px">Continue shopping</a></div>
         <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout, Cash on Delivery <span class="arr">&rarr;</span></a><p class="form-note">One delivery fee for all of Pakistan, confirmed at checkout.</p></aside></div></div>`;
-      bindLines(app); bindPromo(paint);
+      bindLines(app); bindPromo(paint); bindVote(app);
     }
     rerender = () => { paintCounts(); paint(); };
     paint();
@@ -1072,7 +1117,9 @@
       <div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>
       <div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
-      <div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>`;
+      ${keptBox(t)}
+      ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>${votePicker()}` : ''}
+      ${SELL.retailAnchor ? `<div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>` : ''}`;
   }
   function bindPromo(cb) {
     const b = $('#promoBtn'); if (!b) return;
@@ -1122,7 +1169,7 @@
       $('#coSide').innerHTML = `<div class="mini-items">${t.lines.map((d) => `<div class="mini-item"><span class="th">${visual(d.p, d.v)}<em>${d.l.qty}</em></span><span><b>${esc(d.p.name)}</b><br><span class="meta">${esc(d.v.color)} / EU ${d.l.size}</span></span><span class="num">${fmt(d.total)}</span></div>`).join('')}</div>
         ${summary(t, true)}<p class="form-note">Delivered anywhere in Pakistan in ${C.delivery.days} after dispatch.</p>
         <button class="btn volt block" type="submit" id="place">Place order, pay ${fmt(t.total)} on delivery</button><a class="link" href="${link('cart')}" style="justify-self:start">Edit bag</a>`;
-      bindPromo(side);
+      bindPromo(side); bindVote(app);
     };
     rerender = () => { paintCounts(); side(); };
     f.city.addEventListener('change', side);
@@ -1146,7 +1193,7 @@
       const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), via: f.via.value, waUpdates: f.waUpdates.checked },
         address: { city: f.city.value.trim(), area: f.area.value.trim(), address: f.address.value.trim(), landmark: f.landmark.value.trim(), postal: f.postal.value.trim(), note: f.note.value.trim() },
         items: t.lines.map((d) => ({ pid: d.p.id, name: d.p.name, color: d.v.color, size: d.l.size, qty: d.l.qty, price: d.v.price })),
-        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: 'Cash on Delivery' };
+        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: 'Cash on Delivery', sliceCause: window.DAUR_SLICE_VOTE() };
       const orders = store.get('orders', []); orders.unshift(order); store.set('orders', orders);
       t.lines.forEach((d) => { d.v.received = d.v.received || Object.assign({}, d.v.stock); d.v.stock[d.l.size] = Math.max(0, (d.v.stock[d.l.size] || 0) - d.l.qty); });
       store.set('catalog', ALL);
@@ -1242,7 +1289,7 @@
     return `<a class="line-card" href="${link('shop', l.key.toLowerCase())}" style="--n:${pairs.length}">
       <span class="lc-badge">${ps.length} style${ps.length === 1 ? '' : 's'}</span><span class="lc-no mono">${ONE ? 'Style' : 'Line'} 0${i + 1} / DAUR</span>
       <span class="lc-big" aria-hidden="true" style="--len:${(ONE ? l.key.replace('Hybrids', 'Casual') : a).length}">${esc(ONE ? l.key.replace('Hybrids', 'Casual') : a)}</span>
-      <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Crafted in Pakistan / DAUR sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em><s>${fmt(C.marketRetail)}+</s></span>` : ''}</span>`).join('')}</span>
+      <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Crafted in Pakistan / DAUR sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em>${SELL.retailAnchor ? `<s>${fmt(C.marketRetail)}+</s>` : ''}</span>` : ''}</span>`).join('')}</span>
       <span class="lc-foot"><span class="lc-t">${esc(a)}</span><span class="lc-line">${tag} From ${fmt(from)}.</span></span>
       <span class="lc-cta">Shop ${esc(a.toLowerCase())} ${ic('arrow')}</span>
     </a>`;
@@ -1270,7 +1317,8 @@
             <p class="big">At least 5% of our profit goes to charity, from every pair we sell.</p>
             <p>We set aside a minimum of 5% of the profit we make, not of the price you pay, and give it only to verified and genuine cases of need. We check every case ourselves before we give. It is not a marketing budget and it is never added to your price.</p>
             <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
-            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p></div>
+            <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. When you buy a pair, part of our profit from it goes to that share.</p>
+            <a class="link" href="${link('giving')}">How our giving works</a></div>
         </div></div></div>
       <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for DAUR Supply.</p></div>`;
   };
@@ -1359,6 +1407,301 @@
     if (SHOP && /contact_posted=true/.test(location.search)) toast('Message sent. We will reply soon.');
   };
 
+  /* ---- runway ---- */
+  // every pair stands on one studio floor. The chosen pair steps forward and the others fall back out of focus;
+  // Inspect clears the floor, puts numbered points on the pair and opens its details beside it.
+  // A colour shows its own cut out photo when a product image has alt text starting "Runway:" (transparent PNG,
+  // side profile, toe to the right); every other pair is drawn live, so the floor always reads as one set.
+  const RW_ST = 226; // top of the sole line in the drawing (shoe.js)
+  function rwDetails(p) {
+    const S = (SHOE.SHAPES || {})[p.silhouette] || (SHOE.SHAPES || {}).court, sp = p.specs || {}, ST = RW_ST;
+    const said = (k, fallback) => sp[k] ? sp[k].replace(/\.?$/, '. ') + fallback : fallback;
+    const out = [{ t: 'The upper', d: said('Upper', 'Bent at the flex point and checked for cracks and loose grain before we accept the pair.'), x: S.laced ? 352 : S.loafer ? 170 : S.chelsea || S.slip ? 380 : 300, y: (S.ey + ST) / 2 + (S.laced ? 14 : S.chelsea ? 20 : 8) }];
+    out.push(S.moc ? { t: 'Moc toe stitching', d: said('Stitch', 'Tight, even spacing all round the toe. A wavy or skipped stitch is a reject at our checking table.'), x: 440, y: (S.ey + S.toe + 30) / 2 }
+      : { t: 'Stitching', d: said('Stitch', 'Even, tight stitching at the toe and heel. A wavy or skipped stitch is a reject at our checking table.'), x: 470, y: (ST - 6 + S.toe + 18) / 2 - 4 });
+    if (S.laced) {
+      // the same points shoe.js uses: the first and last eyelets
+      const x0 = S.tx + 20, y0 = S.ty + 18, x1 = S.ex - 8, y1 = S.ey + 9;
+      out.push({ t: 'Laces and dubrae', d: 'Thick matte black woven cotton laces replace the factory pair, with the laser engraved DAUR dubrae on the bottom row.', x: x1, y: y1 - 5 });
+      out.push({ t: 'Supply Unit seal', d: 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size: exchanges need it attached.', x: x0 - 3, y: y0 + 59 });
+    } else if (S.chelsea) {
+      out.push({ t: 'Elastic side gussets', d: 'Stretch panels on both sides, so the boot slips on without laces and holds the ankle snug.', x: 270, y: (S.dipY + ST - 52) / 2 });
+      out.push({ t: 'Pull tab', d: 'A heel loop to pull the boot on, stitched into the back seam.', x: 95, y: S.heel - 14 });
+    } else if (S.slip) {
+      out.push({ t: 'Elastic gore', d: 'A stretch insert under the vamp, so the shoe slips on and still holds your foot.', x: S.tx - 14, y: S.ty + 16 });
+    } else if (S.loafer) {
+      out.push({ t: 'Saddle strap and tassels', d: 'A stitched saddle strap across the vamp, finished with a knotted tassel pair.', x: S.tx + 44, y: S.ty + 30 });
+    }
+    out.push({ t: 'The sole', d: said('Sole', 'Bonded to the upper and pull tested at toe and heel. Any gap sends the pair back.'), x: 300, y: ST + S.sole * 0.62 });
+    if (out.length < 5 && sp.Lining) out.splice(1, 0, { t: 'Lining', d: sp.Lining.replace(/\.?$/, '.') + ' Felt along the collar, where your heel sits.', x: 122, y: S.heel + 16 });
+    // where each point sits: in the drawing (per cent of the drawing box) and as a share of the shoe's own outline, for photos
+    const T = Math.min(S.heel - (S.chelsea ? 28 : 4), S.ty - 22), B = ST + S.sole + (S.derby ? 12 : 0);
+    return out.slice(0, 5).map((o) => Object.assign(o, { dx: (30 + 0.84 * o.x - 62) / 4.76, dy: (o.y - 30) / 2.82, fx: (o.x - 70) / 4.96, fy: (o.y - T) / (B - T) * 100 }));
+  }
+  const rwArt = (p, v, vb) => v.runway ? `<img src="${esc(v.runway)}" alt="" draggable="false" decoding="async">` : SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, vb ? { viewBox: vb } : {});
+  // a close crop of one detail, for its row in the panel
+  function rwThumb(p, v, o) {
+    if (v.runway) return `<span class="rw-th-i" style="background-image:url('${esc(v.runway)}');background-position:${o.fx.toFixed(1)}% ${o.fy.toFixed(1)}%" aria-hidden="true"></span>`;
+    const X = 30 + 0.84 * o.x, Y = o.y;
+    return rwArt(p, v, `${(X - 76).toFixed(1)} ${(Y - 57).toFixed(1)} 152 114`);
+  }
+  let rwModelJs = null;
+  const rwModelViewer = () => rwModelJs || (rwModelJs = new Promise((ok, no) => {
+    if (window.customElements && customElements.get('model-viewer')) return ok();
+    const s = document.createElement('script'); s.type = 'module'; s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+    s.onload = () => ok(); s.onerror = () => { rwModelJs = null; no(); }; document.head.appendChild(s);
+  }));
+
+  V.runway = function (param) {
+    setMeta('The Runway: Every DAUR Pair Up Close | DAUR Supply', 'Every DAUR Supply pair on one floor. Bring a pair forward and inspect its leather, stitching, sole and hardware, with honest prices, ' + sizeSpan() + ' sizes and Cash on Delivery.');
+    const list = P.slice();
+    if (!list.length) { V.notfound(); return; }
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lite = document.documentElement.classList.contains('lite');
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const vs = list.map((p) => p.variants.find(stockOf) || p.variants[0]);
+    // the line opens on the middle pair, so it stands with pairs on both sides; a link to #handle opens on that pair
+    const want = list.findIndex((p) => p.id === String(param || '').split('~')[0]);
+    const start = want >= 0 ? want : Math.floor((list.length - 1) / 2);
+    let a = start, mode = 'browse', pin = -1, size = null, dets = [];
+    const pairHTML = (p, i) => `<button class="rw-pair" type="button" data-i="${i}" aria-label="${esc(p.name)}, ${esc(vs[i].color)}"><span class="rw-tilt"><span class="rw-zoom"><span class="rw-face">${rwArt(p, vs[i])}</span><span class="rw-pins"></span></span></span></button>`;
+    app.innerHTML = `<section class="rw" id="rw" aria-roledescription="carousel" aria-label="The Runway, every pair up close">
+      <div class="rw-stage" id="rwStage" tabindex="0">
+        <div class="rw-floor" aria-hidden="true"><i class="rw-grid" id="rwGrid"></i></div>
+        <div class="rw-head wrap"><span class="eyebrow">Runway / ${list.length} pairs</span><h1>The Runway.</h1><p>${fine ? 'Click a pair to see its details, click around it to come back. Drag or scroll sideways to move along the line.' : 'Tap a pair to see its details, tap around it to come back. Swipe to move along the line.'}</p></div>
+        <div class="rw-line" id="rwLine">${list.map(pairHTML).join('')}</div>
+        <div class="rw-call" id="rwCall" aria-live="polite"></div>
+        <div class="rw-3d" id="rw3d" hidden></div>
+      </div>
+      <div class="rw-bar wrap">
+        <div class="rw-now" aria-live="polite"><span class="mono" id="rwN"></span><b id="rwName"></b><span class="mono" id="rwPrice"></span></div>
+        <div class="rw-ticks" role="tablist" aria-label="Pairs on the runway">${list.map((p, i) => `<button type="button" role="tab" data-t="${i}" aria-label="${esc(p.name)}"><i></i></button>`).join('')}</div>
+        <div class="rw-acts"><button class="rw-arr" type="button" id="rwPrev" aria-label="Previous pair">${ic('arrow')}</button><button class="rw-arr r" type="button" id="rwNext" aria-label="Next pair">${ic('arrow')}</button><button class="btn volt" type="button" id="rwGo">Inspect this pair</button></div>
+      </div>
+      <aside class="rw-panel" id="rwPanel" aria-label="Details of this pair" hidden></aside>
+    </section>
+    <section class="sheet x"><div class="wrap">
+      ${head('How to read the Runway', 'Look closer before you order.', `<a class="link" href="${link('shop')}">Shop all pairs</a>`, 'Every point on a pair is something we check at the bench in Lahore, Sialkot or Kasur before it earns our seal. Pairs are shown as design renders of each style until their studio photos are added.')}
+      <div class="steps rw-steps">${[['Move along the line', 'Drag, swipe or scroll sideways. The pair in front is sharp while the rest fall back.'], ['Open the details', 'Click a pair: the floor clears and numbered points mark the leather, stitching, sole and hardware.'], ['Pick your size', 'Choose your EU size and add it to the bag. You pay in cash at your door.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    </div></section>`;
+
+    const rw = $('#rw'), stage = $('#rwStage'), line = $('#rwLine'), panel = $('#rwPanel'), call = $('#rwCall'), grid = $('#rwGrid'), box3d = $('#rw3d');
+    const pairs = $$('.rw-pair', line), ticks = $$('[data-t]', rw);
+    let W = 0, fw = 0, narrow = false, pw = 0, goneT = 0;
+    const measure = () => {
+      W = stage.clientWidth; narrow = W < 961;
+      pw = narrow ? 0 : Math.min(430, Math.round(W * 0.36));
+      fw = narrow ? Math.min(W * 0.9, 560) : Math.min((W - pw) * 0.66, 720);
+      rw.style.setProperty('--fw', Math.round(fw) + 'px'); rw.style.setProperty('--pw', pw + 'px');
+    };
+    // the camera: where each pair stands for the pair in front
+    function place(stagger) {
+      pairs.forEach((el, i) => {
+        const d = i - a, ad = Math.abs(d), sg = Math.sign(d);
+        let x, z, s = 1, r = 0, o, b;
+        if (mode === 'inspect' && d) { x = sg * (W * 0.55 + ad * 60); z = -900; o = 0; b = lite ? 0 : 12; }
+        else if (!d) { x = mode === 'inspect' && !narrow ? -pw / 2 : 0; z = 0; s = mode === 'inspect' ? (narrow ? 1.1 : 1.08) : 1; o = 1; b = 0; }
+        else { x = sg * (fw * (narrow ? 0.58 : 0.6) + (ad - 1) * fw * (narrow ? 0.34 : 0.4)); z = -ad * (narrow ? 420 : 380); r = -sg * 14; o = ad > 3 ? 0 : [1, 0.9, 0.62, 0.34][ad]; b = lite ? 0 : Math.min(ad * 2.4, 7.2); }
+        el.style.setProperty('--x', x.toFixed(1) + 'px'); el.style.setProperty('--z', z + 'px'); el.style.setProperty('--s', s); el.style.setProperty('--r', r + 'deg'); el.style.opacity = o;
+        el.style.filter = b ? `blur(${b}px)` : 'none';
+        el.style.zIndex = 50 - ad; el.style.transitionDelay = stagger ? (ad * 0.09).toFixed(2) + 's' : '';
+        el.classList.toggle('on', !d); el.tabIndex = o ? 0 : -1; el.setAttribute('aria-hidden', o ? 'false' : 'true');
+        if (o) el.style.visibility = '';
+        el.setAttribute('aria-label', `${list[i].name}, ${vs[i].color}. ${mode === 'inspect' && !d ? 'Shown in detail' : 'See its details'}`);
+      });
+      // pairs that have faded out leave the picture entirely once they are gone, so the browser stops drawing them
+      clearTimeout(goneT); goneT = setTimeout(() => pairs.forEach((el) => { if (el.style.opacity === '0') el.style.visibility = 'hidden'; }), stagger ? 1900 : 950);
+      grid.style.setProperty('--gx', (-a * 72) + 'px');
+      ticks.forEach((t, i) => t.setAttribute('aria-selected', i === a));
+      const p = list[a], v = vs[a];
+      $('#rwN').textContent = String(a + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0');
+      $('#rwName').textContent = p.name;
+      $('#rwPrice').textContent = fmt(v.price) + (onSale(v) ? ' / was ' + fmt(v.compareAt) : '');
+      $('#rwGo').textContent = mode === 'inspect' ? 'Back to the line' : 'Inspect this pair';
+    }
+    // a little depth for the pair in front: a few darker copies behind the face give it thickness when it turns
+    function depth() {
+      $$('.rw-sl', line).forEach((x) => x.remove());
+      if (lite || calm) return;
+      const z = $('.rw-zoom', pairs[a]), face = $('.rw-face', pairs[a]);
+      for (let k = 5; k >= 1; k--) { const sl = document.createElement('span'); sl.className = 'rw-sl'; sl.style.setProperty('--k', k); sl.setAttribute('aria-hidden', 'true'); sl.innerHTML = face.innerHTML; z.insertBefore(sl, face); }
+    }
+    // points sit on the drawing directly; on a photo they are placed on the shoe's outline once the photo has its size
+    function pinsFor(i) {
+      const el = pairs[i], p = list[i], v = vs[i], wrap = $('.rw-pins', el);
+      dets = rwDetails(p);
+      wrap.innerHTML = dets.map((o, k) => `<button class="rw-pin" type="button" data-pin="${k}" style="--i:${k};left:${(v.runway ? o.fx : o.dx).toFixed(2)}%;top:${(v.runway ? o.fy : o.dy).toFixed(2)}%" aria-label="Detail ${k + 1}: ${esc(o.t)}" aria-pressed="false"><span>${k + 1}</span></button>`).join('');
+      $$('.rw-pin', wrap).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); choose(+b.dataset.pin === pin ? -1 : +b.dataset.pin); }));
+    }
+    function choose(k) {
+      pin = k;
+      const el = pairs[a], zm = $('.rw-zoom', el), o = dets[k];
+      $$('.rw-pin', el).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.pin === k));
+      $$('[data-row]', panel).forEach((r) => r.setAttribute('aria-pressed', +r.dataset.row === k));
+      if (k < 0 || !o) { zm.style.setProperty('--zs', 1); call.classList.remove('on'); return; }
+      const v = vs[a];
+      zm.style.transformOrigin = `${(v.runway ? o.fx : o.dx).toFixed(2)}% ${(v.runway ? o.fy : o.dy).toFixed(2)}%`;
+      zm.style.setProperty('--zs', narrow ? 1.4 : 1.5);
+      call.innerHTML = `<span class="mono">${String(k + 1).padStart(2, '0')} / ${String(dets.length).padStart(2, '0')}</span><b>${esc(o.t)}</b><p>${esc(o.d)}</p><div class="rw-call-a"><button type="button" data-cn="-1" aria-label="Previous detail">${ic('arrow')}</button><button type="button" data-cn="1" aria-label="Next detail">${ic('arrow')}</button><button type="button" class="mono" data-cx>Close</button></div>`;
+      call.classList.add('on');
+      $$('[data-cn]', call).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); choose((pin + +b.dataset.cn + dets.length) % dets.length); }));
+      $('[data-cx]', call).addEventListener('click', (e) => { e.stopPropagation(); choose(-1); });
+      const row = $(`[data-row="${k}"]`, panel); if (row && !narrow && row.scrollIntoView) row.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
+    }
+    function paintPanel() {
+      const p = list[a], v = vs[a], st = v.stock || {};
+      const keep = Math.max(0, C.marketRetail - v.price);
+      panel.innerHTML = `<div class="rw-pn-h"><span class="eyebrow">In this pair / ${dets.length} details</span><button class="rw-x" type="button" id="rwX" aria-label="Back to the line">&times;</button></div>
+        <h2>${esc(p.name)}</h2><p class="rw-pn-sub mono">${esc(v.color)} / ${esc(lineName(p.category))}</p>
+        <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol>
+        <div class="rw-math">${onSale(v) ? `<div><span class="k">Sale price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Was</span><span class="num strike">${fmt(v.compareAt)}</span></div><div><span class="k">You save</span><b class="num">${fmt(v.compareAt - v.price)}</b></div>`
+          : SELL.retailAnchor ? `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Typical retail</span><span class="num strike">${fmt(C.marketRetail)}+</span></div><div><span class="k">You keep</span><b class="num">${fmt(keep)}+</b></div>` : `<div><span class="k">DAUR price</span><b class="num">${fmt(v.price)}</b></div><div><span class="k">Delivery</span><b class="num">Free on ${C.freeDeliveryPairs}</b></div><div><span class="k">Pay</span><b class="num">On delivery</b></div>`}</div>
+        ${p.variants.length > 1 ? `<div class="rw-cols"><div class="field-label"><span>Colour / ${esc(v.color)}</span></div><div class="swatches">${p.variants.map((x) => `<button class="sw-b" type="button" style="--c:${esc(x.hex || '#777')}" data-rv="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}"></button>`).join('')}</div></div>` : ''}
+        <div class="rw-size"><div class="field-label strong"><span>Size / EU ${size || ''}</span><button type="button" id="rwSg">${ic('ruler')}Size guide</button></div>
+          <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" type="button" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'disabled aria-disabled="true"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}</button>`; }).join('')}</div></div>
+        <button class="btn volt block" type="button" id="rwAdd">${ic('bag')}<span>${size ? 'Add EU ' + size + ' to bag, ' + fmt(v.price) : stockOf(v) ? 'Select a size' : 'Sold out in this colour'}</span></button>
+        <div class="rw-more">${p.model ? `<button class="btn ghost" type="button" id="rw3dB">Turn it in 3D</button>` : ''}<a class="link" href="${link('product', p.id + '~' + v.id)}">Full details</a></div>
+        <p class="rw-note">Add a second pair and delivery is free anywhere in Pakistan. Cash on Delivery, 5 day size exchange.</p>`;
+      $('#rwX').addEventListener('click', () => setMode('browse'));
+      $$('[data-row]', panel).forEach((b) => b.addEventListener('click', () => choose(+b.dataset.row === pin ? -1 : +b.dataset.row)));
+      $$('[data-rv]', panel).forEach((b) => b.addEventListener('click', () => {
+        vs[a] = variant(p, b.dataset.rv); size = null;
+        $('.rw-face', pairs[a]).innerHTML = rwArt(p, vs[a]); depth(); pinsFor(a); prepPhoto(a); paintPanel(); place(); if (pin >= 0) choose(pin);
+      }));
+      $$('.rw-size .size', panel).forEach((b) => b.addEventListener('click', () => { size = +b.dataset.s; const y = panel.scrollTop; paintPanel(); panel.scrollTop = y; }));
+      $('#rwSg').addEventListener('click', () => openModal('sizeGuide'));
+      $('#rwAdd').addEventListener('click', () => {
+        if (!stockOf(v)) return;
+        if (!size) { toast('Pick a size first'); const sz = $('.rw-size .sizes', panel); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
+        addToCart(p.id, v.id, size, 1);
+      });
+      const b3 = $('#rw3dB'); if (b3) b3.addEventListener('click', () => open3d(p));
+    }
+    // a real 3D file (a GLB added to the product's media in Shopify) turns under the finger; nothing is loaded until asked
+    function open3d(p) {
+      box3d.hidden = false; box3d.innerHTML = `<p class="mono">Loading the 3D model</p>`;
+      rwModelViewer().then(() => {
+        box3d.innerHTML = `<model-viewer src="${esc(p.model)}" alt="3D model of ${esc(p.name)}" camera-controls touch-action="pan-y" auto-rotate shadow-intensity="1" exposure="1" interaction-prompt="none"></model-viewer><button class="rw-x" type="button" aria-label="Close the 3D model">&times;</button>`;
+        $('.rw-x', box3d).addEventListener('click', close3d);
+      }).catch(() => { box3d.innerHTML = '<p class="mono">The 3D model could not load. Please try again.</p>'; setTimeout(close3d, 2200); });
+    }
+    function close3d() { box3d.hidden = true; box3d.innerHTML = ''; }
+    function prepPhoto(i) {
+      const im = $('.rw-face img', pairs[i]); if (!im) return;
+      const fit = () => { if (im.naturalWidth) pairs[i].style.setProperty('--ar', (im.naturalWidth / im.naturalHeight).toFixed(3)); };
+      if (im.complete) fit(); else im.addEventListener('load', fit, { once: true });
+    }
+    function setMode(m) {
+      if (m === mode) return;
+      mode = m; pin = -1; size = null;
+      rw.classList.toggle('inspect', m === 'inspect');
+      close3d();
+      const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); call.classList.remove('on');
+      if (m === 'inspect') { pinsFor(a); paintPanel(); panel.hidden = false; requestAnimationFrame(() => panel.classList.add('on')); }
+      else { panel.classList.remove('on'); setTimeout(() => { if (mode === 'browse') panel.hidden = true; }, 450); $$('.rw-pins', line).forEach((w) => { w.innerHTML = ''; }); }
+      place();
+      if (m === 'inspect' && narrow) setTimeout(() => { const r = stage.getBoundingClientRect(); if (r.top < 0 || r.top > 80) window.scrollTo({ top: scrollY + r.top - 70, behavior: calm ? 'auto' : 'smooth' }); }, 60);
+    }
+    // moving along the line; with the details open, the next pair opens straight into its details
+    function go(i) {
+      i = Math.max(0, Math.min(list.length - 1, i));
+      if (i === a) return;
+      const keep = mode === 'inspect';
+      $$('.rw-tilt', line).forEach((t) => { t.style.transform = ''; });
+      if (keep) { const zm = $('.rw-zoom', pairs[a]); zm.style.setProperty('--zs', 1); $('.rw-pins', pairs[a]).innerHTML = ''; call.classList.remove('on'); close3d(); pin = -1; size = null; }
+      a = i;
+      if (keep) { pinsFor(a); const y = panel.scrollTop; paintPanel(); panel.scrollTop = narrow ? y : 0; }
+      place(); depth();
+      if (!SPA) try { history.replaceState(null, '', '#' + list[a].id); } catch (e) { /* not allowed */ }
+    }
+    // one click on any pair opens its details; a click anywhere around it closes them again
+    pairs.forEach((el, i) => el.addEventListener('click', (e) => {
+      if (moved) return;
+      e.stopPropagation();
+      if (i !== a) go(i);
+      if (mode !== 'inspect') setMode('inspect');
+    }));
+    stage.addEventListener('click', (e) => {
+      if (moved || mode !== 'inspect') return;
+      if (e.target.closest('.rw-pair.on, .rw-call, .rw-3d')) return;
+      setMode('browse');
+    });
+    ticks.forEach((t) => t.addEventListener('click', () => go(+t.dataset.t)));
+    $('#rwPrev').addEventListener('click', () => go(a - 1));
+    $('#rwNext').addEventListener('click', () => go(a + 1));
+    $('#rwGo').addEventListener('click', () => setMode(mode === 'inspect' ? 'browse' : 'inspect'));
+    stage.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(a + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); }
+      else if (e.key === 'Escape') { if (pin >= 0) choose(-1); else setMode('browse'); }
+    });
+    // dragging (finger or mouse) slides the whole line with the pointer, and letting go settles on the nearest pair
+    let sx = null, sy = 0, dx = 0, moved = false, dragging = false;
+    const stepW = () => fw * (narrow ? 0.58 : 0.6);
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.button > 0 || e.target.closest('.rw-3d, .rw-call')) return;
+      sx = e.clientX; sy = e.clientY; dx = 0; moved = false; dragging = false;
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (sx == null) return;
+      dx = e.clientX - sx; const dy = e.clientY - sy;
+      if (!dragging) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) return; dragging = true; rw.classList.add('dragging'); try { stage.setPointerCapture(e.pointerId); } catch (er) { /* fine */ } }
+      // resistance at both ends of the line
+      const end = (a === 0 && dx > 0) || (a === list.length - 1 && dx < 0);
+      line.style.transform = `translate3d(${(end ? dx * 0.25 : dx * 0.9).toFixed(1)}px, 0, 0)`;
+    });
+    const release = () => {
+      if (sx == null) return; sx = null;
+      if (!dragging) return;
+      dragging = false; rw.classList.remove('dragging'); moved = true; setTimeout(() => { moved = false; }, 80);
+      const steps = Math.round(-dx / stepW()) || (Math.abs(dx) > 44 ? (dx < 0 ? 1 : -1) : 0);
+      line.style.transform = '';
+      if (steps) go(a + steps);
+    };
+    stage.addEventListener('pointerup', release); stage.addEventListener('pointercancel', release);
+    // a trackpad or a sideways mouse wheel (or Shift and the wheel) moves along the line; up and down still scroll the page
+    let wAcc = 0, wLock = 0;
+    stage.addEventListener('wheel', (e) => {
+      const x = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+      if (!x) return;
+      e.preventDefault();
+      if (Date.now() < wLock) return;
+      wAcc += x;
+      if (Math.abs(wAcc) > 50) { go(a + (wAcc > 0 ? 1 : -1)); wAcc = 0; wLock = Date.now() + 420; }
+    }, { passive: false });
+    // the pair in front turns a little toward the mouse, so it reads as an object rather than a picture
+    if (fine && !calm) {
+      let raf = 0;
+      stage.addEventListener('pointermove', (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0; const r = stage.getBoundingClientRect(), t = $('.rw-tilt', pairs[a]); if (!t) return;
+          const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+          t.style.transform = `rotateY(${(x * (mode === 'inspect' ? 14 : 22)).toFixed(2)}deg) rotateX(${(-y * 8).toFixed(2)}deg)`;
+        });
+      });
+      stage.addEventListener('pointerleave', () => { const t = $('.rw-tilt', pairs[a]); if (t) t.style.transform = ''; });
+    }
+    let rt = 0;
+    const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { const was = narrow; measure(); place(); if (was !== narrow && pin >= 0) choose(pin); }, 120); };
+    addEventListener('resize', onResize);
+    measure();
+    pairs.forEach((_, i) => prepPhoto(i));
+    // the line walks in from the back of the studio the first time it is seen
+    if (calm) { place(); depth(); }
+    else {
+      rw.classList.add('rw-in');
+      pairs.forEach((el) => { el.style.setProperty('--x', '0px'); el.style.setProperty('--z', '-1600px'); el.style.setProperty('--s', 1); el.style.setProperty('--r', '0deg'); el.style.opacity = 0; });
+      requestAnimationFrame(() => requestAnimationFrame(() => { place(true); depth(); setTimeout(() => { rw.classList.remove('rw-in'); pairs.forEach((el) => { el.style.transitionDelay = ''; }); }, 1500); }));
+    }
+    // a device that cannot keep up with the walk in (slow frames) gets the same floor without blur and depth copies
+    if (!lite) {
+      const fr = []; let last = 0;
+      const probe = (t) => { if (last) fr.push(t - last); last = t; if (fr.length < 40 && document.body.contains(rw)) requestAnimationFrame(probe); else if (fr.length) { fr.sort((x, y) => x - y); if (fr[fr.length >> 1] > 34) { lite = true; rw.classList.add('rw-lite'); place(); depth(); } } };
+      requestAnimationFrame(probe);
+    }
+  };
+
   /* ---- offers ---- */
   // live codes come from Shopify (Content > Metaobjects > Offer, printed as window.DAUR_OFFERS); the static preview builds them from data.js
   function liveOffers() {
@@ -1375,6 +1718,57 @@
     const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
     return d >= 7 ? 'Ends ' + new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Ends in ' + (d ? d + 'd ' : '') + h + 'h ' + m + 'm';
   };
+  /* ---- our giving: how the slice works, and the record of every giving once there is one ----
+     Records come from Shopify (Content > Metaobjects > Giving record, printed as window.DAUR_GIVING).
+     With no record yet the page explains the pledge only and promises nothing it cannot show. */
+  V.giving = function () {
+    setMeta('Our Giving: At Least 5% of Profit to People in Need | DAUR Supply', 'On every DAUR Supply pair we set aside at least ' + GIVE.pct + '% of our profit, never added to your price, and give it every quarter to verified cases of need in Pakistan.');
+    const rec = (Array.isArray(window.DAUR_GIVING) ? window.DAUR_GIVING : []).filter((r) => r && +r.amount > 0).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    const sum = rec.reduce((a, r) => a + +r.amount, 0);
+    const day = (d) => { const x = new Date(d + 'T12:00:00'); return isNaN(x) ? '' : x.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); };
+    app.innerHTML = `<section class="phero gv-hero"><div class="wrap"><span class="eyebrow">Our giving / at least ${GIVE.pct}% of profit</span><h1>The slice.</h1>
+      <p class="aside">Every pair we sell carries a share that is not ours to keep. We cut it from our profit, never from your price, and give it to people in need.</p>
+      <button class="gv-loaf" type="button" data-recut aria-label="Play the cut again">${loaf(GIVE.pct + '%')}</button></div></section>
+
+    <section class="sheet x"><div class="wrap">
+      ${head('How it works', 'Same price. A slice set aside.')}
+      <div class="steps gv-steps">${[['You buy a pair', 'At the same price as always. Nothing is added for charity.'], ['We cut the slice', `At least ${GIVE.pct}% of the profit we make on that pair, worked out on the price you finally pay.`], ['We give it every quarter', 'The slices are pooled and given each quarter, so the help is large enough to matter, to verified cases of need after our own checks.'], ['We publish it', 'Date, amount and the case, on this page and on our social pages. It is never a marketing budget.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    </div></section>
+
+    ${quarterHTML()}
+
+    ${rec.length ? `<section class="sheet x"><div class="wrap">
+      ${head('The record', fmt(sum) + ' given so far.', '', 'Every giving we make is listed here with its date and amount.')}
+      <div class="gv-rec">${rec.map((r) => `<article class="gv-item rv">${r.photo ? `<img src="${esc(r.photo)}" alt="${esc(r.where || 'Giving record')}" loading="lazy" width="600" height="450">` : ''}<span class="mono mute">${esc(day(r.date))}</span><b>${esc(fmt(+r.amount))}</b>${r.where ? `<h3>${esc(r.where)}</h3>` : ''}${r.note ? `<p>${esc(r.note)}</p>` : ''}</article>`).join('')}</div>
+    </div></section>` : ''}
+
+    <section class="sheet x"><div class="wrap"><div class="gv-why">
+      <blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>
+      <p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. The people we give to are our neighbours, not a campaign, and every case is treated with dignity.</p>
+      <a class="btn volt" href="${link('shop')}" style="justify-self:start">Shop the collection <span class="arr">&rarr;</span></a></div></div></section>`;
+    cutWhenSeen(app);
+    bindVote(app);
+    const pile = $('.gv-pile', app);
+    if (pile && 'IntersectionObserver' in window) { const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { pile.classList.add('on'); io.disconnect(); } }, { threshold: 0.3 }); io.observe(pile); } else if (pile) pile.classList.add('on');
+    reveal();
+  };
+  // this quarter: a slice for every pair sold so far and the buyers' votes, both counted from real orders
+  // (shop metafields daur.slice_quarter / slice_pairs / slice_votes, refreshed by a daily routine); nothing shows until there is a count for the current quarter
+  function quarterHTML() {
+    const q = quarterOf();
+    const Q = GIVE.quarter && GIVE.quarter.key === q.key ? GIVE.quarter : null;
+    const n = Q ? Math.max(0, Math.floor(+Q.pairs || 0)) : 0;
+    const votes = Q && Q.votes ? Q.votes : {};
+    const total = GIVE.causes.reduce((a, c) => a + (+votes[c] || 0), 0);
+    const shown = Math.min(n, 120);
+    return `<section class="sheet x"><div class="wrap">
+      ${head('This quarter / ' + q.label, n ? `${n} slice${n === 1 ? '' : 's'} so far.` : 'The loaf for this quarter.', '', n ? 'One slice for every pair bought this quarter. At the end of the quarter they are given together, to one verified case of need.' : 'Every pair bought this quarter adds a slice. At the end of the quarter they are given together, to one verified case of need.')}
+      ${n ? `<div class="gv-pile" aria-label="${n} slices">${Array.from({ length: shown }, (_, i) => `<i style="--i:${i}"></i>`).join('')}${n > shown ? `<span class="mono">+ ${n - shown}</span>` : ''}</div>` : ''}
+      ${GIVE.causes.length > 1 ? `<div class="gv-vote"><h3>Buyers choose where it goes.</h3><p>Vote in your bag before checkout. The cause with the most votes from this quarter's buyers receives the slice.</p>
+        ${total ? `<ul class="gv-bars">${GIVE.causes.map((c) => { const v = +votes[c] || 0; const pc = Math.round(v / total * 100); return `<li><span>${esc(c)}</span><b>${pc}%</b><i style="--w:${pc}%"></i></li>`; }).join('')}</ul><p class="mono mute">${total} vote${total === 1 ? '' : 's'} so far</p>` : ''}
+        ${votePicker()}</div>` : ''}
+    </div></section>`;
+  }
   V.offers = function () {
     setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.');
     const offers = liveOffers();
@@ -1553,11 +1947,12 @@
       ['How do I pick my size?', 'Use the size guide on any product page. Our leather pairs run true to size; if you are between sizes, go up.'],
       ['Do you deliver to my city?', 'Yes. We deliver to every city and town in Pakistan that our courier reaches, in ' + C.delivery.days + ', for ' + fmt(C.delivery.fee) + ', or free on ' + C.freeDeliveryPairs + ' pairs or more.'],
       ['How long does delivery take?', 'We dispatch within 24 hours of confirming your order. Delivery then takes ' + C.delivery.days + ' in most cities. Remote areas and public holidays can take longer.'],
+      ...(GIVE.on ? [['Where does the 5% go?', 'At least ' + GIVE.pct + '% of the profit we make on every pair is set aside, never added to your price. Every quarter we give it to one verified case of need, chosen by the votes of that quarter\'s buyers, and publish the record on the Our giving page.']] : []),
       ['How do I use a coupon code?', 'Enter it in the bag or at checkout. One saving applies per order: free delivery or your code, whichever saves you more. Gift offers are added on top.']
     ];
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our promise</span><h1>What every pair promises.</h1><p class="aside">Printed on the manifest card in every box. If we break a line, we make it right.</p></div></section>
       <div class="wrap"><div class="terms">
-        <nav><a href="#dispatch" data-jump="dispatch">01 Dispatch</a><a href="#delivery" data-jump="delivery">02 Delivery</a><a href="#cod" data-jump="cod">03 Cash on Delivery</a><a href="#exchanges" data-jump="exchanges">04 Exchanges</a><a href="#defects" data-jump="defects">05 Defects</a><a href="#sizing" data-jump="sizing">06 Size guide</a><a href="#faq" data-jump="faq">07 FAQ</a></nav>
+        <nav><a href="#dispatch" data-jump="dispatch">01 Dispatch</a><a href="#delivery" data-jump="delivery">02 Delivery</a><a href="#cod" data-jump="cod">03 Cash on Delivery</a><a href="#exchanges" data-jump="exchanges">04 Exchanges</a><a href="#defects" data-jump="defects">05 Defects</a>${GIVE.on ? '<a href="#slice" data-jump="slice">06 The slice</a>' : ''}<a href="#sizing" data-jump="sizing">${GIVE.on ? '07' : '06'} Size guide</a><a href="#faq" data-jump="faq">${GIVE.on ? '08' : '07'} FAQ</a></nav>
         <div class="body">
           <section class="clause" id="dispatch"><span class="no">01 / Dispatch</span><div class="c"><h2>Confirmed, then out within 24 hours.</h2><p>Every order is confirmed by phone call or WhatsApp before it ships. Once confirmed, the pair is inspected, re-laced, sealed and handed to the courier within 24 hours. Orders confirmed on Sunday or a public holiday dispatch the next working day.</p></div></section>
           <section class="clause" id="delivery"><span class="no">02 / Delivery</span><div class="c"><h2>Every city in Pakistan. One flat fee.</h2>
@@ -1566,8 +1961,9 @@
           <section class="clause" id="cod"><span class="no">03 / Cash on Delivery</span><div class="c"><h2>Pay when the box is in your hands.</h2><ul><li>No advance payment and no card needed. There is no COD surcharge.</li><li>Pay the rider the exact total shown on your confirmation.</li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li><li>Refusing a confirmed parcel without a reason costs us two courier legs. Repeat refusals lose COD access.</li></ul></div></section>
           <section class="clause" id="exchanges"><span class="no">04 / Exchanges</span><div class="c"><h2>Five days to swap the size.</h2><ul><li>Message us within 5 days of delivery with your order number.</li><li>The pair must be unworn outside, in the original box, with the Supply Unit seal still attached.</li><li>Send it back to us with the courier of your choice. Once it reaches us and passes the check, your new size is dispatched.</li><li>If the size you need is sold out, we refund the item price to your bank or wallet account.</li><li>Sale pairs cannot be exchanged for size. Defects within 30 days are still covered.</li></ul></div></section>
           <section class="clause" id="defects"><span class="no">05 / Defects</span><div class="c"><h2>30 days on stitching and sole.</h2><p>If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp. We replace the pair, or refund it if no replacement is available. Wear and tear, scuffs and misuse are not defects.</p></div></section>
-          <section class="clause" id="sizing"><span class="no">06 / Size guide</span><div class="c"><h2>Measure, then match.</h2>${sizeTable()}<p>Measure your foot heel to toe while standing. Pick the size whose length is equal to or just above your measurement.</p></div></section>
-          <section class="clause" id="faq"><span class="no">07 / FAQ</span><div class="c faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></section>
+          ${GIVE.on ? `<section class="clause" id="slice"><span class="no">06 / The slice</span><div class="c"><h2>A slice of every pair is not ours to keep.</h2><ul><li>At least ${GIVE.pct}% of the profit we make on every pair is set aside for people in need. It is a share of our profit, never added to your price.</li><li>Every quarter the slices are given together to one verified case of need, after our own checks.</li><li>Buyers vote in the bag for the cause. The most chosen cause receives the quarter's slice.</li><li>Date, amount and the case are published on <a class="link" href="${link('giving')}">Our giving</a> and on our social pages, and every buyer of the quarter is told where it went.</li></ul></div></section>` : ''}
+          <section class="clause" id="sizing"><span class="no">${GIVE.on ? '07' : '06'} / Size guide</span><div class="c"><h2>Measure, then match.</h2>${sizeTable()}<p>Measure your foot heel to toe while standing. Pick the size whose length is equal to or just above your measurement.</p></div></section>
+          <section class="clause" id="faq"><span class="no">${GIVE.on ? '08' : '07'} / FAQ</span><div class="c faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></section>
         </div></div></div>`;
     if (param) { const t = document.getElementById(param); if (t) setTimeout(() => t.scrollIntoView(), 30); }
   };
