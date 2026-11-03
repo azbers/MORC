@@ -103,7 +103,7 @@
     if (v.images && v.images.length) {
       const k = opts.mode === 'blueprint' ? 1 : opts.index || 0;
       const src = v.images[Math.min(k, v.images.length - 1)];
-      return `<img src="${esc(src)}" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
+      return `<img src="${esc(/(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=1000' : src)}" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
     }
     return SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, opts);
   }
@@ -1326,7 +1326,7 @@
   V.manifesto = function () {
     setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply chooses men\'s leather shoes and sneakers at workshops in Lahore, Sialkot and Kasur, checks every pair by hand, finishes it with its own hardware and gives at least 5% of profit every quarter.');
     const CH = [
-      { id: 'why', n: 'Why DAUR', k: 'bench', h: 'Real craft has a home. It is here.', big: 'Pakistan makes fine leather shoes. Too often the buyer pays for a label instead of the work.', p: [STORY, 'Daur means era. Naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.'] },
+      { id: 'why', n: 'Why DAUR', k: 'bench', h: 'Real craft has a home. It is here.', big: 'Pakistan makes fine leather shoes. DAUR gives that work a name you can trust.', p: [STORY, 'Daur means era. Naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.'] },
       { id: 'workshops', n: 'The workshops', k: 'workshop', h: 'Lahore, Sialkot and Kasur.', big: 'Every DAUR pair is chosen at a workshop in one of these three cities.', p: ['Punjab is one of the centres of Pakistan\'s leather footwear trade, with production mainly in and around Lahore and Sialkot. The country has around 800 tanneries, and a widely cited 2016 report counted more than 500,000 people working in its leather industry.', 'We do not own these workshops and we do not claim to make the shoes ourselves. Our work is to find the best of what they make, choose it pair by pair and stand behind it with our name.'], src: [['SOMO, Leather products from Pakistan, 2021', 'https://www.somo.nl/nl/wp-content/uploads/sites/2/2021/04/Leather-products-from-Pakistan-mapping-paper.pdf']] },
       { id: 'checks', n: 'Our checks', k: 'checked', h: 'Six checks before the seal.', big: 'If a pair is not right, it does not ship.', list: ANAT.map((a) => [a.t, a.d]) },
       { id: 'finish', n: 'The DAUR finish', k: 'tools', h: 'Branded, not labeled.', big: 'Our mark lives on the hardware, not across the shoe.', list: [['Matte cotton laces', 'Thick matte black woven cotton laces replace the factory laces.'], ['Engraved dubrae', 'A laser engraved DAUR metal tag on the bottom lace row.'], ['Supply Unit seal', 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.'], ['The box', 'A sturdy box, tissue wrap and a card that explains how your pair reached you.']] },
