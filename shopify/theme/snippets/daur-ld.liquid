@@ -40,12 +40,12 @@
   assign mail = settings.support_email | default: shop.email
 -%}
 {%- capture org -%}
-{"@type":"OnlineStore","@id":{{ org_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"width":1024,"height":1024},"image":{{ 'daur-share.jpg' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"email":{{ mail | json }},"telephone":{{ phone | prepend: '+' | json }},"address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressRegion":"Islamabad Capital Territory","addressCountry":"PK"},"areaServed":{"@type":"Country","name":"Pakistan"},"sameAs":{{ same | json }},"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ mail | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}
+{"@type":"OnlineStore","@id":{{ org_id | json }},"name":{{ shop.name | json }},"alternateName":["DAUR","دور سپلائی","Daur Supply"],"knowsLanguage":["en","ur"],"url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"width":1024,"height":1024},"image":{{ 'daur-share.jpg' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"email":{{ mail | json }},"telephone":{{ phone | prepend: '+' | json }},"address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressRegion":"Islamabad Capital Territory","addressCountry":"PK"},"areaServed":{"@type":"Country","name":"Pakistan"},"sameAs":{{ same | json }},"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ mail | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}
 {%- endcapture -%}
 {%- if template.name == 'index' -%}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{{ org }},
-{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"inLanguage":"en-PK","publisher":{"@id":{{ org_id | json }}}}]}
+{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"alternateName":["DAUR","دور سپلائی"],"url":{{ root | append: '/' | json }},"inLanguage":"en-PK","publisher":{"@id":{{ org_id | json }}}}]}
 </script>
 {%- elsif template.name == 'page' and page.handle != 'liked' and page.handle != 'track' and page.handle != 'alerts' and page.handle != 'runway' -%}
 {%- liquid

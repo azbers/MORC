@@ -43,6 +43,9 @@
     <h2>The collection</h2>
     <ul class="daur-results">{% for p in collections.all.products limit: 24 %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
     <p><a href="/pages/manifesto">Read our story</a>, <a href="/pages/contract">our promise on delivery and exchanges</a> and <a href="/pages/giving">how our giving works</a>.</p>
+    <h2 lang="ur" dir="rtl">دور سپلائی: پاکستان کا ہنر، ہاتھ سے چنا ہوا</h2>
+    <p lang="ur" dir="rtl">لاہور، سیالکوٹ اور قصور کی ورکشاپس سے مردانہ چمڑے کے جوتے، سنیکرز، چیلسی بوٹ اور کیژول جوتے۔ ہر جوڑا ہاتھ سے چیک کیا جاتا ہے۔ اپنے لیے، یا اپنے بیٹے، شوہر، والد، بھائی یا دوست کے لیے آرڈر کریں۔ پورے پاکستان میں کیش آن ڈیلیوری، اور تصدیق کے بعد 24 گھنٹے میں ڈسپیچ۔</p>
+    <p>Mardana chamre ke joote, sneakers aur chelsea boots. Poore Pakistan mein Cash on Delivery.</p>
   {%- when 'product' -%}
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {% for c in product.collections limit: 1 %}<a href="{{ c.url }}">{{ c.title }}</a> / {% endfor %}{{ product.title }}</nav>
     <h1>{{ product.title }}</h1>
@@ -50,6 +53,7 @@
     {%- assign shot = product.images | first -%}
     {%- if shot %}{{ shot | image_url: width: 900 | image_tag: loading: 'eager', alt: product.title }}{% endif %}
     <div class="rte">{{ product.description }}</div>
+    <p lang="ur" dir="rtl">مردانہ جوتے، <bdi dir="ltr">DAUR {{ product.title }}</bdi>۔ پاکستان میں قیمت <bdi dir="ltr">{{ product.price | money }}</bdi>۔ پورے پاکستان میں کیش آن ڈیلیوری۔</p>
     {%- for o in product.options_with_values -%}<p>{{ o.name }}: {{ o.values | join: ', ' }}</p>{%- endfor -%}
     <p>Cash on Delivery to every city in Pakistan. Dispatch within 24 hours of confirmation, delivery in {{ settings.delivery_days }}. Free delivery on {{ settings.free_delivery_pairs | default: 2 }} pairs, 5 day size exchange{% if product.compare_at_price > product.price %} does not apply to sale pairs; defects are covered for 30 days{% endif %}.</p>
   {%- when 'collection' -%}

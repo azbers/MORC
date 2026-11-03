@@ -103,7 +103,8 @@
     if (v.images && v.images.length) {
       const k = opts.mode === 'blueprint' ? 1 : opts.index || 0;
       const src = v.images[Math.min(k, v.images.length - 1)];
-      return `<img src="${esc(/(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=1000' : src)}" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
+      const cdn = /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src), sep = src.includes('?') ? '&' : '?';
+      return `<img class="pf" src="${esc(cdn ? src + sep + 'width=1000' : src)}" style="--ph:url('${esc(cdn ? src + sep + 'width=24' : src)}')" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
     }
     return SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, opts);
   }
@@ -187,19 +188,20 @@
       <clipPath id="${k}a"><rect x="0" y="0" width="96" height="60"/></clipPath><clipPath id="${k}b"><rect x="96" y="0" width="24" height="60"/></clipPath></defs>
       <g class="lf-body" clip-path="url(#${k}a)"><path d="${shape}" fill="url(#${k}c)"/><path d="M26 18 q8 -4 14 3 M48 13 q8 -4 14 3 M70 13 q8 -4 14 3" fill="none" stroke="#F0D3A6" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><rect class="lf-face" x="90" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
       <g class="lf-slice" clip-path="url(#${k}b)"><path d="${shape}" fill="url(#${k}c)"/><rect class="lf-face" x="96" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
+      <g class="lf-crumbs" fill="#C98A4B"><circle cx="94.5" cy="54" r="1.3"/><circle cx="97.5" cy="55" r="1"/><circle cx="96" cy="53.5" r=".8"/></g>
       <line class="lf-knife" x1="96" y1="-2" x2="96" y2="58" pathLength="1"/>
       ${label ? `<text class="lf-amt" x="113" y="2" text-anchor="end">${esc(label)}</text>` : ''}
     </svg>`;
   }
-  // plays the cut once, when the loaf first comes into view; a tap plays it again
+  // the knife keeps cutting, live, while a loaf is on screen: the slice comes away with its share, goes, and the loaf is whole again.
+  // Off screen it rests. With reduced motion the loaf simply shows the slice already cut. A tap starts the cut again.
   function cutWhenSeen(root) {
-    const els = $$('.loaf', root || document);
+    const els = $$('.loaf:not(.mini)', root || document);
     if (!els.length) return;
-    const play = (el) => { el.classList.remove('cut'); void el.getBoundingClientRect(); el.classList.add('cut'); };
-    if (!('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('cut')); return; }
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { setTimeout(() => play(e.target), 350); io.unobserve(e.target); } }), { threshold: 0.6 });
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach((e) => e.classList.add('cut')); return; }
+    const io = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('live', e.isIntersecting)), { threshold: 0.35 });
     els.forEach((e) => io.observe(e));
-    els.forEach((e) => { const b = e.closest('[data-recut]'); if (b) b.addEventListener('click', () => play(e)); });
+    els.forEach((e) => { const b = e.closest('[data-recut]'); if (b) b.addEventListener('click', () => { e.classList.toggle('live', false); void e.getBoundingClientRect(); e.classList.add('live'); }); });
   }
   function openSlice() {
     let m = document.getElementById('sliceSheet');
@@ -299,6 +301,7 @@
       <footer class="ftr"><div class="wrap">
         <div class="ftr-brand"><a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>
           <p>${ONE === 'Men' ? 'Men\'s leather shoes and sneakers, crafted in Pakistan and finished with the DAUR mark. Made to be worn every day, paid for on delivery.' : 'Leather shoes and sneakers, crafted in Pakistan and finished with the DAUR mark. Made to be worn every day, paid for on delivery.'}</p>
+          <p class="ur" lang="ur" dir="rtl">پاکستان میں بنے مردانہ چمڑے کے جوتے اور سنیکرز۔ پورے پاکستان میں کیش آن ڈیلیوری۔</p>
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
@@ -648,7 +651,7 @@
 
   V.home = function () {
     setMeta(ONE === 'Men' ? 'Men\'s Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply' : 'Leather Shoes & Sneakers Online in Pakistan | DAUR Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers, chelsea boots and casual shoes' : 'Leather shoes and sneakers') + ' from workshops in Lahore, Sialkot and Kasur, checked pair by pair by DAUR Supply. Cash on Delivery across Pakistan, dispatch within 24 hours, 5 day size exchange.', [
-      { '@context': 'https://schema.org', '@type': 'OnlineStore', name: 'DAUR Supply', alternateName: 'DAUR', url: C.domain, description: 'Pakistani footwear brand for men: leather shoes, sneakers and chelsea boots, chosen at workshops in Lahore, Sialkot and Kasur, checked by hand and delivered across Pakistan with Cash on Delivery.', areaServed: { '@type': 'Country', name: 'Pakistan' } }]);
+      { '@context': 'https://schema.org', '@type': 'OnlineStore', name: 'DAUR Supply', alternateName: ['DAUR', 'دور سپلائی', 'Daur Supply'], knowsLanguage: ['en', 'ur'], url: C.domain, description: 'Pakistani footwear brand for men: leather shoes, sneakers and chelsea boots, chosen at workshops in Lahore, Sialkot and Kasur, checked by hand and delivered across Pakistan with Cash on Delivery.', areaServed: { '@type': 'Country', name: 'Pakistan' } }]);
     const hero = prod('moc-runner-v1') || P[0], hv = hero.variants[0];
     const drop = P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 8);
     const lines = ONE ? CATS.map((c) => ({ key: c, ps: P.filter((p) => p.category === c) })) : C.audiences.map((a) => ({ key: a, ps: P.filter((p) => p.audience === a) }));
@@ -665,6 +668,7 @@
       <ul class="f-for-l">${FOR.map((x, i) => `<li class="rv"><a href="${link('shop', x.l)}"><span class="mono f-n">0${i + 1}</span><h3>${x.t}</h3><p>${x.d}</p><span class="link">${x.c}</span></a></li>`).join('')}</ul>
       <div class="f-gift rv"><span class="f-pi" aria-hidden="true">${ic('ruler')}</span><p><b>Not sure of his size?</b> Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size. If it does not fit, a full price pair can be exchanged within ${C.exchangeDays || 5} days, unworn with the seal on.</p>
         <a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I am buying a pair as a gift and need help with the size.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask us on WhatsApp</a></div>
+      <div class="f-ur rv"><h2 class="ur" lang="ur" dir="rtl">دور سپلائی: پاکستان کا ہنر، ہاتھ سے چنا ہوا</h2><p class="ur" lang="ur" dir="rtl">لاہور، سیالکوٹ اور قصور کی ورکشاپس سے مردانہ چمڑے کے جوتے، سنیکرز، چیلسی بوٹ اور کیژول جوتے۔ ہر جوڑا ہاتھ سے چیک کیا جاتا ہے۔ اپنے لیے، یا اپنے بیٹے، شوہر، والد، بھائی یا دوست کے لیے آرڈر کریں۔ پورے پاکستان میں کیش آن ڈیلیوری، اور تصدیق کے بعد 24 گھنٹے میں ڈسپیچ۔</p><p class="f-ur-r mono">Mardana chamre ke joote, sneakers aur chelsea boots. Poore Pakistan mein Cash on Delivery.</p></div>
     </div></section>
 
     <section class="sheet f-sec"><div class="wrap">
@@ -1034,18 +1038,20 @@
       const related = P.filter((x) => x.id !== p.id && x.audience === p.audience).sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 4);
       const recent = store.get('recent', []).filter((x) => x !== p.id).map(prod).filter(Boolean).slice(0, 4);
       app.innerHTML = `
-      <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb" style="padding-top:24px"><a href="${link('home')}">Home</a><span>/</span><a href="${link('shop', lineKey(p))}">${esc(lineName(lineOf(p)))}</a>${p.group ? `<span>/</span><span>${esc(p.group)}</span>` : ''}<span>/</span><span>${esc(p.name)}</span></nav>
+      <div class="wrap pdp-wrap">
       <div class="pdp">
         <div class="gallery">
-          <div class="gal-main stage ${views[view].grid ? 'grid-bg' : ''}" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span><span class="corner tl">${views[view].l}</span><span class="corner br">${String(view + 1).padStart(2, '0')} / ${String(views.length).padStart(2, '0')}</span><div class="zoomable" id="zoom">${views[view].h}</div>${views.length > 1 ? '<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span>' : ''}</div>
-          <div class="thumbs">${views.map((x, i) => `<button class="thumb${x.grid ? ' dk' : ''}" data-view="${i}" aria-pressed="${i === view}"><span aria-hidden="true">${x.h}</span><span class="sr-only">${x.l} view</span></button>`).join('')}</div>
+          <div class="gal-main stage" id="galMain"><span class="stage-badge">${esc(lineName(p.category))}</span>${onSale(v) ? priceTag(v) : ''}<span class="stage-glow" aria-hidden="true"></span><span class="stage-shadow" aria-hidden="true"></span>
+            <div class="gal-track" id="galTrack" role="region" tabindex="0" aria-label="Photos of ${esc(p.name)}${views.length > 1 ? `, ${views.length} in all. Swipe or use the arrow keys` : ''}">${views.map((x, i) => `<div class="gal-slide${x.grid ? ' grid-bg' : ''}" role="group" aria-label="${i + 1} of ${views.length}"><div class="zoomable">${i ? x.h : x.h.replace('loading="lazy"', 'fetchpriority="high"')}</div></div>`).join('')}</div>
+            ${views.length > 1 ? `<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span><div class="gal-dots">${views.map((x, i) => `<button class="gal-dot" type="button" data-view="${i}" aria-current="${i === view}" aria-label="Show photo ${i + 1} of ${views.length}"></button>`).join('')}</div>` : ''}</div>
         </div>
         <div class="buy">
           <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))}</span><h1>${esc(p.name)}</h1>
             <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : SELL.retailAnchor ? `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>` : ''}</div>
             ${perWear(v.price)}
             ${GIVE.on ? `<button class="slice-note" id="sliceB" type="button" aria-haspopup="dialog" data-recut>${loaf(GIVE.pct + '%')}<span class="sl-t"><b>A slice of this pair goes to someone in need.</b><span>At least ${GIVE.pct}% of our profit on it. Your price stays the same.</span></span></button>` : ''}
-            <p class="blurb">${esc(p.description)}</p></div>
+            <p class="blurb">${esc(p.description)}</p>
+            <p class="ur pdp-ur" lang="ur" dir="rtl">${{ Sneakers: 'مردانہ چمڑے کے سنیکرز', Leather: 'مردانہ چمڑے کے جوتے', Hybrids: 'مردانہ کیژول جوتے' }[p.category] || 'مردانہ جوتے'}، <bdi dir="ltr">DAUR ${esc(p.name)}</bdi>۔ پاکستان میں قیمت <bdi dir="ltr">${fmt(v.price)}</bdi>۔ پورے پاکستان میں کیش آن ڈیلیوری۔</p></div>
           <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg(window.DAUR_KICKS.kindOf(p), window.DAUR_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
           <div><div class="field-label strong"><span>Select size / EU ${size || ''}</span><button id="sgBtn">${ic('ruler')}Size guide</button></div>
             <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'data-out="1"'}><span class="sr-only">EU size </span>${s}${n && n <= C.lowStockAt ? `<small>${n} LEFT</small>` : ''}${n ? '' : '<small style="color:var(--dim)">SOLD OUT</small>'}</button>`; }).join('')}</div>
@@ -1076,27 +1082,29 @@
     function bind() {
       bindCards(app);
       hook('pdp', { p, v });
-      const g = $('#galMain'), z = $('#zoom');
-      // swap the photo in place, with a short slide in the direction of travel, instead of repainting the page
-      const show = (i, dir) => {
-        if (i === view) return;
-        view = (i + views.length) % views.length;
-        z.innerHTML = views[view].h;
-        g.classList.toggle('grid-bg', !!views[view].grid);
-        $('.corner.tl', g).textContent = views[view].l;
-        $('.corner.br', g).textContent = String(view + 1).padStart(2, '0') + ' / ' + String(views.length).padStart(2, '0');
-        $$('[data-view]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.view === view));
-        const k = z.firstElementChild;
-        if (k && k.animate) k.animate([{ opacity: 0, transform: `translateX(${(dir || 1) * 6}%)` }, { opacity: 1, transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      const g = $('#galMain'), tr = $('#galTrack'), dots = $$('.gal-dot', g);
+      const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const zoomOf = () => tr.children[view] && tr.children[view].firstElementChild;
+      const unzoom = () => { $$('.zoomable', tr).forEach((z) => { z.style.transform = ''; }); g.classList.remove('zooming'); };
+      // the lines follow the finger: each one grows as its photo slides in, live while swiping
+      const live = () => {
+        const f = tr.scrollLeft / Math.max(1, tr.clientWidth), n = Math.max(0, Math.min(views.length - 1, Math.round(f)));
+        dots.forEach((d, i) => d.style.setProperty('--a', Math.max(0, 1 - Math.abs(f - i)).toFixed(3)));
+        if (n !== view) { view = n; unzoom(); dots.forEach((d, i) => d.setAttribute('aria-current', i === view)); }
       };
-      $$('[data-view]').forEach((b) => b.addEventListener('click', () => show(+b.dataset.view, +b.dataset.view > view ? 1 : -1)));
+      let lf = 0;
+      tr.addEventListener('scroll', () => { if (!lf) lf = requestAnimationFrame(() => { lf = 0; live(); }); }, { passive: true });
+      if (view) tr.scrollLeft = view * tr.clientWidth; // a repaint (size, quantity) keeps the photo the shopper was looking at
+      live();
+      const show = (i) => { i = (i + views.length) % views.length; tr.scrollTo({ left: i * tr.clientWidth, behavior: calm ? 'auto' : 'smooth' }); };
+      dots.forEach((b) => b.addEventListener('click', () => show(+b.dataset.view)));
       // resting the mouse near the far left or right edge turns to the previous or next photo on its own
       let edge = 0, edgeT = 0;
       const setEdge = (d) => {
         if (d === edge) return;
         edge = d; clearTimeout(edgeT);
         g.classList.toggle('edge-l', d < 0); g.classList.toggle('edge-r', d > 0);
-        const step = (wait) => { edgeT = setTimeout(() => { if (!edge) return; show(view + edge, edge); step(1300); }, wait); };
+        const step = (wait) => { edgeT = setTimeout(() => { if (!edge) return; show(view + edge); step(1300); }, wait); };
         if (d) step(380);
       };
       g.addEventListener('pointermove', (e) => {
@@ -1104,12 +1112,12 @@
           const x = (e.clientX - g.getBoundingClientRect().left) / g.offsetWidth;
           const d = x < 0.14 ? -1 : x > 0.86 ? 1 : 0;
           setEdge(d);
-          if (d) { z.style.transform = ''; g.classList.remove('zooming'); return; }
+          if (d) { unzoom(); return; }
         }
       });
       g.addEventListener('pointerleave', () => setEdge(0));
-      g.addEventListener('pointermove', (e) => { if (edge) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
-      g.addEventListener('pointerleave', () => { z.style.transform = ''; g.classList.remove('zooming'); });
+      g.addEventListener('pointermove', (e) => { if (edge || e.pointerType !== 'mouse' || e.target.closest('.gal-dots')) return; const z = zoomOf(); if (!z) return; const r = g.getBoundingClientRect(); z.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; z.style.transform = 'scale(1.6)'; g.classList.add('zooming'); g.style.setProperty('--gx', (e.clientX - r.left) / r.width * 100 + '%'); g.style.setProperty('--gy', (e.clientY - r.top) / r.height * 100 + '%'); });
+      g.addEventListener('pointerleave', unzoom);
       $$('.vsw').forEach((b) => b.addEventListener('click', () => { v = variant(p, b.dataset.v); size = null; qty = 1; history.replaceState(null, '', SPA ? link('product', p.id + '~' + v.id) : '#' + p.id + '~' + v.id); paint(); }));
       $$('.buy .size').forEach((b) => b.addEventListener('click', () => {
         if (b.dataset.out) { size = null; soldOut(+b.dataset.s); return; }
