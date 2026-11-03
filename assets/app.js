@@ -150,7 +150,7 @@
   /* ---- selling: honest price framing, switched in Theme settings > Selling ----
      retailAnchor: the typical retail comparison; ladder: where a pair sits in the line (real prices of
      real pairs, dearest first); perWear: price per wear at this many days a week for a year (0 hides it). */
-  const SELL = Object.assign({ retailAnchor: true, ladder: true, perWear: 3 }, C.sell || {});
+  const SELL = Object.assign({ retailAnchor: false, ladder: true, perWear: 3 }, C.sell || {});
   const GIVE = Object.assign({ on: true, pct: 5, causes: ['School fees', 'Medical bills', 'Food rations'], quarter: null }, C.give || {});
   GIVE.causes = (GIVE.causes || []).map((x) => String(x).trim()).filter(Boolean).slice(0, 4);
   // calendar quarter, for example "October to December 2026"; the giving happens at its end
@@ -1289,7 +1289,7 @@
     return `<a class="line-card" href="${link('shop', l.key.toLowerCase())}" style="--n:${pairs.length}">
       <span class="lc-badge">${ps.length} style${ps.length === 1 ? '' : 's'}</span><span class="lc-no mono">${ONE ? 'Style' : 'Line'} 0${i + 1} / DAUR</span>
       <span class="lc-big" aria-hidden="true" style="--len:${(ONE ? l.key.replace('Hybrids', 'Casual') : a).length}">${esc(ONE ? l.key.replace('Hybrids', 'Casual') : a)}</span>
-      <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Crafted in Pakistan / DAUR sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em><s>${fmt(C.marketRetail)}+</s></span>` : ''}</span>`).join('')}</span>
+      <span class="lc-stage">${pairs.map(([p, v], k) => `<span class="lc-shoe s${k}"><span class="lc-art">${visual(p, v)}${k === 0 ? `<span class="lc-bp">${visual(p, v, { mode: 'blueprint' })}</span><span class="lc-seal">Crafted in Pakistan / DAUR sealed</span>` : ''}</span>${k < 3 ? `<span class="lc-tag"><b>${esc(p.name)}</b><em>${fmt(v.price)}</em>${SELL.retailAnchor ? `<s>${fmt(C.marketRetail)}+</s>` : ''}</span>` : ''}</span>`).join('')}</span>
       <span class="lc-foot"><span class="lc-t">${esc(a)}</span><span class="lc-line">${tag} From ${fmt(from)}.</span></span>
       <span class="lc-cta">Shop ${esc(a.toLowerCase())} ${ic('arrow')}</span>
     </a>`;

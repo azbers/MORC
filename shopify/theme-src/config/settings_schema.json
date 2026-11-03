@@ -153,8 +153,8 @@
         "type": "checkbox",
         "id": "retail_anchor",
         "label": "Show the typical retail comparison",
-        "default": true,
-        "info": "Shows the struck through Typical retail figure (set under Store details) on cards, product pages, the Runway and the bag. Pakistan's Competition Commission expects a struck through price to be a real price, so keep this on only if you can show that comparable pairs sell at that price."
+        "default": false,
+        "info": "Off by the owner's decision of 3 Nov 2026. When on, shows the struck through Typical retail figure (set under Store details) on cards, product pages, the Runway, the bag, the value flex card and stories. Pakistan's Competition Commission expects a struck through price to be a real price, so turn it on only if you can show that comparable pairs sell at that price."
       },
       {
         "type": "checkbox",
