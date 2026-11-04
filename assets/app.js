@@ -300,7 +300,7 @@
     document.body.insertAdjacentHTML('beforeend', `
       <footer class="ftr"><div class="wrap">
         <div class="ftr-brand"><a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>
-          <p>${ONE === 'Men' ? 'Men\'s leather shoes and sneakers, crafted in Pakistan and finished with the DAUR mark. Made to be worn every day, paid for on delivery.' : 'Leather shoes and sneakers, crafted in Pakistan and finished with the DAUR mark. Made to be worn every day, paid for on delivery.'}</p>
+          <p>Pakistani craft, under a Pakistani name. Naya daur.</p>
           <div class="ftr-social"><a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div></div>
         <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
         <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'delivery')}">Delivery and COD</a><a href="${link('contract', 'exchanges')}">Exchanges</a><a href="${link('contract', 'sizing')}">Size guide</a><a href="${link('track')}">Track order</a><a href="${link('contract', 'faq')}">FAQ</a></div>
@@ -640,15 +640,23 @@
   }
   const STORY = 'In the workshops of Lahore, Sialkot and Kasur, skilled hands make fine leather shoes every day. Too often that work leaves the bench without a name, and the buyer pays for a label instead. DAUR exists to change that. We visit the workshops, choose finished pairs at the bench, check every pair by hand, finish it with our own hardware and bring it to your door at an honest price.';
   const PILLARS = [
-    { i: 'pin', t: 'Local craft', d: 'Chosen at the bench in Lahore, Sialkot and Kasur. The money stays with Pakistani craftspeople.' },
-    { i: 'check', t: 'Checked by hand', d: 'Six checks on every pair, from the flex of the upper to the bond of the sole, before it earns the DAUR seal.' },
-    { i: 'tag', t: 'Honest price', d: 'You pay for the shoe, not for a label. Real prices only, and a sale price is always a price we really charged.' },
-    { i: 'spark', t: 'The slice', d: 'At least 5% of our profit, given every quarter to verified people in need, and published.' }
+    { i: 'pin', t: 'Our own hands.', d: 'Every pair is made by Pakistani craftsmen in Lahore, Sialkot and Kasur, and every order keeps their work going.' },
+    { i: 'check', t: 'We would wear it first.', d: 'If a pair is not good enough for our own feet, it never reaches yours.' },
+    { i: 'tag', t: 'Pay for the shoe, not the logo.', d: 'The price is the shoe. Nothing else is hiding in it, and a sale price is always one we really charged.' },
+    { i: 'spark', t: 'Every pair helps someone.', d: 'At least ' + GIVE.pct + '% of our profit reaches someone in need every quarter, and we publish every giving.' }
   ];
   const STEPS = [
     { k: 'workshop', i: 'pin', t: 'Chosen at the bench', d: 'We visit workshops in Lahore, Sialkot and Kasur and choose finished pairs where they are made.' },
     { k: 'checked', i: 'check', t: 'Checked by hand', d: 'Stitching, leather grain, sole bond and comfort, pair by pair. A pair that fails a check does not ship.' },
     { k: 'door', i: 'truck', t: 'At your door', d: 'Finished with our hardware, sealed, boxed and dispatched from Islamabad within 24 hours. You pay when it reaches you.' }
+  ];
+  // who a pair is for: most pairs are bought for someone else as often as for oneself
+  const FOR = [
+    { t: 'For yourself', d: 'Sneakers for every day, a derby for the wedding season, an easy slip on for Friday.', l: '', c: 'Shop all pairs' },
+    { t: 'For your son', d: 'His first day at a new job, college, the weekend. Clean leather that makes him stand a little taller.', l: 'sneakers', c: 'Shop sneakers' },
+    { t: 'For your husband', d: 'A full grain derby or a chelsea boot that looks right with a suit and with shalwar kameez.', l: 'leather', c: 'Shop leather shoes' },
+    { t: 'For your father', d: 'Soft leather that slips on easily for Eid, for the mosque and for the long family lunch after.', l: 'hybrids', c: 'Shop casual shoes' },
+    { t: 'For a brother or a friend', d: 'For the wedding he is in, or simply because. If the size is not right, a full price pair can be exchanged within ' + (C.exchangeDays || 5) + ' days.', l: '', c: 'Shop all pairs' }
   ];
   function lastGiving() {
     const rec = (Array.isArray(window.DAUR_GIVING) ? window.DAUR_GIVING : []).filter((r) => r && +r.amount > 0).sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -684,8 +692,15 @@
       }).join('')}</div>
     </div></section>
 
+    <section class="sheet f-sec f-for"><div class="wrap">
+      ${head('Who it is for', 'For every man in your life. Including you.', '', 'Your son, your husband, your father, your brother, your friend, or yourself. Choose the pair, we bring it to the door.')}
+      <ul class="f-for-l">${FOR.map((x, i) => `<li class="rv"><a href="${link('shop', x.l)}"><span class="mono f-n">0${i + 1}</span><h3>${x.t}</h3><p>${x.d}</p><span class="link">${x.c}</span></a></li>`).join('')}</ul>
+      <div class="f-gift rv"><span class="f-pi" aria-hidden="true">${ic('ruler')}</span><p><b>Not sure of his size?</b> Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size. If it does not fit, a full price pair can be exchanged within ${C.exchangeDays || 5} days, unworn with the seal on.</p>
+        <a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I am buying a pair as a gift and need help with the size.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask us on WhatsApp</a></div>
+    </div></section>
+
     <section class="sheet f-sec" id="drop"><div class="wrap">
-      ${head('The collection', 'Every pair, checked by hand.', `<a class="link" href="${link('shop')}">Filter and sort</a>`)}
+      ${head('The collection', 'Pick the pair for your next big day.', `<a class="link" href="${link('shop')}">Filter and sort</a>`)}
       <div class="grid" id="homeGrid">${drop.map((p, i) => card(p, i)).join('')}</div>
     </div></section>
 
@@ -697,7 +712,7 @@
     </div></section>
 
     <section class="sheet f-sec" id="anatomy"><div class="wrap">
-      ${head('The craft, up close', 'Every detail, earned.', '', 'Tap a point on the drawing. Every DAUR pair passes the same six checks before it earns our seal.')}
+      ${head('Why it feels different', 'You feel it before you see it.', '', 'Tap a point on the drawing. Every DAUR pair passes the same six checks before it earns our seal.')}
       <div class="anat"><div class="anat-fig"><div class="svgbox">${SHOE.render({ name: hero.name, colorway: hv.color, silhouette: hero.silhouette, palette: hv.palette }, { mode: 'blueprint' })}${ANAT.map((a, i) => `<button class="hs" style="left:${a.x}%;top:${a.y}%" data-hs="${i}" aria-pressed="${i === 0}" aria-label="${esc(a.t)}"><span>${i + 1}</span></button>`).join('')}</div></div>
         <div class="anat-list">${ANAT.map((a, i) => `<div class="anat-item ${i === 0 ? 'open' : ''}" data-ai="${i}"><button aria-expanded="${i === 0}"><span class="n">0${i + 1}</span><span class="t">${esc(a.t)}</span><span class="pm" aria-hidden="true">+</span></button><div class="d"><p>${esc(a.d)}</p></div></div>`).join('')}</div></div>
     </div></section>
@@ -712,21 +727,22 @@
 
     <div id="ext-stories"></div>
 
-    ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', img: 'guide', alt: 'A pair of brown leather dress shoes', b: [
-      ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We choose leather sneakers, formal shoes, chelsea boots and casual slip ons at workshops in Lahore, Sialkot and Kasur, check every pair by hand and finish it with our own hardware: matte cotton laces, an engraved metal lace tag and the Supply Unit seal.`],
-      ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirming your order, with a 5 day size exchange on unworn pairs.']],
-      l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]) })}
-
     <section class="sheet f-sec"><div class="wrap"><div class="signup closer">
       <h2>Your next pair, at your door.</h2>
       <div class="closer-r"><p>Pick your size tonight. We confirm by call or WhatsApp, dispatch within 24 hours and you pay the rider when the box is in your hands. Free delivery on ${C.freeDeliveryPairs} pairs.</p>
         <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I would like help choosing a pair.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask on WhatsApp</a></div></div>
-    </div></div></section>`;
+    </div></div></section>
+
+    ${guide({ e: 'DAUR Supply', h: (ONE === 'Men' ? 'Men\'s shoes' : 'Shoes') + ', crafted in Pakistan.', img: 'guide', alt: 'A pair of brown leather dress shoes', b: [
+      ['', `DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We choose leather sneakers, formal shoes, chelsea boots and casual slip ons at workshops in Lahore, Sialkot and Kasur, check every pair by hand and finish it with our own hardware: matte cotton laces, an engraved metal lace tag and the Supply Unit seal.`],
+      ['Delivered to your city', 'Order online and pay on delivery in Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. Dispatch within 24 hours of confirming your order, with a 5 day size exchange on unworn pairs.']],
+      l: lines.map((l) => [link('shop', l.key.toLowerCase()), { Sneakers: 'Sneakers & joggers', Leather: 'Leather & formal shoes', Hybrids: 'Casual shoes' }[l.key] || lineName(l.key)]) })}`;
     // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'} / Naya daur</span>
       <h1>Pakistan's craft,<br>chosen by hand.</h1>
-      <p>${fine ? 'Click a pair to choose your size. Drag or scroll sideways to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</p>
+      <p>Fine shoes are made in Pakistan every day. Too often they reach you under someone else's name. These carry ours.</p>
+      <small class="rw-hint mono">${fine ? 'Click a pair to choose your size. Drag or scroll to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</small>
       <div class="hero-cta"><a class="btn ghost" href="${link('shop')}">Shop all <span class="arr">&rarr;</span></a><a class="link" href="${link('manifesto')}">Our story</a></div>` });
     bindCards(app); bindAnat(app); cutWhenSeen(app); cycleTiles(app);
   };
@@ -862,14 +878,14 @@
     const set = P.filter((p) => (!pre.aud || p.audience === pre.aud) && (!pre.cat || p.category === pre.cat) && (!pre.sale || anySale(p)));
     const vs = set.flatMap((p) => p.variants.filter((v) => !pre.sale || onSale(v)).map((v) => [p, v]));
     const HERO = {
-      all: [ONE === 'Men' ? 'Drop 01 / every men\'s pair' : 'Drop 01 / every pair', 'Leather shoes and sneakers crafted in Pakistan, checked pair by pair and finished with the DAUR mark. Pay when it reaches you.'],
-      sneakers: ['Style 01 / Sneakers', 'Court lows, trainers and high tops in real leather. Clean from every angle, with soles bonded and pull tested before a pair is sealed.'],
-      leather: ['Style 02 / Leather shoes', 'Full grain derby shoes and waxed chelsea boots. The pairs you reach for when the day matters.'],
-      hybrids: ['Style 03 / Casual', 'Moc toe runners, slip ons and loafers. The ease of a sneaker with a sharper finish, all day long.'],
+      all: [ONE === 'Men' ? 'Drop 01 / every men\'s pair' : 'Drop 01 / every pair', 'Every pair made by Pakistani hands, for the days you will remember. Pay when it is in your hands.'],
+      sneakers: ['Style 01 / Sneakers', 'For long city days, late chai with friends and everything between.'],
+      leather: ['Style 02 / Leather shoes', 'For the day you stand up at a wedding, the first day of a new job, the photo that stays on the wall.'],
+      hybrids: ['Style 03 / Casual', 'Jummah, a family lunch, a long drive. One easy pair for all of it.'],
       men: ['Line 01 / Men', 'Leather shoes and sneakers made for the way you move.'],
       women: ['Line 02 / Women', 'Clean lines on a narrower last.'],
       kids: ['Line 03 / Kids', 'First steps in real leather, at a price that makes sense when they outgrow it in six months.'],
-      sale: ['Price cuts / live now', 'Real price cuts on real leather, while sizes last.'],
+      sale: ['Price cuts / live now', 'Same pairs, same checks, a lower price while sizes last.'],
       new: ['Just landed', 'The newest pairs to earn the DAUR seal.']
     };
     const hk = param && HERO[param] ? param : 'all';
@@ -1022,6 +1038,18 @@
   };
 
   /* ---- product ---- */
+  // the moment each pair is made for, taken from its own description; a pair not listed simply shows no line
+  const MADE_FOR = {
+    'moc-runner-v1': 'Every day of the week, from the office to Jummah.',
+    'phantom-trainer': 'Long city days and dark evenings.',
+    'grid-court-low': 'Everyday wear that goes with everything you own.',
+    'unit-derby-02': 'Tailoring and cargos alike, from the office to the wedding hall.',
+    'concrete-mid': 'The days you wear them hard.',
+    'volt-signal': 'The days you want to be seen.',
+    'ward-chelsea': 'Winter evenings, weddings and everything between.',
+    'sector-slip': 'From the office to the dinner table.',
+    'saddle-tassel': 'Easy summer days, no socks required.'
+  };
   V.product = function (param) {
     const [pid, vid] = (param || '').split('~');
     const p = prod(pid) || (SPA && pid ? null : P[0]);
@@ -1053,7 +1081,7 @@
             <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : SELL.retailAnchor ? `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>` : ''}</div>
             ${perWear(v.price)}
             ${GIVE.on ? `<button class="slice-note" id="sliceB" type="button" aria-haspopup="dialog" data-recut>${loaf(GIVE.pct + '%')}<span class="sl-t"><b>A slice of this pair goes to someone in need.</b><span>At least ${GIVE.pct}% of our profit on it. Your price stays the same.</span></span></button>` : ''}
-            <p class="blurb">${esc(p.description)}</p></div>
+            <p class="blurb">${esc(p.description)}</p>${MADE_FOR[p.id] ? `<p class="made-for"><b>Made for:</b> ${esc(MADE_FOR[p.id])}</p>` : ''}</div>
           <div><div class="field-label"><span>Colour / ${esc(v.color)}</span><span>${p.variants.length} option${p.variants.length > 1 ? 's' : ''}</span></div><div class="vpick2">${p.variants.map((x) => `<button class="vsw" data-v="${x.id}" aria-pressed="${x.id === v.id}" aria-label="${esc(x.color)}" style="--c:${esc(x.hex || '#777')}"><span class="vsw-i">${window.DAUR_KICKS ? window.DAUR_KICKS.svg(window.DAUR_KICKS.kindOf(p), window.DAUR_KICKS.colorsFor(x.hex || '#777')) : ''}</span><span class="vsw-l">${esc(x.color)}</span>${stockOf(x) ? '' : '<span class="vsw-out">Sold out</span>'}</button>`).join('')}</div></div>
           <div><div class="field-label strong"><span>Select size / EU ${size || ''}</span><button id="sgBtn">${ic('ruler')}Size guide</button></div>
             <div class="sizes">${p.sizes.map((s) => { const n = st[s] || 0; return `<button class="size" data-s="${s}" aria-pressed="${size == s}" ${n ? '' : 'data-out="1"'} aria-label="EU ${s}${n ? '' : ', sold out'}">${s}${n && n <= C.lowStockAt ? `<small>${n} LEFT</small>` : ''}${n ? '' : '<small style="color:var(--dim)">SOLD OUT</small>'}</button>`; }).join('')}</div>
@@ -1062,19 +1090,18 @@
             <button class="btn volt pill-add" id="add">${ic('bag')}<span>${size ? 'Add to bag, ' + fmt(v.price * qty) : 'Select a size'}</span></button>
             <button class="btn ghost block" id="buyNow">Buy now, pay on delivery</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
-          <ul class="trust"><li>Dispatch in 24 hours</li><li>5 day size exchange</li><li>Free delivery on 2 pairs</li><li>Cash on Delivery</li></ul>
           <div id="ext-rvcard"></div>
-          <div class="specs"><h2 class="specs-h">Specs</h2><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div>
-          <div class="ship-est"><div>${ic('box')}<span class="k">Dispatch</span><span class="v">Within 24 hours</span></div><div>${ic('pin')}<span class="k">Delivery to</span><span class="v">All of Pakistan</span></div><div>${ic('truck')}<span class="k">Arrives in</span><span class="v">${C.delivery.days}</span></div></div>
+          <ul class="trust one"><li>Cash on Delivery</li><li>Dispatch in 24 hours</li><li>${esc(C.delivery.days)} to all of Pakistan</li><li>Free delivery on ${C.freeDeliveryPairs} pairs</li><li>${C.exchangeDays || 5} day size exchange</li></ul>
           <div class="acc">
-            <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>Laser engraved DAUR dubrae on the bottom lace row</li><li>Matte black rubber Supply Unit seal</li><li>Grid tissue wrap and the manifest card</li><li>Heavy matte black corrugated box</li></ul></div></details>
+            <details><summary>What it is made of</summary><div class="in specs"><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div></details>
+            <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>The engraved DAUR lace tag on the bottom lace row</li><li>The Supply Unit seal on the top eyelet</li><li>A shoe box for delivery</li></ul></div></details>
             <details><summary>Delivery, COD and exchanges</summary><div class="in"><p>Cash on Delivery across Pakistan. We confirm every order by call or WhatsApp before dispatch. Free delivery on two pairs or more. Five day size exchange on unworn full price pairs with the seal attached. Sale pairs are final for size; defects are covered for 30 days on every pair. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
           </div>
           ${ladder(p, v)}
         </div>
       </div></div>
-      <section class="f-pillars f-pillars-pdp" aria-label="Why DAUR"><div class="wrap"><ul>${PILLARS.map((x) => `<li><span class="f-pi" aria-hidden="true">${ic(x.i)}</span><div><h2>${x.t}</h2><p>${x.d}</p></div></li>`).join('')}</ul></div></section>
       <div id="ext-reviews"></div>
+      <section class="f-pillars f-pillars-pdp" aria-label="Why DAUR"><div class="wrap"><ul>${PILLARS.map((x) => `<li><span class="f-pi" aria-hidden="true">${ic(x.i)}</span><div><h2>${x.t}</h2><p>${x.d}</p></div></li>`).join('')}</ul></div></section>
       ${related.length ? `<section class="sheet x"><div class="wrap">${head('Complete the rotation', ONE ? 'More pairs like this.' : 'More from ' + esc(p.audience) + '.')}<div class="grid">${related.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
       ${recent.length ? `<section class="sheet x"><div class="wrap">${head('Recently viewed', 'Still thinking?')}<div class="grid">${recent.map((x, i) => card(x, i)).join('')}</div></div></section>` : ''}
       <div class="sticky-buy" id="stickyBuy"><div><b>${esc(p.name)}</b><span class="mono mute">${esc(v.color)} / ${fmt(v.price)}</span></div><button class="btn volt" id="stickyAdd">${size ? 'Add EU ' + size : 'Choose size'}</button></div>`;
@@ -1355,9 +1382,9 @@
     setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply chooses men\'s leather shoes and sneakers at workshops in Lahore, Sialkot and Kasur, checks every pair by hand, finishes it with its own hardware and gives at least 5% of profit every quarter.');
     const CH = [
       { id: 'why', n: 'Why DAUR', k: 'bench', h: 'Real craft has a home. It is here.', big: 'Pakistan makes fine leather shoes. DAUR gives that work a name you can trust.', p: [STORY, 'Daur means era. Naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.'] },
-      { id: 'workshops', n: 'The workshops', k: 'workshop', h: 'Lahore, Sialkot and Kasur.', big: 'Every DAUR pair is chosen at a workshop in one of these three cities.', p: ['Punjab is one of the centres of Pakistan\'s leather footwear trade, with production mainly in and around Lahore and Sialkot. The country has around 800 tanneries, and a widely cited 2016 report counted more than 500,000 people working in its leather industry.', 'We do not own these workshops and we do not claim to make the shoes ourselves. Our work is to find the best of what they make, choose it pair by pair and stand behind it with our name.'], src: [['SOMO, Leather products from Pakistan, 2021', 'https://www.somo.nl/nl/wp-content/uploads/sites/2/2021/04/Leather-products-from-Pakistan-mapping-paper.pdf']] },
+      { id: 'workshops', n: 'The workshops', k: 'workshop', h: 'Lahore, Sialkot and Kasur.', big: 'Behind every DAUR pair is a bench, a pair of hands and years of practice that no logo ever mentions.', p: ['Every DAUR pair is chosen at a workshop in one of these three cities. We do not own these workshops and we do not claim to make the shoes ourselves. Our work is to find the best of what they make, choose it pair by pair and stand behind it with our name.'], note: 'Punjab is one of the centres of Pakistan\'s leather footwear trade, with production mainly in and around Lahore and Sialkot. The country has around 800 tanneries, and a widely cited 2016 report counted more than 500,000 people working in its leather industry.', src: [['SOMO, Leather products from Pakistan, 2021', 'https://www.somo.nl/nl/wp-content/uploads/sites/2/2021/04/Leather-products-from-Pakistan-mapping-paper.pdf']] },
       { id: 'checks', n: 'Our checks', k: 'checked', h: 'Six checks before the seal.', big: 'If a pair is not right, it does not ship.', list: ANAT.map((a) => [a.t, a.d]) },
-      { id: 'finish', n: 'The DAUR finish', k: 'tools', h: 'Branded, not labeled.', big: 'Our mark lives on the hardware, not across the shoe.', list: [['Matte cotton laces', 'Thick matte black woven cotton laces replace the factory laces.'], ['Engraved dubrae', 'A laser engraved DAUR metal tag on the bottom lace row.'], ['Supply Unit seal', 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.'], ['The box', 'A sturdy box, tissue wrap and a card that explains how your pair reached you.']] },
+      { id: 'finish', n: 'The DAUR finish', k: 'tools', h: 'Branded, not labeled.', big: 'Our mark lives on the hardware, not across the shoe.', list: [['Matte cotton laces', 'Thick matte black woven cotton laces replace the factory laces.'], ['Engraved dubrae', 'A laser engraved DAUR metal tag on the bottom lace row.'], ['Supply Unit seal', 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.'], ['The box', 'Every pair travels to you in its own shoe box.']] },
       { id: 'slice', n: 'The slice', k: '', h: 'A share that is not ours to keep.', big: 'At least ' + GIVE.pct + '% of our profit, never of your price, given every quarter.', p: ['We pool the slice from every pair and give it at the end of each quarter to verified cases of need that we check ourselves. Every giving is published on Our giving, with its date and amount. We never show the faces of the people we help.'], quote: true, cta: ['giving', 'How our giving works'] },
       { id: 'claims', n: 'What we do not claim', k: '', h: 'Honest, even about our limits.', big: 'Trust is built on what we can show, so we leave out what we cannot.', list: [['Not handmade by DAUR', 'Skilled workshops make the pairs. We choose, check and finish them.'], ['No green claims', 'We do not call our shoes carbon free or eco friendly. We cannot prove it yet.'], ['No invented discounts', 'A crossed out price is always a price we really charged.'], ['Leather stated per pair', 'Each product page lists the upper, lining and sole as the workshop confirms them.']] }
     ];
@@ -1370,6 +1397,7 @@
           ${(c.p || []).map((t) => `<p>${esc(t)}</p>`).join('')}
           ${c.list ? `<dl class="f-list">${c.list.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
           ${c.quote ? '<blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>' : ''}
+          ${c.note ? `<p class="f-ch-src-note">${esc(c.note)}</p>` : ''}
           ${c.src ? `<p class="f-src mono">Source: ${c.src.map(([t, u]) => `<a class="link" href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(', ')}</p>` : ''}
           ${c.cta ? `<a class="link" href="${link(c.cta[0])}">${c.cta[1]}</a>` : ''}</div>
       </div></section>`).join('')}
@@ -1406,17 +1434,9 @@
       </div>
     </div></section>
 
-    <section class="sheet x"><div class="wrap">
-      ${head('In plain words', 'DAUR, at a glance.')}
-      <div class="ctable">${facts.map(([k, v, d], i) => `<div class="crow rv"><span class="k">${ic(['spark', 'bolt', 'box', 'pin', 'truck', 'cash', 'swap'][i])}${k}</span><span class="v">${v}</span><span class="d">${d}</span></div>`).join('')}</div>
-    </div></section>
-
-    <div class="marquee" aria-hidden="true"><div class="marquee-track">${[0, 1].map(() => '<span>Lahore</span><i>+</i><span class="o">Sialkot</span><i>+</i><span>Kasur</span><i>+</i><span class="o">Dispatched from Islamabad</span><i>+</i><span>Naya daur</span><i>+</i>').join('')}</div></div>
-
-    <section class="sheet x"><div class="wrap">
-      ${head('Bench to doorstep', 'How a pair reaches you.')}
-      <div class="van-road" aria-hidden="true"><div class="van">${VAN}</div></div>
-      <div class="steps">${[['Chosen', 'We visit workshops in Lahore, Sialkot and Kasur and choose finished pairs at the bench.'], ['Checked', 'Stitching, leather grain, sole bond and comfort, checked pair by pair.'], ['Re-laced', 'Thick matte black cotton laces go in, with the engraved DAUR lace tag.'], ['Sealed', 'The DAUR seal is clipped to the top eyelet and the pair is boxed.'], ['Delivered', 'We confirm with you, dispatch from Islamabad within 24 hours, and you pay on delivery.']].map(([t, d], i) => `<div class="step"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+    <section class="sheet x"><div class="wrap ab-plain rv">
+      <span class="eyebrow">In one line</span>
+      <p class="ab-line">${facts.map(([k, v, d]) => d).join(' ')}</p>
     </div></section>
 
     <section class="sheet x"><div class="wrap"><div class="signup closer">
@@ -1446,7 +1466,7 @@
         <label class="full"><span>Message</span><textarea name="contact[body]" rows="4" required placeholder="Order number, pair, size or question"></textarea></label>
         <button class="btn volt" type="submit">Send message <span class="arr">&rarr;</span></button>
       </form>` : '';
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Contact</span><h1>Talk to<br>a person.</h1><p class="aside">Dispatched from Islamabad, delivered across Pakistan. We are an online store, so every order starts here or on WhatsApp.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Contact</span><h1>Talk to<br>a person.</h1><p class="aside">Dispatched from Islamabad, delivered across Pakistan. Ask us anything, from his size to the right pair for a wedding.</p></div></section>
 
     <section class="sheet x"><div class="wrap ct-grid">
       <div class="ct-list">${ch.map(([i, k, v, d, href, main], n) => `<a class="ct-card rv${main ? ' main' : ''}" href="${href}"${/^https/.test(href) ? ' target="_blank" rel="noopener"' : ''} style="--d:${n * 0.06}s"><span class="ct-ic">${ic(i)}</span><span class="ct-k mono">${k}</span><b class="ct-v">${esc(v)}</b><span class="ct-d">${d}</span><span class="ct-go" aria-hidden="true">${ic('arrow')}</span></a>`).join('')}</div>
@@ -1876,7 +1896,7 @@
         ${o.ends ? `<span class="of-end mono" data-ends="${esc(o.ends)}">${untilText(o.ends)}</span>` : ''}
         <i class="of-notch l" aria-hidden="true"></i><i class="of-notch r" aria-hidden="true"></i>
       </article>`;
-    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">Offers / ${count} live</span><h1>Offers.</h1><p class="aside">Every live code and deal in one place, straight from our store.${best ? ` Pairs up to ${best}% off.` : ''} Cash on Delivery on every order.</p></div>
+    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">Offers / ${count} live</span><h1>Save on the price.<br>Never on the pair.</h1><p class="aside">The checks, the seal and the slice stay the same on every discounted pair. Every live code and deal is here, straight from our store.${best ? ` Pairs up to ${best}% off.` : ''} Cash on Delivery on every order.</p></div>
       <div class="of-float" aria-hidden="true">${['%', 'Rs', '%', 'Rs', '%'].map((t, i) => `<span style="--i:${i}">${t}</span>`).join('')}</div></section>
 
     <section class="sheet x"><div class="wrap">
@@ -2040,7 +2060,7 @@
       ...(GIVE.on ? [['Where does the 5% go?', 'At least ' + GIVE.pct + '% of the profit we make on every pair is set aside, never added to your price. Every quarter we give it to one verified case of need, chosen by the votes of that quarter\'s buyers, and publish the record on the Our giving page.']] : []),
       ['How do I use a coupon code?', 'Enter it in the bag or at checkout. One saving applies per order: free delivery or your code, whichever saves you more. Gift offers are added on top.']
     ];
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our promise</span><h1>What every pair promises.</h1><p class="aside">Printed on the manifest card in every box. If we break a line, we make it right.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Our promise</span><h1>What every pair promises.</h1><p class="aside">If we break any line on this page, message us. We make it right.</p></div></section>
       <div class="wrap"><div class="terms">
         <nav><a href="#dispatch" data-jump="dispatch">01 Dispatch</a><a href="#delivery" data-jump="delivery">02 Delivery</a><a href="#cod" data-jump="cod">03 Cash on Delivery</a><a href="#exchanges" data-jump="exchanges">04 Exchanges</a><a href="#defects" data-jump="defects">05 Defects</a>${GIVE.on ? '<a href="#slice" data-jump="slice">06 The slice</a>' : ''}<a href="#sizing" data-jump="sizing">${GIVE.on ? '07' : '06'} Size guide</a><a href="#faq" data-jump="faq">${GIVE.on ? '08' : '07'} FAQ</a></nav>
         <div class="body">
