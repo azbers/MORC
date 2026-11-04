@@ -2440,3 +2440,31 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 .trk-main { border-color: var(--signal); }
 @media (max-width: 900px) { .trk-g { grid-template-columns: 1fr; } .trk-steps { grid-template-columns: 1fr 1fr; } }
 .trk .f-ic input { padding-left: 16px; width: 100%; }
+
+/* ---- strong brand pass (2026-11-04): who it is for, gift size help, hero hint ---- */
+.f-for-l { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.f-for-l a { height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; gap: 8px; padding: 20px 18px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--ink-2); transition: border-color .25s, transform .35s var(--ease); }
+.f-for-l a:hover { border-color: var(--signal); transform: translateY(-2px); }
+.f-for-l .f-n { color: var(--signal); font-size: 10.5px; letter-spacing: .14em; }
+.f-for-l h3 { font: 600 18px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
+.f-for-l p { font: 400 14px/1.55 var(--body); color: var(--text-2); margin: 0; }
+.f-for-l .link { justify-self: start; margin-top: 6px; }
+.f-gift { margin-top: 16px; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 18px 20px; border: 1px dashed var(--line-2); border-radius: 16px; }
+.f-gift p { margin: 0; font: 400 14px/1.55 var(--body); color: var(--text-2); }
+.f-gift p b { color: var(--text); }
+.f-gift .btn { white-space: nowrap; }
+@media (max-width: 1100px) { .f-for-l { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .f-for-l { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 78%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; margin-inline: calc(var(--gutter-l, 16px) * -1); padding-inline: var(--gutter-l, 16px); scroll-padding-inline: var(--gutter-l, 16px); scrollbar-width: none; }
+  .f-for-l::-webkit-scrollbar { display: none; }
+  .f-for-l li { scroll-snap-align: start; }
+  .f-gift { grid-template-columns: 44px minmax(0, 1fr); }
+  .f-gift .btn { grid-column: 1 / -1; justify-self: start; }
+}
+.rw-home .rw-head .rw-hint { font-size: 11px; letter-spacing: .06em; color: var(--mute); margin-top: -2px; }
+.made-for { margin: 10px 0 0; font-size: 14px; color: var(--text-2); }
+.made-for b { color: var(--text); font-weight: 600; }
+.pdp .trust.one { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.f-ch-src-note { font-size: 12px; color: var(--mute); }
+.ab-plain { max-width: 820px; }
+.ab-line { font-size: 14px; line-height: 1.65; color: var(--text-2); margin: 8px 0 0; }
