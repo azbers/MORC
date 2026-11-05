@@ -16,6 +16,7 @@ window.DAUR_CONFIG = {
   marketRetail: {{ settings.market_retail | default: 12000 }},
   freeDeliveryPairs: {{ settings.free_delivery_pairs | default: 2 }},
   delivery: { fee: {{ settings.delivery_fee | default: 0 }}, days: {{ settings.delivery_days | default: '' | json }} },
+  advance: { on: {% if settings.advance_on == false %}false{% else %}true{% endif %}, code: {{ settings.advance_code | default: '' | strip | upcase | json }}, deposit: {{ settings.advance_deposit | default: 500 }}, required: {% if settings.advance_required == false %}false{% else %}true{% endif %}, tiers: {{ settings.advance_tiers | default: '3000:500, 8000:1000, 15000:1500' | json }}, free: {{ settings.advance_free | default: 'all' | json }} },
   coupons: {},
   audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
@@ -39,6 +40,12 @@ window.DAUR_STATUSES = [
 {%- endfor -%}
 {%- endcapture -%}
 window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
+{%- comment -%} Related reading on the home and gifts pages: the newest Journal guides {%- endcomment -%}
+window.DAUR_JOURNAL = [
+{%- for a in blogs['journal'].articles limit: 6 -%}
+  { "title": {{ a.title | json }}, "url": {{ a.url | json }}, "text": {{ a.excerpt_or_content | strip_html | strip_newlines | truncate: 150 | json }}, "image": {% if a.image %}{{ a.image | image_url: width: 900 | json }}{% else %}""{% endif %} }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+];
 {%- comment -%} Offers (Content > Metaobjects > Offer): the Offers page lists the ones switched on; anything past its end time is left out here and again in the browser {%- endcomment -%}
 {%- capture offers -%}
 {%- assign now_s = 'now' | date: '%s' | plus: 0 -%}

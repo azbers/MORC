@@ -95,9 +95,24 @@
    and the plain copy comes back on its own if the script never runs. */
 html:not(.drawn) body:not([data-page="page"]) #app > .daur-plain { visibility: hidden; animation: daurShow 0s 6s forwards; }
 @keyframes daurShow { to { visibility: visible; } }
-html:not(.drawn) body:not([data-page="page"]) #app::after { content: "DAUR"; position: fixed; inset: 0; display: grid; place-items: center; font: 700 clamp(44px, 12vw, 96px)/1 'Space Grotesk', system-ui, sans-serif; letter-spacing: -.05em; font-style: italic; color: rgba(42, 28, 20, .14); opacity: 0; animation: daurMark 1.6s .45s ease-in-out infinite alternate, daurHide 0s 6s forwards; pointer-events: none; }
-@keyframes daurMark { from { opacity: 0; } to { opacity: 1; } }
-@keyframes daurHide { to { visibility: hidden; } }
+/* the loading screen: a sneaker running on a track, white page, black ink. Gone the moment the page is drawn, or after 6 s at most */
+.daur-load { position: fixed; inset: 0; z-index: 200; display: grid; place-content: center; justify-items: center; gap: 14px; background: #fff; color: #111; transition: opacity .35s ease, visibility 0s .35s; animation: daurHide 0s 6s forwards; }
+html.drawn .daur-load { opacity: 0; visibility: hidden; pointer-events: none; }
+html[data-theme="dark"] .daur-load { background: #0B0B0B; color: #F2F2F2; }
+.dl-svg { width: min(220px, 56vw); height: auto; overflow: visible; }
+.dl-shoe { animation: dlRun .42s ease-in-out infinite alternate; transform-origin: 118px 86px; }
+.dl-speed path { animation: dlZip .6s linear infinite; }
+.dl-speed path:nth-child(2) { animation-delay: .2s; } .dl-speed path:nth-child(3) { animation-delay: .4s; }
+.dl-dust circle { animation: dlDust .6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.dl-dust circle:nth-child(2) { animation-delay: .15s; } .dl-dust circle:nth-child(3) { animation-delay: .3s; }
+.dl-track { animation: dlTrack .5s linear infinite; }
+.dl-word { font: 700 15px/1 'Space Grotesk', system-ui, sans-serif; letter-spacing: .32em; text-indent: .32em; font-style: italic; }
+@keyframes dlRun { from { transform: translateY(0) rotate(-1.5deg); } to { transform: translateY(-7px) rotate(2deg); } }
+@keyframes dlZip { from { transform: translateX(18px); opacity: 0; } 30% { opacity: 1; } to { transform: translateX(-22px); opacity: 0; } }
+@keyframes dlDust { from { transform: translate(0, 0) scale(1); opacity: .7; } to { transform: translate(-16px, -6px) scale(.2); opacity: 0; } }
+@keyframes dlTrack { to { stroke-dashoffset: 24; } }
+@keyframes daurHide { to { visibility: hidden; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dl-shoe, .dl-speed path, .dl-dust circle, .dl-track { animation: none; } }
 /* Shopify's own policy pages (/policies/...) follow the page style */
 .shopify-policy__container { max-width: 860px !important; margin: 0 !important; padding: 0 !important; }
 .shopify-policy__title { text-align: left !important; border-bottom: 1px solid var(--line, rgba(0,0,0,.12)); margin-bottom: 28px; }

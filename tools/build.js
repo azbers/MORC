@@ -33,6 +33,7 @@ const PAGES = {
   runway: ['runway.html', 'DAUR Supply', 'The Runway now lives on the DAUR Supply home page.'],
   giving: ['giving.html', 'Our Giving: At Least 5% of Profit to People in Need | DAUR Supply', 'On every DAUR Supply pair we set aside at least 5% of our profit, never added to your price, and given every quarter to verified cases of need in Pakistan.'],
   offers: ['offers.html', 'Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.'],
+  gifts: ['gifts.html', 'Gifts for Men: Leather Shoes and Sneakers | DAUR Supply', 'Gift guide for the men in your life: leather shoes, sneakers and casual pairs, with help choosing his size and Cash on Delivery across Pakistan.'],
   notfound: ['404.html', 'Page not found | DAUR Supply', 'This address does not lead to a page on DAUR Supply. Search the collection or go to the shop.'],
   admin: ['admin.html', 'Supply Control | DAUR Supply', 'Store admin.']
 };

@@ -85,7 +85,7 @@
   window.DAUR_PRODUCTS = (S.raw || []).filter((r) => r.variants.length).map(toProduct);
 
   /* ---------- links ---------- */
-  const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies', about: 'about', contact: 'contact', offers: 'offers', runway: 'runway', giving: 'giving' };
+  const PAGES = { manifesto: 'manifesto', contract: 'contract', track: 'track', wishlist: 'liked', list: 'alerts', feed: 'feed', policies: 'policies', about: 'about', contact: 'contact', offers: 'offers', runway: 'runway', giving: 'giving', gifts: 'gifts' };
   // a line or style with a collection of its own links to that collection, so each has an address search engines can list
   const COLL = { men: 'men', women: 'women', kids: 'kids', sale: 'sale', sneakers: 'sneakers', leather: 'leather-shoes', hybrids: 'casual' };
   const has = new Set(S.collections || []);
@@ -101,19 +101,41 @@
     return base + '/';
   };
 
-  /* ---------- checkout: the bag goes into the Shopify cart, then to Shopify checkout ---------- */
-  async function checkout() {
+  /* ---------- checkout: the bag goes into the Shopify cart, with its code, then to Shopify checkout ----------
+     The code is put on the Shopify cart itself (cart/update.js, discount), so checkout opens with it already
+     applied and the buyer never types it twice. The same step checks a code the moment it is entered in the bag. */
+  const J = { 'Content-Type': 'application/json', Accept: 'application/json' };
+  async function syncCart(code) {
     const A = window.DAUR_API;
     const items = A.cart.map((l) => { const p = A.prod(l.pid); const v = p && A.variant(p, l.vid); return v && v.sid && v.sid[l.size] ? { id: v.sid[l.size], quantity: l.qty } : null; }).filter(Boolean);
-    if (!items.length) { location.href = S.link('cart'); return; }
-    A.toast('Opening secure checkout');
+    if (!items.length) return { empty: true };
+    await fetch(base + '/cart/clear.js', { method: 'POST', headers: { Accept: 'application/json' } });
+    const r = await fetch(base + '/cart/add.js', { method: 'POST', headers: J, body: JSON.stringify({ items }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); return { error: e.description || 'A size in your bag just sold out. Please check the bag.' }; }
+    // the buyer's vote for this quarter's charity slice goes on the order as "Slice cause"
+    const vote = window.DAUR_SLICE_VOTE ? window.DAUR_SLICE_VOTE() : '';
+    const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: { 'Slice cause': vote }, discount: code || '' }) });
+    return u.ok ? u.json() : {};
+  }
+  // checks a code against the real Shopify cart: is it known, does it apply to these pairs, and what it saves
+  S.checkCode = async function (code) {
     try {
-      await fetch(base + '/cart/clear.js', { method: 'POST', headers: { Accept: 'application/json' } });
-      const r = await fetch(base + '/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ items }) });
-      if (!r.ok) { const e = await r.json().catch(() => ({})); A.toast(e.description || 'A size in your bag just sold out. Please check the bag.'); return; }
-      // the buyer's vote for this quarter's charity slice goes on the order as "Slice cause"
-      const vote = window.DAUR_SLICE_VOTE ? window.DAUR_SLICE_VOTE() : '';
-      await fetch(base + '/cart/update.js', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ attributes: { 'Slice cause': vote } }) }).catch(() => {});
+      const cart = await syncCart(code);
+      if (cart.empty) return { pending: true };
+      if (cart.error) return { error: cart.error };
+      const dc = (cart.discount_codes || []).find((d) => String(d.code).toUpperCase() === String(code).toUpperCase());
+      return { found: !!dc, applicable: !!(dc && dc.applicable), saving: Math.round((+cart.total_discount || 0) / 100) };
+    } catch (e) { return { pending: true }; }
+  };
+  async function checkout() {
+    const A = window.DAUR_API;
+    if (!A.cart.length) { location.href = S.link('cart'); return; }
+    A.toast(A.coupon ? 'Opening secure checkout with ' + A.coupon : 'Opening secure checkout');
+    try {
+      const cart = await syncCart(A.coupon);
+      if (cart.empty) { location.href = S.link('cart'); return; }
+      if (cart.error) { A.toast(cart.error); return; }
+      // the code is already on the cart; the discount link is a second guarantee for older checkouts
       const code = A.coupon;
       location.href = code ? base + '/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent(base + '/checkout') : base + '/checkout';
     } catch (e) { A.toast('Checkout could not open. Please try again.'); }

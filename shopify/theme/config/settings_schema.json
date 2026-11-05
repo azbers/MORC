@@ -69,7 +69,51 @@
         "type": "text",
         "id": "delivery_days",
         "label": "Delivery time shown",
-        "default": "2 to 6 working days"
+        "default": "2 to 5 days"
+      },
+      {
+        "type": "checkbox",
+        "id": "advance_on",
+        "label": "Free delivery on advance payment or a Care deposit",
+        "info": "Shows the offer in the top bar, the grey strip, policies and FAQ. Keep the free delivery code below active in Discounts.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "advance_code",
+        "label": "Free delivery code for advance payment",
+        "default": "DAURCARE"
+      },
+      {
+        "type": "number",
+        "id": "advance_deposit",
+        "label": "Smallest Care deposit (Rs.)",
+        "default": 500
+      },
+      {
+        "type": "checkbox",
+        "id": "advance_required",
+        "label": "Every order sends a Care deposit first (Cash on Delivery is off)",
+        "info": "Turn Cash on Delivery off in Settings > Payments as well.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "advance_tiers",
+        "label": "Care deposit by order total",
+        "info": "Order total up to : deposit, separated by commas. Above the last total the full amount is paid first.",
+        "default": "3000:500, 8000:1000, 15000:1500"
+      },
+      {
+        "type": "select",
+        "id": "advance_free",
+        "label": "Free delivery when every order sends a deposit",
+        "options": [
+          { "value": "all", "label": "Free on every order" },
+          { "value": "full", "label": "Free on full advance payment only" },
+          { "value": "none", "label": "Normal delivery fee" }
+        ],
+        "default": "all"
       },
       {
         "type": "number",
