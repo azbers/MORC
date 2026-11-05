@@ -232,7 +232,7 @@
   // the D symbol of the identity (brand/daur-symbol.svg)
   const DMARK = '<svg class="dm" viewBox="-55 20 234 160" fill="currentColor" aria-hidden="true"><g transform="skewX(-14)"><path d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></svg>';
   // ایک نیا دور (Aik naya daur): the second slogan, set as a gold calligraphy lockup that writes itself in from the right
-  const urLock = (cls) => `<div class="ur-lock ${cls || ''}"><span class="ur-gold" lang="ur" dir="rtl">ایک نیا دور</span><span class="ur-cap"><i aria-hidden="true"></i>Aik naya daur<b>A new era</b><i aria-hidden="true"></i></span></div>`;
+  const urLock = (cls) => `<div class="ur-lock ${cls || ''}"><span class="ur-cap"><i aria-hidden="true"></i><span class="ur-a">Aik naya daur</span><b>A new era</b><i aria-hidden="true"></i></span></div>`;
   // the empty bag: a paper bag with a pair drawn on it, the laces rising out of the top to become its handles
   const BAG_ART = `<svg class="bag-art" viewBox="0 0 220 300" aria-hidden="true" focusable="false"><g class="ba-sway">
     <path class="ba-lace" pathLength="1" d="M97 154 C 90 128 66 92 74 56 C 82 16 138 16 146 56 C 154 92 130 128 123 154"/>
@@ -340,7 +340,7 @@
   function notices() {
     const A = C.advance || {}, ex = C.exchangeDays || 5;
     const list = (C.announce ? [{ t: C.announce, d: '', l: '' }] : []);
-    if (A.on && A.required) list.push({ t: A.free === 'all' ? 'Free delivery on every order' : 'Small Care deposit, the rest on delivery', d: 'Every order starts with a ' + A.care + ' by bank transfer: ' + A.tierText() + ' The rest is paid to the rider. ' + A.freeText(), l: link('policies', 'advance'), c: 'How it works' });
+    if (A.on && A.required) list.push({ t: A.free === 'all' ? 'Free delivery on every order' : 'Reserve your pair with a small Care deposit', d: 'Your size is reserved with a small ' + A.care + ' by bank transfer: ' + A.tierText() + ' It counts toward your total, and the rest is paid when the box is in your hands. ' + A.freeText(), l: link('policies', 'advance'), c: 'How it works' });
     else if (A.on) list.push({ t: 'Free delivery when you pay in advance', d: 'Pay the full amount in advance, or a ' + A.care + ' of ' + fmt(A.deposit) + ' or more, and delivery is free to any city in Pakistan. The deposit comes off what you pay the rider.' + (A.code ? ' Enter code ' + A.code + ' at checkout and send us your payment receipt on WhatsApp.' : ''), l: link('policies', 'advance'), c: 'How it works' });
     if (C.delivery.days) list.push({ t: 'Delivered in ' + C.delivery.days, d: 'We dispatch within 24 hours of confirming your order. Delivery then takes ' + C.delivery.days + ' in most cities; remote areas and public holidays can take longer.', l: link('policies', 'shipping'), c: 'Shipping policy' });
     try { liveOffers().filter((o) => o.code).forEach((o) => list.push({ t: 'Code ' + o.code + ': ' + o.title, d: o.details || '', l: link('offers'), c: 'See all offers' })); } catch (e) { /* no offers */ }
@@ -392,7 +392,7 @@
             <p class="f2-line">Same local craft. Zero retail markup.</p>
             ${urLock('ul-ftr')}
           </div>
-          <div class="f2-help"><h2>Not sure about the size?</h2><p>Message us before you order. A real person answers, and helps you choose right the first time.</p>
+          <div class="f2-help"><h2>Your size, right the first time.</h2><p>Message us before you order. A real person answers and helps you choose your perfect fit.</p>
             <a class="f2-wa" href="${waChat('Assalam o Alaikum DAUR Supply, I need help choosing my size.')}" target="_blank" rel="noopener">${ic('whatsapp')}<span>Chat on WhatsApp</span></a></div>
         </div></div>
         <div class="f2-links"><div class="wrap">
@@ -799,9 +799,10 @@
 
     <section class="x-sec"><div class="wrap">
       <h2 class="x-h">Choose your style</h2>
-      <div class="x-doors">${doors.map((d) => { const vs = d.ps.flatMap((p) => p.variants.slice(0, 2).map((v) => [p, v])).slice(0, 6); return `<a class="x-door f-cyc rv" href="${d.h}">
-        <span class="x-door-m">${vs.length ? vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v, { defer: j > 0, alt: j ? '' : null, sizes: '(min-width: 900px) 25vw, 50vw' })}</span>`).join('') : d.k && simg(d.k) ? photo(d.k, '', { sizes: '50vw' }) : ''}</span>
-        <span class="x-door-t">${esc(d.t)}</span>${d.s ? `<span class="x-door-s">${esc(d.s)}</span>` : ''}<span class="x-chip">Shop</span></a>`; }).join('')}</div>
+      <div class="xd-grid">${doors.map((d, k) => { const vs = d.ps.flatMap((p) => p.variants.slice(0, 2).map((v) => [p, v])).slice(0, 6); const n = d.ps.length; return `<a class="xd f-cyc rv xd-${k}" href="${d.h}">
+        <span class="xd-m">${vs.length ? vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v, { defer: j > 0, alt: j ? '' : null, sizes: '(min-width: 900px) 25vw, 50vw' })}</span>`).join('') : ''}</span>
+        <span class="xd-b"><span class="xd-n">${n} ${n === 1 ? 'style' : 'styles'}</span><span class="xd-t">${esc(d.t)}</span>${d.s ? `<span class="xd-p">${d.s.replace(/^From /, 'From <b>').replace(/^Up to /, 'Up to <b>')}</b></span>` : ''}</span>
+        <span class="xd-go" aria-hidden="true">${ic('arrow')}</span></a>`; }).join('')}</div>
     </div></section>
 
     ${giftBlock()}
@@ -1303,11 +1304,11 @@
             <button class="btn ghost block" id="buyNow">${C.advance.required ? 'Buy now' : 'Buy now, pay on delivery'}</button></div>
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
           <div id="ext-rvcard"></div>
-          <ul class="trust one">${C.advance.deposits() ? `<li>Small ${esc(C.advance.care)}, the rest on delivery</li>` : '<li>Cash on Delivery</li>'}<li>Dispatch in 24 hours</li><li>${esc(C.delivery.days)} to all of Pakistan</li>${C.advance.freeAll() ? '<li>Free delivery on every order</li>' : `<li>Free delivery on ${C.freeDeliveryPairs} pairs</li>${C.advance.on ? '<li>Free delivery with advance payment</li>' : ''}`}<li>${C.exchangeDays || 5} day size exchange</li></ul>
+          <ul class="trust one">${C.advance.deposits() ? `<li>Reserve with a small ${esc(C.advance.care)}</li>` : '<li>Cash on Delivery</li>'}<li>Dispatch in 24 hours</li><li>${esc(C.delivery.days)} to all of Pakistan</li>${C.advance.freeAll() ? '<li>Free delivery on every order</li>' : `<li>Free delivery on ${C.freeDeliveryPairs} pairs</li>${C.advance.on ? '<li>Free delivery with advance payment</li>' : ''}`}<li>${C.exchangeDays || 5} day size exchange</li></ul>
           <div class="acc">
             <details><summary>What it is made of</summary><div class="in specs"><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div></details>
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>The engraved DAUR lace tag on the bottom lace row</li><li>The Supply Unit seal on the top eyelet</li><li>A shoe box for delivery</li></ul></div></details>
-            <details><summary>${C.advance.required ? 'Delivery, payment and exchanges' : 'Delivery, COD and exchanges'}</summary><div class="in"><p>${C.advance.deposits() ? `A small ${esc(C.advance.care)} by bank transfer secures your order, and the rest is paid on delivery. ${esc(C.advance.freeText())}` : 'Cash on Delivery across Pakistan. Free delivery on two pairs or more.'} We confirm every order by call or WhatsApp before dispatch. Five day size exchange on unworn full price pairs with the seal attached. Sale pairs are final for size; defects are covered for 30 days on every pair. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
+            <details><summary>${C.advance.required ? 'Delivery, payment and exchanges' : 'Delivery, COD and exchanges'}</summary><div class="in"><p>${C.advance.deposits() ? `A small ${esc(C.advance.care)} reserves your pair and counts toward your total. The rest is paid when it is in your hands. ${esc(C.advance.freeText())}` : 'Cash on Delivery across Pakistan. Free delivery on two pairs or more.'} We confirm every order by call or WhatsApp before dispatch. Five day size exchange on unworn full price pairs with the seal attached. Sale prices are final for size, and every pair is covered for defects for 30 days. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
           </div>
           ${ladder(p, v)}
         </div>
@@ -1422,9 +1423,9 @@
   // the Care deposit for this exact bag: what is sent first by bank transfer, and what is left for the rider
   function careBox(t) {
     const A = C.advance, due = gift.on ? t.total : A.due(t.total), rest = t.total - due;
-    return `<div class="care-box"><div class="sum-row"><span><b>${gift.on ? 'Gift, paid in full now' : esc(A.care) + ' to send now'}</b></span><span><b>${fmt(due)}</b></span></div>
-      <div class="sum-row"><span>${rest ? 'Pay the rider on delivery' : 'Nothing to pay on delivery'}</span><span>${fmt(rest)}</span></div>
-      <p class="form-note">${gift.on ? 'Gift orders are paid in full by bank transfer after you place the order, so the person receiving it never pays at the door. Refunded in full if you cancel before dispatch.' : rest ? 'Send the ' + esc(A.care) + ' by bank transfer after you place the order. It comes off your total, and it is refunded in full if you cancel before dispatch.' : 'Orders above ' + fmt(A.fullAbove) + ' are paid in full by bank transfer before dispatch.'} We dispatch once your payment reaches us.</p>
+    return `<div class="care-box"><div class="sum-row"><span><b>${gift.on ? 'Gift, paid in full now' : 'Reserve with your ' + esc(A.care)}</b></span><span><b>${fmt(due)}</b></span></div>
+      <div class="sum-row"><span>${rest ? 'The rest, when it reaches you' : 'Nothing to pay at your door'}</span><span>${fmt(rest)}</span></div>
+      <p class="form-note">${gift.on ? 'Gift orders are paid in full by bank transfer after you place the order, so the person receiving it never pays at the door. Refunded in full if you cancel before dispatch.' : rest ? 'Send it by bank transfer after you place the order. It counts toward your total and comes back to you in full if you change your mind before dispatch.' : 'Orders above ' + fmt(A.fullAbove) + ' are settled in full by bank transfer, so nothing is asked at your door.'} Your pair ships the moment it reaches us.</p>
       <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
   }
   function giftBox() {
@@ -1494,7 +1495,7 @@
           <div class="f"><label for="note">Note for the rider (optional)</label><textarea id="note" name="note" placeholder="Best time to call, gate number"></textarea></div>
         </fieldset>
         <fieldset><legend><span>03</span> Payment</legend>
-          <div class="pay-opt"><span class="radio" aria-hidden="true"></span><div>${C.advance.deposits() ? `<b>Bank transfer: ${esc(C.advance.care)} ${fmt(C.advance.due(totals().total))}</b><p>Send it after you place the order, then pay the rest to the rider.</p>` : `<b>Cash on Delivery</b><p>Pay the rider in cash when the box arrives. Keep exact change ready if you can.</p>`}</div><span class="mono volt">Selected</span></div>
+          <div class="pay-opt"><span class="radio" aria-hidden="true"></span><div>${C.advance.deposits() ? `<b>Bank transfer: ${esc(C.advance.care)} ${fmt(C.advance.due(totals().total))}</b><p>Send it after you place the order and your pair is reserved. The rest is paid when it reaches you.</p>` : `<b>Cash on Delivery</b><p>Pay the rider in cash when the box arrives. Keep exact change ready if you can.</p>`}</div><span class="mono volt">Selected</span></div>
           <div class="note-box">By placing this order you agree to <a class="link" href="${link('contract')}">our promise and terms</a>. Refusing a confirmed COD parcel without reason may remove COD for future orders.</div>
         </fieldset>
       </div>
@@ -1635,28 +1636,37 @@
   V.manifesto = function () {
     setMeta('Our Story | Men\'s Shoes Crafted in Pakistan | DAUR Supply', 'DAUR Supply chooses men\'s leather shoes and sneakers at workshops in Lahore, Sialkot and Kasur, checks every pair by hand, finishes it with its own hardware and gives at least 5% of profit every quarter.');
     const CH = [
-      { id: 'why', n: 'Why DAUR', k: 'bench', h: 'Real craft has a home. It is here.', big: 'Pakistan makes fine leather shoes. DAUR gives that work a name you can trust.', p: [STORY, 'Daur means era. Naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.'] },
-      { id: 'workshops', n: 'The workshops', k: 'workshop', h: 'Lahore, Sialkot and Kasur.', big: 'Behind every DAUR pair is a bench, a pair of hands and years of practice that no logo ever mentions.', p: ['Every DAUR pair is chosen at a workshop in one of these three cities. We do not own these workshops and we do not claim to make the shoes ourselves. Our work is to find the best of what they make, choose it pair by pair and stand behind it with our name.'], note: 'Punjab is one of the centres of Pakistan\'s leather footwear trade, with production mainly in and around Lahore and Sialkot. The country has around 800 tanneries, and a widely cited 2016 report counted more than 500,000 people working in its leather industry.', src: [['SOMO, Leather products from Pakistan, 2021', 'https://www.somo.nl/nl/wp-content/uploads/sites/2/2021/04/Leather-products-from-Pakistan-mapping-paper.pdf']] },
-      { id: 'checks', n: 'Our checks', k: 'checked', h: 'Six checks before the seal.', big: 'If a pair is not right, it does not ship.', list: ANAT.map((a) => [a.t, a.d]) },
-      { id: 'finish', n: 'The DAUR finish', k: 'tools', h: 'Branded, not labeled.', big: 'Our mark lives on the hardware, not across the shoe.', list: [['Matte cotton laces', 'Thick matte black woven cotton laces replace the factory laces.'], ['Engraved dubrae', 'A laser engraved DAUR metal tag on the bottom lace row.'], ['Supply Unit seal', 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.'], ['The box', 'Every pair travels to you in its own shoe box.']] },
-      { id: 'slice', n: 'The slice', k: '', h: 'A share that is not ours to keep.', big: 'At least ' + GIVE.pct + '% of our profit, never of your price, given every quarter.', p: ['We pool the slice from every pair and give it at the end of each quarter to verified cases of need that we check ourselves. Every giving is published on Our giving, with its date and amount. We never show the faces of the people we help.'], quote: true, cta: ['giving', 'How our giving works'] },
-      { id: 'claims', n: 'What we do not claim', k: '', h: 'Honest, even about our limits.', big: 'Trust is built on what we can show, so we leave out what we cannot.', list: [['Not handmade by DAUR', 'Skilled workshops make the pairs. We choose, check and finish them.'], ['No green claims', 'We do not call our shoes carbon free or eco friendly. We cannot prove it yet.'], ['No invented discounts', 'A crossed out price is always a price we really charged.'], ['Leather stated per pair', 'Each product page lists the upper, lining and sole as the workshop confirms them.']] }
+      { id: 'why', n: 'Why DAUR', k: 'bench', i: 'spark', h: 'Real craft has a home. It is here.', big: 'Pakistan makes fine leather shoes. DAUR gives that work a name you can wear with pride.', p: [STORY, 'Daur means era. Aik naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.'] },
+      { id: 'workshops', n: 'The workshops', k: 'workshop', i: 'pin', h: 'Lahore, Sialkot and Kasur.', big: 'Behind every DAUR pair is a bench, a pair of skilled hands and years of practice.', p: ['Every DAUR pair is made by craftsmen in one of these three cities. Our part is to find the very best of what they make, choose it pair by pair and stand behind it with our name.'], note: 'Punjab is one of the centres of Pakistan\'s leather footwear trade, with production mainly in and around Lahore and Sialkot. The country has around 800 tanneries, and a widely cited 2016 report counted more than 500,000 people working in its leather industry.', src: [['SOMO, Leather products from Pakistan, 2021', 'https://www.somo.nl/nl/wp-content/uploads/sites/2/2021/04/Leather-products-from-Pakistan-mapping-paper.pdf']] },
+      { id: 'checks', n: 'Our checks', k: 'checked', i: 'check', h: 'Six checks before the seal.', big: 'Only a pair we would wear ourselves reaches you.', list: ANAT.map((a) => [a.t, a.d]) },
+      { id: 'finish', n: 'The DAUR finish', k: 'tools', i: 'tag', h: 'Branded, not labeled.', big: 'Our mark lives on the hardware. The leather does the talking.', list: [['Matte cotton laces', 'Thick matte black woven cotton laces replace the factory laces.'], ['Engraved dubrae', 'A laser engraved DAUR metal tag on the bottom lace row.'], ['Supply Unit seal', 'A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.'], ['The box', 'Every pair travels to you in its own shoe box.']] },
+      { id: 'slice', n: 'The slice', k: '', i: 'spark', h: 'A share that is not ours to keep.', big: 'At least ' + GIVE.pct + '% of our profit, never of your price, given every quarter.', p: ['Every pair you buy adds to the slice. We pool it and give it at the end of each quarter to verified cases of need that we check ourselves. Every giving is published on Our giving, with its date and amount, and the people we help keep their dignity.'], quote: true, cta: ['giving', 'How our giving works'] },
+      { id: 'word', n: 'Our word', k: '', i: 'shield', h: 'Straight talk, always.', big: 'You deserve to know exactly what you are buying, so we say it plainly.', list: [['Chosen, checked and finished by us', 'Skilled workshops make every pair. We choose the best, check each one by hand and finish it with our own hardware.'], ['Real prices only', 'A crossed out price is always a price we really charged.'], ['Materials on every pair', 'Each product page lists the upper, lining and sole as the workshop confirms them.'], ['A person, not a bot', 'Every order is confirmed with you by call or WhatsApp before it ships.']] }
     ];
-    app.innerHTML = `<section class="f-hero f-hero-s${simg('bench') ? ' has-photo' : ''}"><div class="f-hero-media" aria-hidden="true">${photo('bench', '', { eager: true })}</div>
-      <div class="wrap f-hero-in"><span class="f-kicker">Our story</span><h1>Naya daur.</h1><p>Pakistan's craft, chosen by hand and brought to your door.</p></div></section>
-      <nav class="f-chips wrap" aria-label="Chapters">${CH.map((c, i) => `<a href="#${c.id}" data-jump="${c.id}"><span class="mono">0${i + 1}</span>${c.n}</a>`).join('')}</nav>
-      ${CH.map((c, i) => `<section class="sheet f-sec f-ch${i % 2 ? ' rev' : ''}" id="${c.id}"><div class="wrap f-ch-g">
-        <div class="f-ch-m rv">${c.k && simg(c.k) ? photo(c.k, '', { sizes: '(max-width: 860px) 100vw, 50vw' }) : c.id === 'slice' ? `<span class="f-ch-loaf" data-recut>${loaf(GIVE.pct + '%', 'big')}</span>` : `<span class="f-ch-n">0${i + 1}</span>`}</div>
-        <div class="f-ch-t rv"><span class="eyebrow">0${i + 1} / ${c.n}</span><h2>${c.h}</h2><p class="big">${c.big}</p>
+    const pairAt = (i) => { const p = P[(i * 2 + 1) % P.length]; return p ? visual(p, p.variants[0], { sizes: '(min-width: 860px) 45vw, 100vw' }) : ''; };
+    const fan = P.slice(0, 3);
+    app.innerHTML = `<section class="st-hero"><div class="wrap st-hero-g">
+        <div class="st-hero-t"><span class="st-k">Our story</span><h1>Naya daur.</h1>${urLock('ul-story')}
+          <p>Pakistan's finest craft, chosen by hand and brought to your door under a name of its own.</p>
+          <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="#why" data-jump="why">Read the story</a></div></div>
+        <div class="st-hero-m" aria-hidden="true">${simg('bench') ? photo('bench', '', { eager: true, sizes: '(min-width: 860px) 50vw, 100vw' }) : fan.map((p, k) => `<span class="st-fan f${k}">${visual(p, p.variants[0], k ? { alt: '' } : { eager: true })}</span>`).join('')}</div>
+      </div></section>
+      <nav class="st-nav wrap" aria-label="Chapters">${CH.map((c, i) => `<a href="#${c.id}" data-jump="${c.id}"><b>0${i + 1}</b>${c.n}</a>`).join('')}</nav>
+      ${CH.map((c, i) => `<section class="st-ch${i % 2 ? ' alt' : ''}" id="${c.id}"><div class="wrap st-ch-g${i % 2 ? ' rev' : ''}">
+        <div class="st-ch-m rv">${c.k && simg(c.k) ? photo(c.k, '', { sizes: '(max-width: 860px) 100vw, 50vw' }) : c.id === 'slice' ? `<span class="st-loaf" data-recut>${loaf(GIVE.pct + '%', 'big')}</span>` : `<span class="st-pair">${pairAt(i)}</span>`}<span class="st-no" aria-hidden="true">0${i + 1}</span></div>
+        <div class="st-ch-t rv"><span class="st-k">${ic(c.i)}${c.n}</span><h2>${c.h}</h2><p class="st-big">${c.big}</p>
           ${(c.p || []).map((t) => `<p>${esc(t)}</p>`).join('')}
-          ${c.list ? `<dl class="f-list">${c.list.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
-          ${c.quote ? '<blockquote class="hadith"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>' : ''}
-          ${c.note ? `<p class="f-ch-src-note">${esc(c.note)}</p>` : ''}
-          ${c.src ? `<p class="f-src mono">Source: ${c.src.map(([t, u]) => `<a class="link" href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(', ')}</p>` : ''}
-          ${c.cta ? `<a class="link" href="${link(c.cta[0])}">${c.cta[1]}</a>` : ''}</div>
+          ${c.list ? `<div class="st-list">${c.list.map(([x, y]) => `<div class="st-li"><span class="st-li-i">${ic('check')}</span><div><b>${esc(x)}</b><p>${esc(y)}</p></div></div>`).join('')}</div>` : ''}
+          ${c.quote ? '<blockquote class="st-q"><p>&ldquo;Charity does not decrease wealth.&rdquo;</p><cite>Prophet Muhammad &#xFDFA;, Sahih Muslim 2588</cite></blockquote>' : ''}
+          ${c.note ? `<p class="st-note">${esc(c.note)}</p>` : ''}
+          ${c.src ? `<p class="st-src">Source: ${c.src.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(', ')}</p>` : ''}
+          ${c.cta ? `<a class="u-link" href="${link(c.cta[0])}">${c.cta[1]}</a>` : ''}</div>
       </div></section>`).join('')}
-      <section class="sheet f-sec"><div class="wrap"><div class="signup closer"><h2>Welcome to the new daur.</h2><div class="closer-r"><p>Every pair is checked by hand, paid for on delivery and covered by a 5 day size exchange.</p><div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('contract')}">Our promise</a></div></div></div></div></section>
-      <div class="wrap credits"><span class="mono mute">Credits</span><p>Footer shoe icons from <a class="link" href="https://www.flaticon.com" target="_blank" rel="noopener">Flaticon</a>, recoloured for DAUR Supply.</p></div>`;
+      <section class="st-close"><div class="wrap"><div class="st-close-c">
+        ${urLock('ul-close')}<h2>Welcome to the new daur.</h2>
+        <p>Every pair checked by hand, ${C.advance.freeAll() ? 'delivered free across Pakistan' : 'delivered across Pakistan'} and backed by a ${C.exchangeDays || 5} day size exchange.</p>
+        <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Shop the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('contract')}">Our promise</a></div>
+      </div></div></section>`;
     cutWhenSeen(app);
   };
 
@@ -1667,14 +1677,14 @@
     const hero = prod('moc-runner-v1') || P[0], hv = hero.variants[0];
     const facts = [
       ['The brand', 'DAUR Supply', 'A Pakistani footwear brand for men, sold online at daursupply.com.'],
-      ['The name', '<bdi lang="ur">دور</bdi>, an era', 'From the Urdu word for an era. Our line is Naya daur.'],
+      ['The name', 'Daur, an era', 'From the Urdu word for an era. Our line is Aik naya daur, a new era.'],
       ['What we sell', 'Men\'s shoes', 'Leather sneakers, formal shoes, chelsea boots and casual slip ons, crafted in Pakistan.'],
       ['Made in', 'Lahore, Sialkot, Kasur', 'Finished pairs chosen from the workshops, then checked by hand, pair by pair.'],
       ['Dispatch', 'Islamabad', 'Every order leaves from Islamabad within 24 hours of confirmation.'],
       C.advance.deposits() ? ['Payment', 'Deposit, then delivery', 'A small ' + C.advance.care + ' by bank transfer, the rest on delivery. ' + C.advance.freeText()] : ['Payment', 'Cash on Delivery', 'To every city in Pakistan our couriers reach. Free delivery on ' + C.freeDeliveryPairs + ' pairs.'],
       ['After delivery', '5 day exchange', 'Size exchange within 5 days, defects covered for 30 days.']
     ];
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">About DAUR Supply</span><h1>Named for<br>an era.</h1><p class="aside"><bdi lang="ur">دور</bdi> means an era in Urdu. Ours is Naya daur: Pakistani craft, worn with pride.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">About DAUR Supply</span><h1>Named for<br>an era.</h1><p class="aside">Daur means an era in Urdu. Ours is Aik naya daur, a new era: Pakistani craft, worn with pride.</p></div></section>
 
     <section class="sheet x ab-intro" id="hero"><div class="hero-light"></div><div class="wrap ab-grid">
       <div class="ab-copy rv"><span class="eyebrow">Who we are</span>
@@ -2143,7 +2153,7 @@
     const applyHref = (code) => SHOP ? '/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent('/collections/all') : link('shop');
     const card = (o, i) => `<article class="of-card rv${o.code ? ' has-code' : ''}" style="--d:${i * 0.08}s">
         <span class="of-ic">${ic(o.code ? 'ticket' : 'truck')}</span>
-        <span class="of-k mono">${o.code ? 'Code' : 'Automatic'}${o.min ? ' / min ' + fmt(o.min) : ''}</span>
+        <span class="of-k">${o.code ? 'Code' : 'Automatic'}${o.min ? `<em>On ${fmt(o.min)} or more</em>` : ''}</span>
         <h3>${esc(o.title)}</h3>
         ${o.details ? `<p>${esc(o.details)}</p>` : ''}
         ${o.code ? `<div class="of-code"><button class="of-copy" type="button" data-code="${esc(o.code)}" aria-label="Copy code ${esc(o.code)}"><b>${esc(o.code)}</b><span class="mono">Copy</span></button>
@@ -2151,7 +2161,7 @@
         ${o.ends ? `<span class="of-end mono" data-ends="${esc(o.ends)}">${untilText(o.ends)}</span>` : ''}
         <i class="of-notch l" aria-hidden="true"></i><i class="of-notch r" aria-hidden="true"></i>
       </article>`;
-    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">Offers / ${count} live</span><h1>Save on the price.<br>Never on the pair.</h1><p class="aside">The checks, the seal and the slice stay the same on every discounted pair. Every live code and deal is here, straight from our store.${best ? ` Pairs up to ${best}% off.` : ''} ${C.advance.required ? (C.advance.freeAll() ? 'Free delivery on every order.' : '') : 'Cash on Delivery on every order.'}</p></div>
+    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">${count} live</span><h1>Smart men<br>pay less.</h1><p class="aside">Every live code and deal, straight from our store. The checks, the seal and the craft stay exactly the same on every pair you save on.${best ? ` Pairs up to ${best}% off.` : ''} ${C.advance.required ? (C.advance.freeAll() ? 'Free delivery on every order.' : '') : 'Cash on Delivery on every order.'}</p></div>
       <div class="of-float" aria-hidden="true">${['%', 'Rs', '%', 'Rs', '%'].map((t, i) => `<span style="--i:${i}">${t}</span>`).join('')}</div></section>
 
     <section class="sheet x"><div class="wrap">
@@ -2159,19 +2169,18 @@
       ${offers.length ? `<div class="of-grid">${offers.map(card).join('')}</div>` : ''}
     </div></section>
 
-    ${sale.length ? `<div class="marquee" aria-hidden="true"><div class="marquee-track">${[0, 1].map(() => sale.map(([p, v]) => `<span>${esc(p.name)}</span><i>+</i><span class="o">${pct(v)}% off</span><i>+</i>`).join('')).join('')}</div></div>
-    <section class="sheet x"><div class="wrap">
-      ${head('On sale now', 'Already reduced.', `<a class="link" href="${link('shop', 'sale')}">All sale pairs</a>`, 'No code needed: the price you see is the price you pay. Sale pairs are final for size, and defects are still covered for 30 days.')}
+    ${sale.length ? `<section class="sheet x"><div class="wrap">
+      ${head('On sale now', 'Already reduced.', `<a class="link" href="${link('shop', 'sale')}">All sale pairs</a>`, 'No code needed: the price you see is the price you pay. Sale prices are final for size, and every pair is still covered for defects for 30 days.')}
       <div class="grid">${sale.map(([p, v], i) => card_(p, i, v)).join('')}</div>
     </div></section>` : ''}
 
     <section class="sheet x"><div class="wrap">
-      ${head('How it works', 'Three steps to the saving.')}
-      <div class="steps of-steps">${[['Pick your pairs', C.advance.freeAll() ? 'Add your size to the bag. Delivery is free on every order.' : 'Add your size to the bag. Two pairs or more and delivery is free.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], C.advance.required ? ['Send the deposit', 'Send the small ' + C.advance.care + ' for your order total. We confirm, dispatch from Islamabad, and you pay the rest at your door.'] : ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+      ${head('How it works', 'Three steps to your saving.')}
+      <div class="steps of-steps">${[['Pick your pairs', C.advance.freeAll() ? 'Add your size to the bag. Delivery is free on every order.' : 'Add your size to the bag. Two pairs or more and delivery is free.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], C.advance.required ? ['Reserve your pair', 'A small ' + C.advance.care + ' holds your size. Your pair ships from Islamabad and the rest is paid at your door.'] : ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
     <section class="sheet x"><div class="wrap"><div class="signup closer">
-      <h2>First to hear about the next code.</h2>
+      <h2>Be first to the next code.</h2>
       <div class="closer-r"><p>New codes and drops go out on Instagram first. Questions about a code? Ask on WhatsApp ${esc(PHONE())}.</p>
         <div class="hero-cta"><a class="btn volt" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener">${ic('instagram')}Follow @daursupply</a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I have a question about a discount code.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask on WhatsApp</a></div></div>
     </div></div></section>`;
@@ -2280,7 +2289,7 @@
         <li>Send us your payment receipt on ${wa} with your order number.</li>
         <li>We check the payment and email you the updated order showing what you have paid and what is left to pay the rider. Then we dispatch.</li></ol>
         <ul><li>An order is dispatched only after its ${esc(A.care)} reaches us. If it has not arrived, we remind you on WhatsApp before anything is sent.</li>
-        <li>If you cancel before dispatch, your ${esc(A.care)} or advance payment is refunded in full to the account you paid from.</li></ul>`]] : A.on ? [['advance', 'Advance payment and ' + A.care, `<p>Delivery is free when you pay for your order in advance. You can pay the full amount, or a smaller ${esc(A.care)} of ${fmt(A.deposit)} or more that tells us the order is real. The ${esc(A.care)} is part of your payment: it comes off the amount you pay the rider.</p><ol>
+        <li>If you cancel before dispatch, your ${esc(A.care)} or advance payment is refunded in full to the account you paid from.</li></ul>`]] : A.on ? [['advance', 'Advance payment and ' + A.care, `<p>Delivery is free when you pay for your order in advance. You can pay the full amount, or a smaller ${esc(A.care)} of ${fmt(A.deposit)} or more that reserves your pair. The ${esc(A.care)} is part of your payment: it comes off the amount you pay the rider.</p><ol>
         <li>Place your order${A.code ? ` and enter code <b>${esc(A.code)}</b> at checkout` : ''}.</li>
         <li>Pay the full amount, or a ${esc(A.care)} of ${fmt(A.deposit)} or more, to the bank account shown when you place the order. We also send the details on WhatsApp.</li>
         <li>Send us your payment receipt on ${wa} with your order number.</li>
@@ -2358,7 +2367,7 @@
       ['Do you deliver to my city?', 'Yes. We deliver to every city and town in Pakistan that our courier reaches, in ' + C.delivery.days + (C.advance.freeAll() ? ', free on every order.' : ', for ' + fmt(C.delivery.fee) + ', or free on ' + C.freeDeliveryPairs + ' pairs or more.')],
       ['How long does delivery take?', 'We dispatch within 24 hours of confirming your order. Delivery then takes ' + C.delivery.days + ' in most cities. Remote areas and public holidays can take longer.'],
       ...(GIVE.on ? [['Where does the 5% go?', 'At least ' + GIVE.pct + '% of the profit we make on every pair is set aside, never added to your price. Every quarter we give it to one verified case of need, chosen by the votes of that quarter\'s buyers, and publish the record on the Our giving page.']] : []),
-      ...(C.advance.deposits() ? [['Do I need to pay before delivery?', 'Yes, a small ' + C.advance.care + ' by bank transfer: ' + C.advance.tierText() + ' It comes off your total, the rest is paid to the rider, and it is refunded in full if you cancel before dispatch. ' + C.advance.freeText()], ['Why a ' + C.advance.care + '?', 'It tells us the order is real, so every pair we dispatch goes to someone waiting for it. That keeps our prices honest for everyone.']] : C.advance.on ? [['Is delivery free if I pay in advance?', 'Yes. Pay the full amount, or a ' + C.advance.care + ' of ' + fmt(C.advance.deposit) + ' or more, by bank transfer' + (C.advance.code ? ' and enter code ' + C.advance.code + ' at checkout' : '') + '. Send us the receipt on WhatsApp; we check it, take the delivery fee off and email you the updated order. The deposit comes off what you pay the rider.'], ['What is the ' + C.advance.care + '?', 'A small payment of ' + fmt(C.advance.deposit) + ' or more that you send before dispatch. It is part of your payment, not an extra charge, and it is refunded in full if you cancel before dispatch.']] : []),
+      ...(C.advance.deposits() ? [['How does payment work?', 'You reserve your pair with a small ' + C.advance.care + ' by bank transfer: ' + C.advance.tierText() + ' It counts toward your total, the rest is paid when the box is in your hands, and it comes back to you in full if you change your mind before dispatch. ' + C.advance.freeText()], ['What does the ' + C.advance.care + ' do for me?', 'It holds your size from the moment you order and sends your pair straight to dispatch. It is part of your price, never an extra.']] : C.advance.on ? [['Is delivery free if I pay in advance?', 'Yes. Pay the full amount, or a ' + C.advance.care + ' of ' + fmt(C.advance.deposit) + ' or more, by bank transfer' + (C.advance.code ? ' and enter code ' + C.advance.code + ' at checkout' : '') + '. Send us the receipt on WhatsApp; we check it, take the delivery fee off and email you the updated order. The deposit comes off what you pay the rider.'], ['What is the ' + C.advance.care + '?', 'A small payment of ' + fmt(C.advance.deposit) + ' or more that you send before dispatch. It is part of your payment, not an extra charge, and it is refunded in full if you cancel before dispatch.']] : []),
       ['Can I cancel my order?', 'Yes, free of charge until it is handed to the courier. Reply to your confirmation on WhatsApp or call us with your order number.'],
       ['How do I use a coupon code?', C.advance.freeAll() ? 'Enter it in the bag and it goes to checkout already applied. One code per order, and delivery stays free. Gift offers are added on top.' : 'Enter it in the bag or at checkout. One saving applies per order: free delivery or your code, whichever saves you more. Gift offers are added on top.']
     ];
@@ -2370,7 +2379,7 @@
           <section class="clause" id="delivery"><span class="no">02 / Delivery</span><div class="c"><h2>${C.advance.freeAll() ? 'Every city in Pakistan. Free delivery.' : 'Every city in Pakistan. One flat fee.'}</h2>
             <div class="city-grid"><div><b>Where</b><span>Every city and town our courier reaches</span></div><div><b>How long</b><span>${C.delivery.days} after dispatch</span></div><div><b>Fee</b><span>${C.advance.freeAll() ? 'Free on every order' : `${fmt(C.delivery.fee)} / free on ${C.freeDeliveryPairs}+ pairs`}</span></div></div>
             <p>Your courier name, tracking number and live tracking link arrive on WhatsApp at dispatch, and show on the <a class="link" href="${link('track')}">Track order</a> page.</p></div></section>
-          <section class="clause" id="cod"><span class="no">03 / ${C.advance.deposits() ? 'Payment' : 'Cash on Delivery'}</span><div class="c">${C.advance.deposits() ? `<h2>A small deposit first. The rest at your door.</h2><ul><li>Every order starts with a ${esc(C.advance.care)} by bank transfer: ${esc(C.advance.tierText())}</li><li>The rest is paid to the rider when the box is in your hands. ${esc(C.advance.freeText())}</li><li>We dispatch once your ${esc(C.advance.care)} reaches us. Cancel before dispatch and it is refunded in full. <a class="link" href="${link('policies', 'advance')}">How it works</a></li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li></ul>` : `<h2>Pay when the box is in your hands.</h2><ul><li>No card needed and there is no COD surcharge. Advance payment is never required.</li>${C.advance.on ? `<li>Prefer to pay first? Pay in full, or send a ${esc(C.advance.care)} of ${fmt(C.advance.deposit)} or more, and delivery is free. <a class="link" href="${link('policies', 'advance')}">How it works</a></li>` : ''}<li>Pay the rider the exact total shown on your confirmation.</li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li><li>Refusing a confirmed parcel without a reason costs us two courier legs. Repeat refusals lose COD access.</li></ul>`}</div></section>
+          <section class="clause" id="cod"><span class="no">03 / ${C.advance.deposits() ? 'Payment' : 'Cash on Delivery'}</span><div class="c">${C.advance.deposits() ? `<h2>Reserve it small. The rest at your door.</h2><ul><li>Your pair is reserved with a ${esc(C.advance.care)} by bank transfer: ${esc(C.advance.tierText())}</li><li>The rest is paid to the rider when the box is in your hands. ${esc(C.advance.freeText())}</li><li>Your pair ships the moment your ${esc(C.advance.care)} reaches us. Change your mind before dispatch and it comes back to you in full. <a class="link" href="${link('policies', 'advance')}">How it works</a></li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li></ul>` : `<h2>Pay when the box is in your hands.</h2><ul><li>No card needed and there is no COD surcharge. Advance payment is never required.</li>${C.advance.on ? `<li>Prefer to pay first? Pay in full, or send a ${esc(C.advance.care)} of ${fmt(C.advance.deposit)} or more, and delivery is free. <a class="link" href="${link('policies', 'advance')}">How it works</a></li>` : ''}<li>Pay the rider the exact total shown on your confirmation.</li><li>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</li><li>Refusing a confirmed parcel without a reason costs us two courier legs. Repeat refusals lose COD access.</li></ul>`}</div></section>
           <section class="clause" id="exchanges"><span class="no">04 / Exchanges</span><div class="c"><h2>Five days to swap the size.</h2><ul><li>Message us within 5 days of delivery with your order number.</li><li>The pair must be unworn outside, in the original box, with the Supply Unit seal still attached.</li><li>Send it back to us with the courier of your choice. Once it reaches us and passes the check, your new size is dispatched.</li><li>If the size you need is sold out, we refund the item price to your bank or wallet account.</li><li>Sale pairs cannot be exchanged for size. Defects within 30 days are still covered.</li></ul></div></section>
           <section class="clause" id="defects"><span class="no">05 / Defects</span><div class="c"><h2>30 days on stitching and sole.</h2><p>If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp. We replace the pair, or refund it if no replacement is available. Wear and tear, scuffs and misuse are not defects.</p></div></section>
           ${GIVE.on ? `<section class="clause" id="slice"><span class="no">06 / The slice</span><div class="c"><h2>A slice of every pair is not ours to keep.</h2><ul><li>At least ${GIVE.pct}% of the profit we make on every pair is set aside for people in need. It is a share of our profit, never added to your price.</li><li>Every quarter the slices are given together to one verified case of need, after our own checks.</li><li>Buyers vote in the bag for the cause. The most chosen cause receives the quarter's slice.</li><li>Date, amount and the case are published on <a class="link" href="${link('giving')}">Our giving</a> and on our social pages, and every buyer of the quarter is told where it went.</li></ul></div></section>` : ''}

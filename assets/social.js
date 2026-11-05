@@ -481,24 +481,28 @@
     P.forEach((p, k) => {
       const v = p.variants.find(onSale) || p.variants[0];
       reels.push({ p, v });
-      if (k === 1) reels.push({ text: ['Full grain leather.', 'Checked by hand.', 'Signed DAUR.', 'Paid on delivery.'] });
-      if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Drop 01 is live.'] });
+      if (k === 1) reels.push({ text: ['Full grain leather.', 'Checked by hand.', 'Finished with our seal.', 'Delivered to your door.'] });
+      if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Aik naya daur.'] });
     });
-    document.getElementById('app').innerHTML = `<h1 class="sr-only">The DAUR Supply feed: new pairs and price cuts</h1><div class="feed" id="feed">${reels.map((r, i) => r.text
-      ? `<section class="reel txt"><div class="reel-in">${r.text.map((t, j) => `<p class="${j % 2 ? 'volt' : ''}" style="animation-delay:${j * .25}s">${esc(t)}</p>`).join('')}<span class="mono mute">Swipe up</span></div></section>`
-      : `<section class="reel" data-i="${i}" style="--glow:${esc(r.v.hex || '#333')}"><a class="reel-stage${r.v.images && r.v.images.length ? ' photo' : ''}" href="${link('product', r.p.id + '~' + r.v.id)}" aria-label="Open ${esc(r.p.name)} in ${esc(r.v.color)}">${r.v.images && r.v.images.length
-        // a photo keeps its own background, so it sits in one calm square frame of fixed size instead of filling the reel
-        ? `<div class="layer rn"><span class="reel-photo"><img class="rp-bg" src="${esc(r.v.images[0])}" alt="" aria-hidden="true" loading="lazy" decoding="async">${visual(r.p, r.v)}</span></div>`
-        : `<div class="layer rn float">${visual(r.p, r.v)}</div><div class="layer scan">${visual(r.p, r.v, { mode: 'blueprint' })}</div>`}<span class="reel-peek mono">View the pair <span class="arr">&rarr;</span></span></a>
-        <div class="reel-cap"><span class="mono"><b>@daursupply</b> / ${esc(r.p.audience)}${r.p.group ? ' / ' + esc(r.p.group) : ''}</span>
-          <h2>${esc(r.p.name)}</h2><p>${esc(r.v.color)}${r.p.description ? '. ' + esc(r.p.description.split('.')[0]) + '.' : ''}</p>
-          <span class="mono mute">#DAURsupply #${esc(r.p.category)} #ValueFlex</span>
-          <div class="reel-price"><b>${fmt(r.v.price)}</b>${onSale(r.v) ? `<span class="strike mono">${fmt(r.v.compareAt)}</span><span class="chip v">&minus;${pct(r.v)}%</span>` : C.sell && C.sell.retailAnchor === false ? (C.sell.perWear > 0 ? `<span class="mono">About ${fmt(Math.round(r.v.price / (C.sell.perWear * 52)))} a wear</span>` : '') : `<span class="strike mono">${fmt(C.marketRetail)}+ retail</span>`}</div>
-          <a class="btn volt" href="${link('product', r.p.id + '~' + r.v.id)}">Shop now <span class="arr">&rarr;</span></a></div>
-        <div class="reel-act">
-          <button class="ra like" data-like="${r.p.id}" aria-pressed="${A().wish.includes(r.p.id)}" aria-label="Like"><span class="ra-i">${I('heart', 'o')}${I('heartFill', 'f')}</span><small>${A().wish.includes(r.p.id) ? 'Liked' : 'Like'}</small></button>
-          <button class="ra flex" data-flex="${i}" aria-label="Make a value flex card"><span class="ra-i">${I('bolt')}</span><small>Flex</small></button>
-        </div></section>`).join('')}</div>`;
+    const D = '<svg viewBox="-55 20 234 160" aria-hidden="true"><g transform="skewX(-14)"><path fill="currentColor" d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></svg>';
+    const head = `<span class="fd-av">${D}</span><span class="fd-who"><b>daursupply</b><small>Pakistan</small></span>`;
+    document.getElementById('app').innerHTML = `<div class="fd" id="feed">
+      <header class="fd-hd"><h1>The Feed</h1><p>New pairs, price cuts and the craft behind them. Double tap a pair to like it.</p></header>
+      ${reels.map((r, i) => r.text
+      ? `<section class="fd-post fd-txt"><div class="fd-top">${head}</div><div class="fd-txt-in">${r.text.map((t, j) => `<p style="--j:${j}">${esc(t)}</p>`).join('')}</div></section>`
+      : `<section class="fd-post" data-i="${i}">
+          <div class="fd-top">${head}${onSale(r.v) ? `<span class="fd-tag">&minus;${pct(r.v)}%</span>` : r.p.tag && /new/i.test(r.p.tag) ? '<span class="fd-tag new">New</span>' : ''}</div>
+          <a class="fd-media" href="${link('product', r.p.id + '~' + r.v.id)}" aria-label="Open ${esc(r.p.name)} in ${esc(r.v.color)}">${visual(r.p, r.v, { sizes: '(min-width: 600px) 560px, 100vw' })}</a>
+          <div class="fd-acts">
+            <button class="ra like" data-like="${r.p.id}" aria-pressed="${A().wish.includes(r.p.id)}" aria-label="Like"><span class="ra-i">${I('heart', 'o')}${I('heartFill', 'f')}</span><small>${A().wish.includes(r.p.id) ? 'Liked' : 'Like'}</small></button>
+            <button class="ra flex" data-flex="${i}" aria-label="Share this pair"><span class="ra-i">${I('share')}</span><small>Share</small></button>
+          </div>
+          <div class="fd-cap">
+            <h2>${esc(r.p.name)}</h2><p>${esc(r.v.color)}${r.p.description ? '. ' + esc(r.p.description.split('.')[0]) + '.' : ''}</p>
+            <div class="fd-row"><div class="fd-price${onSale(r.v) ? ' sale' : ''}"><b>${fmt(r.v.price)}</b>${onSale(r.v) ? `<s>${fmt(r.v.compareAt)}</s>` : ''}</div>
+            <a class="btn volt" href="${link('product', r.p.id + '~' + r.v.id)}">Shop now <span class="arr">&rarr;</span></a></div>
+            <span class="fd-hash">#DAURsupply #${esc(r.p.category === 'Hybrids' ? 'Casual' : r.p.category)} #AikNayaDaur</span>
+          </div></section>`).join('')}</div>`;
     const burst = (host, x, y) => {
       for (let k = 0; k < 7; k++) {
         const h = document.createElement('i'); h.className = 'lv-float'; h.innerHTML = I('heartFill');
@@ -514,14 +518,14 @@
       if (on === has) return;
       toggleWish(id);
       b.setAttribute('aria-pressed', !has); b.querySelector('small').textContent = has ? 'Like' : 'Liked';
-      if (!has) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); const r = b.getBoundingClientRect(); const sec = b.closest('.reel'); const sr = sec.getBoundingClientRect(); burst(sec, r.left - sr.left + r.width / 2, r.top - sr.top + 20); }
+      if (!has) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); const r = b.getBoundingClientRect(); const sec = b.closest('.fd-post'); const sr = sec.getBoundingClientRect(); burst(sec, r.left - sr.left + r.width / 2, r.top - sr.top + 20); }
     };
     $$('[data-like]').forEach((b) => b.addEventListener('click', () => setLike(b, b.getAttribute('aria-pressed') !== 'true')));
     // double tap a reel to love it, like the apps
-    $$('.reel[data-i]').forEach((sec) => {
+    $$('.fd-post[data-i]').forEach((sec) => {
       let last = 0;
       sec.addEventListener('pointerup', (e) => {
-        if (e.target.closest('a:not(.reel-stage),button')) return;
+        if (e.target.closest('a:not(.fd-media),button')) return;
         const now = Date.now();
         if (now - last < 320) {
           const sr = sec.getBoundingClientRect(); const x = e.clientX - sr.left; const y = e.clientY - sr.top;
@@ -532,7 +536,7 @@
       });
     });
     // one tap on the pair opens its page; a second tap within the double tap window keeps it a like instead
-    $$('.reel-stage').forEach((a) => {
+    $$('.fd-media').forEach((a) => {
       let wait = 0;
       a.addEventListener('click', (e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey) return;
