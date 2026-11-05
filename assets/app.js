@@ -357,7 +357,7 @@
           <div class="ftr-col"><h2>DAUR</h2><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/blogs/journal">Journal</a>' : ''}</div>
           <div class="ftr-reach"><a class="ilink" href="${waChat('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('+' + String(C.whatsapp).replace(/^92(\d{3})(\d+)$/, '92 $1 $2'))}</a><a class="ilink" href="mailto:${esc(C.supportEmail)}">${ic('mail')}${esc(C.supportEmail)}</a>
             <a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div>
-          <div class="ftr-base"><span class="ftr-pk">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span><span>Pakistani craft, under a Pakistani name. Naya daur.</span><button type="button" class="ftr-theme" id="themeBtn" aria-pressed="false">Dark mode</button><span>&copy; 2026 DAUR Supply</span></div>
+          <div class="ftr-base"><span class="ftr-pk">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span><span>Pakistani craft, under a Pakistani name. Naya daur.</span><span class="ur-line" lang="ur" dir="rtl">ایک نیا دور</span><button type="button" class="ftr-theme" id="themeBtn" aria-pressed="false">Dark mode</button><span>&copy; 2026 DAUR Supply</span></div>
         </div></div>
       </footer>
       <div class="scrim" id="scrim"></div>
@@ -806,6 +806,7 @@
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'} / Naya daur</span>
       <h1>Pakistan's craft,<br>chosen by hand.</h1>
+      <p class="ur-line" lang="ur" dir="rtl">ایک نیا دور</p>
       <p>Fine shoes are made in Pakistan every day. Too often they reach you under someone else's name. These carry ours.</p>
       <small class="rw-hint mono">${fine ? 'Click a pair to choose your size. Drag or scroll to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</small>
       <div class="hero-cta"><a class="btn-box" href="${link('shop')}">Shop all ${ic('arrow')}</a><a class="u-link" href="${link('gifts')}">Gifts</a></div>` });

@@ -1,6 +1,7 @@
 /* brand fonts, served with the theme (latin, weights in use only) */
 @font-face { font-family: 'Space Grotesk'; src: url("font-grotesk.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url("font-inter.woff2") format("woff2"); font-weight: 400 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'DAUR Nastaliq'; src: url("font-nastaliq.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'JetBrains Mono'; src: url("font-mono.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
 /* stand in fonts sized to the brand fonts, so text does not jump or rewrap when the web fonts arrive (layout shift) */
 @font-face { font-family: 'DAUR Display Fallback'; src: local('Arial'), local('ArialMT'), local('Liberation Sans'); size-adjust: 91.5%; }
@@ -2895,3 +2896,8 @@ p .link, li .link, td .link { font: inherit; letter-spacing: 0; text-transform: 
 .care-box .sum-row { margin: 0; }
 .care-box .form-note { margin: 2px 0 0; font-size: 12.5px; color: var(--mute); line-height: 1.5; }
 .care-box .form-note { font-family: var(--display); text-transform: none; letter-spacing: 0; }
+
+/* ---- Urdu slogan: ایک نیا دور (Aik naya daur), user choice 2026-11-05 ---- */
+.ur-line { font-family: 'DAUR Nastaliq', 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif; font-weight: 700; direction: rtl; unicode-bidi: isolate; letter-spacing: 0 !important; text-transform: none !important; }
+.rw-home .rw-head .ur-line { font-size: clamp(26px, 3vw, 40px); line-height: 1.85; margin: -2px 0 6px; color: inherit; max-width: none; }
+.ftr-base .ur-line { font-size: 17px; line-height: 1.6; color: #E6C487 !important; }
