@@ -2580,9 +2580,9 @@ h1, h2, h3, h4 { color: var(--bone); }
 }
 
 /* the grey promise strip under the header */
-.promo { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--tile); color: var(--bone); padding: 15px max(16px, calc((100% - var(--max)) / 2 + var(--pad))); font: 700 13.5px/1.25 var(--display); text-transform: uppercase; letter-spacing: .03em; }
-.promo .ic { width: 22px; height: 22px; flex: none; transition: transform .25s; }
-.promo:hover .ic { transform: translateX(4px); }
+.hstrip { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--tile); color: var(--bone); padding: 15px max(16px, calc((100% - var(--max)) / 2 + var(--pad))); font: 700 13.5px/1.25 var(--display); text-transform: uppercase; letter-spacing: .03em; }
+.hstrip .ic { width: 22px; height: 22px; flex: none; transition: transform .25s; }
+.hstrip:hover .ic { transform: translateX(4px); }
 
 /* phone menu: a full white sheet with its own header, big rows with arrows, then the helpful links */
 @media (max-width: 860px) {
@@ -2782,7 +2782,7 @@ h1, h2, h3, h4 { color: var(--bone); }
 .trust li { border-radius: 0; }
 .ptag2 { position: absolute; top: 12px; left: 12px; z-index: 3; background: var(--sale); color: #fff; font: 700 12px/1 var(--display); padding: 6px 8px; letter-spacing: .02em; }
 .card-top .price.on-sale { color: var(--sale); }
-.promo { border: 0 !important; border-radius: 0; }
+.hstrip { border: 0 !important; border-radius: 0; }
 .rw-head h1 { text-transform: uppercase !important; font-weight: 700 !important; letter-spacing: -.015em !important; line-height: .95 !important; }
 .f-kicker, .rw-hint { letter-spacing: .08em !important; }
 .btn-box .ic, .btn-box svg { width: 20px; height: 20px; flex: none; }
@@ -2872,3 +2872,7 @@ h1, h2, h3, h4 { color: var(--bone); }
 .shero { background: var(--ink) !important; }
 .shero::before, .shero-bg { display: none !important; }
 .shero h1 { text-transform: uppercase; font-weight: 700; }
+.code-msg { display: block; font-size: 12.5px; line-height: 1.45; color: var(--mute); margin-top: 6px; }
+.code-msg.err { color: var(--sale); }
+.code-msg.ok { color: #1E7B3A; }
+:root[data-theme="dark"] .code-msg.ok { color: #6FD08C; }

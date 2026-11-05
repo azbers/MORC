@@ -115,6 +115,9 @@
   let cart = store.get('cart', []);
   let wish = store.get('wish', []);
   let coupon = store.get('coupon', '');
+  // on Shopify: what the store said about the code in the bag, for this exact bag
+  let shopCode = { code: '', sig: '', err: '', saving: 0, note: '' };
+  const cartSig = () => cart.map((l) => l.pid + l.vid + l.size + 'x' + l.qty).join('|');
   const saveCart = () => { store.set('cart', cart); store.set('coupon', coupon); paintCounts(); };
   const pairs = () => cart.reduce((a, l) => a + l.qty, 0);
   function lineData(l) {
@@ -127,7 +130,13 @@
     const subtotal = lines.reduce((a, d) => a + d.total, 0);
     const before = lines.reduce((a, d) => a + d.was, 0);
     let discount = 0, couponErr = '', cp = null;
-    if (coupon && SHOP) { /* Shopify checks and applies the code at checkout */ }
+    if (coupon && SHOP) {
+      // Shopify checked the code against the real cart (SHOP.checkCode); its answer holds only while the bag is unchanged
+      if (shopCode.code === coupon && shopCode.sig === cartSig()) {
+        if (shopCode.err) couponErr = shopCode.err;
+        else if (shopCode.saving) { discount = shopCode.saving; cp = { label: 'Discount' }; }
+      }
+    }
     else if (coupon) {
       cp = C.coupons[coupon];
       const used = cp && cp.limit ? store.get('orders', []).filter((o) => o.coupon === coupon && o.status !== 'Cancelled').length : 0;
@@ -312,7 +321,7 @@
           <button class="icon-btn" id="bagBtn">${ic('bag')}<span class="sr-only">Open bag, pairs:</span><span class="dot-count" id="bagCount">0</span></button>
         </div>
       </div></header>
-      <a class="promo" href="${strip[1]}"><span>${esc(strip[0])}</span>${ic('arrow')}</a>
+      <a class="hstrip" href="${strip[1]}"><span>${esc(strip[0])}</span>${ic('arrow')}</a>
       <nav class="mnav" id="mnav" aria-label="Mobile">
         <div class="mnav-h">${LOGO}<button class="mnav-x" type="button" id="mnavX" aria-label="Close menu">${ic('close')}</button></div>
         <div class="mnav-main">${navItems.map(([pg, pr, t]) => `<a href="${link(pg, pr)}"${pr === 'sale' ? ' class="nav-sale"' : ''}>${esc(t)}${pg === 'gifts' ? ic('gift', 'mn-gift') : ''}${ic('chevR', 'mn-ch')}</a>`).join('')}</div>
@@ -1311,7 +1320,7 @@
     return `<span class="mono mute">Order summary</span>
       <div class="sum-row"><span>Subtotal, ${t.n} pair${t.n > 1 ? 's' : ''}</span><span>${fmt(t.subtotal)}</span></div>
       ${t.sale ? `<div class="sum-row mute"><span>Before sale</span><span class="strike">${fmt(t.before)}</span></div>` : ''}
-      ${promo ? `<div class="promo"><input id="promo" placeholder="Coupon code" value="${esc(coupon)}" aria-label="Coupon code" autocomplete="off"><button id="promoBtn">${coupon && !t.couponErr ? 'Remove' : 'Apply'}</button></div>${t.couponErr ? `<span class="mono" style="color:var(--danger);font-size:10.5px">${esc(t.couponErr)}</span>` : ''}` : ''}
+      ${promo ? `<div class="promo"><input id="promo" placeholder="Discount code" value="${esc(coupon)}" aria-label="Discount code" autocomplete="off"><button id="promoBtn">${coupon && !t.couponErr ? 'Remove' : 'Apply'}</button></div>${t.couponErr ? `<span class="code-msg err">${esc(t.couponErr)}</span>` : SHOP && coupon && shopCode.code === coupon && shopCode.note ? `<span class="code-msg ok">${esc(shopCode.note)}</span>` : ''}${SHOP ? '<span class="code-msg">Your code goes to checkout with your bag, already applied. Gift card? Enter it on the payment step at checkout.</span>' : ''}` : ''}
       ${t.discount ? `<div class="sum-row save"><span>${esc(coupon)} / ${esc(t.cp.label || 'Discount')}</span><span>&minus; ${fmt(t.discount)}</span></div>${t.cp.phone ? '<p class="form-note">This code is linked to one WhatsApp number. It is checked when you place the order.</p>' : ''}` : ''}
       <div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>
       <div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>
@@ -1322,12 +1331,27 @@
   }
   function bindPromo(cb) {
     const b = $('#promoBtn'); if (!b) return;
-    const apply = () => {
+    const apply = async () => {
       const t = totals();
-      if (coupon && !t.couponErr && b.textContent === 'Remove') { coupon = ''; saveCart(); cb(); toast('Code removed'); return; }
+      if (coupon && !t.couponErr && b.textContent === 'Remove') { coupon = ''; shopCode = { code: '', sig: '', err: '', saving: 0, note: '' }; saveCart(); cb(); toast('Code removed'); if (SHOP && SHOP.checkCode) SHOP.checkCode(''); return; }
       coupon = $('#promo').value.trim().toUpperCase(); saveCart();
+      if (SHOP && SHOP.checkCode && coupon) {
+        // ask Shopify now, with the pairs in this bag, so the buyer knows at once and never types the code again at checkout
+        b.disabled = true; b.textContent = 'Checking';
+        const r = await SHOP.checkCode(coupon);
+        const adv = C.advance && C.advance.on && C.advance.code && coupon === C.advance.code;
+        shopCode = { code: coupon, sig: cartSig(), err: '', saving: 0, note: '' };
+        if (r.error) shopCode.err = r.error;
+        else if (adv) shopCode.note = 'Free delivery code added. Pay in full or send a ' + C.advance.care + ' of ' + fmt(C.advance.deposit) + ' or more, and send us the receipt on WhatsApp.';
+        else if (r.pending) shopCode.note = 'Code saved. It goes to checkout with your bag.';
+        else if (!r.found || !r.applicable) shopCode.err = 'This code does not apply to the pairs in your bag. Check the spelling or the conditions on the Offers page.';
+        else { shopCode.saving = r.saving; shopCode.note = r.saving ? coupon + ' applied: you save ' + fmt(r.saving) + '.' : coupon + ' applied. Your saving shows at checkout.'; }
+        cb();
+        toast(shopCode.err ? 'Code not applied' : shopCode.note.split('.')[0]);
+        return;
+      }
       const t2 = totals(); cb();
-      if (coupon && !t2.couponErr) toast(SHOP ? coupon + ' saved. It is applied at checkout' : coupon + ' applied');
+      if (coupon && !t2.couponErr) toast(coupon + ' applied');
     };
     b.addEventListener('click', apply);
     $('#promo').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); apply(); } });
