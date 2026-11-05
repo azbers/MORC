@@ -2891,3 +2891,7 @@ p .link, li .link, td .link { font: inherit; letter-spacing: 0; text-transform: 
 .ftr-theme { padding: 10px 0; }
 .code-msg.wa-r { display: inline-flex; align-items: center; gap: 6px; color: var(--bone); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; padding: 6px 0; }
 .code-msg.wa-r .ic { width: 16px; height: 16px; }
+.care-box { border: 2px solid var(--bone); padding: 12px 14px; margin: 12px 0 4px; display: grid; gap: 6px; }
+.care-box .sum-row { margin: 0; }
+.care-box .form-note { margin: 2px 0 0; font-size: 12.5px; color: var(--mute); line-height: 1.5; }
+.care-box .form-note { font-family: var(--display); text-transform: none; letter-spacing: 0; }

@@ -14,7 +14,7 @@ window.DAUR_CONFIG = {
   /* One flat Cash on Delivery fee and timing for every city in Pakistan. Admin > Settings can change both. */
   delivery: { fee: 200, days: '2 to 5 days' },
   /* Free delivery when the buyer pays in advance (bank transfer or wallet, confirmed on WhatsApp). code: the Shopify discount code, if any. */
-  advance: { on: true, code: 'DAURCARE', deposit: 500 },
+  advance: { on: true, code: 'DAURCARE', deposit: 500, required: true, tiers: '3000:500, 8000:1000, 15000:1500', free: 'all' },
   /* Coupon rules. type: percent | flat. min: minimum subtotal in rupees. */
   coupons: {
     'NAYADAUR': { type: 'flat', value: 300, min: 5500, label: 'Rs. 300 off your order' }

@@ -16,7 +16,7 @@ window.DAUR_CONFIG = {
   marketRetail: {{ settings.market_retail | default: 12000 }},
   freeDeliveryPairs: {{ settings.free_delivery_pairs | default: 2 }},
   delivery: { fee: {{ settings.delivery_fee | default: 0 }}, days: {{ settings.delivery_days | default: '' | json }} },
-  advance: { on: {% if settings.advance_on == false %}false{% else %}true{% endif %}, code: {{ settings.advance_code | default: '' | strip | upcase | json }}, deposit: {{ settings.advance_deposit | default: 500 }} },
+  advance: { on: {% if settings.advance_on == false %}false{% else %}true{% endif %}, code: {{ settings.advance_code | default: '' | strip | upcase | json }}, deposit: {{ settings.advance_deposit | default: 500 }}, required: {% if settings.advance_required == false %}false{% else %}true{% endif %}, tiers: {{ settings.advance_tiers | default: '3000:500, 8000:1000, 15000:1500' | json }}, free: {{ settings.advance_free | default: 'all' | json }} },
   coupons: {},
   audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
   lowStockAt: {{ settings.low_stock_at | default: 2 }},
