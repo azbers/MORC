@@ -851,7 +851,7 @@
     const J = (Array.isArray(window.DAUR_JOURNAL) ? window.DAUR_JOURNAL : []).filter((a) => a && a.url && a.title).slice(0, 6);
     const own = [
       { title: 'How to find your size', text: 'Trace your foot, measure heel to toe and match it to the chart. Takes two minutes.', url: link('policies', 'sizes'), k: 'guide' },
-      { title: 'What every pair promises', text: 'Dispatch, delivery, Cash on Delivery, exchanges and defect cover, in plain words.', url: link('contract'), k: 'door' },
+      { title: 'What every pair promises', text: 'Dispatch, delivery, ' + (C.advance.required ? 'the Care deposit' : 'Cash on Delivery') + ', exchanges and defect cover, in plain words.', url: link('contract'), k: 'door' },
       { title: 'From the bench to your door', text: 'Where our pairs are made, how we check them and why they carry our name.', url: link('manifesto'), k: 'workshop' }
     ];
     const list = J.length ? J : own;
@@ -1614,7 +1614,7 @@
 
     <section class="sheet x"><div class="wrap">
       ${head('Already ordered?', 'The answer may be one tap away.')}
-      <div class="ct-help">${[['truck', 'Track your order', 'Where your pair is right now.', link('track')], ['swap', 'Exchanges and sizing', '5 day size exchange, 30 day defect cover, size guide.', link('contract')], ['shield', 'Policies', 'Delivery, Cash on Delivery, returns and privacy.', link('policies')]].map(([i, t, d, h]) => `<a class="ct-help-i rv" href="${h}"><span class="ct-ic">${ic(i)}</span><b>${t}</b><span>${d}</span><span class="arr">&rarr;</span></a>`).join('')}</div>
+      <div class="ct-help">${[['truck', 'Track your order', 'Where your pair is right now.', link('track')], ['swap', 'Exchanges and sizing', '5 day size exchange, 30 day defect cover, size guide.', link('contract')], ['shield', 'Policies', 'Delivery, ' + (C.advance.required ? 'payment' : 'Cash on Delivery') + ', returns and privacy.', link('policies')]].map(([i, t, d, h]) => `<a class="ct-help-i rv" href="${h}"><span class="ct-ic">${ic(i)}</span><b>${t}</b><span>${d}</span><span class="arr">&rarr;</span></a>`).join('')}</div>
     </div></section>
 
     ${form ? `<section class="sheet x"><div class="wrap ct-form-w">${form}</div></section>` : ''}`;
@@ -1790,7 +1790,7 @@
         <details class="rw-dd"${detOpen ? ' open' : ''}><summary><span>What we check on this pair</span><span class="mono">${dets.length} points</span></summary>
           <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol></details>
         <div class="rw-more">${p.model ? `<button class="btn ghost" type="button" id="rw3dB">Turn it in 3D</button>` : ''}<a class="link" href="${link('product', p.id + '~' + v.id)}">Full details</a></div>
-        <p class="rw-note">Add a second pair and delivery is free anywhere in Pakistan. Cash on Delivery, 5 day size exchange.</p>`;
+        <p class="rw-note">${C.advance.freeAll() ? 'Free delivery anywhere in Pakistan, 5 day size exchange.' : 'Add a second pair and delivery is free anywhere in Pakistan. ' + (C.advance.required ? '' : 'Cash on Delivery, ') + '5 day size exchange.'}</p>`;
       $('#rwX', panel).addEventListener('click', () => setMode('browse'));
       $('[data-wish]', panel).addEventListener('click', () => toggleWish(p.id));
       $('.rw-dd', panel).addEventListener('toggle', (e) => {
@@ -2020,7 +2020,7 @@
     </div></section>`;
   }
   V.offers = function () {
-    setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, free delivery on two pairs and men\'s shoes on sale in Pakistan, with Cash on Delivery.');
+    setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, ' + (C.advance.freeAll() ? 'free delivery on every order' : 'free delivery on two pairs') + ' and men\'s shoes on sale in Pakistan, with Cash on Delivery.');
     const offers = liveOffers();
     const sale = P.filter((p) => p.variants.some(onSale)).map((p) => [p, p.variants.find(onSale)]);
     const best = sale.length ? Math.max(...sale.map(([, v]) => pct(v))) : 0;
@@ -2232,7 +2232,7 @@
 
   /* ---- contract ---- */
   V.contract = function (param) {
-    setMeta('Our Promise: Delivery, Cash on Delivery & Exchanges | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery, dispatch within 24 hours, 5 day size exchanges, 30 day defect cover and the EU to UK shoe size guide.');
+    setMeta(C.advance.required ? 'Our Promise: Delivery, Payment & Exchanges | DAUR Supply' : 'Our Promise: Delivery, Cash on Delivery & Exchanges | DAUR Supply', 'Delivery to every city in Pakistan, Cash on Delivery, dispatch within 24 hours, 5 day size exchanges, 30 day defect cover and the EU to UK shoe size guide.');
     const faq = [
       ['Is DAUR a brand?', 'Yes. DAUR Supply is our own Pakistani brand. Every pair is made in Pakistani workshops, checked by our team and finished with DAUR hardware: the engraved dubrae on the laces and the Supply Unit seal. We do not sell copies or products of other brands.'],
       ['Are the shoes real leather?', 'Each product page lists the upper, lining and sole of that pair. Our leather shoes and chelsea boots are full grain leather; sneakers list their leather, suede or mesh parts in the specs.'],

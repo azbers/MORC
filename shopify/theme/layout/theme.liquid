@@ -42,10 +42,10 @@
   if template.name == 'index'
     # a fixed fallback, so the home page never goes out with only the shop name and no description
     assign daur_title = settings.seo_home_title | default: "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
-    assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Cash on Delivery nationwide and free delivery on 2 pairs."
+    assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Delivered to every city in Pakistan, with a 5 day size exchange."
   endif
   if daur_desc == blank
-    assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan. Cash on Delivery to every city in Pakistan." 
+    assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan, delivered to every city in Pakistan." 
   endif
 -%}
 <html lang="{{ request.locale.iso_code }}">
@@ -96,7 +96,7 @@
     assign og_img_alt = og_img.alt | default: daur_title
   else
     assign og_img_url = 'daur-share.jpg' | asset_url | prepend: 'https:'
-    assign og_img_alt = shop.name | append: " men's leather shoes, Cash on Delivery across Pakistan"
+    assign og_img_alt = shop.name | append: " men's leather shoes, delivered across Pakistan"
   endif
 -%}
 <meta property="og:site_name" content="{{ shop.name | escape }}">

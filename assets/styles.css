@@ -3146,3 +3146,9 @@ input:focus, select:focus, textarea:focus { outline: 0; border-color: var(--bone
 .btn:hover, .btn-box:hover { transform: translate(2px, 2px) !important; }
 .ap-card.peek .layer.bp { opacity: 0 !important; }
 .ap-card.peek .layer.rn { opacity: 1 !important; }
+/* product page keeps photo and buy box side by side from tablet landscape up */
+@media (min-width: 861px) and (max-width: 1100px) {
+  .pdp { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+  .pdp .gallery { grid-column: 1 / 8 !important; position: sticky !important; top: 120px !important; }
+  .pdp .buy { grid-column: 8 / -1 !important; }
+}
