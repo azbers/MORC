@@ -158,5 +158,7 @@
 <script src="{{ 'social.js' | asset_url }}" defer></script>
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
+{%- comment -%} pages the shopper is about to open are fetched while the finger is still on the link (Chrome, Edge, Samsung Internet) {%- endcomment -%}
+<script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/cart*","/checkout*","/checkouts/*","/account*","/*?*add*"]}}]},"eagerness":"moderate"}]}</script>
 </body>
 </html>

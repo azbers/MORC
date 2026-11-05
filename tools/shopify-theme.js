@@ -12,7 +12,7 @@ const src = path.join(root, 'shopify', 'theme-src');
 const out = path.join(root, 'shopify', 'theme');
 const zip = path.join(root, 'shopify', 'daur-supply-theme.zip');
 // the same files the static site runs; data.js and admin.js stay out because Shopify holds the catalog and the admin
-const SHARED = ['styles.css', 'app.js', 'shoe.js', 'icons.js', 'kicks.js', 'pile.js', 'polart.js', 'social.js', 'alive.js', 'leather.jpg', 'leather-dark.jpg', 'font-grotesk.woff2', 'font-inter.woff2', 'font-mono.woff2', 'font-nastaliq.woff2', 'font-cond-700.woff2', 'font-sans-400.woff2', 'font-sans-700.woff2'];
+const SHARED = ['styles.css', 'app.js', 'shoe.js', 'icons.js', 'kicks.js', 'pile.js', 'polart.js', 'social.js', 'alive.js', 'leather.jpg', 'leather-dark.jpg', 'font-grotesk.woff2', 'font-inter.woff2', 'font-mono.woff2', 'font-nastaliq.woff2', 'font-cond-700.woff2', 'font-sans-400.woff2', 'font-sans-700.woff2', 'bread.webp'];
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.cpSync(src, out, { recursive: true });

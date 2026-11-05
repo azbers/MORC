@@ -114,7 +114,10 @@
     if (!r.ok) { const e = await r.json().catch(() => ({})); return { error: e.description || 'A size in your bag just sold out. Please check the bag.' }; }
     // the buyer's vote for this quarter's charity slice goes on the order as "Slice cause"
     const vote = window.DAUR_SLICE_VOTE ? window.DAUR_SLICE_VOTE() : '';
-    const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: { 'Slice cause': vote }, discount: code || '' }) });
+    // a gift goes on the order too: packing, who it is for, the note for the box, and that it is paid in full in advance
+    const g = window.DAUR_GIFT ? window.DAUR_GIFT() : null;
+    const gift = { 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
+    const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: Object.assign({ 'Slice cause': vote }, gift), discount: code || '' }) });
     return u.ok ? u.json() : {};
   }
   // checks a code against the real Shopify cart: is it known, does it apply to these pairs, and what it saves

@@ -84,7 +84,7 @@ fs.writeFileSync(path.join(root, 'robots.txt'), `User-agent: *\nDisallow: /check
 const inline = (f) => fs.readFileSync(path.join(root, f), 'utf8').replace(/<\/script/gi, '<\\/script');
 const js = ['assets/data.js', 'assets/shoe.js'].concat(OPTIONAL.filter((f) => fs.existsSync(path.join(root, f))), ['assets/app.js']);
 // the stylesheet points at the leather tiles next to it; the one file preview carries them inline
-const inlineTiles = (css) => css.replace(/url\("(font-[a-z]+\.woff2)"\)/g, (m, f) => `url("data:font/woff2;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`).replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
+const inlineTiles = (css) => css.replace(/url\("(bread\.webp)"\)/g, (m, f) => `url("data:image/webp;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`).replace(/url\("(font-[a-z0-9-]+\.woff2)"\)/g, (m, f) => `url("data:font/woff2;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`).replace(/url\("(leather(?:-dark)?\.jpg)"\)/g, (m, f) => `url("data:image/jpeg;base64,${fs.readFileSync(path.join(root, 'assets', f)).toString('base64')}")`);
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'dist/preview.html'), `<title>DAUR Supply</title>
 <meta name="claude:viewport-fit-sides" content="cover">

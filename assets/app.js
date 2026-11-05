@@ -120,15 +120,41 @@
     if (v.images && v.images.length) {
       const k = opts.mode === 'blueprint' ? 1 : opts.index || 0;
       const src = v.images[Math.min(k, v.images.length - 1)];
-      return `<img src="${esc(/(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=1000' : src)}" alt="${esc(p.name + ' in ' + v.color)}" width="1200" height="1200" loading="lazy" decoding="async">`;
+      // Shopify resizes on request: a phone takes a small file, a wide screen a sharp one. A picture that is only seen
+      // on hover or later in a cycle waits (data-src) until it is about to show, so the first screen loads first.
+      const cdn = /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src);
+      const at = (w) => cdn ? src + (src.includes('?') ? '&' : '?') + 'width=' + w : src;
+      const ss = cdn ? [360, 540, 720, 1000, 1400].map((w) => at(w) + ' ' + w + 'w').join(', ') : '';
+      const d = opts.defer ? 'data-' : '';
+      return `<img ${d}src="${esc(at(720))}"${ss ? ` ${d}srcset="${esc(ss)}" sizes="${esc(opts.sizes || '(min-width: 1024px) 50vw, 100vw')}"` : ''} alt="${esc(opts.alt != null ? opts.alt : p.name + ' in ' + v.color)}" width="1200" height="1200" ${opts.eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
     }
     return SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, opts);
+  }
+  // the second look of a pair, shown on hover and as a phone scrolls past: its next photo, or the same pair in another colour
+  function second(p, v) {
+    const ph = (x) => x.images && x.images.length;
+    if (ph(v) && v.images.length > 1) return visual(p, v, { index: 1, defer: 1, alt: '', sizes: CARD_SIZES });
+    const o = p.variants.find((x) => x !== v && (ph(v) ? ph(x) : !ph(x)));
+    if (o) return visual(p, o, ph(v) ? { defer: 1, alt: '', sizes: CARD_SIZES } : {});
+    return ph(v) ? '' : visual(p, v, { mode: 'blueprint' });
+  }
+  const CARD_SIZES = '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw';
+  // a waiting picture starts loading
+  function wake(root) {
+    (root.matches && root.matches('img[data-src]') ? [root] : $$('img[data-src]', root)).forEach((i) => {
+      if (i.dataset.srcset) { i.srcset = i.dataset.srcset; i.removeAttribute('data-srcset'); }
+      i.src = i.dataset.src; i.removeAttribute('data-src');
+    });
   }
 
   /* ---------------- state ---------------- */
   let cart = store.get('cart', []);
   let wish = store.get('wish', []);
   let coupon = store.get('coupon', '');
+  // a gift order: packing on request, who it is for and the note that goes in the box. A gift is always paid in full in advance.
+  let gift = Object.assign({ on: false, pack: true, to: '', note: '' }, store.get('gift', {}));
+  const saveGift = () => store.set('gift', gift);
+  window.DAUR_GIFT = () => (gift.on && cart.length ? gift : null);
   // on Shopify: what the store said about the code in the bag, for this exact bag
   let shopCode = { code: '', sig: '', err: '', saving: 0, note: '' };
   const cartSig = () => cart.map((l) => l.pid + l.vid + l.size + 'x' + l.qty).join('|');
@@ -203,20 +229,32 @@
       if (v) toast('Your vote: ' + v + '. Thank you.');
     }));
   }
+  // the D symbol of the identity (brand/daur-symbol.svg)
+  const DMARK = '<svg class="dm" viewBox="-55 20 234 160" fill="currentColor" aria-hidden="true"><g transform="skewX(-14)"><path d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></svg>';
+  // ایک نیا دور (Aik naya daur): the second slogan, set as a gold calligraphy lockup that writes itself in from the right
+  const urLock = (cls) => `<div class="ur-lock ${cls || ''}"><span class="ur-gold" lang="ur" dir="rtl">ایک نیا دور</span><span class="ur-cap"><i aria-hidden="true"></i>Aik naya daur<b>A new era</b><i aria-hidden="true"></i></span></div>`;
+  // the empty bag: a paper bag with a pair drawn on it, the laces rising out of the top to become its handles
+  const BAG_ART = `<svg class="bag-art" viewBox="0 0 220 300" aria-hidden="true" focusable="false"><g class="ba-sway">
+    <path class="ba-lace" pathLength="1" d="M97 154 C 90 128 66 92 74 56 C 82 16 138 16 146 56 C 154 92 130 128 123 154"/>
+    <path class="ba-side" d="M186 96 L202 106 L202 280 L186 288 Z"/>
+    <path class="ba-front" d="M34 96 H186 V288 H34 Z"/>
+    <path class="ba-fold" d="M34 110 H186"/>
+    <g class="ba-shoe">
+      <path d="M110 120 C 92 120 84 134 85 152 C 86 172 80 188 80 208 C 80 240 94 262 110 262 C 126 262 140 240 140 208 C 140 188 134 172 135 152 C 136 134 128 120 110 120 Z"/>
+      <path class="ba-stitch" d="M110 128 C 96 128 91 139 92 153 C 93 172 87 189 87 208 C 87 235 98 254 110 254 C 122 254 133 235 133 208 C 133 189 127 172 128 153 C 129 139 124 128 110 128 Z"/>
+      <path d="M99 133 C 99 125 121 125 121 133 C 121 142 116 147 110 147 C 104 147 99 142 99 133 Z"/>
+      <path d="M102 147 V 198 Q 110 203 118 198 V 147"/>
+      <path d="M97 166 L123 154 M123 166 L97 154 M97 178 L123 166 M123 178 L97 166 M97 190 L123 178 M123 190 L97 178"/>
+      <g class="ba-eye"><circle cx="97" cy="154" r="1.9"/><circle cx="123" cy="154" r="1.9"/><circle cx="97" cy="166" r="1.9"/><circle cx="123" cy="166" r="1.9"/><circle cx="97" cy="178" r="1.9"/><circle cx="123" cy="178" r="1.9"/><circle cx="97" cy="190" r="1.9"/><circle cx="123" cy="190" r="1.9"/></g>
+      <path d="M88 224 Q 110 240 132 224"/>
+    </g>
+    <g class="ba-d" transform="translate(101 268) scale(.085)"><g transform="skewX(-14)"><path d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></g>
+  </g><ellipse class="ba-shadow" cx="114" cy="294" rx="78" ry="4"/></svg>`;
   // a loaf seen from the side; the last slice is its own piece so the cut can lift it away
   let loafN = 0;
   function loaf(label, cls) {
-    const k = 'lf' + (++loafN);
-    const shape = 'M8 53 Q3 53 3 46 C2 30 12 12 34 8 C48 5 72 5 88 8 C108 12 118 28 117 46 Q117 53 111 53 Z';
-    return `<svg class="loaf ${cls || ''}" viewBox="0 0 120 60" aria-hidden="true" focusable="false"><defs>
-      <linearGradient id="${k}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C98A4B"/><stop offset=".55" stop-color="#A4642F"/><stop offset="1" stop-color="#6E3E1C"/></linearGradient>
-      <clipPath id="${k}a"><rect x="0" y="0" width="96" height="60"/></clipPath><clipPath id="${k}b"><rect x="96" y="0" width="24" height="60"/></clipPath></defs>
-      <g class="lf-body" clip-path="url(#${k}a)"><path d="${shape}" fill="url(#${k}c)"/><path d="M26 18 q8 -4 14 3 M48 13 q8 -4 14 3 M70 13 q8 -4 14 3" fill="none" stroke="#F0D3A6" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><rect class="lf-face" x="90" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
-      <g class="lf-slice" clip-path="url(#${k}b)"><path d="${shape}" fill="url(#${k}c)"/><rect class="lf-face" x="96" y="7" width="6" height="46" rx="1.5" fill="#F3E2C3"/></g>
-      <g class="lf-crumbs" fill="#C98A4B"><circle cx="94.5" cy="54" r="1.3"/><circle cx="97.5" cy="55" r="1"/><circle cx="96" cy="53.5" r=".8"/></g>
-      <line class="lf-knife" x1="96" y1="-2" x2="96" y2="58" pathLength="1"/>
-      ${label ? `<text class="lf-amt" x="113" y="2" text-anchor="end">${esc(label)}</text>` : ''}
-    </svg>`;
+    // a real looking loaf (bread.webp, a 3D render), warm steam rising and the share of profit beside it
+    return `<span class="loaf bread ${cls || ''}" aria-hidden="true"><span class="br-steam"><i></i><i></i><i></i></span><span class="br-img"></span>${label ? `<b class="lf-amt">${esc(label)}</b>` : ''}</span>`;
   }
   // the knife keeps cutting, live, while a loaf is on screen: the slice comes away with its share, goes, and the loaf is whole again.
   // Off screen it rests. With reduced motion the loaf simply shows the slice already cut. A tap starts the cut again.
@@ -316,7 +354,7 @@
     const NOTES = notices();
     const tbRun = NOTES.map((n, i) => `<span class="tb-msg${i ? '' : ' on'}">${esc(n.t)}</span>`).join('');
     const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
-    const LOGO = `<a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>`;
+    const LOGO = `<a class="logo lg-swap" href="${link('home')}" aria-label="DAUR Supply home"><span class="lg-w">${WORDMARK}<small>SUPPLY</small></span><span class="lg-d">${DMARK}</span></a>`;
     // the black bar already carries the delivery offers, so the grey strip points to the gift guide instead of repeating them
     const strip = ['Gift guide: shoes for the men in your life', link('gifts')];
     // the page holds the header's room from the first paint (.hdr-ph), so nothing moves when the header arrives
@@ -347,19 +385,33 @@
         <p class="mnav-f">${ic('pin')}Delivering across Pakistan, prices in PKR</p>
       </nav>`);
     document.body.insertAdjacentHTML('beforeend', `
-      <footer class="ftr">
-        <button class="ftr-top" type="button" id="toTop">${ic('chevU')}Back to top</button>
-        <div class="ftr-bar"><a href="${link('track')}">Track order</a><button type="button" id="ftrBag">Your bag (<span id="ftrBagN">0</span>)</button></div>
-        <div class="ftr-band"><h2>Not sure about the size?</h2><p>Message us before you order. A real person answers.</p>
-          <a class="btn-box" href="${waChat('Assalam o Alaikum DAUR Supply, I need help choosing my size.')}" target="_blank" rel="noopener">Chat on WhatsApp ${ic('arrow')}</a></div>
-        <div class="ftr-main"><div class="wrap">
-          <div class="ftr-col"><h2>Help</h2><a href="${link('contract', 'faq')}">FAQ</a><a href="${link('track')}">Track order</a><a href="${link('policies', 'shipping')}">Shipping policy</a><a href="${link('policies', 'returns')}">Return and exchange</a><a href="${link('policies', 'sizes')}">Size guide</a>${SHOP ? '<a href="/pages/contact">Contact us</a>' : `<a href="${link('contact')}">Contact us</a>`}</div>
-          <div class="ftr-col"><h2>Policies</h2><a href="${link('policies', 'cancellation')}">Cancellation policy</a><a href="${link('policies', 'exchange')}">Exchange policy</a><a href="${link('policies', 'claims')}">Claim policy</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'terms')}">Terms of service</a></div>
-          <div class="ftr-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('gifts')}">Gifts</a><a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
-          <div class="ftr-col"><h2>DAUR</h2><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/blogs/journal">Journal</a>' : ''}</div>
-          <div class="ftr-reach"><a class="ilink" href="${waChat('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener">${ic('whatsapp')}WhatsApp</a><a class="ilink" href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('+' + String(C.whatsapp).replace(/^92(\d{3})(\d+)$/, '92 $1 $2'))}</a><a class="ilink" href="mailto:${esc(C.supportEmail)}">${ic('mail')}${esc(C.supportEmail)}</a>
-            <a class="ilink" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me">${ic('instagram')}Instagram</a><a class="ilink" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me">${ic('facebook')}Facebook</a></div>
-          <div class="ftr-base"><span class="ftr-pk">${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span><span>Pakistani craft, under a Pakistani name. Naya daur.</span><span class="ur-line" lang="ur" dir="rtl">ایک نیا دور</span><button type="button" class="ftr-theme" id="themeBtn" aria-pressed="false">Dark mode</button><span>&copy; 2026 DAUR Supply</span></div>
+      <footer class="ftr ftr2">
+        <div class="f2-hero"><div class="wrap">
+          <div class="f2-brand">
+            <a class="f2-logo" href="${link('home')}" aria-label="DAUR Supply home">${DMARK}<span class="f2-wm">${WORDMARK}<small>SUPPLY</small></span></a>
+            <p class="f2-line">Same local craft. Zero retail markup.</p>
+            ${urLock('ul-ftr')}
+          </div>
+          <div class="f2-help"><h2>Not sure about the size?</h2><p>Message us before you order. A real person answers, and helps you choose right the first time.</p>
+            <a class="f2-wa" href="${waChat('Assalam o Alaikum DAUR Supply, I need help choosing my size.')}" target="_blank" rel="noopener">${ic('whatsapp')}<span>Chat on WhatsApp</span></a></div>
+        </div></div>
+        <div class="f2-links"><div class="wrap">
+          <div class="f2-col"><h2>Shop${ONE ? ' ' + esc(ONE) : ''}</h2>${lineLinks.map(([pg, pr, t]) => `<a href="${link(pg, pr)}">${esc(t)}</a>`).join('')}<a href="${link('gifts')}">Gifts</a><a href="${link('shop', 'sale')}">Sale</a><a href="${link('shop', 'new')}">New in</a></div>
+          <div class="f2-col"><h2>Help</h2><a href="${link('contract', 'faq')}">FAQ</a><a href="${link('track')}">Track order</a><a href="${link('policies', 'shipping')}">Shipping policy</a><a href="${link('policies', 'returns')}">Return and exchange</a><a href="${link('policies', 'sizes')}">Size guide</a>${SHOP ? '<a href="/pages/contact">Contact us</a>' : `<a href="${link('contact')}">Contact us</a>`}</div>
+          <div class="f2-col"><h2>DAUR</h2><a href="${link('manifesto')}">Our story</a><a href="${link('contract')}">Our promise</a><a href="${link('offers')}">Offers</a><a href="${link('feed')}">The Feed</a>${GIVE.on ? `<a href="${link('giving')}">Our giving</a>` : ''}${SHOP ? '<a href="/pages/about">About us</a><a href="/blogs/journal">Journal</a>' : ''}</div>
+          <div class="f2-col"><h2>Policies</h2><a href="${link('policies', 'cancellation')}">Cancellation policy</a><a href="${link('policies', 'exchange')}">Exchange policy</a><a href="${link('policies', 'claims')}">Claim policy</a><a href="${link('policies', 'privacy')}">Privacy policy</a><a href="${link('policies', 'terms')}">Terms of service</a></div>
+        </div></div>
+        <div class="f2-reach"><div class="wrap">
+          <div class="f2-soc">
+            <a class="f2-ic wa" href="${waChat('Assalam o Alaikum DAUR Supply, I have a question about an order.')}" target="_blank" rel="noopener" aria-label="WhatsApp">${ic('whatsapp')}</a>
+            <a class="f2-ic ig" href="https://www.instagram.com/daursupply" target="_blank" rel="noopener me" aria-label="Instagram">${ic('instagram')}</a>
+            <a class="f2-ic fb" href="https://www.facebook.com/daursupply" target="_blank" rel="noopener me" aria-label="Facebook">${ic('facebook')}</a>
+          </div>
+          <div class="f2-ct"><a href="tel:+${esc(C.whatsapp)}">${ic('phone')}${esc('+' + String(C.whatsapp).replace(/^92(\d{3})(\d+)$/, '92 $1 $2'))}</a><a href="mailto:${esc(C.supportEmail)}">${ic('mail')}${esc(C.supportEmail)}</a><span>${ic('pin')}Dispatch from Islamabad, delivering across Pakistan</span></div>
+        </div></div>
+        <div class="f2-base"><div class="wrap">
+          <span>&copy; 2026 DAUR Supply</span>
+          <span class="f2-acts"><a href="${link('track')}">Track order</a><button type="button" id="ftrBag">Your bag (<span id="ftrBagN">0</span>)</button><button type="button" class="ftr-theme" id="themeBtn" aria-pressed="false">Dark mode</button><button class="ftr-top" type="button" id="toTop">Back to top ${ic('chevU')}</button></span>
         </div></div>
       </footer>
       <div class="scrim" id="scrim"></div>
@@ -543,8 +595,8 @@
     const t = totals();
     $('#dCount').textContent = t.n ? `(${t.n})` : '';
     if (!t.lines.length) {
-      body.innerHTML = `<div class="empty"><span class="mono">The bag is empty</span><a class="btn ghost" href="${link('shop')}">Browse Drop 01</a></div>`;
-      $('#dFoot').innerHTML = ''; return;
+      body.innerHTML = bagEmpty(true);
+      $('#dFoot').innerHTML = ''; bindCards(body); return;
     }
     body.innerHTML = freeMeter(t.n) + t.lines.map((d) => lineHTML(d)).join('');
     $('#dFoot').innerHTML = `
@@ -556,6 +608,22 @@
     bindLines(body);
   }
   let rerender = () => { paintCounts(); };
+  // our picks while the bag is empty: pairs in stock, leather and casual first. Shown as picks, never as best sellers,
+  // until real sales say which pairs sell best.
+  function picks(n) {
+    const ok = P.filter((p) => p.variants.some((v) => stockOf(v) > 0));
+    return (ok.length ? ok : P).slice().sort((x, y) => ({ Leather: 0, Hybrids: 1 }[x.category] ?? 2) - ({ Leather: 0, Hybrids: 1 }[y.category] ?? 2)).slice(0, n);
+  }
+  function bagEmpty(compact) {
+    return `<div class="bag-empty${compact ? ' compact' : ''}">
+      <div class="be-top"><div class="be-art">${BAG_ART}</div>
+        <div class="be-t"><h${compact ? 2 : 1} class="be-h">Your bag is empty.<br>Not for long.</h${compact ? 2 : 1}>
+        <p class="be-p">The right pair does not wait for a sale banner, and neither do you. Choose it today and it reaches your door in ${esc(C.delivery.days || '2 to 5 days')}${C.advance.freeAll() ? ', delivered free' : ''}.</p>
+        <div class="be-cta"><a class="btn volt" href="${link('shop')}">Shop all pairs <span class="arr">&rarr;</span></a>${wish.length ? `<a class="btn ghost" href="${link('wishlist')}">Liked pairs (${wish.length})</a>` : `<a class="btn ghost" href="${link('gifts')}">Shop gifts</a>`}</div></div></div>
+      <div class="be-picks"><div class="x-hrow"><h2 class="x-h">Our picks for you</h2><a class="u-link" href="${link('shop')}">See all</a></div>
+        <div class="grid be-grid">${picks(compact ? 4 : 4).map((p, i) => card(p, i)).join('')}</div></div>
+    </div>`;
+  }
 
   /* ---------------- shared blocks ---------------- */
   // marked down pairs carry a tag cut from a hide, hung on a leather thong through a brass eyelet;
@@ -579,7 +647,7 @@
     const nC = p.variants.length;
     return `<article class="card ap-card" data-pid="${p.id}" data-vid="${v.id}">
       <a class="card-media" href="${url}" tabindex="-1" aria-hidden="true">
-        <span class="layer rn">${visual(p, v)}</span><span class="layer bp">${visual(p, v, { mode: 'blueprint' })}</span>${tag}</a>
+        <span class="layer rn">${visual(p, v, { sizes: CARD_SIZES })}</span><span class="layer bp">${second(p, v)}</span>${tag}</a>
       <button class="ap-heart" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" aria-label="Save ${esc(p.name)} to wishlist">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button>
       <a class="card-body" href="${url}">
         <span class="ap-price${onSale(v) ? ' on-sale' : ''}">${fmt(v.price)}</span>
@@ -594,8 +662,16 @@
     $$('.card', root).forEach((c) => {
       const w = $('[data-wish]', c);
       if (w && !w.dataset.bound) { w.dataset.bound = '1'; w.addEventListener('click', (e) => { e.preventDefault(); toggleWish(c.dataset.pid); }); }
+      // the second look loads when a mouse comes near the card, or when the card scrolls into view on a phone
+      if (!c.dataset.wk && $('img[data-src]', c)) {
+        c.dataset.wk = '1';
+        if (FINE) { c.addEventListener('pointerenter', () => wake(c), { once: true }); c.addEventListener('focusin', () => wake(c), { once: true }); }
+        else if (WIO) WIO.observe(c); else wake(c);
+      }
     });
   }
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const WIO = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { wake(e.target); WIO.unobserve(e.target); } }), { rootMargin: '200px 0px' }) : null;
   // a WhatsApp chat with the order line, opened with a first line already typed; nothing is collected on the site
   const waChat = (text) => `https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent(text)}`;
   // written guides under each collection: real answers to what men here ask before they buy, shown on the page for everyone
@@ -652,9 +728,9 @@
         dots.forEach((d, j) => d.classList.toggle('on', j === i));
         if (name) name.textContent = items[i].dataset.n;
       };
-      const start = (wait) => { if (!timer) { step(); timer = setInterval(step, wait); } };
+      const start = (wait) => { if (!timer) { wake(t); step(); timer = setInterval(step, wait); } };
       const stop = () => { clearInterval(timer); timer = 0; };
-      if (hover) { t.addEventListener('mouseenter', () => start(1300)); t.addEventListener('mouseleave', stop); t.addEventListener('focus', () => start(1300)); t.addEventListener('blur', stop); }
+      if (hover) { t.addEventListener('pointerenter', () => wake(t), { once: true }); t.addEventListener('mouseenter', () => start(1300)); t.addEventListener('mouseleave', stop); t.addEventListener('focus', () => start(1300)); t.addEventListener('blur', stop); }
       else if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) start(2600); else stop(); }, { threshold: 0.5 }).observe(t);
     });
   }
@@ -722,9 +798,9 @@
     <div id="homeRw" class="home-rw"></div>
 
     <section class="x-sec"><div class="wrap">
-      <h2 class="x-h">Shop by style</h2>
+      <h2 class="x-h">Choose your style</h2>
       <div class="x-doors">${doors.map((d) => { const vs = d.ps.flatMap((p) => p.variants.slice(0, 2).map((v) => [p, v])).slice(0, 6); return `<a class="x-door f-cyc rv" href="${d.h}">
-        <span class="x-door-m">${vs.length ? vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v)}</span>`).join('') : d.k && simg(d.k) ? photo(d.k, '', { sizes: '50vw' }) : ''}</span>
+        <span class="x-door-m">${vs.length ? vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v, { defer: j > 0, alt: j ? '' : null, sizes: '(min-width: 900px) 25vw, 50vw' })}</span>`).join('') : d.k && simg(d.k) ? photo(d.k, '', { sizes: '50vw' }) : ''}</span>
         <span class="x-door-t">${esc(d.t)}</span>${d.s ? `<span class="x-door-s">${esc(d.s)}</span>` : ''}<span class="x-chip">Shop</span></a>`; }).join('')}</div>
     </div></section>
 
@@ -733,7 +809,7 @@
     <div id="homeNotes"></div>
 
     <section class="x-sec" id="drop"><div class="wrap">
-      <div class="x-hrow"><h2 class="x-h">The latest pairs</h2><a class="u-link" href="${link('shop')}">View all</a></div>
+      <div class="x-hrow"><h2 class="x-h">Fresh from the bench</h2><a class="u-link" href="${link('shop')}">View all</a></div>
       <div class="grid" id="homeGrid">${drop.map((p, i) => card(p, i)).join('')}</div>
     </div></section>
 
@@ -778,10 +854,10 @@
     </div></section>`;
     // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-    runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'} / Naya daur</span>
+    runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'}</span>
       <h1>Pakistan's craft,<br>chosen by hand.</h1>
-      <p class="ur-line" lang="ur" dir="rtl">ایک نیا دور</p>
-      <p>Fine shoes are made in Pakistan every day. Too often they reach you under someone else's name. These carry ours.</p>
+      ${urLock('ul-hero')}
+      <p>Fine shoes are made in Pakistan every day, then sold under someone else's name at someone else's price. These carry ours. Pay for the pair, not the label.</p>
       <small class="rw-hint mono">${fine ? 'Click a pair to choose your size. Drag or scroll to see the next.' : 'Tap a pair to choose your size. Swipe to see the next.'}</small>
       <div class="hero-cta"><a class="btn-box" href="${link('shop')}">Shop all ${ic('arrow')}</a><a class="u-link" href="${link('gifts')}">Gifts</a></div>` });
     bindGifts(app); homeNotes($('#homeNotes')); bindCards(app); bindAnat(app); cutWhenSeen(app); cycleTiles(app);
@@ -798,15 +874,35 @@
   ];
   // the pair that best stands for each person in the guide
   const forPair = (x) => { const ps = x.l ? P.filter((p) => p.category.toLowerCase() === x.l) : P; return ps[0] || P[0]; };
+  // up to five looks for one story; the stories that share all pairs start at different pairs
+  const forPairs = (x, k) => {
+    let ps = x.l ? P.filter((p) => p.category.toLowerCase() === x.l) : P.slice();
+    if (!ps.length) ps = P.slice();
+    if (!x.l && ps.length > 2) { const o = (k * 3) % ps.length; ps = ps.slice(o).concat(ps.slice(0, o)); }
+    const vs = ps.flatMap((p) => p.variants.slice(0, 2).map((v) => [p, v]));
+    return vs.slice(0, 5);
+  };
   function giftBlock(full) {
     const tabs = GIFT_TABS.filter(([, , f]) => f(P).length);
     return `<section class="x-sec x-gift" id="gifts"><div class="wrap">
       <div class="x-hrow"><h2 class="x-h">${full ? 'Gifts by who they are for' : 'Gift guide'}</h2>${full ? '' : `<a class="u-link" href="${link('gifts')}">All gifts</a>`}</div>
-      <div class="x-rail">${FOR.map((x) => { const p = forPair(x), v = p && p.variants[0]; return `<a class="x-story rv" href="${link('shop', x.l)}"><span class="x-story-m">${p ? visual(p, v) : ''}</span><span class="x-story-b"><h3>${esc(x.t)}</h3><p>${esc(x.d)}</p><span class="u-link">${esc(x.c)}</span></span></a>`; }).join('')}</div>
+      <div class="x-rail">${FOR.map((x, k) => { const vs = forPairs(x, k); return `<a class="x-story f-cyc rv" href="${link('shop', x.l)}"><span class="x-story-m">${vs.map(([p, v], j) => `<span class="f-cy${j ? '' : ' on'}" data-n="${esc(p.name)}">${visual(p, v, { defer: j > 0, alt: j ? '' : null, sizes: '(min-width: 900px) 25vw, 70vw' })}</span>`).join('')}</span><span class="x-story-b"><h3>${esc(x.t)}</h3><p>${esc(x.d)}</p><span class="u-link">${esc(x.c)}</span></span></a>`; }).join('')}</div>
       <div class="x-tabs" role="tablist" aria-label="Gift shelf">${tabs.map(([k, t], i) => `<button type="button" role="tab" data-gt="${k}" aria-selected="${i === 0}">${esc(t)}</button>`).join('')}</div>
       <div class="grid x-shelf" id="giftShelf">${(tabs[0] ? tabs[0][2](P) : []).slice(0, full ? 12 : 4).map((p, i) => card(p, i)).join('')}</div>
       <div class="f-gift rv"><span class="f-pi" aria-hidden="true">${ic('ruler')}</span><p><b>Not sure of his size?</b> Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size. If it does not fit, a full price pair can be exchanged within ${C.exchangeDays || 5} days, unworn with the seal on.</p>
         <a class="btn-box ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I am buying a pair as a gift and need help with the size.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask us on WhatsApp</a></div>
+    </div></section>`;
+  }
+  // how a gift is sent: packing on request, the giver's own note, and full payment in advance
+  function giftServe() {
+    return `<section class="x-sec gift-serve"><div class="wrap">
+      <div class="x-hrow"><h2 class="x-h">Send it as a gift</h2></div>
+      <div class="gs-grid">
+        <div class="gs-i rv">${ic('gift')}<h3>Gift packing on request</h3><p>Tick <b>This is a gift</b> in your bag and ask for gift packing. The pair leaves Islamabad ready to be handed over, not unwrapped from a courier sleeve.</p></div>
+        <div class="gs-i rv">${ic('mail')}<h3>Your words, in the box</h3><p>Dedicate the pair to him. Write a personal note in your bag and we place it with the pair, so the first thing he reads is from you.</p></div>
+        <div class="gs-i rv">${ic('check')}<h3>Paid in full, nothing at his door</h3><p>Gift orders are paid in full in advance by bank transfer. He receives the pair and your note, never a bill.</p></div>
+      </div>
+      <div class="gs-cta"><a class="btn volt" href="${link('shop')}">Choose his pair <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I want to send a pair as a gift with gift packing and a note.')}" target="_blank" rel="noopener">${ic('whatsapp')}Plan a gift on WhatsApp</a></div>
     </div></section>`;
   }
   function bindGifts(root) {
@@ -820,12 +916,13 @@
     }));
   }
   V.gifts = function () {
-    setMeta('Gifts for Men: Leather Shoes and Sneakers | DAUR Supply', 'Gift guide for the men in your life: leather shoes, sneakers and casual pairs from DAUR Supply, with help choosing his size and Cash on Delivery across Pakistan.');
+    setMeta('Gifts for Men: Leather Shoes and Sneakers | DAUR Supply', 'Gift guide for the men in your life: leather shoes, sneakers and casual pairs from DAUR Supply, gift packing on request, your own note in the box and delivery across Pakistan.');
     app.dataset.full = '1';
-    app.innerHTML = `<section class="phero x-phero"><div class="wrap"><h1>Gifts</h1><p class="aside">For your son, your husband, your father, your brother, your friend. Choose the pair, we bring it to the door in ${esc(C.delivery.days || '2 to 5 days')}.</p></div></section>
+    app.innerHTML = `<section class="phero x-phero"><div class="wrap"><h1>Gifts</h1><p class="aside">For your son, your husband, your father, your brother, your friend. A pair he will wear for years says more than anything wrapped in a shop bag. Choose it, and we bring it to his door in ${esc(C.delivery.days || '2 to 5 days')}.</p></div></section>
+      ${giftServe()}
       ${giftBlock(true)}
       ${resources()}`;
-    bindGifts(app); bindCards(app);
+    bindGifts(app); bindCards(app); cycleTiles(app);
   };
 
   /* ---- Fit notes on the home page: only approved notes from the store with five hearts, the fullest first ---- */
@@ -1014,7 +1111,7 @@
     app.innerHTML = `
       <section class="shero shero-${hk}">
         <div class="shero-bg" aria-hidden="true"><div class="shero-mq">${(title + ' + ').repeat(8)}</div></div>
-        <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="${link('home')}">Home</a><span>/</span>${pre.aud || pre.cat || pre.sale || pre.sort ? `<a href="${link('shop')}">Shop</a><span>/</span><span>${esc(h1)}</span>` : `<span>${esc(h1)}</span>`}</nav>
+        <div class="wrap">
           <div class="shero-grid"><div class="shero-t"><span class="eyebrow">${HERO[hk][0]}</span><h1 class="split" aria-label="${esc(h1)}">${letters(h1)}</h1><p>${HERO[hk][1]}</p></div>
           <div class="shero-stats">${stats.map(([k, n, suf, money]) => `<div><span class="mono">${k}</span><b class="num">${money ? C.currency + ' ' : ''}${typeof n === 'number' ? `<span data-count="${n}">${n.toLocaleString('en-US')}</span>` : n}${suf}</b></div>`).join('')}</div></div></div>
         ${parade.length ? `<div class="parade" aria-hidden="true"><div class="parade-track">${parade.map(([p, v], i) => `<a class="pd" href="${link('product', p.id + '~' + v.id)}" tabindex="-1" style="--d:${(i % 5) * -0.7}s">${visual(p, v)}${pre.sale ? `<em>&minus;${pct(v)}%</em>` : ''}</a>`).join('')}</div></div>` : ''}
@@ -1192,7 +1289,7 @@
             ${views.length > 1 ? `<span class="gal-edge l" aria-hidden="true"></span><span class="gal-edge r" aria-hidden="true"></span><div class="gal-dots">${views.map((x, i) => `<button class="gal-dot" type="button" data-view="${i}" aria-current="${i === view}" aria-label="Show photo ${i + 1} of ${views.length}"></button>`).join('')}</div>` : ''}</div>
         </div>
         <div class="buy">
-          <div class="buy-head"><span class="cw">${esc(audienceLabel(p))} / ${esc(lineName(p.category))} / ${esc(p.tag)}</span><h1>${esc(p.name)}</h1>
+          <div class="buy-head"><span class="cw">${esc(lineName(p.category))}</span><h1>${esc(p.name)}</h1>
             <div class="price-row"><span class="now">${fmt(v.price)}</span><span class="pcol">${esc(v.color)}</span>${onSale(v) ? `<span class="was strike">${fmt(v.compareAt)}</span><span class="save">Save ${pct(v)}%</span>` : SELL.retailAnchor ? `<span class="was">Typical retail <span class="strike">${fmt(C.marketRetail)}+</span></span>` : ''}</div>
             ${perWear(v.price)}
             ${GIVE.on ? `<button class="slice-note" id="sliceB" type="button" aria-haspopup="dialog" data-recut>${loaf(GIVE.pct + '%')}<span class="sl-t"><b>A slice of this pair goes to someone in need.</b><span>At least ${GIVE.pct}% of our profit on it. Your price stays the same.</span></span></button>` : ''}
@@ -1295,14 +1392,14 @@
     function paint() {
       const t = totals();
       if (!t.lines.length) {
-        app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Bag</span><h1>Empty.</h1><p class="aside">Nothing sealed yet.</p></div></section><div class="wrap"><div class="empty"><a class="btn volt" href="${link('shop')}">Shop Drop 01 <span class="arr">&rarr;</span></a>${wish.length ? `<a class="link" href="${link('wishlist')}">Open your wishlist (${wish.length})</a>` : ''}</div></div>`;
-        return;
+        app.innerHTML = `<div class="wrap">${bagEmpty(false)}</div>`;
+        bindCards(app); return;
       }
-      app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Bag / ${t.n} pair${t.n > 1 ? 's' : ''}</span><h1>Your bag.</h1><p class="aside">Saved on this device. A size is held for you once the order is placed.</p></div></section>
+      app.innerHTML = `<section class="phero"><div class="wrap"><h1>Your bag.</h1><p class="aside">Saved on this device. A size is held for you once the order is placed.</p></div></section>
       <div class="wrap"><div class="two cart-page"><div class="main">${freeMeter(t.n)}${t.lines.map((d) => lineHTML(d, true)).join('')}
         <a class="link" href="${link('shop')}" style="display:inline-block;margin-top:24px">Continue shopping</a></div>
         <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout${C.advance.required ? '' : ', Cash on Delivery'} <span class="arr">&rarr;</span></a><p class="form-note">One delivery fee for all of Pakistan, confirmed at checkout.</p></aside></div></div>`;
-      bindLines(app); bindPromo(paint); bindVote(app);
+      bindLines(app); bindPromo(paint); bindVote(app); bindGift(paint);
     }
     rerender = () => { paintCounts(); paint(); };
     paint();
@@ -1316,18 +1413,36 @@
       <div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>
       ${C.advance.required ? '' : `<div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>`}
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
-      ${C.advance.on && C.advance.required && t.n ? careBox(t) : ''}
+      ${promo && t.n ? giftBox() : ''}
+      ${(C.advance.on && C.advance.required || gift.on) && t.n ? careBox(t) : ''}
       ${keptBox(t)}
       ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>${votePicker()}` : ''}
       ${SELL.retailAnchor ? `<div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>` : ''}`;
   }
   // the Care deposit for this exact bag: what is sent first by bank transfer, and what is left for the rider
   function careBox(t) {
-    const A = C.advance, due = A.due(t.total), rest = t.total - due;
-    return `<div class="care-box"><div class="sum-row"><span><b>${esc(A.care)} to send now</b></span><span><b>${fmt(due)}</b></span></div>
+    const A = C.advance, due = gift.on ? t.total : A.due(t.total), rest = t.total - due;
+    return `<div class="care-box"><div class="sum-row"><span><b>${gift.on ? 'Gift, paid in full now' : esc(A.care) + ' to send now'}</b></span><span><b>${fmt(due)}</b></span></div>
       <div class="sum-row"><span>${rest ? 'Pay the rider on delivery' : 'Nothing to pay on delivery'}</span><span>${fmt(rest)}</span></div>
-      <p class="form-note">${rest ? 'Send the ' + esc(A.care) + ' by bank transfer after you place the order. It comes off your total, and it is refunded in full if you cancel before dispatch.' : 'Orders above ' + fmt(A.fullAbove) + ' are paid in full by bank transfer before dispatch.'} We dispatch once your payment reaches us.</p>
+      <p class="form-note">${gift.on ? 'Gift orders are paid in full by bank transfer after you place the order, so the person receiving it never pays at the door. Refunded in full if you cancel before dispatch.' : rest ? 'Send the ' + esc(A.care) + ' by bank transfer after you place the order. It comes off your total, and it is refunded in full if you cancel before dispatch.' : 'Orders above ' + fmt(A.fullAbove) + ' are paid in full by bank transfer before dispatch.'} We dispatch once your payment reaches us.</p>
       <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
+  }
+  function giftBox() {
+    return `<div class="gift-box${gift.on ? ' on' : ''}">
+      <label class="gb-t"><input type="checkbox" id="giftOn"${gift.on ? ' checked' : ''}><span class="gb-tx"><b>${ic('gift')}This is a gift</b><small>Gift packing on request and your own note in the box. Gifts are paid in full in advance.</small></span></label>
+      ${gift.on ? `<div class="gb-f">
+        <label class="gb-c"><input type="checkbox" id="giftPack"${gift.pack ? ' checked' : ''}><span>Add gift packing</span></label>
+        <label class="gb-l"><span>Who is it for?</span><input id="giftTo" maxlength="40" placeholder="His name" value="${esc(gift.to)}" autocomplete="off"></label>
+        <label class="gb-l"><span>Your note <em id="giftN">${240 - gift.note.length}</em></span><textarea id="giftNote" maxlength="240" rows="3" placeholder="Eid Mubarak, Abbu. For every step ahead.">${esc(gift.note)}</textarea></label>
+        <p class="form-note">We place your note with the pair. The price stays off the parcel.</p></div>` : ''}
+    </div>`;
+  }
+  function bindGift(cb) {
+    const on = $('#giftOn'); if (!on) return;
+    on.addEventListener('change', () => { gift.on = on.checked; saveGift(); cb(); toast(gift.on ? 'Marked as a gift: paid in full in advance' : 'Gift removed'); });
+    const pk = $('#giftPack'); if (pk) pk.addEventListener('change', () => { gift.pack = pk.checked; saveGift(); });
+    const to = $('#giftTo'); if (to) to.addEventListener('input', () => { gift.to = to.value.slice(0, 40); saveGift(); });
+    const nt = $('#giftNote'); if (nt) nt.addEventListener('input', () => { gift.note = nt.value.slice(0, 240); saveGift(); $('#giftN').textContent = 240 - gift.note.length; });
   }
   function bindPromo(cb) {
     const b = $('#promoBtn'); if (!b) return;
@@ -1362,7 +1477,7 @@
     setMeta('Checkout | DAUR Supply', 'Cash on Delivery checkout for DAUR Supply. Delivery to every city in Pakistan.');
     if (!cart.length) { location.replace(link('cart')); if (SPA) route(); return; }
     const draft = store.get('draft', {});
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Checkout${C.advance.required ? '' : ' / Cash on Delivery'}</span><h1>Seal the order.</h1><p class="aside">No card needed: pay the rider at your door, or pay in advance and delivery is free. We confirm by call or WhatsApp, then dispatch within 24 hours.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><h1>Seal the order.</h1><p class="aside">No card needed: pay the rider at your door, or pay in advance and delivery is free. We confirm by call or WhatsApp, then dispatch within 24 hours.</p></div></section>
       <div class="wrap"><form class="two" id="co" novalidate><div class="main">
         <fieldset><legend><span>01</span> Contact</legend>
           <div class="f-row"><div class="f"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required><span class="err"></span></div>
@@ -1416,7 +1531,7 @@
       const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), via: f.via.value, waUpdates: f.waUpdates.checked },
         address: { city: f.city.value.trim(), area: f.area.value.trim(), address: f.address.value.trim(), landmark: f.landmark.value.trim(), postal: f.postal.value.trim(), note: f.note.value.trim() },
         items: t.lines.map((d) => ({ pid: d.p.id, name: d.p.name, color: d.v.color, size: d.l.size, qty: d.l.qty, price: d.v.price })),
-        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: 'Cash on Delivery', sliceCause: window.DAUR_SLICE_VOTE() };
+        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: gift.on ? 'Gift, paid in full in advance' : C.advance.required ? 'Advance payment' : 'Cash on Delivery', sliceCause: window.DAUR_SLICE_VOTE(), gift: window.DAUR_GIFT() };
       const orders = store.get('orders', []); orders.unshift(order); store.set('orders', orders);
       t.lines.forEach((d) => { d.v.received = d.v.received || Object.assign({}, d.v.stock); d.v.stock[d.l.size] = Math.max(0, (d.v.stock[d.l.size] || 0) - d.l.qty); });
       store.set('catalog', ALL);
@@ -1493,7 +1608,7 @@
   V.wishlist = function () {
     setMeta('Liked pairs | DAUR Supply', 'The DAUR Supply pairs you liked.');
     const ps = wish.map(prod).filter(Boolean);
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Liked / ${ps.length}</span><h1>Liked pairs.</h1><p class="aside">Your shortlist, saved on this device. When you are ready, your size is a tap away.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><h1>Liked pairs.</h1><p class="aside">Your shortlist, saved on this device. When you are ready, your size is a tap away.</p></div></section>
       <div class="wrap" style="padding-block:32px 96px">${ps.length ? `<div class="grid">${ps.map((p, i) => card(p, i)).join('')}</div>` : `<div class="empty"><span class="mono">Nothing saved yet</span><a class="btn ghost" href="${link('shop')}">Browse the catalog</a></div>`}</div>`;
     bindCards(app);
   };
@@ -2300,6 +2415,40 @@
   const hook = (name, arg) => (EXT.hooks[name] || []).forEach((fn) => fn(arg));
   chrome();
   route();
+  // the next page starts loading the moment a finger touches a link or a mouse rests on it, so it opens almost at once
+  (function prefetch() {
+    const seen = new Set(), slow = navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType || ''));
+    const go = (e) => {
+      const a = e.target.closest && e.target.closest('a[href]'); if (!a || slow) return;
+      const u = new URL(a.href, location.href);
+      if (u.origin !== location.origin || u.hash && u.pathname === location.pathname || /\/(cart|checkout|account|checkouts)\b/.test(u.pathname) || a.target === '_blank') return;
+      const k = u.pathname + u.search; if (seen.has(k) || seen.size > 40) return; seen.add(k);
+      const l = document.createElement('link'); l.rel = 'prefetch'; l.href = k; document.head.appendChild(l);
+    };
+    document.addEventListener('pointerover', (e) => { if (e.pointerType === 'mouse') { clearTimeout(go.t); go.t = setTimeout(() => go(e), 80); } }, { passive: true });
+    document.addEventListener('touchstart', go, { passive: true });
+  })();
+  // cookies: the bag, liked pairs and choices are kept on this phone so every visit picks up where it stopped.
+  // The first visit asks once; the answer is remembered and passed to Shopify's own consent record.
+  (function cookies() {
+    if (store.get('consent', '')) return;
+    const ask = () => {
+      document.body.insertAdjacentHTML('beforeend', `<div class="ck" id="ck" role="dialog" aria-live="polite" aria-label="Cookies"><div class="ck-t"><b>Faster on every visit.</b> We use cookies to keep your bag and liked pairs ready, remember your choices and learn which pages help shoppers most. <a href="${link('policies', 'privacy')}">Privacy policy</a></div><div class="ck-b"><button type="button" class="btn volt" data-ck="all">Accept all</button><button type="button" class="btn ghost" data-ck="ess">Essential only</button></div></div>`);
+      const box = $('#ck');
+      requestAnimationFrame(() => box.classList.add('on'));
+      box.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-ck]'); if (!b) return;
+        const all = b.dataset.ck === 'all';
+        store.set('consent', all ? 'all' : 'essential');
+        const set = () => { try { window.Shopify.customerPrivacy.setTrackingConsent({ analytics: all, marketing: all, preferences: true, sale_of_data: false }, () => {}); } catch (err) { /* consent API not on this page */ } };
+        if (window.Shopify && window.Shopify.customerPrivacy) set();
+        else if (window.Shopify && window.Shopify.loadFeatures) window.Shopify.loadFeatures([{ name: 'consent-tracking-api', version: '0.1' }], (err) => { if (!err) set(); });
+        box.classList.remove('on'); setTimeout(() => box.remove(), 400);
+      });
+    };
+    // asked after the page is showing, so it never holds up the first screen
+    setTimeout(() => (window.requestIdleCallback ? requestIdleCallback(ask, { timeout: 4000 }) : ask()), 2500);
+  })();
   window.addEventListener('hashchange', () => {
     const { page, param } = current();
     if (!SPA && page === 'contract') { const t = document.getElementById(param); if (t) t.scrollIntoView(); return; }
