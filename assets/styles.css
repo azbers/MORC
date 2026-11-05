@@ -2889,3 +2889,5 @@ p .link, li .link, td .link { font: inherit; letter-spacing: 0; text-transform: 
 .u-link { padding: 6px 0; }
 .crumbs a { padding: 8px 0; }
 .ftr-theme { padding: 10px 0; }
+.code-msg.wa-r { display: inline-flex; align-items: center; gap: 6px; color: var(--bone); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; padding: 6px 0; }
+.code-msg.wa-r .ic { width: 16px; height: 16px; }
