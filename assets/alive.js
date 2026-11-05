@@ -367,7 +367,8 @@
       booted = true; progress(); bagBump();
       // decoration starts once the page is showing and the phone is free, in small steps, so the first screen is never held up
       const idle = (fn, t) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: t }) : setTimeout(fn, 200));
-      idle(() => { cursor(); tilt(); magnets(); }, 1200);
+      // the sports store look keeps the normal pointer: no shoe cursor, no tilting tiles, no buttons drifting (owner, 5 Nov 2026)
+      if (window.DAUR_FX_PLAY) idle(() => { cursor(); tilt(); magnets(); }, 1200);
       idle(() => bigWord(), 2500);
       idle(() => pit(), 3500);
     }
