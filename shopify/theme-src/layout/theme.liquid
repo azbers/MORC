@@ -134,7 +134,8 @@
 <link rel="apple-touch-icon" href="{{ 'daur-favicon-180.png' | asset_url }}">
 {%- endif %}
 {%- comment -%} the three brand fonts are served from the theme itself (no Google Fonts round trips); the heading font is fetched first {%- endcomment -%}
-<link rel="preload" as="font" type="font/woff2" href="{{ 'font-grotesk.woff2' | asset_url }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ 'font-cond-700.woff2' | asset_url }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ 'font-sans-400.woff2' | asset_url }}" crossorigin>
 {{ 'styles.css' | asset_url | stylesheet_tag }}
 {%- comment -%} the small Shopify only stylesheet is printed inline, so it is not a second file holding up the first paint {%- endcomment -%}
 <style>{% render 'daur-theme-css' %}</style>

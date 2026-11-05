@@ -10,7 +10,7 @@ const sandbox = { window: {} };
 require('vm').runInNewContext(fs.readFileSync(path.join(root, 'assets/data.js'), 'utf8'), sandbox);
 const C = sandbox.window.DAUR_CONFIG;
 
-const FONTS = '<link rel="preload" as="font" type="font/woff2" href="assets/font-grotesk.woff2" crossorigin>';
+const FONTS = '<link rel="preload" as="font" type="font/woff2" href="assets/font-cond-700.woff2" crossorigin>\n<link rel="preload" as="font" type="font/woff2" href="assets/font-sans-400.woff2" crossorigin>';
 
 const THEME_BOOT = '<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem(\'daur.theme\')===\'dark\')d.dataset.theme=\'dark\';if(localStorage.getItem(\'daur.grid\')===\'1\')d.classList.add(\'grid-1\')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add(\'lite\')}catch(e){}</script>';
 
