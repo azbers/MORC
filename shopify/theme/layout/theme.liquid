@@ -28,7 +28,7 @@
     when '404'
       assign daur_page = 'notfound'
     when 'page'
-      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers,runway:runway,giving:giving' | split: ','
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers,runway:runway,giving:giving,gifts:gifts' | split: ','
       for pair in views
         assign kv = pair | split: ':'
         if page.handle == kv[0]
@@ -72,7 +72,7 @@
   endif
 -%}
 {%- if daur_noindex %}<meta name="robots" content="noindex">{% endif %}
-<meta name="theme-color" content="#F5EEE4">
+<meta name="theme-color" content="#FFFFFF">
 <script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
 {%- comment -%} Link previews (WhatsApp, Facebook, Instagram DMs, X): every page gets a title, a description and a 1200 x 630 image. Image order: product photo, article photo, the page's own social image, the Social sharing image in Online Store > Preferences, the theme share image setting, then assets/daur-share.jpg. {%- endcomment -%}
 {%- liquid
@@ -135,7 +135,6 @@
 {%- endif %}
 {%- comment -%} the three brand fonts are served from the theme itself (no Google Fonts round trips); the heading font is fetched first {%- endcomment -%}
 <link rel="preload" as="font" type="font/woff2" href="{{ 'font-grotesk.woff2' | asset_url }}" crossorigin>
-<link rel="preload" as="image" href="{{ 'leather.jpg' | asset_url }}">
 {{ 'styles.css' | asset_url | stylesheet_tag }}
 {%- comment -%} the small Shopify only stylesheet is printed inline, so it is not a second file holding up the first paint {%- endcomment -%}
 <style>{% render 'daur-theme-css' %}</style>
@@ -144,6 +143,7 @@
 {{ content_for_header }}
 </head>
 <body data-page="{{ daur_page }}">
+{% render 'daur-loader' %}
 <div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1">{{ content_for_layout }}</main>
 {% render 'daur-data', product: product, daur_param: daur_param %}

@@ -69,7 +69,26 @@
         "type": "text",
         "id": "delivery_days",
         "label": "Delivery time shown",
-        "default": "2 to 6 working days"
+        "default": "2 to 5 days"
+      },
+      {
+        "type": "checkbox",
+        "id": "advance_on",
+        "label": "Free delivery on advance payment or a Care deposit",
+        "info": "Shows the offer in the top bar, the grey strip, policies and FAQ. Keep the free delivery code below active in Discounts.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "advance_code",
+        "label": "Free delivery code for advance payment",
+        "default": "DAURCARE"
+      },
+      {
+        "type": "number",
+        "id": "advance_deposit",
+        "label": "Smallest Care deposit (Rs.)",
+        "default": 500
       },
       {
         "type": "number",
