@@ -2876,3 +2876,16 @@ h1, h2, h3, h4 { color: var(--bone); }
 .code-msg.err { color: var(--sale); }
 .code-msg.ok { color: #1E7B3A; }
 :root[data-theme="dark"] .code-msg.ok { color: #6FD08C; }
+
+/* full review (5 Nov 2026): one heading voice on every page, no leftover grid marks, plain links in running text, bigger tap areas */
+.shead h2, .guide-h h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; letter-spacing: -.01em; font-size: clamp(26px, 3.6vw, 44px); line-height: 1.02; }
+.guide-h h2 { margin: 6px 0 16px; }
+.x::before, .x::after { display: none !important; }
+p .link, li .link, td .link { font: inherit; letter-spacing: 0; text-transform: none; padding-bottom: 0; border-bottom: 0; text-decoration: underline; text-underline-offset: 3px; }
+.clause ol { padding-left: 30px; }
+.clause ol li::marker { content: counter(list-item) ". "; font-family: var(--display); }
+.sw-b { position: relative; }
+.sw-b::after { content: ""; position: absolute; inset: -8px; }
+.u-link { padding: 6px 0; }
+.crumbs a { padding: 8px 0; }
+.ftr-theme { padding: 10px 0; }

@@ -300,7 +300,8 @@
     const tbRun = NOTES.map((n, i) => `<span class="tb-msg${i ? '' : ' on'}">${esc(n.t)}</span>`).join('');
     const WORDMARK = '<svg class="wm" viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
     const LOGO = `<a class="logo" href="${link('home')}" aria-label="DAUR Supply home">${WORDMARK}<small>SUPPLY</small></a>`;
-    const strip = C.advance && C.advance.on ? ['Free delivery with advance payment or a ' + C.advance.care, link('policies', 'advance')] : ['Free delivery on ' + C.freeDeliveryPairs + ' pairs or more', link('shop')];
+    // the black bar already carries the delivery offers, so the grey strip points to the gift guide instead of repeating them
+    const strip = ['Gift guide: shoes for the men in your life', link('gifts')];
     // the page holds the header's room from the first paint (.hdr-ph), so nothing moves when the header arrives
     const ph = document.querySelector('.hdr-ph'); if (ph) ph.remove();
     document.body.insertAdjacentHTML('afterbegin', `
@@ -1362,7 +1363,7 @@
     setMeta('Checkout | DAUR Supply', 'Cash on Delivery checkout for DAUR Supply. Delivery to every city in Pakistan.');
     if (!cart.length) { location.replace(link('cart')); if (SPA) route(); return; }
     const draft = store.get('draft', {});
-    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Checkout / Cash on Delivery</span><h1>Seal the order.</h1><p class="aside">No card, no advance. We confirm by call or WhatsApp, then dispatch within 24 hours.</p></div></section>
+    app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Checkout / Cash on Delivery</span><h1>Seal the order.</h1><p class="aside">No card needed: pay the rider at your door, or pay in advance and delivery is free. We confirm by call or WhatsApp, then dispatch within 24 hours.</p></div></section>
       <div class="wrap"><form class="two" id="co" novalidate><div class="main">
         <fieldset><legend><span>01</span> Contact</legend>
           <div class="f-row"><div class="f"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required><span class="err"></span></div>
@@ -2230,6 +2231,8 @@
       ['Are the shoes real leather?', 'Each product page lists the upper, lining and sole of that pair. Our leather shoes and chelsea boots are full grain leather; sneakers list their leather, suede or mesh parts in the specs.'],
       ['Can I open the parcel before paying?', 'This depends on the courier, and most do not allow it. Record a short unboxing video. If anything is wrong, send it to us on WhatsApp and the defect and exchange terms apply.'],
       ['How do I pick my size?', 'Trace your foot on paper, measure heel to the tip of your longest toe in centimetres and match it to the size guide. If you are between sizes, go for the larger one.'],
+      ['I am buying for someone else. How do I choose the size?', 'Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size. If it does not fit, a full price pair can be exchanged within ' + (C.exchangeDays || 5) + ' days, unworn with the seal on. Sale pairs are final for size. You can also message us on WhatsApp and we will help you choose.'],
+      ['Can I send a pair to someone else\'s address?', 'Yes. Enter their name, number and address at checkout. If the order is Cash on Delivery, the person who receives the parcel pays the rider, so please let them know the amount first. To send it fully paid, pay in advance and delivery is free.'],
       ['Do you deliver to my city?', 'Yes. We deliver to every city and town in Pakistan that our courier reaches, in ' + C.delivery.days + ', for ' + fmt(C.delivery.fee) + ', or free on ' + C.freeDeliveryPairs + ' pairs or more.'],
       ['How long does delivery take?', 'We dispatch within 24 hours of confirming your order. Delivery then takes ' + C.delivery.days + ' in most cities. Remote areas and public holidays can take longer.'],
       ...(GIVE.on ? [['Where does the 5% go?', 'At least ' + GIVE.pct + '% of the profit we make on every pair is set aside, never added to your price. Every quarter we give it to one verified case of need, chosen by the votes of that quarter\'s buyers, and publish the record on the Our giving page.']] : []),
