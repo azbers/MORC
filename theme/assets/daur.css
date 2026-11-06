@@ -946,3 +946,13 @@ html.has-sticky-buy .site-footer { padding-bottom: 84px; }
 .liked__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .liked__note { margin-top: var(--s-6, 32px); }
 .feed-posts__liked { margin: 0 0 var(--s-4, 16px); }
+/* Fit notes */
+.fit-notes__list { list-style: none; margin: 0 0 var(--s-6, 32px); padding: 0; display: grid; gap: var(--s-4, 16px); grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.fit-note { border: 1px solid var(--c-line, #ddd); border-radius: var(--radius, 4px); padding: var(--s-4, 16px); display: grid; gap: 8px; align-content: start; }
+.fit-note__title { margin: 0; font-size: 1rem; }
+.fit-note__body { margin: 0; }
+.fit-heart { color: #CFC8BE; font-size: 18px; line-height: 1; }
+.fit-heart.is-on { color: #9B0F1E; }
+.fit-notes__share summary { list-style: none; cursor: pointer; display: inline-flex; }
+.fit-notes__share summary::-webkit-details-marker { display: none; }
+.fit-notes__form { margin-top: var(--s-4, 16px); max-width: 560px; display: grid; gap: var(--s-3, 12px); }

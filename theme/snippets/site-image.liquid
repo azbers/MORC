@@ -9,11 +9,22 @@
   assign img_alt = image.alt | default: alt
   assign w = widths | default: '480, 720, 960, 1200, 1600'
   assign test_url = ''
-  if image == blank and key != blank and theme.role != 'main' and settings.test_photos
-    capture test_url
-      render 'test-photo', key: key
-    endcapture
-    assign test_url = test_url | strip
+  if image == blank and settings.test_photos
+    if key != blank
+      capture test_url
+        render 'test-photo', key: key
+      endcapture
+      assign test_url = test_url | strip
+    endif
+    if test_url == ''
+      # no photo chosen for this slot yet: borrow one of the site test photos, picked from the slot text so it stays the same
+      assign pool = 'site-hero,site-sneakers,site-casual,site-leather,site-workshop,site-checked,site-door,site-bench,site-shop,site-tools' | split: ','
+      assign seed = need | append: alt | append: key | size | modulo: pool.size
+      capture test_url
+        render 'test-photo', key: pool[seed]
+      endcapture
+      assign test_url = test_url | strip
+    endif
   endif
 -%}
 {%- if image != blank -%}

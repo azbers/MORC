@@ -195,12 +195,12 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Test photos are other shoes, used only to check layouts. They never show on the live theme, and every one is flagged on screen. Real DAUR photographs must replace them before launch."
+        "content": "Test photos are other shoes, used while the store is in testing. They show on every theme while this box is ticked, each with a small Test photo tag. Untick it once real DAUR photographs are in."
       },
       {
         "type": "checkbox",
         "id": "test_photos",
-        "label": "Show test photos on this unpublished theme",
+        "label": "Show test photos",
         "default": true
       }
     ]

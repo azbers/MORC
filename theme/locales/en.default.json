@@ -402,5 +402,18 @@
       "title": "Liked pairs",
       "description": "The DAUR Supply pairs you saved on this device."
     }
+  },
+  "fit_notes": {
+    "summary": "{{ avg }} of 5 hearts from {{ count }} fit notes.",
+    "city": "City",
+    "email_note": "Only for our reply. Never shown.",
+    "rating": "Hearts (5 is best)",
+    "size": "Size you wear",
+    "fit": "How it fits",
+    "true": "True to size",
+    "small": "Runs small",
+    "large": "Runs large",
+    "note": "Your note on fit and comfort",
+    "send": "Send fit note"
   }
 }

@@ -86,7 +86,7 @@
               {%- if section.settings.mega_image != blank -%}
                 {{ section.settings.mega_image | image_url: width: 900 | image_tag: widths: '450, 675, 900', sizes: '33vw', loading: 'lazy', alt: section.settings.mega_image.alt }}
               {%- else -%}
-                <span class="placeholder-art"><span><strong>{{ 'dev.placeholder' | t }}</strong>{{ 'dev.needs_photo' | t }}</span></span>
+                {%- render 'site-image', image: blank, key: 'site-shop', need: 'mega', sizes: '33vw' -%}
               {%- endif -%}
             </span>
             <span class="mega__feature-text"><h3>{{ section.settings.mega_heading | escape }}</h3><span class="link-arrow">{{ section.settings.mega_cta | escape }}{% render 'icon', name: 'arrow-right' %}</span></span>

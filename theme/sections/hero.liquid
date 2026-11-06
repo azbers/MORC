@@ -7,7 +7,7 @@
   assign img_d = section.settings.image
   assign img_m = section.settings.image_mobile | default: img_d
   assign test_url = ''
-  if img_d == blank and theme.role != 'main' and settings.test_photos
+  if img_d == blank and settings.test_photos
     capture test_url
       render 'test-photo', key: 'site-hero'
     endcapture

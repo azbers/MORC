@@ -2,7 +2,7 @@
 <li class="cart-item" data-line="{{ index }}" data-key="{{ item.key }}">
   <a class="media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
     {%- if item.image -%}
-      {%- capture test_url -%}{% if theme.role != 'main' and settings.test_photos %}{% render 'test-photo', key: item.product.handle, index: 0 %}{% endif %}{%- endcapture -%}
+      {%- capture test_url -%}{% if settings.test_photos %}{% render 'test-photo', key: item.product.handle, index: 0 %}{% endif %}{%- endcapture -%}
       {%- assign test_url = test_url | strip -%}
       {%- if test_url != '' -%}
         {%- assign base = test_url | split: '?' | first -%}<img class="is-photo" src="{{ base }}?width=200" alt="" width="200" height="200" loading="lazy"><span class="dev-flag">{{ 'dev.test_short' | t }}</span>

@@ -1,8 +1,26 @@
 {
   "sections": {
-    "main": { "type": "main-product", "settings": {} },
-    "story": { "type": "product-story", "settings": {} },
-    "related": { "type": "product-recommendations", "settings": {} }
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "story": {
+      "type": "product-story",
+      "settings": {}
+    },
+    "related": {
+      "type": "product-recommendations",
+      "settings": {}
+    },
+    "fit_notes": {
+      "type": "fit-notes",
+      "settings": {}
+    }
   },
-  "order": ["main", "story", "related"]
+  "order": [
+    "main",
+    "story",
+    "fit_notes",
+    "related"
+  ]
 }

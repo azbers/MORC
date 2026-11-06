@@ -19,14 +19,25 @@
     assign is_dev = true
   endif
   assign test_url = ''
-  if is_dev and settings.test_photos
-    capture test_url
-      render 'test-photo', key: product.handle, index: i
+  assign own_i = i
+  if settings.test_photos
+    capture t_first
+      render 'test-photo', key: product.handle, index: 0
     endcapture
-    assign test_url = test_url | strip
+    if t_first != blank
+      if i < 5
+        capture test_url
+          render 'test-photo', key: product.handle, index: i
+        endcapture
+        assign test_url = test_url | strip
+      else
+        # gallery: the 5 test photos come first, then the pair's own photos and drawings
+        assign own_i = i | minus: 5
+      endif
+    endif
   endif
-  assign m = product.media[i]
-  if i == 0 and product.featured_media
+  assign m = product.media[own_i]
+  if own_i == 0 and product.featured_media
     assign m = product.featured_media
   endif
 -%}

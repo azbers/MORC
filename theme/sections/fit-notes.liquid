@@ -1,0 +1,102 @@
+{%- comment -%}
+  Fit notes (customer reviews) for this pair. Reads the "Fit note" metaobjects whose Product is this pair and
+  whose Status is Approved; nothing else is shown. Hearts show the rating the buyer gave. No review rich
+  result markup is printed. The form emails a new note to the store (Shopify contact form); the team adds it
+  in Content > Metaobjects > Fit note and sets Status to Approved.
+{%- endcomment -%}
+{%- liquid
+  assign notes_html = ''
+  assign n = 0
+  assign total = 0
+  for note in shop.metaobjects.fit_note.values
+    assign st = note.status.value | default: note.status | downcase
+    if st != 'approved'
+      continue
+    endif
+    assign np = note.product.value
+    if np.id != product.id
+      continue
+    endif
+    assign n = n | plus: 1
+    assign r = note.rating.value | default: note.rating | plus: 0
+    assign total = total | plus: r
+    assign t_esc = note.title | escape
+    assign b_esc = note.body | escape | newline_to_br
+    assign meta = note.name | escape
+    if note.city != blank
+      assign c_esc = note.city | escape
+      assign meta = meta | append: ', ' | append: c_esc
+    endif
+    if note.size != blank
+      assign s_esc = note.size | escape
+      assign meta = meta | append: ' · EU ' | append: s_esc
+    endif
+    if note.fit != blank
+      assign f_esc = note.fit | escape
+      assign meta = meta | append: ' · ' | append: f_esc
+    endif
+    if note.colour != blank
+      assign k_esc = note.colour | escape
+      assign meta = meta | append: ' · ' | append: k_esc
+    endif
+    if note.date != blank
+      assign d_txt = note.date.value | default: note.date | date: '%-d %b %Y'
+      assign meta = meta | append: ' · ' | append: d_txt
+    endif
+    capture one
+      echo '<li class="fit-note"><div class="fit-note__hearts" role="img" aria-label="' | append: r | append: ' of 5 hearts">'
+      for h in (1..5)
+        if h <= r
+          echo '<span class="fit-heart is-on" aria-hidden="true">&#9829;</span>'
+        else
+          echo '<span class="fit-heart" aria-hidden="true">&#9829;</span>'
+        endif
+      endfor
+      echo '</div>'
+      if t_esc != blank
+        echo '<h3 class="fit-note__title">' | append: t_esc | append: '</h3>'
+      endif
+      echo '<p class="fit-note__body">' | append: b_esc | append: '</p><p class="caption fit-note__meta">' | append: meta | append: '</p></li>'
+    endcapture
+    assign notes_html = notes_html | append: one
+  endfor
+-%}
+<section class="section fit-notes" id="fit-notes" aria-labelledby="FitNotes-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head">
+      <div>
+        <h2 id="FitNotes-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        {%- if n > 0 -%}{%- assign avg = total | times: 10 | divided_by: n | divided_by: 10.0 -%}<p>{{ 'fit_notes.summary' | t: avg: avg, count: n }}</p>{%- else -%}<p>{{ section.settings.empty | escape }}</p>{%- endif -%}
+      </div>
+    </div>
+    {%- if n > 0 -%}<ul class="fit-notes__list">{{ notes_html }}</ul>{%- endif -%}
+    <details class="fit-notes__share" data-fit-share>
+      <summary class="button button--secondary">{{ section.settings.share | escape }}</summary>
+      {%- form 'contact', id: 'FitNoteForm', class: 'form fit-notes__form' -%}
+        {%- if form.posted_successfully? -%}<p class="form-message form-message--ok" role="status">{{ section.settings.thanks | escape }}</p>{%- endif -%}
+        <input type="hidden" name="return_to" value="{{ product.url }}?contact_posted=true#fit-notes"><input type="hidden" name="contact[Fit note for]" value="{{ product.title | escape }}">
+        <input type="hidden" name="contact[subject]" value="New fit note to approve: {{ product.title | escape }}">
+        <div class="field"><label for="FN-name">{{ 'contact.name' | t }}</label><input class="input" id="FN-name" type="text" name="contact[name]" autocomplete="name" required></div>
+        <div class="field"><label for="FN-city">{{ 'fit_notes.city' | t }}</label><input class="input" id="FN-city" type="text" name="contact[City]" autocomplete="address-level2"></div>
+        <div class="field"><label for="FN-email">{{ 'contact.email_field' | t }}</label><input class="input" id="FN-email" type="email" name="contact[email]" autocomplete="email" required><p class="caption">{{ 'fit_notes.email_note' | t }}</p></div>
+        <div class="field"><label for="FN-rating">{{ 'fit_notes.rating' | t }}</label><select class="input" id="FN-rating" name="contact[Hearts]"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+        <div class="field"><label for="FN-size">{{ 'fit_notes.size' | t }}</label><select class="input" id="FN-size" name="contact[Size worn]">{%- for o in product.options_with_values -%}{%- assign on = o.name | downcase -%}{%- if on == 'size' -%}{%- for v in o.values -%}<option>{{ v | escape }}</option>{%- endfor -%}{%- endif -%}{%- endfor -%}</select></div>
+        <div class="field"><label for="FN-fit">{{ 'fit_notes.fit' | t }}</label><select class="input" id="FN-fit" name="contact[Fit]"><option>{{ 'fit_notes.true' | t }}</option><option>{{ 'fit_notes.small' | t }}</option><option>{{ 'fit_notes.large' | t }}</option></select></div>
+        <div class="field"><label for="FN-body">{{ 'fit_notes.note' | t }}</label><textarea class="textarea" id="FN-body" name="contact[body]" rows="4" required></textarea></div>
+        <button class="button" type="submit">{{ 'fit_notes.send' | t }}</button>
+      {%- endform -%}
+    </details>
+  </div>
+</section>
+<script>(function () { if (/contact_posted=true/.test(location.search) && /fit-notes/.test(location.hash + document.referrer + location.href)) { var d = document.querySelector('[data-fit-share]'); if (d) d.open = true; } })();</script>
+{% schema %}
+{
+  "name": "Fit notes",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Fit notes." },
+    { "type": "text", "id": "empty", "label": "Text when there are no notes", "default": "No fit notes for this pair yet. Wore it? Tell the next buyer how it fits." },
+    { "type": "text", "id": "share", "label": "Button", "default": "Share your fit" },
+    { "type": "text", "id": "thanks", "label": "Thank you text", "default": "Thank you. Your note reaches our team and appears here once it is checked." }
+  ]
+}
+{% endschema %}

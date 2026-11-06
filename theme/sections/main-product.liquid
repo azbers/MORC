@@ -6,17 +6,13 @@
 {%- endcomment -%}
 {%- liquid
   assign current = product.selected_or_first_available_variant
-  assign is_dev = false
-  if theme.role != 'main'
-    assign is_dev = true
-  endif
   assign media_count = product.media.size
-  if is_dev and settings.test_photos
+  if settings.test_photos
     capture t0
       render 'test-photo', key: product.handle, index: 0
     endcapture
     if t0 != blank
-      assign media_count = 5
+      assign media_count = product.media.size | plus: 5
     endif
   endif
   assign desc_parts = product.description | split: '<ul>'
