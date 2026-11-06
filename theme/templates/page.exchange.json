@@ -57,24 +57,21 @@
           "type": "item",
           "settings": {
             "title": "Return courier",
-            "body": "<p>Send the pair to us with the courier of your choice. The return courier charge is paid by the customer.</p>",
-            "dev_note": "The return address for exchange parcels (shared on WhatsApp, or printed here)."
+            "body": "<p>When we approve your exchange, we send you the return address on WhatsApp. Send the pair to that address with the courier of your choice. The return courier charge is paid by the customer.</p>"
           }
         },
         "b6": {
           "type": "item",
           "settings": {
             "title": "Inspection",
-            "body": "<p>Once the pair reaches us, it is checked.</p>",
-            "dev_note": "How long the check takes once the pair reaches you."
+            "body": "<p>We check the pair within 1 working day of it reaching us.</p>"
           }
         },
         "b7": {
           "type": "item",
           "settings": {
             "title": "Replacement dispatch",
-            "body": "<p>Once the pair passes the check, your new size is dispatched.</p>",
-            "dev_note": "How soon the new size is dispatched after the check."
+            "body": "<p>Once the pair passes the check, your new size is dispatched within 24 hours, with tracking on WhatsApp.</p>"
           }
         },
         "b8": {

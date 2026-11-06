@@ -940,3 +940,9 @@ html.has-sticky-buy .site-footer { padding-bottom: 84px; }
 /* WCAG 2.5.8: standalone text links get a 24px tall target */
 .policy-links a, .acc .rte a, .card__title a, .article-card h3 a, .cart-item__name { display: inline-block; min-height: 24px; padding-block: 3px; }
 @media print { .site-header, .announcement, .site-footer, .wa-float, .consent, .drawer, .overlay { display: none !important; } body { background: #fff; } }
+/* Liked pairs page */
+.liked__empty { padding: var(--s-8, 48px) 0; display: grid; gap: var(--s-4, 16px); justify-items: start; }
+.liked__empty[hidden], [data-liked-grid][hidden] { display: none; }
+.liked__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.liked__note { margin-top: var(--s-6, 32px); }
+.feed-posts__liked { margin: 0 0 var(--s-4, 16px); }

@@ -18,7 +18,7 @@
         "nayadaur": {
           "type": "code",
           "settings": {
-            "on": false,
+            "on": true,
             "code": "NAYADAUR",
             "value": "Rs. 300 off",
             "minimum": "Orders of Rs. 5,500 or more",
@@ -30,7 +30,7 @@
         "doubleup": {
           "type": "code",
           "settings": {
-            "on": false,
+            "on": true,
             "code": "DOUBLEUP",
             "value": "10% off",
             "minimum": "Orders of Rs. 8,000 or more",

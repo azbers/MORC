@@ -98,8 +98,7 @@
           "type": "item",
           "settings": {
             "title": "Failed delivery",
-            "body": "<p>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</p>",
-            "dev_note": "What happens to the order and any payment when delivery fails."
+            "body": "<p>If you will not be available, reply to the WhatsApp confirmation and we will reschedule. If a parcel comes back to us because it could not be delivered, we message you on WhatsApp to arrange a new delivery, and we agree with you what happens to the order and your Care deposit before anything is cancelled.</p>"
           }
         },
         "b5": {
@@ -120,8 +119,7 @@
           "type": "item",
           "settings": {
             "title": "Refund process",
-            "body": "<p>Refunds go back in full to the account you paid from.</p>",
-            "dev_note": "How many days a cancellation refund takes."
+            "body": "<p>Refunds go back in full to the account you paid from, within 3 working days of the cancellation being confirmed.</p>"
           }
         }
       },

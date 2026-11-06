@@ -62,8 +62,7 @@
           "settings": {
             "title": "Refunds",
             "anchor": "refunds",
-            "body": "<p>When a refund is due, we pay the item price to your bank account or mobile wallet once the returned pair reaches us and is checked. Delivery fees are refunded when the mistake was ours.</p>",
-            "dev_note": "How many days a refund takes after the pair is checked."
+            "body": "<p>When a refund is due, we pay the item price to your bank account or mobile wallet within 3 working days of the returned pair reaching us and passing the check.</p>"
           }
         },
         "b6": {

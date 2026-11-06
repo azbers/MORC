@@ -14,6 +14,7 @@
 -%}
 <section class="section" aria-label="{{ section.settings.label | escape }}">
   <div class="page-width">
+    <p class="feed-posts__liked"><a class="link-arrow" href="/pages/liked">{{ 'feed.liked_link' | t }}{% render 'icon', name: 'arrow-right' %}</a></p>
     <ul class="feed-posts" data-feed>
       {%- assign ti = 0 -%}
       {%- for product in col.products limit: section.settings.limit -%}

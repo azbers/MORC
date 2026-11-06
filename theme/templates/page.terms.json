@@ -26,8 +26,7 @@
           "type": "item",
           "settings": {
             "title": "Business identity",
-            "body": "<p>DAUR Supply is a Pakistani footwear brand for men. Our shoes are made by independent workshops in Pakistan, checked by our team and finished with DAUR hardware. We do not sell products of other brands and never present our pairs as theirs. Orders are dispatched from Islamabad.</p>",
-            "dev_note": "Registered business name and address, if they are to be shown."
+            "body": "<p>DAUR Supply is the trading name of this online store for men's footwear. Our shoes are made by independent workshops in Pakistan, checked by our team and finished with DAUR hardware. We do not sell products of other brands and never present our pairs as theirs. Orders are dispatched from Islamabad. Contact: WhatsApp 0319 9628735, contact@daursupply.com.</p>"
           }
         },
         "b2": {

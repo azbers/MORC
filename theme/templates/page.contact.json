@@ -12,7 +12,9 @@
     },
     "contact": {
       "type": "contact-page",
-      "settings": {}
+      "settings": {
+        "hours": "<p>Monday to Saturday, 10 am to 7 pm. Messages sent outside these hours are answered the next working day.</p>"
+      }
     }
   },
   "order": [

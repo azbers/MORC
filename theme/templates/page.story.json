@@ -236,14 +236,15 @@
         "style": "list",
         "nav": false,
         "numbered": false,
-        "label": "Founder note",
+        "label": "A note from DAUR",
         "muted": false
       },
       "blocks": {
         "b1": {
-          "type": "note",
+          "type": "item",
           "settings": {
-            "text": "Founder note (optional): in your own words, with your name if you want one on this page. Nothing is shown until you write it."
+            "title": "Why we do this",
+            "body": "<p>We started DAUR because good leather shoes are made every day in Pakistan, and too much of their price goes to the chain between the workshop and your door. We choose each pair, check it by hand and tell you plainly what you are buying. If a pair ever falls short of what we promised, message us and we will put it right.</p>"
           }
         }
       },

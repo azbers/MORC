@@ -1,0 +1,51 @@
+{%- comment -%}
+  Liked pairs. Hearts are saved only in the visitor's own browser (localStorage 'daur.liked'), so this page
+  prints every live pair as a hidden card and the script shows the ones whose handle is in that list.
+  Nothing is sent anywhere. Empty state when the list is empty, storage is blocked or scripts are off.
+{%- endcomment -%}
+<section class="section" aria-labelledby="Liked-{{ section.id }}" data-liked-pairs>
+  <div class="page-width">
+    <div class="section-head">
+      <div><h2 id="Liked-{{ section.id }}">{{ section.settings.heading | escape }}</h2><p data-liked-count aria-live="polite"></p></div>
+    </div>
+    <ul class="product-grid product-grid--4" data-liked-grid>
+      {%- for p in collections.all.products limit: 48 -%}<li hidden data-liked-item="{{ p.handle }}">{% render 'product-card', product: p, loading: 'lazy' %}</li>{%- endfor -%}
+    </ul>
+    <div class="liked__empty" data-liked-empty>
+      <p>{{ section.settings.empty | escape }}</p>
+      <div class="liked__actions">
+        <a class="button" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">{{ section.settings.cta | escape }}</a>
+        {%- if settings.page_feed != blank -%}<a class="button button--secondary" href="{{ settings.page_feed }}">{{ section.settings.cta2 | escape }}</a>{%- endif -%}
+      </div>
+    </div>
+    <p class="caption liked__note">{{ section.settings.note | escape }}</p>
+  </div>
+</section>
+<script>
+  (function () {
+    var root = document.currentScript.previousElementSibling; var list = [];
+    try { list = JSON.parse(localStorage.getItem('daur.liked') || '[]'); } catch (e) { list = []; }
+    if (!Array.isArray(list)) list = [];
+    var shown = 0;
+    root.querySelectorAll('[data-liked-item]').forEach(function (li) { var on = list.indexOf(li.getAttribute('data-liked-item')) !== -1; li.hidden = !on; if (on) shown++; });
+    var count = root.querySelector('[data-liked-count]');
+    root.querySelector('[data-liked-empty]').hidden = shown > 0;
+    root.querySelector('[data-liked-grid]').hidden = shown === 0;
+    if (count) count.textContent = shown === 0 ? '' : (shown === 1 ? {{ section.settings.one | json }} : {{ section.settings.many | json }}.replace('[count]', shown));
+  })();
+</script>
+{% schema %}
+{
+  "name": "Liked pairs",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your liked pairs." },
+    { "type": "text", "id": "one", "label": "Count text, one pair", "default": "1 pair saved on this device." },
+    { "type": "text", "id": "many", "label": "Count text, several pairs ([count] is the number)", "default": "[count] pairs saved on this device." },
+    { "type": "text", "id": "empty", "label": "Empty text", "default": "No liked pairs yet. Tap the heart on a pair in The Feed and it will wait here." },
+    { "type": "text", "id": "cta", "label": "Button", "default": "Shop all pairs" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "text", "id": "cta2", "label": "Second button", "default": "Open The Feed" },
+    { "type": "text", "id": "note", "label": "Privacy note", "default": "Liked pairs are saved only in this browser. Clearing your browser data removes them." }
+  ]
+}
+{% endschema %}

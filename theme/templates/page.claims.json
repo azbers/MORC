@@ -35,7 +35,7 @@
           "settings": {
             "icon": "check",
             "title": "Acknowledgement",
-            "text": "<p>We confirm we have your claim.</p>"
+            "text": "<p>We confirm on WhatsApp, within 1 working day, that we have your claim.</p>"
           }
         },
         "s3": {
@@ -136,8 +136,7 @@
           "type": "item",
           "settings": {
             "title": "Review and resolution",
-            "body": "<p>We check the photos and, if needed, ask for the pair back. When the claim is accepted we replace the pair, or refund it if no replacement is available.</p>",
-            "dev_note": "How long a review usually takes, and how many days a refund takes."
+            "body": "<p>We reply within 1 working day of receiving your photos. We check them and, if needed, ask for the pair back. When the claim is accepted we replace the pair, or refund it within 3 working days if no replacement is available.</p>"
           }
         },
         "b8": {

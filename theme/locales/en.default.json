@@ -326,7 +326,8 @@
     "shop": "Shop now",
     "liked": "Added to your liked pairs.",
     "unliked": "Removed from your liked pairs.",
-    "link_copied": "Link copied."
+    "link_copied": "Link copied.",
+    "liked_link": "Your liked pairs"
   },
   "seo_pages": {
     "story": {
@@ -396,6 +397,10 @@
     "terms": {
       "title": "Terms of Service",
       "description": "The terms that apply when you use the DAUR Supply store and buy from us, including orders, prices, payment and delivery."
+    },
+    "liked": {
+      "title": "Liked pairs",
+      "description": "The DAUR Supply pairs you saved on this device."
     }
   }
 }

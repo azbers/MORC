@@ -141,8 +141,7 @@
           "settings": {
             "title": "Failed delivery and address correction",
             "anchor": "failed-delivery",
-            "body": "<p>If you will not be available, reply to the WhatsApp confirmation and we will reschedule. Please do not refuse a confirmed parcel at the door. It costs two courier legs.</p>",
-            "dev_note": "What happens when a delivery attempt fails (how many attempts, return to us, re-dispatch and any charge), and how a buyer corrects an address before dispatch."
+            "body": "<p>If the courier cannot reach you, they usually call the number on the order and try again. If a parcel comes back to us, we message you on WhatsApp and send it again once you confirm a day and address. To correct your address, message us on WhatsApp with your order number before dispatch; after dispatch we ask the courier to update it where they allow. Please do not refuse a confirmed parcel at the door. It costs two courier legs.</p>"
           }
         }
       },

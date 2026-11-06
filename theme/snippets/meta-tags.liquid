@@ -39,7 +39,7 @@
     if page.handle == 'policies' and template.suffix == blank
       assign daur_noindex = true
     endif
-    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts' or template.suffix == 'track'
+    if page.handle == 'liked' or template.suffix == 'liked' or page.handle == 'track' or page.handle == 'alerts' or template.suffix == 'track'
       assign daur_noindex = true
     endif
     # Privacy and Terms are published by Shopify at /policies/; these templates must not compete with them.

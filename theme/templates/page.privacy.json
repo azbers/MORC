@@ -62,29 +62,28 @@
           "type": "item",
           "settings": {
             "title": "Cookies and analytics",
-            "body": "<p>Shopify sets the cookies the bag and checkout need, and basic store analytics. Pairs you like on The Feed are saved only in your own browser; clearing your browser data removes them. You can accept all cookies or essential only when you first visit. With essential only, Shopify is told you did not agree to analytics, and the optional visitor analytics tool, when switched on, is not loaded.</p>",
-            "dev_note": "Name the analytics tools in use, for example Shopify analytics and Microsoft Clarity if it is switched on."
+            "body": "<p>Shopify sets the cookies the bag and checkout need, and runs basic store analytics. Pairs you like on The Feed are saved only in your own browser; clearing your browser data removes them. You can accept all cookies or essential only when you first visit. With essential only, Shopify is told you did not agree to analytics, and Microsoft Clarity, our optional visitor analytics tool, is not loaded when it is switched on.</p>"
           }
         },
         "b7": {
           "type": "item",
           "settings": {
             "title": "Advertising technologies",
-            "dev_note": "Whether any advertising pixels (Meta, TikTok, Google) are or will be installed, and what they collect. Nothing is stated until confirmed."
+            "body": "<p>We do not use advertising pixels at present. If we add one in future, for example from Meta, TikTok or Google, this section will be updated before it is switched on, and it will run only if you accept all cookies.</p>"
           }
         },
         "b8": {
           "type": "item",
           "settings": {
             "title": "Data retention",
-            "dev_note": "How long order and contact details are kept."
+            "body": "<p>We keep order details for as long as tax and accounting records require, and contact details until you ask us to delete them. To ask, message us on WhatsApp or email contact@daursupply.com.</p>"
           }
         },
         "b9": {
           "type": "item",
           "settings": {
             "title": "Data security",
-            "dev_note": "How the details are protected (for example Shopify security, who in the team has access)."
+            "body": "<p>Orders are processed on Shopify, which encrypts your details in transit. Only the DAUR team members who handle orders can see them, and we never ask for card details or passwords on WhatsApp.</p>"
           }
         },
         "b10": {

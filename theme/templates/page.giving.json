@@ -81,16 +81,14 @@
           "type": "item",
           "settings": {
             "title": "How contributions are calculated",
-            "body": "<p>At least 5% of the profit we make on each pair, worked out on the price you finally pay.</p>",
-            "dev_note": "The exact profit definition used for the 5% (for example after product cost, delivery and fees), before launch."
+            "body": "<p>At least 5% of the profit we make on each pair, worked out on the price you finally pay. Profit here means that price less the cost of the pair, packaging, delivery and payment fees.</p>"
           }
         },
         "b3": {
           "type": "item",
           "settings": {
             "title": "Buyer voting",
-            "body": "<p>Vote in your bag before checkout. The cause with the most votes from this quarter's buyers receives the slice.</p>",
-            "dev_note": "What happens on a tie or when nobody votes in a quarter."
+            "body": "<p>Vote in your bag before checkout. The cause with the most votes from this quarter's buyers receives the slice. If causes tie, or nobody votes in a quarter, the slice is shared equally between the causes listed that quarter.</p>"
           }
         },
         "b4": {

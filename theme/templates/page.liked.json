@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Liked pairs.",
+        "subheading": "The pairs you saved, in one place.",
+        "crumb": "Liked pairs",
+        "show_image": false
+      }
+    },
+    "liked": {
+      "type": "liked-pairs",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "liked"
+  ]
+}
