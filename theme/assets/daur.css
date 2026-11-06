@@ -361,6 +361,9 @@ table { border-collapse: collapse; width: 100%; }
 .deposit__row dt { color: var(--c-text-2); }
 .deposit__row dd { margin: 0; font-weight: 600; white-space: nowrap; }
 .deposit__row--now dd { font-weight: 700; }
+.deposit__receipt { margin: var(--s-3) 0 0; font-size: var(--t-small); }
+.deposit__receipt a { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 24px; font-weight: 600; }
+.deposit__receipt svg { width: 18px; height: 18px; }
 .deposit__note { margin: var(--s-3) 0 0; font-size: var(--t-caption); color: var(--c-text-2); }
 
 /* product card */

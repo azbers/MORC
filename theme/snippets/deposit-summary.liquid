@@ -18,6 +18,7 @@
     </dl>
     {%- assign limit_money = last_limit | money_without_trailing_zeros -%}
     <p class="deposit__note">{{ 'payment.full_note' | t: limit: limit_money }}</p>
+    {%- if context != 'product' -%}{%- assign wa_num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' -%}<p class="deposit__receipt"><a href="https://wa.me/{{ wa_num }}?text={{ 'payment.receipt_message' | t | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'payment.receipt_link' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a></p>{%- endif -%}
   </div>
   {%- else -%}
   {%- assign dep = dep_raw | plus: 0 -%}
@@ -30,6 +31,7 @@
       <div class="deposit__row"><dt>{{ 'payment.pay_rider' | t }}</dt><dd>{{ rest | money }}</dd></div>
     </dl>
     <p class="deposit__note">{{ 'payment.deposit_note' | t }}</p>
+    {%- if context != 'product' -%}{%- assign wa_num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' -%}<p class="deposit__receipt"><a href="https://wa.me/{{ wa_num }}?text={{ 'payment.receipt_message' | t | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'payment.receipt_link' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a></p>{%- endif -%}
   </div>
   {%- endif -%}
 {%- endif -%}

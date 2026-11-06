@@ -24,7 +24,10 @@
     "home_label": "{{ shop }}, home",
     "search": "Search",
     "account": "Account",
-    "bag_count": { "one": "Bag, {{ count }} item", "other": "Bag, {{ count }} items" },
+    "bag_count": {
+      "one": "Bag, {{ count }} item",
+      "other": "Bag, {{ count }} items"
+    },
     "shop_all": "Shop all",
     "new_arrivals": "New arrivals"
   },
@@ -42,7 +45,10 @@
     "view_all": "See all results for \"{{ terms }}\"",
     "searching": "Searching",
     "results_count": "{{ count }} products found",
-    "results_for": { "one": "{{ count }} result for \"{{ terms }}\"", "other": "{{ count }} results for \"{{ terms }}\"" },
+    "results_for": {
+      "one": "{{ count }} result for \"{{ terms }}\"",
+      "other": "{{ count }} results for \"{{ terms }}\""
+    },
     "submit": "Search",
     "journal": "Journal guide",
     "page": "Page"
@@ -83,7 +89,9 @@
     "deposit_note": "The Care deposit is part of your total, not an extra charge. It is deducted from the total and the rest is paid to the rider.",
     "full_title": "Full payment in advance",
     "pay_now_full": "Pay in advance",
-    "full_note": "Orders above {{ limit }} are paid in full before dispatch, so there is nothing to pay the rider."
+    "full_note": "Orders above {{ limit }} are paid in full before dispatch, so there is nothing to pay the rider.",
+    "receipt_link": "Send your payment receipt on WhatsApp",
+    "receipt_message": "Assalam o Alaikum DAUR, here is my payment receipt for my order"
   },
   "product": {
     "from": "From",
@@ -94,7 +102,10 @@
     "sale_price": "Sale price",
     "regular_price": "Regular price",
     "you_save": "You save {{ amount }}",
-    "colours_count": { "one": "{{ count }} colour", "other": "{{ count }} colours" },
+    "colours_count": {
+      "one": "{{ count }} colour",
+      "other": "{{ count }} colours"
+    },
     "gallery": "Product photos",
     "size_guide": "Size guide",
     "choose_size": "Choose your size to continue.",
@@ -104,13 +115,18 @@
     "low_stock": "Only {{ count }} left in this size"
   },
   "collection": {
-    "count": { "one": "{{ count }} pair", "other": "{{ count }} pairs" },
+    "count": {
+      "one": "{{ count }} pair",
+      "other": "{{ count }} pairs"
+    },
     "sort": "Sort by",
     "apply": "Apply",
     "empty": "No pairs here yet.",
     "all_title": "Collections"
   },
-  "blog": { "by": "By {{ author }}" },
+  "blog": {
+    "by": "By {{ author }}"
+  },
   "footer": {
     "contact": "Contact",
     "instagram": "DAUR Supply on Instagram",
@@ -125,7 +141,12 @@
     "accept": "Accept all",
     "essential": "Essential only"
   },
-  "gift_card": { "title": "Gift card", "code": "Gift card code:", "expired": "This gift card has expired.", "shop": "Shop now" },
+  "gift_card": {
+    "title": "Gift card",
+    "code": "Gift card code:",
+    "expired": "This gift card has expired.",
+    "shop": "Shop now"
+  },
   "dev": {
     "test_photo": "Test photo, not a DAUR product",
     "test_short": "Test",
