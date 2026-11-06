@@ -1,0 +1,92 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Named for an era.",
+        "subheading": "Pakistani craft, worn with pride.",
+        "crumb": "About Us",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "text": "<p>Daur means an era in Urdu. Ours is Aik naya daur, a new era.</p>"
+      }
+    },
+    "facts": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": true,
+        "label": "About DAUR",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Who we are",
+            "body": "<p>DAUR Supply is a Pakistani footwear brand for men, sold online at daursupply.com.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "What we sell",
+            "body": "<p>Leather sneakers, formal shoes, chelsea boots and casual slip ons, crafted in Pakistan.</p>",
+            "link_text": "Shop men",
+            "link": "/collections/men"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "How DAUR works",
+            "body": "<ul><li>We choose finished pairs from workshops in Lahore, Sialkot and Kasur and check every one by hand.</li><li>Every order is confirmed with you by call or WhatsApp, then leaves Islamabad within 24 hours of confirmation.</li><li>A small Care deposit by bank transfer, the rest on delivery, and free delivery on every order.</li><li>Size exchange within 5 days, defects covered for 30 days.</li></ul>",
+            "link_text": "Our promise",
+            "link": "@promise"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Our identity",
+            "body": "<p>Thick matte black cotton laces, an engraved metal lace tag and the DAUR seal: that is how you know a pair is ours. The leather does the rest.</p><p>Same local craft. Zero retail markup. Aik naya daur. A new era.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Contact",
+            "body": "<p>WhatsApp or call 0319 9628735, or email contact@daursupply.com. Every order is confirmed with you before it ships.</p>",
+            "link_text": "All contact options",
+            "link": "@contact"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ]
+    },
+    "close": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Explore DAUR.",
+        "text": "Questions first? Ask a person.",
+        "cta1": "Shop the collection",
+        "cta1_link": "/collections/men",
+        "cta2": "Our story",
+        "cta2_link": "@story",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "facts",
+    "close"
+  ]
+}

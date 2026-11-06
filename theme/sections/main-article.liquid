@@ -1,15 +1,72 @@
-{%- comment -%} Journal article, Phase 2 build. Links inside the article that point to a guide not yet published are shown as plain text (see core.js), so readers never land on a missing page. {%- endcomment -%}
-<article class="page-width">
+{%- comment -%}
+  Journal article. Breadcrumb, topic, H1, byline, published and (when changed later) updated dates,
+  featured image, a table of contents built from the article's own H2 headings when the guide is long,
+  the article, share, related guides (same topic first) and related pairs (the collection named by the
+  topic tag, or the product list in the article field custom.products). Links inside the article that
+  point to a guide not yet published are shown as plain text (see core.js), so readers never land on a
+  missing page.
+{%- endcomment -%}
+{%- liquid
+  assign topic = article.tags.first
+  assign byline = section.settings.byline | default: shop.name
+  assign words = article.content | strip_html | split: ' ' | size
+  assign mins = words | divided_by: 200 | floor
+  if mins < 1
+    assign mins = 1
+  endif
+  assign pub = article.published_at | date: '%Y-%m-%d'
+  assign upd = article.updated_at | date: '%Y-%m-%d'
+  assign rel_products = article.metafields.custom.products.value
+  if rel_products == blank and topic != blank
+    assign th = topic | handleize
+    assign rel_products = collections[th].products
+  endif
+-%}
+<article class="page-width article">
   {%- render 'breadcrumbs' -%}
   <header class="page-head read-width">
-    {%- if article.tags.size > 0 -%}<p class="eyebrow">{{ article.tags.first | escape }}</p>{%- endif -%}
+    {%- if topic -%}<p class="eyebrow"><a href="{{ blog.url }}/tagged/{{ topic | handleize }}">{{ topic | replace: '-', ' ' | capitalize | escape }}</a></p>{%- endif -%}
     <h1>{{ article.title | escape }}</h1>
-    <p class="caption">{{ 'blog.by' | t: author: shop.name }} · <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%-d %B %Y' }}</time></p>
+    <p class="caption article__meta">{{ 'blog.by' | t: author: byline }} · <time datetime="{{ pub }}">{{ article.published_at | date: '%-d %B %Y' }}</time>{% if upd > pub %} · {{ 'blog.updated' | t }} <time datetime="{{ upd }}">{{ article.updated_at | date: '%-d %B %Y' }}</time>{% endif %} · {{ 'blog.reading_time' | t: count: mins }}</p>
   </header>
-  {%- if article.image -%}<div class="media media--landscape" style="margin-bottom:var(--s-10)">{{ article.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: article.image.alt | default: article.title }}</div>{%- endif -%}
-  <div class="rte" data-article-body data-blog="{{ blog.handle }}" data-live="{% for a in blog.articles limit: 250 %}{{ a.handle }}{% unless forloop.last %},{% endunless %}{% endfor %}">{{ article.content }}</div>
+  {%- if article.image -%}<div class="media media--landscape article__image">{{ article.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: article.image.alt | default: article.title }}</div>{%- endif -%}
+  <div class="article__layout">
+    <nav class="article__toc" aria-labelledby="Toc-{{ section.id }}" data-toc hidden>
+      <p class="info__nav-title" id="Toc-{{ section.id }}">{{ 'blog.contents' | t }}</p>
+      <ol data-toc-list></ol>
+    </nav>
+    <div class="rte" data-article-body data-blog="{{ blog.handle }}" data-live="{% for a in blog.articles limit: 250 %}{{ a.handle }}{% unless forloop.last %},{% endunless %}{% endfor %}">{{ article.content }}</div>
+  </div>
+  <div class="article__share read-width">
+    <p class="info__nav-title">{{ 'blog.share' | t }}</p>
+    <button class="button button--small button--secondary" type="button" data-share="{{ shop.url }}{{ article.url }}" data-share-title="{{ article.title | escape }}">{% render 'icon', name: 'share' %}{{ 'blog.share_link' | t }}</button>
+    <a class="button button--small button--secondary" href="https://wa.me/?text={{ article.title | append: ' ' | append: shop.url | append: article.url | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}WhatsApp<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a>
+  </div>
 </article>
+{%- assign shown = 0 -%}
+{%- capture related -%}
+  {%- for a in blog.articles -%}
+    {%- if a.id != article.id and topic and a.tags contains topic and shown < 3 -%}<li>{% render 'article-card', article: a %}</li>{%- assign shown = shown | plus: 1 -%}{%- endif -%}
+  {%- endfor -%}
+  {%- for a in blog.articles -%}
+    {%- if a.id != article.id and shown < 3 -%}{%- unless topic and a.tags contains topic -%}<li>{% render 'article-card', article: a %}</li>{%- assign shown = shown | plus: 1 -%}{%- endunless -%}{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if shown > 0 -%}
+<section class="section" aria-labelledby="RelA-{{ section.id }}">
+  <div class="page-width"><h2 id="RelA-{{ section.id }}">{{ 'blog.related' | t }}</h2><ul class="article-cards">{{ related }}</ul></div>
+</section>
+{%- endif -%}
+{%- if rel_products != blank and rel_products.size > 0 -%}
+<section class="section section--muted" aria-labelledby="RelP-{{ section.id }}">
+  <div class="page-width"><h2 id="RelP-{{ section.id }}">{{ 'blog.pairs' | t }}</h2>
+    <ul class="product-grid product-grid--4">{%- for p in rel_products limit: 4 -%}<li>{% render 'product-card', product: p %}</li>{%- endfor -%}</ul>
+  </div>
+</section>
+{%- endif -%}
 <div style="height: var(--section-y)"></div>
 {% schema %}
-{ "name": "Article", "settings": [] }
+{ "name": "Article", "settings": [
+  { "type": "text", "id": "byline", "label": "Byline", "default": "DAUR Supply", "info": "Who wrote it. Use a real name or the brand, never an invented person." }
+] }
 {% endschema %}

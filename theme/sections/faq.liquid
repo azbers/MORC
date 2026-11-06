@@ -1,0 +1,78 @@
+{%- comment -%}
+  FAQ: questions grouped under category headings, each question a native disclosure (keyboard and screen
+  reader friendly, several can be open). A search box filters questions as you type. FAQPage structured
+  data is printed from the same blocks, so it always matches what visitors can read.
+{%- endcomment -%}
+{%- liquid
+  assign open_group = false
+  assign gi = 0
+-%}
+<section class="section faq" aria-label="{{ section.settings.label | escape }}" data-faq>
+  <div class="page-width faq__layout">
+    <div class="faq__tools">
+      <label class="field" for="FaqSearch-{{ section.id }}">
+        <span class="visually-hidden">{{ section.settings.search_label | escape }}</span>
+        <span class="faq__search">{% render 'icon', name: 'search' %}<input class="input" id="FaqSearch-{{ section.id }}" type="search" placeholder="{{ section.settings.search_placeholder | escape }}" autocomplete="off" data-faq-search aria-describedby="FaqCount-{{ section.id }}"></span>
+      </label>
+      <p class="caption" id="FaqCount-{{ section.id }}" role="status" aria-live="polite" data-faq-count></p>
+      <nav class="faq__cats" aria-label="{{ section.settings.cats_label | escape }}">
+        <ol>
+          {%- for block in section.blocks -%}{%- if block.type == 'category' -%}<li><a href="#{{ block.settings.title | handleize }}">{{ block.settings.title | escape }}</a></li>{%- endif -%}{%- endfor -%}
+        </ol>
+      </nav>
+    </div>
+    <div class="faq__groups">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'category' -%}
+          {%- if open_group -%}</div></section>{%- endif -%}
+          {%- assign gi = gi | plus: 1 -%}
+          <section class="faq__group" id="{{ block.settings.title | handleize }}" aria-labelledby="{{ block.settings.title | handleize }}-h" data-faq-group {{ block.shopify_attributes }}>
+            <h2 id="{{ block.settings.title | handleize }}-h"><span class="info__num" aria-hidden="true">{{ gi | prepend: '0' | slice: -2, 2 }}</span>{{ block.settings.title | escape }}</h2>
+            <div class="faq__list">
+          {%- assign open_group = true -%}
+        {%- else -%}
+          <details class="acc faq__q" data-faq-item {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.question | escape }}</summary>
+            <div class="rte">{{ block.settings.answer }}
+              {%- if block.settings.link_text != blank -%}<p><a class="link-arrow" href="{% render 'link-to', to: block.settings.link %}">{{ block.settings.link_text | escape }}{% render 'icon', name: 'arrow-right' %}</a></p>{%- endif -%}
+            </div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if open_group -%}</div></section>{%- endif -%}
+      <div class="faq__empty" data-faq-empty hidden>
+        <p>{{ section.settings.empty | escape }}</p>
+        <p><a class="button" href="{% render 'link-to', to: '@whatsapp' %}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'general.ask_whatsapp' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a></p>
+      </div>
+    </div>
+  </div>
+</section>
+{%- capture faq_json -%}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{%- assign first = true -%}
+{%- for block in section.blocks -%}{%- if block.type == 'question' -%}{%- unless first -%},{%- endunless -%}{"@type":"Question","name":{{ block.settings.question | json }},"acceptedAnswer":{"@type":"Answer","text":{{ block.settings.answer | strip_html | json }}}}{%- assign first = false -%}{%- endif -%}{%- endfor -%}
+]}
+{%- endcapture -%}
+<script type="application/ld+json">{{ faq_json }}</script>
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Name for screen readers", "default": "Questions and answers" },
+    { "type": "text", "id": "search_label", "label": "Search label", "default": "Search a question" },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search a question…" },
+    { "type": "text", "id": "cats_label", "label": "Categories label", "default": "Question topics" },
+    { "type": "text", "id": "empty", "label": "No match message", "default": "No question matches that yet. Ask us and a person will answer." }
+  ],
+  "blocks": [
+    { "type": "category", "name": "Category", "settings": [ { "type": "text", "id": "title", "label": "Category name" } ] },
+    { "type": "question", "name": "Question", "settings": [
+      { "type": "text", "id": "question", "label": "Question" },
+      { "type": "richtext", "id": "answer", "label": "Answer", "info": "Keep it short and in line with the policy pages." },
+      { "type": "text", "id": "link_text", "label": "Link text (optional)" },
+      { "type": "text", "id": "link", "label": "Link", "info": "A path, or a page key such as @exchange." }
+    ] }
+  ],
+  "presets": [{ "name": "FAQ" }]
+}
+{% endschema %}

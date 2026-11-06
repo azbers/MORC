@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Terms of service.",
+        "crumb": "Terms of Service",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "text": "<p>These terms apply to every order placed on this website. By placing an order you agree to them.</p>"
+      }
+    },
+    "doc": {
+      "type": "info-sections",
+      "settings": {
+        "style": "legal",
+        "nav": false,
+        "numbered": true,
+        "label": "Terms of service",
+        "muted": false,
+        "nav_label": "Contents"
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Business identity",
+            "body": "<p>DAUR Supply is a Pakistani footwear brand for men. Our shoes are made by independent workshops in Pakistan, checked by our team and finished with DAUR hardware. We do not sell products of other brands and never present our pairs as theirs. Orders are dispatched from Islamabad.</p>",
+            "dev_note": "Registered business name and address, if they are to be shown."
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Orders",
+            "body": "<p>An order is a request to buy. It becomes a contract once we confirm it with you by phone call or WhatsApp. We may decline or cancel an order if stock runs out, the price shown was clearly wrong, the details cannot be confirmed, or the order looks fraudulent. If that happens you pay nothing.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Product descriptions",
+            "body": "<p>We describe and picture every pair as accurately as we can. Leather is natural, so small differences in grain and shade from one pair to the next are normal and are not defects.</p>"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Prices",
+            "body": "<p>All prices are in Pakistani rupees and include our laces, lace tag, seal and box. Any tax that applies is shown at checkout. Delivery is free on every order. The price you pay is the total on your confirmation.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Discounts and offers",
+            "body": "<p>One discount code applies per order, and delivery stays free. Gift offers are added on top. Personal codes work only for the pairs and WhatsApp number they were issued for, and only until their end date. Codes have no cash value.</p>"
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "Payments",
+            "body": "<p>Every order starts with a Care deposit, or the full amount, by bank transfer to the account we share. The rest is paid in cash to the courier rider on delivery. Orders above Rs. 15,000 are paid in full before dispatch.</p>"
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "Delivery",
+            "body": "<p>Our Shipping Policy forms part of these terms.</p>",
+            "link_text": "Shipping policy",
+            "link": "@shipping"
+          }
+        },
+        "b8": {
+          "type": "item",
+          "settings": {
+            "title": "Exchanges and claims",
+            "body": "<p>Our Exchange, Return and Exchange, Claim and Cancellation policies form part of these terms.</p>",
+            "link_text": "Return and exchange",
+            "link": "@returns"
+          }
+        },
+        "b9": {
+          "type": "item",
+          "settings": {
+            "title": "Customer submitted content",
+            "body": "<p>Fit notes and photos you submit must be your own and honest. We read every note before it is published and may decline ones that are abusive, off topic or not about the product.</p>"
+          }
+        },
+        "b10": {
+          "type": "item",
+          "settings": {
+            "title": "Liability",
+            "body": "<p>Our responsibility for an order is limited to the amount paid for it. Nothing in these terms removes rights you have under the consumer protection laws of Pakistan.</p>"
+          }
+        },
+        "b11": {
+          "type": "item",
+          "settings": {
+            "title": "Applicable law",
+            "body": "<p>These terms are governed by the laws of Pakistan.</p>"
+          }
+        },
+        "b12": {
+          "type": "item",
+          "settings": {
+            "title": "Contact",
+            "body": "<p>WhatsApp or call +92 319 9628735, or email contact@daursupply.com. Please include your order number.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "b12"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "doc"
+  ]
+}

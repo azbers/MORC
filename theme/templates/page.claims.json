@@ -1,0 +1,181 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "We'll put it right.",
+        "subheading": "A claim is how you tell us something is wrong with an order, so we can put it right.",
+        "crumb": "Warranty and Claims",
+        "eyebrow": "WARRANTY AND CLAIMS",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "parent": "Policies",
+        "parent_link": "/pages/policies"
+      }
+    },
+    "process": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "How a claim works.",
+        "layout": "row",
+        "muted": true
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "chat",
+            "title": "Submit claim",
+            "text": "<p>Your order number and photos, on WhatsApp, by phone or by email.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "check",
+            "title": "Acknowledgement",
+            "text": "<p>We confirm we have your claim.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "icon": "search",
+            "title": "Review",
+            "text": "<p>We check the photos.</p>"
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "icon": "paper",
+            "title": "More information if needed",
+            "text": "<p>If needed, we ask for more photos or for the pair back.</p>"
+          }
+        },
+        "s5": {
+          "type": "step",
+          "settings": {
+            "icon": "shield",
+            "title": "Decision",
+            "text": "<p>We tell you whether the claim is accepted.</p>"
+          }
+        },
+        "s6": {
+          "type": "step",
+          "settings": {
+            "icon": "box",
+            "title": "Resolution",
+            "text": "<p>We replace the pair, or refund it if no replacement is available.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    "policy": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": true,
+        "numbered": true,
+        "label": "Claim policy",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Wrong product",
+            "body": "<p>Tell us within 48 hours of delivery if the pair is not the one you ordered.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Transit damage",
+            "body": "<p>Tell us within 48 hours of delivery if the pair arrives damaged. If a parcel is lost or damaged by the courier, we take it up with the courier ourselves; you do not have to.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Missing item",
+            "body": "<p>Tell us within 48 hours of delivery if an item is missing.</p>"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Stitching defects",
+            "body": "<p>If stitching opens in normal wear within 30 days of delivery, send photos.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Sole separation",
+            "body": "<p>If a sole separates in normal wear within 30 days of delivery, send photos.</p>"
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "How to submit",
+            "body": "<p>Send your order number, clear photos of the pair, the box and the courier label, and your unboxing video if you have one, on WhatsApp, by phone at +92 319 9628735 or by email to contact@daursupply.com. A video helps but is not required.</p>"
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "Review and resolution",
+            "body": "<p>We check the photos and, if needed, ask for the pair back. When the claim is accepted we replace the pair, or refund it if no replacement is available.</p>",
+            "dev_note": "How long a review usually takes, and how many days a refund takes."
+          }
+        },
+        "b8": {
+          "type": "item",
+          "settings": {
+            "title": "Exclusions",
+            "body": "<p>Normal wear, scuffs, water damage, misuse, and claims made after the time limits above.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b8"
+      ]
+    },
+    "help": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Something wrong with your order?",
+        "text": "WhatsApp, call +92 319 9628735 or email contact@daursupply.com.",
+        "cta1": "Start a claim on WhatsApp",
+        "cta1_link": "@whatsapp",
+        "cta2": "Email us",
+        "cta2_link": "@email",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "process",
+    "policy",
+    "help"
+  ]
+}

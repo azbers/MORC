@@ -1,0 +1,119 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Smart men pay less.",
+        "subheading": "Live offers. Clear terms. No surprises.",
+        "crumb": "Offers",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "text": "<p>The checks, the seal and the craft stay exactly the same on every pair you save on. Free delivery on every order.</p>"
+      }
+    },
+    "codes": {
+      "type": "offers-codes",
+      "settings": {},
+      "blocks": {
+        "nayadaur": {
+          "type": "code",
+          "settings": {
+            "on": false,
+            "code": "NAYADAUR",
+            "value": "Rs. 300 off",
+            "minimum": "Orders of Rs. 5,500 or more",
+            "eligible": "All pairs",
+            "limits": "One use per customer. 10 uses in total.",
+            "checked": "6 November 2026"
+          }
+        },
+        "doubleup": {
+          "type": "code",
+          "settings": {
+            "on": false,
+            "code": "DOUBLEUP",
+            "value": "10% off",
+            "minimum": "Orders of Rs. 8,000 or more",
+            "eligible": "All pairs",
+            "ends": "2026-11-25",
+            "limits": "One use per customer. 10 uses in total.",
+            "checked": "6 November 2026"
+          }
+        }
+      },
+      "block_order": [
+        "nayadaur",
+        "doubleup"
+      ]
+    },
+    "sale": {
+      "type": "featured-products",
+      "settings": {
+        "collection": "sale",
+        "limit": 8,
+        "heading": "On sale now.",
+        "subheading": "Already reduced. No code needed: the price you see is the price you pay. Sale prices are final for size, and every pair is still covered for defects for 30 days.",
+        "cta": "Explore sale"
+      }
+    },
+    "how": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "Three steps to your saving.",
+        "layout": "row",
+        "muted": true,
+        "eyebrow": "HOW TO APPLY A CODE"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "bag",
+            "title": "Pick your pairs",
+            "text": "<p>Add your size to the bag. Delivery is free on every order.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "tag",
+            "title": "Use the code",
+            "text": "<p>Tap Apply, or type the code in the bag or at checkout. One code per order.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "icon": "wallet",
+            "title": "Reserve your pair",
+            "text": "<p>A small Care deposit holds your size. Your pair ships from Islamabad and the rest is paid at your door.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "next": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Be first to the next code.",
+        "text": "New codes and drops go out on Instagram first. Questions about a code? Ask on WhatsApp 0319 9628735.",
+        "cta1": "Follow @daursupply",
+        "cta1_link": "@instagram",
+        "cta2": "Ask on WhatsApp",
+        "cta2_link": "@whatsapp",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "codes",
+    "sale",
+    "how",
+    "next"
+  ]
+}

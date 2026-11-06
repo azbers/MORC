@@ -1,0 +1,89 @@
+{%- comment -%}
+  Contact Us body. Left: every real contact route from Theme settings (WhatsApp, call, email, Instagram,
+  Facebook) and the customer service hours once the business confirms them (until then nothing is promised).
+  Right: Shopify's own contact form, which emails the store. Errors are listed at the top of the form and
+  tied to their fields; success shows the brief's confirmation line.
+{%- endcomment -%}
+{%- liquid
+  assign num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' | remove: '-'
+  assign phone = settings.phone_display | default: '0319 9628735'
+  assign tel = '+' | append: num
+-%}
+<section class="section" aria-label="{{ section.settings.label | escape }}">
+  <div class="page-width contact">
+    <div class="contact__ways">
+      <h2>{{ section.settings.ways_heading | escape }}</h2>
+      <ul class="contact__list">
+        <li>{% render 'icon', name: 'whatsapp' %}<div><a href="https://wa.me/{{ num }}" target="_blank" rel="noopener"><strong>{{ 'contact.whatsapp' | t }}</strong> {{ phone }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a><p class="caption">{{ section.settings.whatsapp_note | escape }}</p></div></li>
+        <li>{% render 'icon', name: 'phone' %}<div><a href="tel:{{ tel }}"><strong>{{ 'contact.call' | t }}</strong> {{ phone }}</a><p class="caption">{{ section.settings.call_note | escape }}</p></div></li>
+        {%- if settings.support_email != blank -%}<li>{% render 'icon', name: 'mail' %}<div><a href="mailto:{{ settings.support_email }}"><strong>{{ 'contact.email' | t }}</strong> {{ settings.support_email }}</a><p class="caption">{{ section.settings.email_note | escape }}</p></div></li>{%- endif -%}
+        {%- if settings.instagram_url != blank -%}<li>{% render 'icon', name: 'instagram' %}<div><a href="{{ settings.instagram_url }}" target="_blank" rel="noopener"><strong>Instagram</strong> @daursupply<span class="visually-hidden"> {{ 'general.new_window' | t }}</span></a><p class="caption">{{ section.settings.instagram_note | escape }}</p></div></li>{%- endif -%}
+        {%- if settings.facebook_url != blank -%}<li>{% render 'icon', name: 'facebook' %}<div><a href="{{ settings.facebook_url }}" target="_blank" rel="noopener"><strong>Facebook</strong> facebook.com/daursupply<span class="visually-hidden"> {{ 'general.new_window' | t }}</span></a><p class="caption">{{ section.settings.facebook_note | escape }}</p></div></li>{%- endif -%}
+      </ul>
+      {%- if section.settings.hours != blank -%}
+        <div class="contact__hours"><h3>{{ 'contact.hours' | t }}</h3><div class="rte">{{ section.settings.hours }}</div></div>
+      {%- elsif theme.role != 'main' -%}
+        <p class="dev-note" role="note">{{ 'dev.needs_wording' | t }} {{ 'contact.hours_needed' | t }}</p>
+      {%- endif -%}
+      <h3 class="contact__quick-title">{{ section.settings.quick_heading | escape }}</h3>
+      <ul class="contact__quick">
+        <li><a class="link-arrow" href="{% render 'link-to', to: '@track' %}">{{ 'contact.l_track' | t }}{% render 'icon', name: 'arrow-right' %}</a></li>
+        <li><a class="link-arrow" href="{% render 'link-to', to: '@size' %}">{{ 'contact.l_size' | t }}{% render 'icon', name: 'arrow-right' %}</a></li>
+        <li><a class="link-arrow" href="{% render 'link-to', to: '@exchange' %}">{{ 'contact.l_exchange' | t }}{% render 'icon', name: 'arrow-right' %}</a></li>
+        <li><a class="link-arrow" href="{% render 'link-to', to: '@faq' %}">{{ 'contact.l_faq' | t }}{% render 'icon', name: 'arrow-right' %}</a></li>
+      </ul>
+    </div>
+    <div class="contact__form">
+      <h2 id="ContactForm-{{ section.id }}-h">{{ section.settings.form_heading | escape }}</h2>
+      {%- form 'contact', id: 'ContactForm', class: 'form', novalidate: 'novalidate' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="form-message form-message--ok" role="status" tabindex="-1" data-autofocus>{% render 'icon', name: 'check' %}{{ section.settings.success | escape }}</p>
+        {%- elsif form.errors -%}
+          <div class="form-message form-message--error" role="alert" tabindex="-1" data-autofocus>
+            <p>{% render 'icon', name: 'alert' %}{{ 'contact.errors_title' | t }}</p>
+            <ul>{%- for field in form.errors -%}<li><a href="#Contact-{{ field }}">{{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}</a></li>{%- endfor -%}</ul>
+          </div>
+        {%- endif -%}
+        <p class="caption">{{ 'contact.required_note' | t }}</p>
+        <div class="field">
+          <label for="Contact-name">{{ 'contact.name' | t }}</label>
+          <input class="input" id="Contact-name" type="text" name="contact[name]" autocomplete="name" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+        </div>
+        <div class="field">
+          <label for="Contact-phone">{{ 'contact.phone' | t }}</label>
+          <input class="input" id="Contact-phone" type="tel" name="contact[phone]" autocomplete="tel" inputmode="tel" value="{{ form.phone }}">
+        </div>
+        <div class="field">
+          <label for="Contact-email">{{ 'contact.email_field' | t }} <span aria-hidden="true">*</span></label>
+          <input class="input" id="Contact-email" type="email" name="contact[email]" autocomplete="email" required aria-required="true" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="Contact-email-error"{% endif %} data-validate="email">
+          <p class="field-error" id="Contact-email-error"{% unless form.errors contains 'email' %} hidden{% endunless %}>{% render 'icon', name: 'alert' %}{{ 'contact.email_error' | t }}</p>
+        </div>
+        <div class="field">
+          <label for="Contact-body">{{ 'contact.message' | t }} <span aria-hidden="true">*</span></label>
+          <textarea class="textarea" id="Contact-body" name="contact[body]" rows="6" required aria-required="true" placeholder="{{ 'contact.message_hint' | t }}"{% if form.errors contains 'body' %} aria-invalid="true" aria-describedby="Contact-body-error"{% endif %} data-validate="text">{{ form.body }}</textarea>
+          <p class="field-error" id="Contact-body-error"{% unless form.errors contains 'body' %} hidden{% endunless %}>{% render 'icon', name: 'alert' %}{{ 'contact.message_error' | t }}</p>
+        </div>
+        <button class="button button--full" type="submit">{{ 'contact.send' | t }}</button>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Contact ways and form",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Name for screen readers", "default": "Contact options and form" },
+    { "type": "text", "id": "ways_heading", "label": "Contact list heading", "default": "Reach a person" },
+    { "type": "text", "id": "whatsapp_note", "label": "WhatsApp note", "default": "Fastest for sizing, orders and exchanges." },
+    { "type": "text", "id": "call_note", "label": "Call note", "default": "Same number as WhatsApp." },
+    { "type": "text", "id": "email_note", "label": "Email note", "default": "For anything that needs photos or detail." },
+    { "type": "text", "id": "instagram_note", "label": "Instagram note", "default": "Drops and fit checks. Messages open." },
+    { "type": "text", "id": "facebook_note", "label": "Facebook note", "default": "Messages open." },
+    { "type": "richtext", "id": "hours", "label": "Customer service hours", "info": "Leave empty until the hours are confirmed. No reply time is promised without them." },
+    { "type": "text", "id": "quick_heading", "label": "Quick links heading", "default": "Already ordered? The answer may be one tap away." },
+    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "Write to us" },
+    { "type": "text", "id": "success", "label": "Success message", "default": "Thank you. Your message has been received." }
+  ],
+  "presets": [{ "name": "Contact ways and form" }]
+}
+{% endschema %}

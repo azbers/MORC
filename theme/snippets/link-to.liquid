@@ -1,0 +1,24 @@
+{%- comment -%}
+  Resolves a link written in a section setting. "@faq", "@size" and so on map to Theme settings > Page addresses
+  (one place to change when pages move to their launch addresses); "@whatsapp" opens WhatsApp; anything else is used as written.
+  Input: to. Output: the URL, nothing else.
+{%- endcomment -%}
+{%- liquid
+  assign t = to | strip
+  assign first = t | slice: 0
+  if t == '@whatsapp'
+    assign num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' | remove: '-'
+    echo 'https://wa.me/' | append: num
+  elsif t == '@email'
+    echo 'mailto:' | append: settings.support_email
+  elsif t == '@instagram'
+    echo settings.instagram_url
+  elsif first == '@'
+    assign key = t | remove_first: '@'
+    assign k = 'page_' | append: key
+    assign fallback = '/pages/' | append: key
+    echo settings[k] | default: fallback
+  else
+    echo t
+  endif
+-%}

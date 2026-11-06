@@ -1,0 +1,182 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "From our hands to your door.",
+        "subheading": "Dispatched from Islamabad. Delivered across Pakistan.",
+        "crumb": "Shipping Policy",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "parent": "Policies",
+        "parent_link": "/pages/policies"
+      }
+    },
+    "pay": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "Payment in two steps.",
+        "layout": "row",
+        "muted": true,
+        "note": "<p>The Care deposit is part of your payment, not an extra charge.</p>"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "bank",
+            "title": "Reserve your pair",
+            "text": "<p>Send the Care deposit by bank transfer, or the full amount if you prefer. Your bag shows the exact amount for your order.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "truck",
+            "title": "Pay the rest on delivery",
+            "text": "<p>The rest of your total is paid to the rider in cash when the parcel is delivered. Orders above Rs. 15,000 are paid in full before dispatch.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2"
+      ]
+    },
+    "policy": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": true,
+        "numbered": true,
+        "label": "Shipping policy",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Where we deliver",
+            "anchor": "where",
+            "body": "<p>We deliver to every city and town in Pakistan that our courier partners reach. Orders are dispatched from Islamabad. We do not ship outside Pakistan.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Dispatch timeline",
+            "anchor": "dispatch",
+            "body": "<p>Every order is confirmed by call or WhatsApp, then inspected, sealed and handed to the courier within 24 hours of confirmation. Orders confirmed on Sunday or a public holiday leave the next working day.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Delivery timeline",
+            "anchor": "delivery-time",
+            "body": "<p>Delivery takes 2 to 5 days after dispatch in most cities.</p>"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Delivery fees",
+            "anchor": "fees",
+            "body": "<p>Delivery is free on every order, to any city. One discount code per order. Delivery stays free.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Care deposit and advance payment",
+            "anchor": "care-deposit",
+            "body": "<p>Every order starts with a Care deposit: a small payment by bank transfer that secures your order. It is part of your payment, not an extra charge, and the rest is paid to the rider on delivery.</p>"
+          }
+        },
+        "b6": {
+          "type": "deposit_table",
+          "settings": {
+            "caption": "Care deposit by order total"
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "Payment verification",
+            "anchor": "verification",
+            "body": "<ol><li>Place your order and choose bank transfer at checkout. Your bag shows the exact Care deposit for your order.</li><li>Send the Care deposit, or the full amount if you prefer, to the bank account shown when you place the order. We also send the details on WhatsApp.</li><li>Send us your payment receipt on WhatsApp with your order number.</li><li>We check the payment and email you the updated order showing what you have paid and what is left to pay the rider. Then we dispatch.</li></ol><ul><li>An order is dispatched only after its Care deposit reaches us. If it has not arrived, we remind you on WhatsApp before anything is sent.</li><li>If you cancel before dispatch, your Care deposit or advance payment is refunded in full to the account you paid from.</li></ul>"
+          }
+        },
+        "b8": {
+          "type": "item",
+          "settings": {
+            "title": "Remaining payment",
+            "anchor": "remaining",
+            "body": "<ul><li>After your Care deposit, the rest of your total is paid to the rider in cash when the parcel is delivered. Your updated order email shows the exact amount.</li><li>Orders above Rs. 15,000 are paid in full before dispatch, so there is nothing to pay the rider.</li><li>Most couriers do not allow a parcel to be opened before payment. Record an unboxing video; if anything is wrong, our Claim Policy applies.</li></ul>",
+            "link_text": "Claim policy",
+            "link": "@claims"
+          }
+        },
+        "b9": {
+          "type": "item",
+          "settings": {
+            "title": "Tracking",
+            "anchor": "tracking",
+            "body": "<p>At dispatch you receive the courier name, tracking number and tracking link on WhatsApp. They also show on the Track Order page.</p>",
+            "link_text": "Track order",
+            "link": "@track"
+          }
+        },
+        "b10": {
+          "type": "item",
+          "settings": {
+            "title": "Delivery delays",
+            "anchor": "delays",
+            "body": "<p>Remote areas, weather and public holidays can take longer.</p>"
+          }
+        },
+        "b11": {
+          "type": "item",
+          "settings": {
+            "title": "Failed delivery and address correction",
+            "anchor": "failed-delivery",
+            "body": "<p>If you will not be available, reply to the WhatsApp confirmation and we will reschedule. Please do not refuse a confirmed parcel at the door. It costs two courier legs.</p>",
+            "dev_note": "What happens when a delivery attempt fails (how many attempts, return to us, re-dispatch and any charge), and how a buyer corrects an address before dispatch."
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b8",
+        "b9",
+        "b10",
+        "b11"
+      ]
+    },
+    "links": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Questions about delivery?",
+        "text": "Track an order, cancel before dispatch, exchange a size or talk to us.",
+        "cta1": "Track order",
+        "cta1_link": "@track",
+        "cta2": "Contact us",
+        "cta2_link": "@contact",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "pay",
+    "policy",
+    "links"
+  ]
+}

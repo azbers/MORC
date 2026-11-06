@@ -1,0 +1,155 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Plans change. Here's how cancellations work.",
+        "subheading": "Free of charge until your pair is handed to the courier.",
+        "crumb": "Cancellation Policy",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "parent": "Policies",
+        "parent_link": "/pages/policies"
+      }
+    },
+    "timeline": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "When you can cancel.",
+        "layout": "timeline",
+        "muted": true
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "check",
+            "title": "Order confirmation",
+            "text": "<p>We confirm your order by call or WhatsApp. You can cancel free of charge.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "bank",
+            "title": "Payment verification",
+            "text": "<p>We check your Care deposit or advance payment. You can still cancel free, and it is refunded in full.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "icon": "truck",
+            "title": "Dispatch",
+            "text": "<p>Once the parcel is with the courier, it cannot be cancelled.</p>"
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "icon": "box",
+            "title": "Delivery",
+            "text": "<p>If you no longer want the pair, our exchange and return terms apply once it is delivered.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    "policy": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": true,
+        "label": "Cancellation policy",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Before dispatch",
+            "body": "<p>You can cancel any order free of charge until it is handed to the courier. Reply to your confirmation message on WhatsApp or call +92 319 9628735 with your order number.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "After advance payment",
+            "body": "<p>If you paid in advance or sent a Care deposit and cancel before dispatch, we refund it in full to the account you paid from.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "After dispatch",
+            "body": "<p>Once a parcel is with the courier it cannot be cancelled. If you no longer want the pair, our exchange and return terms apply once it is delivered.</p>",
+            "link_text": "Return and exchange",
+            "link": "@returns"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Failed delivery",
+            "body": "<p>If you will not be available, reply to the WhatsApp confirmation and we will reschedule.</p>",
+            "dev_note": "What happens to the order and any payment when delivery fails."
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Refused parcels",
+            "body": "<p>Please do not refuse a confirmed parcel at the door. It costs two courier legs.</p>"
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "Cancellation by DAUR",
+            "body": "<p>We may cancel an order if stock runs out, the details cannot be confirmed or the price shown was clearly wrong. If that happens you pay nothing, and any advance payment is refunded in full.</p>"
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "Refund process",
+            "body": "<p>Refunds go back in full to the account you paid from.</p>",
+            "dev_note": "How many days a cancellation refund takes."
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ]
+    },
+    "help": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Need to cancel?",
+        "text": "Reply to your confirmation on WhatsApp or call +92 319 9628735 with your order number.",
+        "cta1": "Cancel on WhatsApp",
+        "cta1_link": "@whatsapp",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "timeline",
+    "policy",
+    "help"
+  ]
+}

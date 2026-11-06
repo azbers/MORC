@@ -1,0 +1,171 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "The slice.",
+        "subheading": "Every pair carries a share that isn't ours to keep.",
+        "crumb": "Our Giving",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "text": "<p>We cut it from our profit, never from your price, and give it to people in need.</p>"
+      }
+    },
+    "how": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "Same price. A slice set aside.",
+        "layout": "row",
+        "muted": true,
+        "eyebrow": "HOW IT WORKS"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "bag",
+            "title": "Purchase",
+            "text": "<p>You buy a pair at the same price as always. Nothing is added for charity.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "wallet",
+            "title": "Contribution allocation",
+            "text": "<p>We set aside at least 5% of the profit we make on that pair, worked out on the price you finally pay.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "icon": "search",
+            "title": "Verification",
+            "text": "<p>Cases of need are checked by us before anything is given.</p>"
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "icon": "paper",
+            "title": "Distribution and reporting",
+            "text": "<p>The slices are pooled and given each quarter. Date, amount and the case are published on this page and on our social pages.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    "rules": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": true,
+        "label": "How the slice works",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "How it works",
+            "body": "<p>Every pair we sell carries a share that is not ours to keep. It is never a marketing budget.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "How contributions are calculated",
+            "body": "<p>At least 5% of the profit we make on each pair, worked out on the price you finally pay.</p>",
+            "dev_note": "The exact profit definition used for the 5% (for example after product cost, delivery and fees), before launch."
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Buyer voting",
+            "body": "<p>Vote in your bag before checkout. The cause with the most votes from this quarter's buyers receives the slice.</p>",
+            "dev_note": "What happens on a tie or when nobody votes in a quarter."
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Causes",
+            "body": "<p>School fees, Medical bills, Food rations.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Quarterly distribution",
+            "body": "<p>The slices are pooled and given each quarter, so the help is large enough to matter, to one verified case of need after our own checks.</p>"
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "Published record",
+            "body": "<p>Date, amount and the case, on this page and on our social pages. The people we help keep their dignity.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6"
+      ]
+    },
+    "record": {
+      "type": "giving-record",
+      "settings": {}
+    },
+    "quote": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": false,
+        "label": "Why we give",
+        "muted": true
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Charity does not decrease wealth.",
+            "body": "<p>Prophet Muhammad ﷺ, Sahih Muslim 2588.</p><p>We follow the way of the early Muslim traders: honest goods, a fair margin, and a share of every gain returned to people in need. The people we give to are our neighbours, not a campaign, and every case is treated with dignity.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1"
+      ]
+    },
+    "close": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Every pair adds to the slice.",
+        "cta1": "Shop the collection",
+        "cta1_link": "/collections/men",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "how",
+    "rules",
+    "record",
+    "quote",
+    "close"
+  ]
+}

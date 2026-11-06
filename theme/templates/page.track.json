@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Where is your pair?",
+        "subheading": "Your order status, without the guesswork.",
+        "crumb": "Track Order",
+        "show_image": false,
+        "need": "Real DAUR photograph needed"
+      }
+    },
+    "track": {
+      "type": "track-order",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "track"
+  ]
+}

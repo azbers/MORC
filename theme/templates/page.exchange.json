@@ -1,0 +1,133 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Exchange policy.",
+        "subheading": "The detailed steps for a size exchange.",
+        "crumb": "Exchange Policy",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "parent": "Policies",
+        "parent_link": "/pages/policies"
+      }
+    },
+    "steps": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": true,
+        "label": "Exchange steps",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Eligibility",
+            "body": "<p>Full price pairs, unworn outside. Wrong, damaged and defective pairs are covered by the Return and Exchange page.</p>",
+            "link_text": "Return and exchange",
+            "link": "@returns"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Five day window",
+            "body": "<p>Message us within 5 days of delivery with your order number.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Condition of the pair",
+            "body": "<p>The pair must be unworn outside.</p>"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Original box and Supply Unit seal",
+            "body": "<p>The pair must be in its original box, with the Supply Unit seal still attached.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Return courier",
+            "body": "<p>Send the pair to us with the courier of your choice. The return courier charge is paid by the customer.</p>",
+            "dev_note": "The return address for exchange parcels (shared on WhatsApp, or printed here)."
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "Inspection",
+            "body": "<p>Once the pair reaches us, it is checked.</p>",
+            "dev_note": "How long the check takes once the pair reaches you."
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "Replacement dispatch",
+            "body": "<p>Once the pair passes the check, your new size is dispatched.</p>",
+            "dev_note": "How soon the new size is dispatched after the check."
+          }
+        },
+        "b8": {
+          "type": "item",
+          "settings": {
+            "title": "Sold out sizes",
+            "body": "<p>If the size you need is sold out, we refund the item price to your bank account or mobile wallet.</p>"
+          }
+        },
+        "b9": {
+          "type": "item",
+          "settings": {
+            "title": "Sale pairs",
+            "body": "<p>Sale pairs are final for size and cannot be exchanged. Defects within 30 days are still covered.</p>"
+          }
+        },
+        "b10": {
+          "type": "item",
+          "settings": {
+            "title": "Refund instead",
+            "body": "<p>When the size you need is sold out, the item price is refunded to your bank account or mobile wallet.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b8",
+        "b9",
+        "b10"
+      ]
+    },
+    "help": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Start an exchange.",
+        "text": "WhatsApp or call +92 319 9628735, or email contact@daursupply.com, with your order number and the size you need.",
+        "cta1": "Start an exchange on WhatsApp",
+        "cta1_link": "@whatsapp",
+        "cta2": "Email us",
+        "cta2_link": "@email",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "steps",
+    "help"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Your information stays yours.",
+        "subheading": "Privacy policy",
+        "crumb": "Privacy Policy",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "text": "<p>We collect only what is needed to deliver your order and to answer you when you write to us.</p>"
+      }
+    },
+    "doc": {
+      "type": "info-sections",
+      "settings": {
+        "style": "legal",
+        "nav": false,
+        "numbered": true,
+        "label": "Privacy policy",
+        "muted": false,
+        "nav_label": "Contents"
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Information collected",
+            "body": "<p>Your name, mobile number, delivery address, city and, if you give it, your email address. If you pay in advance, the name and reference on your payment. Fit notes keep the name, city and photo you chose to share.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Why it is collected",
+            "body": "<p>To confirm and deliver orders, check payments, handle exchanges, claims and refunds, and answer your questions.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Shopify and service providers",
+            "body": "<p>Our store runs on Shopify, which holds order details on our behalf. We never sell or rent your details.</p>"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Courier data sharing",
+            "body": "<p>Apart from Shopify, only the courier delivering your parcel receives your name, number and address.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "WhatsApp communication",
+            "body": "<p>We message you only about your order, or in reply to a message you sent us. Reply STOP at any time and we stop.</p>"
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "Cookies and analytics",
+            "body": "<p>Shopify sets the cookies the bag and checkout need, and basic store analytics. Pairs you like on The Feed are saved only in your own browser; clearing your browser data removes them. You can accept all cookies or essential only when you first visit. With essential only, Shopify is told you did not agree to analytics, and the optional visitor analytics tool, when switched on, is not loaded.</p>",
+            "dev_note": "Name the analytics tools in use, for example Shopify analytics and Microsoft Clarity if it is switched on."
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "Advertising technologies",
+            "dev_note": "Whether any advertising pixels (Meta, TikTok, Google) are or will be installed, and what they collect. Nothing is stated until confirmed."
+          }
+        },
+        "b8": {
+          "type": "item",
+          "settings": {
+            "title": "Data retention",
+            "dev_note": "How long order and contact details are kept."
+          }
+        },
+        "b9": {
+          "type": "item",
+          "settings": {
+            "title": "Data security",
+            "dev_note": "How the details are protected (for example Shopify security, who in the team has access)."
+          }
+        },
+        "b10": {
+          "type": "item",
+          "settings": {
+            "title": "Customer rights and requests",
+            "body": "<p>Ask us to show, correct or delete the details we hold about you.</p>"
+          }
+        },
+        "b11": {
+          "type": "item",
+          "settings": {
+            "title": "Contact",
+            "body": "<p>WhatsApp at +92 319 9628735 or email contact@daursupply.com.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b8",
+        "b9",
+        "b10",
+        "b11"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "doc"
+  ]
+}

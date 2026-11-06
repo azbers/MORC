@@ -1,44 +1,302 @@
 [
-  { "name": "theme_info", "theme_name": "DAUR Supply", "theme_version": "2.0.0", "theme_author": "DAUR Supply", "theme_documentation_url": "https://daursupply.com", "theme_support_url": "https://daursupply.com/pages/contact" },
-  { "name": "Contact", "settings": [
-    { "type": "text", "id": "whatsapp", "label": "WhatsApp number (country code, no plus or spaces)", "default": "923199628735" },
-    { "type": "text", "id": "phone_display", "label": "Phone as shown", "default": "+92 319 9628735" },
-    { "type": "text", "id": "whatsapp_message", "label": "Prefilled WhatsApp message", "default": "Hello DAUR Supply, I need help choosing my shoe size." },
-    { "type": "checkbox", "id": "whatsapp_float", "label": "Show floating WhatsApp button", "default": true },
-    { "type": "text", "id": "support_email", "label": "Public email", "default": "contact@daursupply.com" },
-    { "type": "url", "id": "instagram_url", "label": "Instagram" },
-    { "type": "url", "id": "facebook_url", "label": "Facebook" },
-    { "type": "image_picker", "id": "favicon", "label": "Favicon" }
-  ] },
-  { "name": "Delivery", "settings": [
-    { "type": "text", "id": "delivery_days", "label": "Delivery time", "default": "2 to 5 days" },
-    { "type": "number", "id": "delivery_fee", "label": "Delivery fee in rupees (structured data)", "default": 0, "info": "Must match the rate in Settings > Shipping and delivery. Today: Free delivery, 2 to 5 days, Rs 0." },
-    { "type": "text", "id": "delivery_line", "label": "Delivery line in the bag", "default": "Free delivery across Pakistan, 2 to 5 days." },
-    { "type": "text", "id": "delivery_price_text", "label": "Delivery price in the bag", "default": "Free" },
-    { "type": "number", "id": "low_stock_at", "label": "Show the stock count at or below", "default": 2, "info": "Real Shopify stock only." },
-    { "type": "url", "id": "size_guide_url", "label": "Size guide page" }
-  ] },
-  { "name": "Payment (Care deposit)", "settings": [
-    { "type": "paragraph", "content": "One rule for the whole site. Each pair is a limit and a deposit in rupees. A limit includes its own amount: 3000:500 means order totals up to and including Rs 3,000 send Rs 500. Above the last limit the full amount is paid in advance. The deposit is part of the total; the rest is paid to the rider." },
-    { "type": "checkbox", "id": "advance_required", "label": "Ask for an advance before dispatch", "default": true },
-    { "type": "text", "id": "advance_tiers", "label": "Limits and deposits", "default": "3000:500, 8000:1000, 15000:1500", "info": "Approved by the owner on 6 Nov 2026." }
-  ] },
-  { "name": "Search and sharing", "settings": [
-    { "type": "text", "id": "seo_home_title", "label": "Home page title", "default": "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan" },
-    { "type": "textarea", "id": "seo_home_description", "label": "Home page description", "default": "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Delivered to every city in Pakistan, with a 5 day size exchange." },
-    { "type": "textarea", "id": "same_as_extra", "label": "Other official profiles (one https link per line)" },
-    { "type": "text", "id": "google_verification", "label": "Google site verification code" },
-    { "type": "image_picker", "id": "share_image", "label": "Share image (1200 x 630)" },
-    { "type": "text", "id": "clarity_id", "label": "Microsoft Clarity project id" },
-    { "type": "link_list", "id": "search_menu", "label": "Suggested links in search" }
-  ] },
-  { "name": "Giving (the slice)", "settings": [
-    { "type": "checkbox", "id": "give_on", "label": "Show the slice", "default": true },
-    { "type": "range", "id": "give_pct", "label": "Share of profit, at least", "min": 1, "max": 20, "step": 1, "unit": "%", "default": 5 },
-    { "type": "text", "id": "give_causes", "label": "Causes buyers can vote for", "default": "School fees, Medical bills, Food rations" }
-  ] },
-  { "name": "Development", "settings": [
-    { "type": "paragraph", "content": "Test photos are other shoes, used only to check layouts. They never show on the live theme, and every one is flagged on screen. Real DAUR photographs must replace them before launch." },
-    { "type": "checkbox", "id": "test_photos", "label": "Show test photos on this unpublished theme", "default": true }
-  ] }
+  {
+    "name": "theme_info",
+    "theme_name": "DAUR Supply",
+    "theme_version": "2.0.0",
+    "theme_author": "DAUR Supply",
+    "theme_documentation_url": "https://daursupply.com",
+    "theme_support_url": "https://daursupply.com/pages/contact"
+  },
+  {
+    "name": "Contact",
+    "settings": [
+      {
+        "type": "text",
+        "id": "whatsapp",
+        "label": "WhatsApp number (country code, no plus or spaces)",
+        "default": "923199628735"
+      },
+      {
+        "type": "text",
+        "id": "phone_display",
+        "label": "Phone as shown",
+        "default": "+92 319 9628735"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_message",
+        "label": "Prefilled WhatsApp message",
+        "default": "Hello DAUR Supply, I need help choosing my shoe size."
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_float",
+        "label": "Show floating WhatsApp button",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "support_email",
+        "label": "Public email",
+        "default": "contact@daursupply.com"
+      },
+      {
+        "type": "url",
+        "id": "instagram_url",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "facebook_url",
+        "label": "Facebook"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  },
+  {
+    "name": "Delivery",
+    "settings": [
+      {
+        "type": "text",
+        "id": "delivery_days",
+        "label": "Delivery time",
+        "default": "2 to 5 days"
+      },
+      {
+        "type": "number",
+        "id": "delivery_fee",
+        "label": "Delivery fee in rupees (structured data)",
+        "default": 0,
+        "info": "Must match the rate in Settings > Shipping and delivery. Today: Free delivery, 2 to 5 days, Rs 0."
+      },
+      {
+        "type": "text",
+        "id": "delivery_line",
+        "label": "Delivery line in the bag",
+        "default": "Free delivery across Pakistan, 2 to 5 days."
+      },
+      {
+        "type": "text",
+        "id": "delivery_price_text",
+        "label": "Delivery price in the bag",
+        "default": "Free"
+      },
+      {
+        "type": "number",
+        "id": "low_stock_at",
+        "label": "Show the stock count at or below",
+        "default": 2,
+        "info": "Real Shopify stock only."
+      },
+      {
+        "type": "url",
+        "id": "size_guide_url",
+        "label": "Size guide page"
+      }
+    ]
+  },
+  {
+    "name": "Payment (Care deposit)",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "One rule for the whole site. Each pair is a limit and a deposit in rupees. A limit includes its own amount: 3000:500 means order totals up to and including Rs 3,000 send Rs 500. Above the last limit the full amount is paid in advance. The deposit is part of the total; the rest is paid to the rider."
+      },
+      {
+        "type": "checkbox",
+        "id": "advance_required",
+        "label": "Ask for an advance before dispatch",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "advance_tiers",
+        "label": "Limits and deposits",
+        "default": "3000:500, 8000:1000, 15000:1500",
+        "info": "Approved by the owner on 6 Nov 2026."
+      }
+    ]
+  },
+  {
+    "name": "Search and sharing",
+    "settings": [
+      {
+        "type": "text",
+        "id": "seo_home_title",
+        "label": "Home page title",
+        "default": "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
+      },
+      {
+        "type": "textarea",
+        "id": "seo_home_description",
+        "label": "Home page description",
+        "default": "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Delivered to every city in Pakistan, with a 5 day size exchange."
+      },
+      {
+        "type": "textarea",
+        "id": "same_as_extra",
+        "label": "Other official profiles (one https link per line)"
+      },
+      {
+        "type": "text",
+        "id": "google_verification",
+        "label": "Google site verification code"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Share image (1200 x 630)"
+      },
+      {
+        "type": "text",
+        "id": "clarity_id",
+        "label": "Microsoft Clarity project id"
+      },
+      {
+        "type": "link_list",
+        "id": "search_menu",
+        "label": "Suggested links in search"
+      }
+    ]
+  },
+  {
+    "name": "Giving (the slice)",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "give_on",
+        "label": "Show the slice",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "give_pct",
+        "label": "Share of profit, at least",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "unit": "%",
+        "default": 5
+      },
+      {
+        "type": "text",
+        "id": "give_causes",
+        "label": "Causes buyers can vote for",
+        "default": "School fees, Medical bills, Food rations"
+      }
+    ]
+  },
+  {
+    "name": "Development",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Test photos are other shoes, used only to check layouts. They never show on the live theme, and every one is flagged on screen. Real DAUR photographs must replace them before launch."
+      },
+      {
+        "type": "checkbox",
+        "id": "test_photos",
+        "label": "Show test photos on this unpublished theme",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Page addresses",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Where each information page lives. Links across the theme use these, so a page can move (for example to its launch address) by changing one line. Write a path such as /pages/faq."
+      },
+      {
+        "type": "text",
+        "id": "page_story",
+        "label": "Our Story"
+      },
+      {
+        "type": "text",
+        "id": "page_promise",
+        "label": "Our Promise"
+      },
+      {
+        "type": "text",
+        "id": "page_about",
+        "label": "About Us"
+      },
+      {
+        "type": "text",
+        "id": "page_shipping",
+        "label": "Shipping Policy"
+      },
+      {
+        "type": "text",
+        "id": "page_returns",
+        "label": "Return and Exchange"
+      },
+      {
+        "type": "text",
+        "id": "page_exchange",
+        "label": "Exchange Policy"
+      },
+      {
+        "type": "text",
+        "id": "page_claims",
+        "label": "Claim Policy"
+      },
+      {
+        "type": "text",
+        "id": "page_cancellation",
+        "label": "Cancellation Policy"
+      },
+      {
+        "type": "text",
+        "id": "page_size",
+        "label": "Size Guide"
+      },
+      {
+        "type": "text",
+        "id": "page_faq",
+        "label": "FAQ"
+      },
+      {
+        "type": "text",
+        "id": "page_track",
+        "label": "Track Order"
+      },
+      {
+        "type": "text",
+        "id": "page_contact",
+        "label": "Contact Us"
+      },
+      {
+        "type": "text",
+        "id": "page_giving",
+        "label": "Our Giving"
+      },
+      {
+        "type": "text",
+        "id": "page_offers",
+        "label": "Offers"
+      },
+      {
+        "type": "text",
+        "id": "page_feed",
+        "label": "The Feed"
+      },
+      {
+        "type": "text",
+        "id": "page_privacy",
+        "label": "Privacy Policy"
+      },
+      {
+        "type": "text",
+        "id": "page_terms",
+        "label": "Terms of Service"
+      }
+    ]
+  }
 ]

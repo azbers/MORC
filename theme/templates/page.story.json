@@ -1,0 +1,278 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Naya daur.",
+        "subheading": "Aik naya daur. A new era.",
+        "crumb": "Our Story",
+        "show_image": true,
+        "need": "Real DAUR footwear or craft photograph needed",
+        "test_key": "site-bench",
+        "text": "<p>Pakistan's finest craft, chosen by hand and brought to your door under a name of its own.</p>"
+      }
+    },
+    "why": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "WHY DAUR",
+        "heading": "Real craft has a home. It is here.",
+        "flip": true,
+        "test_key": "site-checked",
+        "need": "Real DAUR workshop or product photograph needed",
+        "cta": "",
+        "text": "<p>Pakistan makes fine leather shoes. DAUR gives that work a name you can wear with pride.</p><p>In the workshops of Lahore, Sialkot and Kasur, skilled hands make fine leather shoes every day. Too often that work leaves the bench without a name, and the buyer pays for a label instead. DAUR exists to change that. We visit the workshops, choose finished pairs at the bench, check every pair by hand, finish it with our own hardware and bring it to your door at an honest price.</p><p>Daur means era. Aik naya daur is our promise: a new era for the shoes Pakistan makes, and for the men who wear them.</p>"
+      }
+    },
+    "workshops": {
+      "type": "feature-cards",
+      "settings": {
+        "heading": "Lahore, Sialkot and Kasur.",
+        "subheading": "Every DAUR pair is made by craftsmen in one of these three cities. Our part is to find the very best of what they make, choose it pair by pair and stand behind it with our name.",
+        "cta": "",
+        "muted": true
+      },
+      "blocks": {
+        "w1": {
+          "type": "card",
+          "settings": {
+            "title": "Lahore",
+            "text": "Independent workshops. DAUR chooses finished pairs at the bench.",
+            "need": "Real Lahore workshop photograph needed (with permission)"
+          }
+        },
+        "w2": {
+          "type": "card",
+          "settings": {
+            "title": "Sialkot",
+            "text": "Independent workshops. DAUR chooses finished pairs at the bench.",
+            "need": "Real Sialkot workshop photograph needed (with permission)"
+          }
+        },
+        "w3": {
+          "type": "card",
+          "settings": {
+            "title": "Kasur",
+            "text": "Independent workshops. DAUR chooses finished pairs at the bench.",
+            "need": "Real Kasur workshop photograph needed (with permission)"
+          }
+        }
+      },
+      "block_order": [
+        "w1",
+        "w2",
+        "w3"
+      ]
+    },
+    "checks": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "Only a pair we would wear ourselves reaches you.",
+        "layout": "row",
+        "muted": false,
+        "eyebrow": "OUR CHECKS"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "hand",
+            "title": "Upper",
+            "text": "<p>The upper is bent at the flex point and checked for cracks and loose grain before the pair is accepted.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "stitch",
+            "title": "Stitching",
+            "text": "<p>Stitching must be tight and even. A wavy or skipped stitch is a reject at our checking table.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "icon": "sole",
+            "title": "Sole bond",
+            "text": "<p>The bond between sole and upper is checked at toe and heel. Any gap sends the pair back.</p>"
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "icon": "box",
+            "title": "Finish",
+            "text": "<p>Factory laces are replaced with thick matte black woven cotton laces, the engraved DAUR lace tag and the Supply Unit seal are fitted, and the pair is boxed.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    "finish": {
+      "type": "feature-cards",
+      "settings": {
+        "heading": "Branded, not labeled.",
+        "subheading": "Our mark lives on the hardware. The leather does the talking.",
+        "cta": "",
+        "muted": true
+      },
+      "blocks": {
+        "f1": {
+          "type": "card",
+          "settings": {
+            "title": "Matte cotton laces",
+            "text": "Thick matte black woven cotton laces replace the factory laces.",
+            "need": "Close up of the matte black laces needed"
+          }
+        },
+        "f2": {
+          "type": "card",
+          "settings": {
+            "title": "Engraved dubrae",
+            "text": "A laser engraved DAUR metal tag on the bottom lace row.",
+            "need": "Close up of the engraved dubrae needed"
+          }
+        },
+        "f3": {
+          "type": "card",
+          "settings": {
+            "title": "Supply Unit seal",
+            "text": "A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.",
+            "need": "Close up of the Supply Unit seal needed"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ]
+    },
+    "slice": {
+      "type": "text-banner",
+      "settings": {
+        "eyebrow": "THE SLICE",
+        "heading": "A share that is not ours to keep.",
+        "only_if_giving": false,
+        "cta": "Our Giving",
+        "cta_link": "",
+        "text": "<p>At least 5% of our profit, never of your price, given every quarter. Every pair you buy adds to the slice. We pool it and give it at the end of each quarter to verified cases of need that we check ourselves. Every giving is published on Our Giving, with its date and amount, and the people we help keep their dignity.</p>"
+      }
+    },
+    "word": {
+      "type": "promise-cards",
+      "settings": {
+        "heading": "Straight talk, always.",
+        "subheading": "You deserve to know exactly what you are buying, so we say it plainly.",
+        "cta": ""
+      },
+      "blocks": {
+        "p1": {
+          "type": "card",
+          "settings": {
+            "icon": "hand",
+            "title": "Chosen, checked and finished by us.",
+            "text": "Skilled workshops make every pair. We choose the best, check each one by hand and finish it with our own hardware."
+          }
+        },
+        "p2": {
+          "type": "card",
+          "settings": {
+            "icon": "tag",
+            "title": "Real prices only.",
+            "text": "A crossed out price is always a price we really charged."
+          }
+        },
+        "p3": {
+          "type": "card",
+          "settings": {
+            "icon": "paper",
+            "title": "Materials on every pair.",
+            "text": "Each product page lists the upper, lining and sole as the workshop confirms them."
+          }
+        },
+        "p4": {
+          "type": "card",
+          "settings": {
+            "icon": "chat",
+            "title": "A person, not a bot.",
+            "text": "Every order is confirmed with you by call or WhatsApp before it ships."
+          }
+        },
+        "p5": {
+          "type": "card",
+          "settings": {
+            "icon": "shield",
+            "title": "Policies in plain words.",
+            "text": "Delivery, payment, exchanges and claims are written out in full on our policy pages."
+          }
+        },
+        "p6": {
+          "type": "card",
+          "settings": {
+            "icon": "truck",
+            "title": "Clear delivery information.",
+            "text": "Free delivery across Pakistan, dispatch within 24 hours of confirmation, 2 to 5 days in most cities."
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6"
+      ]
+    },
+    "founder": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": false,
+        "label": "Founder note",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "note",
+          "settings": {
+            "text": "Founder note (optional): in your own words, with your name if you want one on this page. Nothing is shown until you write it."
+          }
+        }
+      },
+      "block_order": [
+        "b1"
+      ]
+    },
+    "close": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Welcome to the new daur.",
+        "text": "Every pair checked by hand, delivered free across Pakistan and backed by a 5 day size exchange.",
+        "cta1": "Shop the collection",
+        "cta1_link": "/collections/men",
+        "cta2": "Our promise",
+        "cta2_link": "@promise",
+        "dark": true
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "why",
+    "workshops",
+    "checks",
+    "finish",
+    "slice",
+    "word",
+    "founder",
+    "close"
+  ]
+}

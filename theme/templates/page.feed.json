@@ -1,0 +1,42 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "The Feed",
+        "subheading": "New pairs, the craft behind them and the details that make DAUR.",
+        "crumb": "The Feed",
+        "show_image": false,
+        "need": "Real DAUR photograph needed"
+      }
+    },
+    "posts": {
+      "type": "feed-posts",
+      "settings": {
+        "collection": "men"
+      },
+      "blocks": {
+        "t1": {
+          "type": "text",
+          "settings": {
+            "text": "Full grain leather. Checked by hand. Finished with our seal."
+          }
+        },
+        "t2": {
+          "type": "text",
+          "settings": {
+            "text": "No loud logo. Just the craft. Branded, not labeled."
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "posts"
+  ]
+}

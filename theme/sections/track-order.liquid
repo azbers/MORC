@@ -1,0 +1,119 @@
+{%- comment -%}
+  Track Order, secure by design. No order is ever looked up from an order number or a phone number typed
+  into a box (both are easy to guess). Instead:
+  * Signed in (Shopify customer accounts, a one time code sent to the buyer's email): the buyer's own recent
+    orders with a timeline built from real order data.
+  * Not signed in: sign in, or open the private order status link Shopify sends in the confirmation message.
+  Shopify handles sign in, codes and rate limiting. Timeline steps come from Shopify data only:
+    Placed = order exists; Confirmed = the order carries the tag set below (added by the team after the
+    call or WhatsApp confirmation); Payment verified = Shopify shows paid or partly paid; Dispatched = a
+    fulfilment exists. Out for delivery and Delivered are shown by the courier at the tracking link,
+    because Shopify does not pass courier delivery events to the theme.
+{%- endcomment -%}
+{%- liquid
+  assign ctag = section.settings.confirmed_tag | default: 'Confirmed' | downcase
+-%}
+<section class="section" aria-label="{{ section.settings.label | escape }}">
+  <div class="page-width track">
+    {%- if customer -%}
+      <h2>{{ 'track.your_orders' | t }}</h2>
+      {%- if customer.orders.size == 0 -%}
+        <p>{{ section.settings.empty | escape }}</p>
+      {%- endif -%}
+      <ol class="track__orders">
+      {%- for order in customer.orders limit: 5 -%}
+        {%- liquid
+          assign confirmed = false
+          for tg in order.tags
+            assign tl = tg | downcase
+            if tl == ctag
+              assign confirmed = true
+            endif
+          endfor
+          assign paid = false
+          if order.financial_status == 'paid' or order.financial_status == 'partially_paid'
+            assign paid = true
+          endif
+          assign fl = nil
+          for li in order.line_items
+            if li.fulfillment
+              assign fl = li.fulfillment
+              break
+            endif
+          endfor
+        -%}
+        <li class="track__order">
+          <h3>{{ 'track.order' | t: name: order.name }} <span class="caption">{{ order.created_at | date: '%-d %B %Y' }}</span></h3>
+          {%- if order.cancelled -%}
+            <p class="form-message form-message--error">{{ 'track.cancelled' | t }}</p>
+          {%- else -%}
+          <ol class="timeline">
+            <li class="is-done"><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_placed' | t }}</strong> <span class="caption">{{ order.created_at | date: '%-d %b' }}</span><span class="visually-hidden">, {{ 'track.done' | t }}</span></li>
+            <li class="{% if confirmed %}is-done{% endif %}"><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_confirmed' | t }}</strong><span class="visually-hidden">, {% if confirmed %}{{ 'track.done' | t }}{% else %}{{ 'track.pending' | t }}{% endif %}</span></li>
+            <li class="{% if paid %}is-done{% endif %}"><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_paid' | t }}</strong><span class="visually-hidden">, {% if paid %}{{ 'track.done' | t }}{% else %}{{ 'track.pending' | t }}{% endif %}</span></li>
+            <li class="{% if fl %}is-done{% endif %}"><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_dispatched' | t }}</strong>{% if fl %} <span class="caption">{{ fl.created_at | date: '%-d %b' }}</span>{% endif %}<span class="visually-hidden">, {% if fl %}{{ 'track.done' | t }}{% else %}{{ 'track.pending' | t }}{% endif %}</span></li>
+            <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_out' | t }}</strong></li>
+            <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_delivered' | t }}</strong></li>
+          </ol>
+          {%- if fl -%}
+            <dl class="track__courier">
+              {%- if fl.tracking_company != blank -%}<div><dt>{{ 'track.courier' | t }}</dt><dd>{{ fl.tracking_company | escape }}</dd></div>{%- endif -%}
+              {%- if fl.tracking_number != blank -%}<div><dt>{{ 'track.number' | t }}</dt><dd>{{ fl.tracking_number | escape }}</dd></div>{%- endif -%}
+            </dl>
+            {%- if fl.tracking_url != blank -%}<p><a class="button button--small" href="{{ fl.tracking_url }}" target="_blank" rel="noopener">{{ 'track.follow' | t }}<span class="visually-hidden"> {{ 'general.new_window' | t }}</span></a></p>{%- endif -%}
+            <p class="caption">{{ 'track.courier_note' | t }}</p>
+          {%- endif -%}
+          {%- endif -%}
+          <p><a class="link-arrow" href="{{ order.order_status_url }}">{{ 'track.details' | t }}{% render 'icon', name: 'arrow-right' %}</a></p>
+        </li>
+      {%- endfor -%}
+      </ol>
+    {%- else -%}
+      <div class="track__ways">
+        <div class="track__way">
+          <h2>{{ section.settings.signin_heading | escape }}</h2>
+          <p>{{ section.settings.signin_text | escape }}</p>
+          <p><a class="button" href="{{ routes.account_login_url }}?return_url={{ request.path | url_encode }}">{{ 'track.sign_in' | t }}</a></p>
+        </div>
+        <div class="track__way">
+          <h2>{{ section.settings.link_heading | escape }}</h2>
+          <p>{{ section.settings.link_text | escape }}</p>
+        </div>
+      </div>
+    {%- endif -%}
+    <div class="track__steps">
+      <h2>{{ section.settings.steps_heading | escape }}</h2>
+      <ol class="timeline timeline--key">
+        <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_placed' | t }}</strong><span>{{ 'track.k_placed' | t }}</span></li>
+        <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_confirmed' | t }}</strong><span>{{ 'track.k_confirmed' | t }}</span></li>
+        <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_paid' | t }}</strong><span>{{ 'track.k_paid' | t }}</span></li>
+        <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_dispatched' | t }}</strong><span>{{ 'track.k_dispatched' | t }}</span></li>
+        <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_out' | t }}</strong><span>{{ 'track.k_out' | t }}</span></li>
+        <li><span class="timeline__dot" aria-hidden="true"></span><strong>{{ 'track.s_delivered' | t }}</strong><span>{{ 'track.k_delivered' | t }}</span></li>
+      </ol>
+    </div>
+    <div class="track__help">
+      <h2>{{ section.settings.help_heading | escape }}</h2>
+      <p>{{ section.settings.help_text | escape }}</p>
+      <p><a class="button button--secondary" href="{% render 'link-to', to: '@whatsapp' %}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'general.ask_whatsapp' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a></p>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Track order",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Name for screen readers", "default": "Order status" },
+    { "type": "text", "id": "confirmed_tag", "label": "Order tag that means Confirmed", "default": "Confirmed", "info": "Add this tag to an order in Shopify once the buyer has confirmed it by call or WhatsApp." },
+    { "type": "text", "id": "signin_heading", "label": "Sign in heading", "default": "Sign in to see your orders" },
+    { "type": "text", "id": "signin_text", "label": "Sign in text", "default": "Use the email you ordered with. We send a one time code to that email, so only you can see your orders." },
+    { "type": "text", "id": "link_heading", "label": "Order link heading", "default": "Or use your order link" },
+    { "type": "text", "id": "link_text", "label": "Order link text", "default": "Your order confirmation email has a private link to your order's status and tracking. Open it from that email." },
+    { "type": "text", "id": "steps_heading", "label": "Steps heading", "default": "What each step means" },
+    { "type": "text", "id": "empty", "label": "No orders message", "default": "We cannot see an order on this account yet." },
+    { "type": "text", "id": "help_heading", "label": "Help heading", "default": "Can't find your order?" },
+    { "type": "text", "id": "help_text", "label": "Help text", "default": "Message us and we'll help. Please include your order number." }
+  ],
+  "presets": [{ "name": "Track order" }]
+}
+{% endschema %}

@@ -412,6 +412,8 @@
       if (!b) return;
       const all = b.dataset.consentChoice === 'all';
       try { localStorage.setItem('daur.consent', all ? 'all' : 'essential'); } catch (err) { /* ignore */ }
+      /* optional analytics (Clarity) loads only after Accept all, never with Essential only */
+      if (all && window.daurLoadClarity) window.daurLoadClarity();
       const set = () => { try { window.Shopify.customerPrivacy.setTrackingConsent({ analytics: all, marketing: all, preferences: true, sale_of_data: false }, () => {}); } catch (err) { /* not available */ } };
       if (window.Shopify && window.Shopify.customerPrivacy) set();
       else if (window.Shopify && window.Shopify.loadFeatures) window.Shopify.loadFeatures([{ name: 'consent-tracking-api', version: '0.1' }], (err) => { if (!err) set(); });
@@ -531,6 +533,110 @@
     if (msg) msg.hidden = true;
     e.target.removeAttribute('aria-describedby');
   });
+
+  /* ---------- information pages ---------- */
+  /* FAQ: filter questions as you type; groups with no match hide; a count is announced */
+  $$('[data-faq]').forEach((faq) => {
+    const input = $('[data-faq-search]', faq);
+    const count = $('[data-faq-count]', faq);
+    const empty = $('[data-faq-empty]', faq);
+    if (!input) return;
+    let t = null;
+    input.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        const q = input.value.trim().toLowerCase();
+        let shown = 0;
+        $$('[data-faq-group]', faq).forEach((g) => {
+          let any = false;
+          $$('[data-faq-item]', g).forEach((it) => {
+            const hit = !q || it.textContent.toLowerCase().includes(q);
+            it.hidden = !hit;
+            if (hit) { any = true; shown += 1; }
+          });
+          g.hidden = !any;
+        });
+        if (empty) empty.hidden = shown > 0;
+        if (count) count.textContent = q ? (shown === 1 ? '1 question matches.' : shown + ' questions match.') : '';
+      }, 150);
+    });
+  });
+
+  /* copy a discount code or a link */
+  const copyText = async (text) => {
+    try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+  };
+  document.addEventListener('click', async (e) => {
+    const c = e.target.closest('[data-copy]');
+    if (c) { if (await copyText(c.dataset.copy)) D.toast(T.copied || 'Copied.'); return; }
+    const s = e.target.closest('[data-share]');
+    if (s) {
+      const url = s.dataset.share; const title = s.dataset.shareTitle || document.title;
+      if (navigator.share) { try { await navigator.share({ title, url }); } catch (err) { /* closed */ } return; }
+      if (await copyText(url)) D.toast(T.linkCopied || 'Link copied.');
+      return;
+    }
+    const l = e.target.closest('[data-like]');
+    if (l) {
+      let list = [];
+      try { list = JSON.parse(localStorage.getItem('daur.liked') || '[]'); } catch (err) { list = []; }
+      const h = l.dataset.like; const i = list.indexOf(h);
+      if (i === -1) list.push(h); else list.splice(i, 1);
+      try { localStorage.setItem('daur.liked', JSON.stringify(list)); } catch (err) { /* storage blocked: still toggles for this visit */ }
+      $$('[data-like="' + h + '"]').forEach((b) => b.setAttribute('aria-pressed', String(i === -1)));
+      D.toast(i === -1 ? (T.liked || 'Added to your liked pairs.') : (T.unliked || 'Removed from your liked pairs.'));
+    }
+  });
+  try {
+    const liked = JSON.parse(localStorage.getItem('daur.liked') || '[]');
+    $$('[data-like]').forEach((b) => b.setAttribute('aria-pressed', String(liked.includes(b.dataset.like))));
+  } catch (err) { /* nothing saved */ }
+
+  /* article: contents list from the guide's own H2 headings, for longer guides */
+  const toc = $('[data-toc]');
+  const artBody = $('[data-article-body]');
+  if (toc && artBody) {
+    const hs = $$('h2', artBody);
+    const words = artBody.textContent.trim().split(/\s+/).length;
+    if (hs.length >= 3 && words > 700) {
+      const list = $('[data-toc-list]', toc);
+      hs.forEach((h, i) => {
+        if (!h.id) h.id = 'part-' + (i + 1) + '-' + h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+        const li = document.createElement('li'); const a = document.createElement('a');
+        a.href = '#' + h.id; a.textContent = h.textContent.trim(); li.appendChild(a); list.appendChild(li);
+      });
+      toc.hidden = false;
+    }
+  }
+
+  /* contact form: check before sending, errors tied to their fields */
+  const cf = document.getElementById('ContactForm');
+  if (cf) {
+    const checks = [
+      ['Contact-email', (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],
+      ['Contact-body', (v) => v.trim().length > 0],
+    ];
+    cf.addEventListener('submit', (e) => {
+      let first = null;
+      checks.forEach(([id, ok]) => {
+        const f = document.getElementById(id); const err = document.getElementById(id + '-error');
+        if (!f) return;
+        if (ok(f.value)) { f.removeAttribute('aria-invalid'); f.removeAttribute('aria-describedby'); if (err) err.hidden = true; }
+        else { f.setAttribute('aria-invalid', 'true'); if (err) { err.hidden = false; f.setAttribute('aria-describedby', err.id); } if (!first) first = f; }
+      });
+      if (first) { e.preventDefault(); first.focus(); }
+    });
+    const msg = cf.querySelector('[data-autofocus]');
+    if (msg) msg.focus();
+  }
 
   D.ready = true;
 })();

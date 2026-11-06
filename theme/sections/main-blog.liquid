@@ -1,17 +1,60 @@
-{%- comment -%} Journal list. Featured article and categories arrive in Phase 4. Only published articles exist here. {%- endcomment -%}
+{%- comment -%}
+  Journal home. Opening line, topic links built only from tags that published guides really carry,
+  one featured guide (the newest, first page only), then the latest guides as cards and numbered pages.
+  Only published articles exist here; paused or scheduled guides never appear.
+{%- endcomment -%}
 {%- paginate blog.articles by 12 -%}
+{%- liquid
+  assign featured = nil
+  if paginate.current_page == 1 and current_tags == blank and blog.articles.size > 2
+    assign featured = blog.articles.first
+  endif
+-%}
 <div class="page-width">
   {%- render 'breadcrumbs' -%}
-  <header class="page-head"><h1>{{ blog.title | escape }}</h1><p>{{ section.settings.intro | escape }}</p></header>
+  <header class="page-hero__text journal-head">
+    <h1>{% if current_tags %}{{ current_tags.first | replace: '-', ' ' | capitalize | escape }}{% else %}{{ section.settings.heading | default: blog.title | escape }}{% endif %}</h1>
+    <p class="page-hero__sub">{{ section.settings.intro | escape }}</p>
+  </header>
+  {%- if blog.all_tags.size > 0 -%}
+  <nav class="journal-topics" aria-label="{{ 'blog.topics' | t }}">
+    <ul>
+      <li><a href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'blog.all' | t }}</a></li>
+      {%- for tag in blog.all_tags -%}
+      <li><a href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | replace: '-', ' ' | capitalize | escape }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+  {%- endif -%}
+  {%- if featured -%}
+  <article class="journal-feature">
+    <a class="media media--landscape" href="{{ featured.url }}" tabindex="-1" aria-hidden="true">{%- if featured.image -%}{{ featured.image | image_url: width: 1400 | image_tag: widths: '600, 900, 1200, 1400', sizes: '(min-width: 990px) 60vw, 100vw', loading: 'eager', alt: '' }}{%- endif -%}</a>
+    <div class="journal-feature__text">
+      <p class="eyebrow">{{ 'blog.featured' | t }}</p>
+      <h2><a href="{{ featured.url }}">{{ featured.title | escape }}</a></h2>
+      <p>{{ featured.excerpt_or_content | strip_html | truncatewords: 40 }}</p>
+      <a class="button button--secondary" href="{{ featured.url }}" aria-label="{{ 'blog.read_article_label' | t: title: featured.title | escape }}">{{ 'blog.read_article' | t }}</a>
+    </div>
+  </article>
+  {%- endif -%}
+  {%- if blog.articles.size > 0 -%}
+  <h2 class="journal-latest-title">{{ 'blog.latest' | t }}</h2>
   <ul class="article-cards">
     {%- for a in blog.articles -%}
-    <li>{% render 'article-card', article: a %}</li>
+      {%- if featured and a.id == featured.id -%}{%- continue -%}{%- endif -%}
+      <li>{% render 'article-card', article: a %}</li>
     {%- endfor -%}
   </ul>
+  {%- else -%}
+  <p>{{ 'blog.none' | t }}</p>
+  {%- endif -%}
   {%- if paginate.pages > 1 -%}<nav aria-label="{{ 'general.pagination' | t }}"><ul class="pagination">{%- if paginate.previous -%}<li><a href="{{ paginate.previous.url }}">{{ 'general.previous' | t }}</a></li>{%- endif -%}{%- for part in paginate.parts -%}<li>{%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span aria-current="page">{{ part.title }}</span>{%- else -%}<span>{{ part.title }}</span>{%- endif -%}</li>{%- endfor -%}{%- if paginate.next -%}<li><a href="{{ paginate.next.url }}">{{ 'general.next' | t }}</a></li>{%- endif -%}</ul></nav>{%- endif -%}
 </div>
 <div style="height: var(--section-y)"></div>
 {%- endpaginate -%}
 {% schema %}
-{ "name": "Journal", "settings": [ { "type": "text", "id": "intro", "label": "Introduction", "default": "Plain guides for men who want to buy well and wear well." } ] }
+{ "name": "Journal", "settings": [
+  { "type": "text", "id": "heading", "label": "Heading", "default": "The DAUR Journal" },
+  { "type": "text", "id": "intro", "label": "Introduction", "default": "Plain guides for men who want to buy well and wear well." }
+] }
 {% endschema %}

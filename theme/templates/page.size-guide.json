@@ -1,0 +1,115 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Your size, right the first time.",
+        "subheading": "A few centimetres make a difference.",
+        "crumb": "Size Guide",
+        "show_image": false,
+        "need": "Real DAUR photograph needed"
+      }
+    },
+    "chart": {
+      "type": "size-chart",
+      "settings": {}
+    },
+    "how": {
+      "type": "process-steps",
+      "settings": {
+        "heading": "How to measure.",
+        "layout": "row",
+        "muted": true,
+        "note": "<p>Measure both feet and use the longer measurement.</p>"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "icon": "paper",
+            "title": "Place paper on a flat surface",
+            "text": "<p>Place a sheet of paper on a flat surface.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "icon": "pencil",
+            "title": "Trace your foot",
+            "text": "<p>Stand on the paper and trace around your foot.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "icon": "ruler",
+            "title": "Measure heel to longest toe",
+            "text": "<p>Measure the distance in centimetres from your heel to the tip of your longest toe, then match it with the closest length in the size chart.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "fit": {
+      "type": "info-sections",
+      "settings": {
+        "style": "list",
+        "nav": false,
+        "numbered": true,
+        "label": "Fit advice",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Between sizes",
+            "body": "<p>If you fall between sizes, go for the larger one for extra comfort.</p>"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Buying for someone else",
+            "body": "<p>Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "If the size is not right",
+            "body": "<p>All measurements are approximate and serve as a guide only. You can exchange a full price pair within 5 days of delivery, unworn and with the Supply Unit seal attached, as per our Exchange Policy. Sale pairs are final for size.</p>",
+            "link_text": "Exchange policy",
+            "link": "@exchange"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ]
+    },
+    "help": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Need help?",
+        "text": "Message us on WhatsApp or call +92 319 9628735. We are happy to help.",
+        "cta1": "Ask us on WhatsApp",
+        "cta1_link": "@whatsapp",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "chart",
+    "how",
+    "fit",
+    "help"
+  ]
+}

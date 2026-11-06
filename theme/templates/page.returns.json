@@ -1,0 +1,116 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Your pair should feel right.",
+        "subheading": "What to do when the size, the pair or the stitching is not right.",
+        "crumb": "Return and Exchange",
+        "updated": "Last updated 5 November 2026.",
+        "show_image": false,
+        "need": "Real DAUR photograph needed",
+        "parent": "Policies",
+        "parent_link": "/pages/policies"
+      }
+    },
+    "cases": {
+      "type": "info-sections",
+      "settings": {
+        "style": "cards",
+        "nav": false,
+        "numbered": true,
+        "label": "Return and exchange cases",
+        "muted": false
+      },
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "title": "Wrong size",
+            "anchor": "wrong-size",
+            "body": "<p>Covered by our Exchange Policy: 5 days from delivery, unworn, with the seal attached. For size exchanges, the return courier charge is paid by the customer.</p>",
+            "link_text": "Exchange policy",
+            "link": "@exchange"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "title": "Wrong product",
+            "anchor": "wrong-product",
+            "body": "<p>If the pair you received is not the one you ordered, tell us within 48 hours of delivery with photos. We send the right pair, and the return courier charge is ours when the mistake was ours.</p>"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "title": "Damaged delivery",
+            "anchor": "damaged",
+            "body": "<p>If the pair arrives damaged, tell us within 48 hours of delivery with photos. A short unboxing video helps us settle it fast. We send the right pair, and the return courier charge is ours when the mistake was ours.</p>"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "title": "Manufacturing defects",
+            "anchor": "defects",
+            "body": "<p>If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp. We replace the pair, or refund it if no replacement is available.</p>"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "title": "Refunds",
+            "anchor": "refunds",
+            "body": "<p>When a refund is due, we pay the item price to your bank account or mobile wallet once the returned pair reaches us and is checked. Delivery fees are refunded when the mistake was ours.</p>",
+            "dev_note": "How many days a refund takes after the pair is checked."
+          }
+        },
+        "b6": {
+          "type": "item",
+          "settings": {
+            "title": "Exclusions",
+            "anchor": "exclusions",
+            "body": "<p>Normal wear, scuffs, water damage, misuse, pairs worn outside and pairs without their seal. We do not accept returns of pairs that fit and have no fault.</p>"
+          }
+        },
+        "b7": {
+          "type": "item",
+          "settings": {
+            "title": "How to start a claim",
+            "anchor": "start",
+            "body": "<p>Send your order number and clear photos on WhatsApp, by phone at +92 319 9628735 or by email to contact@daursupply.com.</p>",
+            "link_text": "Claim policy",
+            "link": "@claims"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ]
+    },
+    "help": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Start an exchange on WhatsApp.",
+        "text": "Send your order number and the size you need.",
+        "cta1": "Start an exchange on WhatsApp",
+        "cta1_link": "@whatsapp",
+        "cta2": "Exchange policy",
+        "cta2_link": "@exchange",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "cases",
+    "help"
+  ]
+}

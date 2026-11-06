@@ -1,0 +1,127 @@
+{%- comment -%}
+  Numbered information sections for policy and information pages. One block per section: number, heading,
+  body. Styles: "list" (clean vertical reading), "cards" (scenario cards), "legal" (legal document with a
+  table of contents). Optional side navigation, sticky on desktop; on phones it becomes a compact row of
+  section links. Extra block types: Care deposit table (built from Theme settings > Payment, the same rules
+  the bag uses), and development notes for wording the business still has to supply (never shown on the
+  live theme).
+{%- endcomment -%}
+{%- liquid
+  assign style = section.settings.style
+  assign nav = section.settings.nav
+  if style == 'legal'
+    assign nav = true
+  endif
+  assign h = 'h2'
+  if section.settings.heading != blank
+    assign h = 'h3'
+  endif
+  assign n = 0
+-%}
+<section class="section info{% if section.settings.muted %} section--muted{% endif %} info--{{ style }}{% if nav %} info--nav{% endif %}"{% if section.settings.heading != blank %} aria-labelledby="IS-{{ section.id }}"{% else %} aria-label="{{ section.settings.label | default: 'Sections' | escape }}"{% endif %}>
+  <div class="page-width">
+    {%- if section.settings.heading != blank or section.settings.intro != blank -%}
+    <div class="info__head">
+      {%- if section.settings.heading != blank -%}<h2 id="IS-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+      {%- if section.settings.intro != blank -%}<div class="rte">{{ section.settings.intro }}</div>{%- endif -%}
+    </div>
+    {%- endif -%}
+    <div class="info__layout">
+      {%- if nav -%}
+      <nav class="info__nav" aria-label="{{ section.settings.nav_label | default: 'On this page' | escape }}">
+        <p class="info__nav-title">{{ section.settings.nav_label | default: 'On this page' | escape }}</p>
+        <ol>
+          {%- assign k = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'item' -%}
+              {%- assign k = k | plus: 1 -%}
+              {%- assign anchor = block.settings.anchor | default: block.settings.title | handleize -%}
+              <li><a href="#{{ anchor }}">{% if section.settings.numbered %}<span aria-hidden="true">{{ k | prepend: '0' | slice: -2, 2 }}</span> {% endif %}{{ block.settings.nav | default: block.settings.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ol>
+      </nav>
+      {%- endif -%}
+      <div class="info__items">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'item' -%}
+              {%- assign n = n | plus: 1 -%}
+              {%- assign anchor = block.settings.anchor | default: block.settings.title | handleize -%}
+              <section class="info__item" id="{{ anchor }}" aria-labelledby="{{ anchor }}-h" {{ block.shopify_attributes }}>
+                <{{ h }} id="{{ anchor }}-h" class="info__title">{% if section.settings.numbered %}<span class="info__num" aria-hidden="true">{{ n | prepend: '0' | slice: -2, 2 }}</span>{% endif %}<span>{{ block.settings.title | escape }}</span></{{ h }}>
+                {%- if block.settings.kicker != blank -%}<p class="info__kicker">{{ block.settings.kicker | escape }}</p>{%- endif -%}
+                {%- if block.settings.body != blank -%}<div class="rte">{{ block.settings.body }}</div>{%- endif -%}
+                {%- if block.settings.dev_note != blank and theme.role != 'main' -%}<p class="dev-note" role="note">{{ 'dev.needs_wording' | t }} {{ block.settings.dev_note | escape }}</p>{%- endif -%}
+                {%- if block.settings.link_text != blank -%}<p><a class="link-arrow" href="{% render 'link-to', to: block.settings.link %}">{{ block.settings.link_text | escape }}{% render 'icon', name: 'arrow-right' %}</a></p>{%- endif -%}
+              </section>
+            {%- when 'deposit_table' -%}
+              <div class="info__table" {{ block.shopify_attributes }}>
+                {%- if settings.advance_required -%}
+                <table>
+                  <caption>{{ block.settings.caption | escape }}</caption>
+                  <thead><tr><th scope="col">{{ 'payment.table_total' | t }}</th><th scope="col">{{ 'payment.table_advance' | t }}</th></tr></thead>
+                  <tbody>
+                    {%- assign tiers = settings.advance_tiers | default: '3000:500, 8000:1000, 15000:1500' | split: ',' -%}
+                    {%- assign prev = 0 -%}
+                    {%- for tier in tiers -%}
+                      {%- assign kv = tier | strip | split: ':' -%}
+                      {%- if kv.size == 2 -%}
+                        {%- assign limit = kv[0] | strip | plus: 0 -%}
+                        {%- assign dep = kv[1] | strip | plus: 0 -%}
+                        {%- assign m_to = limit | times: 100 | money_without_trailing_zeros -%}
+                        {%- assign m_from = prev | plus: 1 | times: 100 | money_without_trailing_zeros -%}
+                        <tr><td>{% if prev == 0 %}{{ 'payment.table_up_to' | t: amount: m_to }}{% else %}{{ 'payment.table_range' | t: from: m_from, to: m_to }}{% endif %}</td><td><strong>{{ dep | times: 100 | money_without_trailing_zeros }}</strong></td></tr>
+                        {%- assign prev = limit -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- assign m_above = prev | times: 100 | money_without_trailing_zeros -%}
+                    <tr><td>{{ 'payment.table_above' | t: amount: m_above }}</td><td><strong>{{ 'payment.table_full' | t }}</strong></td></tr>
+                  </tbody>
+                </table>
+                <p class="caption">{{ 'payment.table_note' | t }}</p>
+                {%- endif -%}
+              </div>
+            {%- when 'note' -%}
+              {%- if theme.role != 'main' -%}<p class="dev-note" role="note" {{ block.shopify_attributes }}>{{ 'dev.needs_wording' | t }} {{ block.settings.text | escape }}</p>{%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Information sections",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Group heading (optional)" },
+    { "type": "text", "id": "label", "label": "Name for screen readers when there is no heading", "default": "Sections" },
+    { "type": "richtext", "id": "intro", "label": "Introduction (optional)" },
+    { "type": "select", "id": "style", "label": "Style", "default": "list", "options": [
+      { "value": "list", "label": "Reading list" }, { "value": "cards", "label": "Scenario cards" }, { "value": "legal", "label": "Legal document" } ] },
+    { "type": "checkbox", "id": "numbered", "label": "Number the sections", "default": true },
+    { "type": "checkbox", "id": "nav", "label": "Section navigation (sticky on desktop, compact links on phones)", "default": false },
+    { "type": "text", "id": "nav_label", "label": "Navigation title", "default": "On this page" },
+    { "type": "checkbox", "id": "muted", "label": "Tinted background", "default": false }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Section", "settings": [
+      { "type": "text", "id": "title", "label": "Heading" },
+      { "type": "text", "id": "nav", "label": "Short name in the navigation (optional)" },
+      { "type": "text", "id": "anchor", "label": "Anchor (optional)", "info": "Lets other pages link straight here, for example payment." },
+      { "type": "text", "id": "kicker", "label": "One line under the heading (optional)" },
+      { "type": "richtext", "id": "body", "label": "Text" },
+      { "type": "text", "id": "link_text", "label": "Link text (optional)" },
+      { "type": "text", "id": "link", "label": "Link", "info": "A path, or a page key such as @exchange." },
+      { "type": "text", "id": "dev_note", "label": "Wording still needed (development only)", "info": "Shown only on unpublished themes, so a missing business detail is never guessed." }
+    ] },
+    { "type": "deposit_table", "name": "Care deposit table", "limit": 1, "settings": [
+      { "type": "text", "id": "caption", "label": "Table caption", "default": "Care deposit by order total" }
+    ] },
+    { "type": "note", "name": "Development note", "settings": [
+      { "type": "text", "id": "text", "label": "What is still needed" }
+    ] }
+  ],
+  "presets": [{ "name": "Information sections" }]
+}
+{% endschema %}

@@ -11,7 +11,7 @@
       {%- when 'collection' -%}<li aria-current="page">{{ title | default: collection.title | escape }}</li>
       {%- when 'article' -%}<li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li><li aria-current="page">{{ article.title | escape }}</li>
       {%- when 'blog' -%}<li aria-current="page">{{ blog.title | escape }}</li>
-      {%- when 'page' -%}<li aria-current="page">{{ page.title | escape }}</li>
+      {%- when 'page' -%}{%- if parent_title != blank -%}<li><a href="{{ parent_url }}">{{ parent_title | escape }}</a></li>{%- endif -%}<li aria-current="page">{{ title | default: page.title | escape }}</li>
       {%- when 'search' -%}<li aria-current="page">{{ 'search.title' | t }}</li>
       {%- else -%}<li aria-current="page">{{ page_title | escape }}</li>
     {%- endcase -%}

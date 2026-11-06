@@ -1,0 +1,55 @@
+{%- comment -%}
+  Our Giving: the causes buyers vote for (Theme settings > Giving) and the published record. Only real
+  givings are listed, one block each, with the date, the amount and a short description that keeps the
+  people helped anonymous. Until the first giving, a plain pre-distribution status shows instead. Nothing
+  here is ever estimated or projected.
+{%- endcomment -%}
+{%- assign records = section.blocks | where: 'type', 'record' -%}
+<section class="section" aria-labelledby="GR-{{ section.id }}">
+  <div class="page-width giving">
+    <div class="giving__causes">
+      <h2>{{ section.settings.causes_heading | escape }}</h2>
+      <p>{{ section.settings.causes_text | escape }}</p>
+      {%- assign causes = settings.give_causes | split: ',' -%}
+      <ul class="giving__list">{%- for c in causes -%}<li>{{ c | strip | escape }}</li>{%- endfor -%}</ul>
+    </div>
+    <div class="giving__record">
+      <h2 id="GR-{{ section.id }}">{{ section.settings.record_heading | escape }}</h2>
+      {%- if records.size == 0 -%}
+        <div class="giving__status" role="status">
+          <p class="eyebrow">{{ section.settings.status_label | escape }}</p>
+          <p>{{ section.settings.status_text | escape }}</p>
+        </div>
+      {%- else -%}
+        <table>
+          <caption class="visually-hidden">{{ section.settings.record_heading | escape }}</caption>
+          <thead><tr><th scope="col">{{ 'giving.date' | t }}</th><th scope="col">{{ 'giving.quarter' | t }}</th><th scope="col">{{ 'giving.amount' | t }}</th><th scope="col">{{ 'giving.case' | t }}</th></tr></thead>
+          <tbody>
+            {%- for r in records -%}<tr {{ r.shopify_attributes }}><td>{{ r.settings.date | escape }}</td><td>{{ r.settings.quarter | escape }}</td><td>{{ r.settings.amount | escape }}</td><td>{{ r.settings.case | escape }}</td></tr>{%- endfor -%}
+          </tbody>
+        </table>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Giving causes and record",
+  "settings": [
+    { "type": "text", "id": "causes_heading", "label": "Causes heading", "default": "Buyers choose where it goes." },
+    { "type": "text", "id": "causes_text", "label": "Causes text", "default": "Vote in your bag before checkout. The cause with the most votes from this quarter's buyers receives the slice." },
+    { "type": "text", "id": "record_heading", "label": "Record heading", "default": "The record" },
+    { "type": "text", "id": "status_label", "label": "Status label before the first giving", "default": "Before the first giving" },
+    { "type": "text", "id": "status_text", "label": "Status text before the first giving", "default": "No giving has been made yet. The first record, with its date, amount and case, is published here after the first quarter's giving." }
+  ],
+  "blocks": [
+    { "type": "record", "name": "Giving made", "settings": [
+      { "type": "text", "id": "date", "label": "Date given" },
+      { "type": "text", "id": "quarter", "label": "Quarter", "info": "For example: July to September 2026." },
+      { "type": "text", "id": "amount", "label": "Amount", "info": "The exact amount given, for example Rs. 25,000." },
+      { "type": "text", "id": "case", "label": "Case, without names", "info": "For example: school fees for one student in Rawalpindi." }
+    ] }
+  ],
+  "presets": [{ "name": "Giving causes and record" }]
+}
+{% endschema %}

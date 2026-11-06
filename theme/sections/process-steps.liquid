@@ -1,0 +1,82 @@
+{%- comment -%}
+  Numbered process or timeline, shared by information pages: payment in two steps, claim process,
+  cancellation timeline, giving steps, how to measure. "Row" lays steps side by side with arrows on
+  desktop (stacked on phones); "timeline" is a vertical line. Optional line icon per step.
+{%- endcomment -%}
+<section class="section{% if section.settings.muted %} section--muted{% endif %}" aria-labelledby="PS-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        <h2 id="PS-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.subheading != blank -%}<p>{{ section.settings.subheading | escape }}</p>{%- endif -%}
+      </div>
+      {%- if section.settings.cta != blank -%}<a class="link-arrow" href="{% render 'link-to', to: section.settings.cta_link %}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+    </div>
+    <ol class="process process--{{ section.settings.layout }} process--{{ section.blocks.size }}">
+      {%- for block in section.blocks -%}
+      <li class="process__step" {{ block.shopify_attributes }}>
+        <div class="process__mark" aria-hidden="true">
+          {%- if block.settings.icon != 'none' -%}{% render 'icon', name: block.settings.icon %}{%- else -%}<span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>{%- endif -%}
+        </div>
+        <div class="process__body">
+          <p class="process__count">{{ 'general.step' | t: n: forloop.index, total: forloop.length }}</p>
+          <h3>{{ block.settings.title | escape }}</h3>
+          {%- if block.settings.text != blank -%}<div class="process__text">{{ block.settings.text }}</div>{%- endif -%}
+        </div>
+      </li>
+      {%- endfor -%}
+    </ol>
+    {%- if section.settings.note != blank -%}<div class="process__note">{{ section.settings.note }}</div>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Steps",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How it works." },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "select", "id": "layout", "label": "Layout", "default": "row", "options": [ { "value": "row", "label": "Row with arrows" }, { "value": "timeline", "label": "Vertical timeline" } ] },
+    { "type": "richtext", "id": "note", "label": "Note under the steps" },
+    { "type": "text", "id": "cta", "label": "Link text" },
+    { "type": "text", "id": "cta_link", "label": "Link", "info": "A path, or a page key such as @shipping." },
+    { "type": "checkbox", "id": "muted", "label": "Tinted background", "default": false }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "none", "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "truck", "label": "Truck" },
+        { "value": "wallet", "label": "Wallet" },
+        { "value": "bank", "label": "Bank" },
+        { "value": "exchange", "label": "Exchange" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "phone", "label": "Phone" },
+        { "value": "mail", "label": "Mail" },
+        { "value": "chat", "label": "Chat" },
+        { "value": "whatsapp", "label": "Whatsapp" },
+        { "value": "paper", "label": "Paper" },
+        { "value": "pencil", "label": "Pencil" },
+        { "value": "ruler", "label": "Ruler" },
+        { "value": "box", "label": "Box" },
+        { "value": "heart", "label": "Heart" },
+        { "value": "share", "label": "Share" },
+        { "value": "clock", "label": "Clock" },
+        { "value": "stitch", "label": "Stitch" },
+        { "value": "sole", "label": "Sole" },
+        { "value": "tag", "label": "Tag" },
+        { "value": "hand", "label": "Hand" },
+        { "value": "search", "label": "Search" },
+        { "value": "gift", "label": "Gift" },
+        { "value": "alert", "label": "Alert" }
+      ] },
+      { "type": "text", "id": "title", "label": "Heading" },
+      { "type": "richtext", "id": "text", "label": "Text" }
+    ] }
+  ],
+  "max_blocks": 8,
+  "presets": [{ "name": "Steps" }]
+}
+{% endschema %}

@@ -1,0 +1,259 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Questions? We've got you.",
+        "subheading": "Short answers. The full detail is on the policy pages.",
+        "crumb": "FAQ",
+        "show_image": false,
+        "need": "Real DAUR photograph needed"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {},
+      "blocks": {
+        "c0": {
+          "type": "category",
+          "settings": {
+            "title": "About DAUR"
+          }
+        },
+        "q0_0": {
+          "type": "question",
+          "settings": {
+            "question": "Is DAUR a brand?",
+            "answer": "<p>Yes. DAUR Supply is our own Pakistani brand. Every pair is made in Pakistani workshops, checked by our team and finished with DAUR hardware: the engraved dubrae on the laces and the Supply Unit seal. We do not sell copies or products of other brands.</p>",
+            "link_text": "Our story",
+            "link": "@story"
+          }
+        },
+        "q0_1": {
+          "type": "question",
+          "settings": {
+            "question": "Where are the shoes made?",
+            "answer": "<p>In workshops in Lahore, Sialkot and Kasur. We choose finished pairs at the bench and check each one by hand. Orders are dispatched from Islamabad.</p>"
+          }
+        },
+        "q0_2": {
+          "type": "question",
+          "settings": {
+            "question": "Do you sell women's or kids' shoes?",
+            "answer": "<p>No. DAUR Supply is a men's footwear brand.</p>"
+          }
+        },
+        "c1": {
+          "type": "category",
+          "settings": {
+            "title": "Products and materials"
+          }
+        },
+        "q1_0": {
+          "type": "question",
+          "settings": {
+            "question": "Are the shoes real leather?",
+            "answer": "<p>Each product page lists the upper, lining and sole of that pair. Our leather shoes and chelsea boots are full grain leather; sneakers list their leather, suede or mesh parts in the specs.</p>"
+          }
+        },
+        "c2": {
+          "type": "category",
+          "settings": {
+            "title": "Sizing and fit"
+          }
+        },
+        "q2_0": {
+          "type": "question",
+          "settings": {
+            "question": "How do I pick my size?",
+            "answer": "<p>Trace your foot on paper, measure heel to the tip of your longest toe in centimetres and match it to the Size Guide. If you are between sizes, go for the larger one.</p>",
+            "link_text": "Size guide",
+            "link": "@size"
+          }
+        },
+        "q2_1": {
+          "type": "question",
+          "settings": {
+            "question": "I am buying for someone else. How do I choose the size?",
+            "answer": "<p>Look inside a shoe he wears now: the EU size is usually printed on the tongue or under the insole. Choose the same size. If it does not fit, a full price pair can be exchanged within 5 days, unworn with the seal on. Sale pairs are final for size. You can also message us on WhatsApp and we will help you choose.</p>"
+          }
+        },
+        "c3": {
+          "type": "category",
+          "settings": {
+            "title": "Orders and payment"
+          }
+        },
+        "q3_0": {
+          "type": "question",
+          "settings": {
+            "question": "How does payment work?",
+            "answer": "<p>You reserve your pair with a small Care deposit by bank transfer: Rs. 500 on orders up to Rs. 3,000, Rs. 1,000 up to Rs. 8,000, Rs. 1,500 up to Rs. 15,000, and the full amount above Rs. 15,000. It counts toward your total, the rest is paid when the box is in your hands, and it comes back to you in full if you change your mind before dispatch.</p>",
+            "link_text": "Shipping and payment",
+            "link": "@shipping"
+          }
+        },
+        "q3_1": {
+          "type": "question",
+          "settings": {
+            "question": "What does the Care deposit do for me?",
+            "answer": "<p>It holds your size from the moment you order and sends your pair straight to dispatch. It is part of your price, never an extra.</p>"
+          }
+        },
+        "q3_2": {
+          "type": "question",
+          "settings": {
+            "question": "Can I open the parcel before paying?",
+            "answer": "<p>This depends on the courier, and most do not allow it. Record a short unboxing video. If anything is wrong, send it to us on WhatsApp and our claim, defect and exchange terms apply.</p>"
+          }
+        },
+        "q3_3": {
+          "type": "question",
+          "settings": {
+            "question": "Can I send a pair to someone else's address?",
+            "answer": "<p>Yes. Enter their name, number and address at checkout. You send the Care deposit and the person who receives the parcel pays the rider the rest, so please let them know the amount first. To send it fully paid, pay the full amount in advance.</p>"
+          }
+        },
+        "q3_4": {
+          "type": "question",
+          "settings": {
+            "question": "Can I cancel my order?",
+            "answer": "<p>Yes, free of charge until it is handed to the courier. Reply to your confirmation on WhatsApp or call us with your order number.</p>",
+            "link_text": "Cancellation policy",
+            "link": "@cancellation"
+          }
+        },
+        "c4": {
+          "type": "category",
+          "settings": {
+            "title": "Delivery and tracking"
+          }
+        },
+        "q4_0": {
+          "type": "question",
+          "settings": {
+            "question": "Do you deliver to my city?",
+            "answer": "<p>Yes. We deliver to every city and town in Pakistan that our courier reaches, in 2 to 5 days, free on every order. We do not ship outside Pakistan.</p>"
+          }
+        },
+        "q4_1": {
+          "type": "question",
+          "settings": {
+            "question": "How long does delivery take?",
+            "answer": "<p>We dispatch within 24 hours of confirming your order. Delivery then takes 2 to 5 days in most cities. Remote areas and public holidays can take longer.</p>",
+            "link_text": "Shipping policy",
+            "link": "@shipping"
+          }
+        },
+        "q4_2": {
+          "type": "question",
+          "settings": {
+            "question": "How do I track my order?",
+            "answer": "<p>Your courier name, tracking number and tracking link arrive on WhatsApp at dispatch.</p>",
+            "link_text": "Track order",
+            "link": "@track"
+          }
+        },
+        "c5": {
+          "type": "category",
+          "settings": {
+            "title": "Exchanges and claims"
+          }
+        },
+        "q5_0": {
+          "type": "question",
+          "settings": {
+            "question": "Can I exchange the size?",
+            "answer": "<p>Yes, within 5 days of delivery, unworn outside, in the original box, with the Supply Unit seal attached. The return courier charge is paid by the customer. Sale pairs are final for size.</p>",
+            "link_text": "Exchange policy",
+            "link": "@exchange"
+          }
+        },
+        "q5_1": {
+          "type": "question",
+          "settings": {
+            "question": "What if my pair has a defect?",
+            "answer": "<p>If stitching opens or a sole separates in normal wear within 30 days of delivery, send photos on WhatsApp. We replace the pair, or refund it if no replacement is available.</p>",
+            "link_text": "Claim policy",
+            "link": "@claims"
+          }
+        },
+        "c6": {
+          "type": "category",
+          "settings": {
+            "title": "Offers and discounts"
+          }
+        },
+        "q6_0": {
+          "type": "question",
+          "settings": {
+            "question": "How do I use a coupon code?",
+            "answer": "<p>Enter it in the bag and it goes to checkout already applied. One code per order, and delivery stays free.</p>",
+            "link_text": "Offers",
+            "link": "@offers"
+          }
+        },
+        "c7": {
+          "type": "category",
+          "settings": {
+            "title": "Our Giving"
+          }
+        },
+        "q7_0": {
+          "type": "question",
+          "settings": {
+            "question": "Where does the 5% go?",
+            "answer": "<p>At least 5% of the profit we make on every pair is set aside, never added to your price. Every quarter we give it to one verified case of need, chosen by the votes of that quarter's buyers, and publish the record on the Our Giving page.</p>",
+            "link_text": "Our Giving",
+            "link": "@giving"
+          }
+        }
+      },
+      "block_order": [
+        "c0",
+        "q0_0",
+        "q0_1",
+        "q0_2",
+        "c1",
+        "q1_0",
+        "c2",
+        "q2_0",
+        "q2_1",
+        "c3",
+        "q3_0",
+        "q3_1",
+        "q3_2",
+        "q3_3",
+        "q3_4",
+        "c4",
+        "q4_0",
+        "q4_1",
+        "q4_2",
+        "c5",
+        "q5_0",
+        "q5_1",
+        "c6",
+        "q6_0",
+        "c7",
+        "q7_0"
+      ]
+    },
+    "help": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Still have a question?",
+        "text": "WhatsApp or call +92 319 9628735, or email contact@daursupply.com.",
+        "cta1": "Ask us on WhatsApp",
+        "cta1_link": "@whatsapp",
+        "cta2": "Contact us",
+        "cta2_link": "@contact",
+        "dark": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "faq",
+    "help"
+  ]
+}

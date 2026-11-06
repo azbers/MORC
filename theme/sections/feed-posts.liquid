@@ -1,0 +1,69 @@
+{%- comment -%}
+  The Feed page: an editorial grid of real products from one collection (their own photos, name, colour,
+  live price), with text posts placed between them. Like keeps the pair in this browser only (no account,
+  nothing sent to us; the same list as Liked pairs). Share uses the phone's share sheet where available,
+  otherwise copies the link. No like counts or other engagement numbers are shown.
+{%- endcomment -%}
+{%- liquid
+  assign col = section.settings.collection
+  if col == blank
+    assign col = collections['men']
+  endif
+  assign inserts = section.blocks | where: 'type', 'text'
+  assign every = section.settings.every | default: 4
+-%}
+<section class="section" aria-label="{{ section.settings.label | escape }}">
+  <div class="page-width">
+    <ul class="feed-posts" data-feed>
+      {%- assign ti = 0 -%}
+      {%- for product in col.products limit: section.settings.limit -%}
+        {%- liquid
+          assign colour = ''
+          for o in product.options_with_values
+            assign on = o.name | downcase
+            if on == 'color' or on == 'colour'
+              assign colour = o.values | join: ', '
+            endif
+          endfor
+        -%}
+        <li class="feed-post">
+          <a class="feed-post__media media media--portrait" href="{{ product.url }}" tabindex="-1" aria-hidden="true">{% render 'product-media', product: product, index: 0, sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw', widths: '360, 540, 720, 900' %}</a>
+          <div class="feed-post__body">
+            <h2 class="feed-post__title"><a href="{{ product.url }}">{{ product.title | remove_first: 'DAUR ' | escape }}</a></h2>
+            {%- if colour != '' -%}<p class="caption">{{ colour | escape }}</p>{%- endif -%}
+            {% render 'price', product: product, variant: product.selected_or_first_available_variant %}
+            <div class="feed-post__actions">
+              <button class="icon-button feed-like" type="button" aria-pressed="false" data-like="{{ product.handle }}">{% render 'icon', name: 'heart' %}<span class="visually-hidden">{{ 'feed.like' | t: title: product.title }}</span></button>
+              <button class="icon-button" type="button" data-share="{{ shop.url }}{{ product.url }}" data-share-title="{{ product.title | escape }}">{% render 'icon', name: 'share' %}<span class="visually-hidden">{{ 'feed.share' | t: title: product.title }}</span></button>
+              <a class="button button--small" href="{{ product.url }}">{{ 'feed.shop' | t }}<span class="visually-hidden">: {{ product.title | escape }}</span></a>
+            </div>
+          </div>
+        </li>
+        {%- assign m = forloop.index | modulo: every -%}
+        {%- if m == 0 and ti < inserts.size -%}
+          <li class="feed-text" {{ inserts[ti].shopify_attributes }}><p>{{ inserts[ti].settings.text | escape }}</p></li>
+          {%- assign ti = ti | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+    {%- if settings.instagram_url != blank -%}
+      <p class="feed__more"><a class="link-arrow" href="{{ settings.instagram_url }}" target="_blank" rel="noopener">{{ section.settings.instagram_text | escape }}{% render 'icon', name: 'instagram' %}<span class="visually-hidden"> {{ 'general.new_window' | t }}</span></a></p>
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Feed posts",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Name for screen readers", "default": "Feed posts" },
+    { "type": "collection", "id": "collection", "label": "Collection to show" },
+    { "type": "range", "id": "limit", "label": "Pairs to show", "min": 4, "max": 24, "step": 1, "default": 12 },
+    { "type": "range", "id": "every", "label": "A text post after every", "min": 2, "max": 8, "step": 1, "default": 3 },
+    { "type": "text", "id": "instagram_text", "label": "Instagram link text", "default": "See more on Instagram @daursupply" }
+  ],
+  "blocks": [
+    { "type": "text", "name": "Text post", "settings": [ { "type": "textarea", "id": "text", "label": "Text" } ] }
+  ],
+  "presets": [{ "name": "Feed posts" }]
+}
+{% endschema %}

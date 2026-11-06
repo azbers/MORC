@@ -16,7 +16,9 @@
     "password": "Password",
     "enter": "Enter",
     "new_window": "(opens in a new window)",
-    "loading": "Loading"
+    "loading": "Loading",
+    "step": "Step {{ n }} of {{ total }}",
+    "ask_whatsapp": "Ask us on WhatsApp"
   },
   "header": {
     "announcement": "Announcement",
@@ -85,7 +87,8 @@
     "gift_hint": "Gift packing on request and your own note in the box. Gifts are paid in full in advance.",
     "gift_pack": "Add gift packing",
     "gift_to": "Who is it for?",
-    "gift_note": "Your note", "gift_left": "of 240 characters left",
+    "gift_note": "Your note",
+    "gift_left": "of 240 characters left",
     "gift_fine": "We place your note with the pair. The price stays off the parcel.",
     "gift_on": "Marked as a gift: paid in full in advance.",
     "gift_off": "Gift removed.",
@@ -106,7 +109,14 @@
     "full_note": "Orders above {{ limit }} are paid in full before dispatch, so there is nothing to pay the rider.",
     "receipt_link": "Send your payment receipt on WhatsApp",
     "receipt_message": "Assalam o Alaikum DAUR, here is my payment receipt for my order",
-    "gift_note": "Gift orders are paid in full by bank transfer after you place the order, so the person receiving it never pays at the door. Refunded in full if you cancel before dispatch."
+    "gift_note": "Gift orders are paid in full by bank transfer after you place the order, so the person receiving it never pays at the door. Refunded in full if you cancel before dispatch.",
+    "table_total": "Order total",
+    "table_advance": "Care deposit",
+    "table_up_to": "Up to {{ amount }}",
+    "table_range": "{{ from }} to {{ to }}",
+    "table_above": "Above {{ amount }}",
+    "table_full": "Full amount in advance",
+    "table_note": "The Care deposit is part of your total, not an extra charge. The rest is paid to the rider on delivery."
   },
   "product": {
     "from": "From",
@@ -175,7 +185,18 @@
       "other": "{{ count }} minute read"
     },
     "read_article": "Read article",
-    "read_article_label": "Read article: {{ title }}"
+    "read_article_label": "Read article: {{ title }}",
+    "topics": "Journal topics",
+    "all": "All guides",
+    "featured": "Featured guide",
+    "latest": "Latest guides",
+    "none": "New guides are on their way.",
+    "updated": "Updated",
+    "contents": "In this guide",
+    "share": "Share this guide",
+    "share_link": "Share",
+    "related": "More guides",
+    "pairs": "Pairs for this guide"
   },
   "footer": {
     "contact": "Contact",
@@ -211,7 +232,8 @@
     "test_photo_short": "Test photo, not DAUR",
     "feed_empty": "Development note: add up to six photos from real DAUR posts in the theme editor. Until then only the Instagram link shows.",
     "story_empty": "Development note: product story is hidden until this pair has a story heading, story text or lifestyle photo in its metafields.",
-    "collection_guide": "Development note: add a short buying guide for this collection in its metafield custom.guide. Nothing is written for you."
+    "collection_guide": "Development note: add a short buying guide for this collection in its metafield custom.guide. Nothing is written for you.",
+    "needs_wording": "Development note, wording needed:"
   },
   "newsletter": {
     "label": "Email address",
@@ -225,6 +247,84 @@
     "title": "Find your DAUR size.",
     "missing": "The size chart is on our size guide page.",
     "help": "Between sizes or unsure? Message us before you order and a real person helps you choose.",
-    "full": "Open the full size guide"
+    "full": "Open the full size guide",
+    "d_heel": "Heel",
+    "d_toe": "Longest toe",
+    "d_length": "Foot length in cm",
+    "d_s1": "Paper on a flat surface",
+    "d_s2": "Trace your foot",
+    "d_s3": "Measure heel to toe"
+  },
+  "contact": {
+    "whatsapp": "WhatsApp",
+    "call": "Call",
+    "email": "Email",
+    "hours": "Customer service hours",
+    "hours_needed": "Customer service hours (the days and times you answer). No reply time is promised until they are confirmed.",
+    "l_track": "Track your order",
+    "l_size": "Size guide",
+    "l_exchange": "Exchange policy",
+    "l_faq": "FAQ",
+    "errors_title": "Please check the fields below.",
+    "required_note": "Fields marked * are required.",
+    "name": "Name",
+    "phone": "Phone or WhatsApp",
+    "email_field": "Email",
+    "email_error": "Enter an email address like name@example.com.",
+    "message": "Message",
+    "message_hint": "Order number, pair, size or question",
+    "message_error": "Write your message.",
+    "send": "Send message"
+  },
+  "track": {
+    "your_orders": "Your recent orders",
+    "order": "Order {{ name }}",
+    "cancelled": "This order was cancelled.",
+    "s_placed": "Placed",
+    "s_confirmed": "Confirmed",
+    "s_paid": "Payment verified",
+    "s_dispatched": "Dispatched",
+    "s_out": "Out for delivery",
+    "s_delivered": "Delivered",
+    "done": "done",
+    "pending": "not yet",
+    "courier": "Courier",
+    "number": "Tracking number",
+    "follow": "Follow the parcel",
+    "courier_note": "Out for delivery and delivered are shown by the courier at this tracking link.",
+    "details": "Order details",
+    "sign_in": "Sign in",
+    "k_placed": "Your order has reached us.",
+    "k_confirmed": "We have confirmed it with you by call or WhatsApp.",
+    "k_paid": "Your Care deposit or advance payment has been checked, when one is due.",
+    "k_dispatched": "The courier has your parcel. Courier name, tracking number and link arrive on WhatsApp.",
+    "k_out": "Shown by the courier at the tracking link.",
+    "k_delivered": "Shown by the courier at the tracking link."
+  },
+  "giving": {
+    "date": "Date",
+    "quarter": "Quarter",
+    "amount": "Amount",
+    "case": "Case"
+  },
+  "offers": {
+    "code": "Code",
+    "minimum": "Minimum spend",
+    "eligible": "Eligible pairs",
+    "ends": "Ends",
+    "no_end": "No end date",
+    "limits": "Limits",
+    "copy": "Copy code",
+    "apply": "Apply to bag",
+    "checked": "Checked in Shopify on {{ date }}",
+    "copied": "Code copied."
+  },
+  "feed": {
+    "like": "Like {{ title }}",
+    "share": "Share {{ title }}",
+    "shop": "Shop now",
+    "liked": "Added to your liked pairs.",
+    "unliked": "Removed from your liked pairs.",
+    "link_copied": "Link copied."
   }
 }

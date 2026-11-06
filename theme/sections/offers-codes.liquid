@@ -1,0 +1,76 @@
+{%- comment -%}
+  Offers: discount code cards. Liquid cannot read Shopify Discounts, so each card is entered by the team
+  from Shopify admin > Discounts, with every term shown (code, amount, minimum, eligible pairs, end date,
+  limits). A card shows only when it is switched on AND its end date has not passed (checked on every page
+  view against the store's date), so an expired code is never shown as live. With no live card, the brief's
+  "no live code" line shows. Copy button puts the code on the clipboard; Apply opens Shopify's own
+  /discount/CODE link, which applies it to the bag.
+{%- endcomment -%}
+{%- liquid
+  assign today = 'now' | date: '%Y-%m-%d'
+  assign live = 0
+  for b in section.blocks
+    if b.settings.on
+      if b.settings.ends == blank or b.settings.ends >= today
+        assign live = live | plus: 1
+      endif
+    endif
+  endfor
+-%}
+<section class="section" aria-labelledby="OC-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head">
+      <div><h2 id="OC-{{ section.id }}">{{ section.settings.heading | escape }}</h2><p>{{ section.settings.subheading | escape }}</p></div>
+    </div>
+    {%- if live == 0 -%}
+      <p class="offers__none">{{ section.settings.none | escape }}</p>
+    {%- else -%}
+    <ul class="offer-cards">
+      {%- for b in section.blocks -%}
+        {%- if b.settings.on -%}{%- if b.settings.ends == blank or b.settings.ends >= today -%}
+        <li class="offer-card" {{ b.shopify_attributes }}>
+          <p class="offer-card__code"><span class="visually-hidden">{{ 'offers.code' | t }} </span>{{ b.settings.code | upcase | escape }}</p>
+          <p class="offer-card__value">{{ b.settings.value | escape }}</p>
+          <dl class="offer-card__terms">
+            {%- if b.settings.minimum != blank -%}<div><dt>{{ 'offers.minimum' | t }}</dt><dd>{{ b.settings.minimum | escape }}</dd></div>{%- endif -%}
+            <div><dt>{{ 'offers.eligible' | t }}</dt><dd>{{ b.settings.eligible | default: 'All pairs' | escape }}</dd></div>
+            <div><dt>{{ 'offers.ends' | t }}</dt><dd>{% if b.settings.ends != blank %}{{ b.settings.ends | date: '%-d %B %Y' }}{% else %}{{ 'offers.no_end' | t }}{% endif %}</dd></div>
+            {%- if b.settings.limits != blank -%}<div><dt>{{ 'offers.limits' | t }}</dt><dd>{{ b.settings.limits | escape }}</dd></div>{%- endif -%}
+          </dl>
+          <p class="offer-card__actions">
+            <button class="button button--small button--secondary" type="button" data-copy="{{ b.settings.code | upcase | escape }}">{{ 'offers.copy' | t }}<span class="visually-hidden"> {{ b.settings.code | upcase | escape }}</span></button>
+            <a class="button button--small" href="/discount/{{ b.settings.code | upcase | url_encode }}?redirect={{ routes.cart_url | url_encode }}">{{ 'offers.apply' | t }}<span class="visually-hidden"> {{ b.settings.code | upcase | escape }}</span></a>
+          </p>
+          {%- if theme.role != 'main' and b.settings.checked != blank -%}<p class="caption">{{ 'offers.checked' | t: date: b.settings.checked }}</p>{%- endif -%}
+        </li>
+        {%- endif -%}{%- endif -%}
+      {%- endfor -%}
+    </ul>
+    {%- endif -%}
+    {%- if section.settings.rules != blank -%}<p class="caption offers__rules">{{ section.settings.rules | escape }}</p>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Discount codes",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Active discount codes." },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Use it at checkout." },
+    { "type": "text", "id": "none", "label": "Message when no code is live", "default": "There is no live code at the moment. Sale pairs below are already reduced." },
+    { "type": "text", "id": "rules", "label": "Rules line", "default": "One code per order, and delivery stays free on every order." }
+  ],
+  "blocks": [
+    { "type": "code", "name": "Discount code", "settings": [
+      { "type": "checkbox", "id": "on", "label": "Show this code", "default": false, "info": "Switch on only after checking the code in Shopify admin > Discounts." },
+      { "type": "text", "id": "code", "label": "Code, exactly as in Shopify" },
+      { "type": "text", "id": "value", "label": "What it gives", "info": "For example: Rs. 300 off" },
+      { "type": "text", "id": "minimum", "label": "Minimum spend", "info": "For example: Orders of Rs. 5,500 or more" },
+      { "type": "text", "id": "eligible", "label": "Eligible pairs", "default": "All pairs" },
+      { "type": "text", "id": "ends", "label": "End date (YYYY-MM-DD)", "info": "Leave empty when Shopify shows no end date. The card hides itself after this date." },
+      { "type": "text", "id": "limits", "label": "Usage limits", "info": "For example: One use per customer" },
+      { "type": "text", "id": "checked", "label": "Date checked in Shopify (shown only on unpublished themes)" }
+    ] }
+  ],
+  "presets": [{ "name": "Discount codes" }]
+}
+{% endschema %}
