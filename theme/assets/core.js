@@ -51,10 +51,16 @@
     $$('[aria-controls="' + id + '"]').forEach((b) => b.setAttribute('aria-expanded', 'true'));
     lock(true);
     document.dispatchEvent(new CustomEvent('daur:open', { detail: { id } }));
-    requestAnimationFrame(() => {
+    /* focus the first control once the panel is really visible (visibility can lag a frame behind the class) */
+    const focusIn = () => {
+      if (openEl !== el) return true;
       const first = el.querySelector('[data-autofocus]') || el.querySelector('input[type="search"]') || el.querySelector(FOCUSABLE);
       (first || el).focus({ preventScroll: true });
-    });
+      return el.contains(document.activeElement);
+    };
+    let tries = 0;
+    const retry = () => { if (!focusIn() && tries++ < 15) setTimeout(retry, 25); };
+    requestAnimationFrame(retry);
     return true;
   };
 

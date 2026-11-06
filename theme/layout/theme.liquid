@@ -25,7 +25,7 @@
 {% sections 'footer-group' %}
 {% section 'cart-drawer' %}
 <div class="overlay" data-overlay></div>
-{%- if settings.whatsapp_float -%}{% render 'whatsapp-button' %}{%- endif -%}
+{%- if settings.whatsapp_float and template.name != 'cart' -%}{% render 'whatsapp-button' %}{%- endif -%}
 {% render 'consent-banner' %}
 <div class="toast" role="status" aria-live="polite" data-toast></div>
 <script>window.DAUR={routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},cartUpdate:{{ routes.cart_update_url | json }},suggest:{{ routes.predictive_search_url | json }}},t:{added:{{ 'cart.added' | t | json }},error:{{ 'cart.error' | t | json }},chooseSize:{{ 'product.choose_size' | t | json }},updated:{{ 'cart.updated' | t | json }},searching:{{ 'search.searching' | t | json }},results:{{ 'search.results_count' | t | json }},codeEmpty:{{ 'cart.code_empty' | t | json }},copied:{{ 'general.copied' | t | json }}}};</script>
