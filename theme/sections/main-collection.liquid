@@ -36,7 +36,7 @@
     {%- if collection.description != blank -%}<div class="collection-head__intro">{{ collection.description | strip_html | truncatewords: 60 }}</div>{%- endif -%}
   </header>
   {%- if section.settings.show_banner and collection.image -%}
-    <div class="collection-banner media media--wide">{{ collection.image | image_url: width: 2000 | image_tag: widths: '750, 1100, 1500, 2000', sizes: '100vw', loading: 'eager', alt: collection.image.alt | default: '' }}</div>
+    <div class="collection-banner media media--wide">{{ collection.image | image_url: width: 2000 | image_tag: widths: '750, 1100, 1500, 2000', sizes: '100vw', loading: 'eager', alt: collection.image.alt }}</div>
   {%- endif -%}
 
   <div class="collection-bar">
@@ -79,9 +79,10 @@
   {%- endif -%}
 
   {%- if collection.products.size > 0 -%}
+  <h2 class="visually-hidden">{{ 'collection.products_heading' | t }}</h2>
   <ul class="product-grid product-grid--4">
     {%- for p in collection.products -%}
-      <li>{% if forloop.index <= 4 %}{% render 'product-card', product: p, loading: 'eager' %}{% else %}{% render 'product-card', product: p %}{% endif %}</li>
+      <li>{% if forloop.index <= 2 %}{% render 'product-card', product: p, loading: 'eager' %}{% elsif forloop.index <= 4 %}{% render 'product-card', product: p, loading: 'eager-low' %}{% else %}{% render 'product-card', product: p %}{% endif %}</li>
     {%- endfor -%}
   </ul>
   {%- else -%}

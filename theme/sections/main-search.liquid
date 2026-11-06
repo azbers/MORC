@@ -14,6 +14,7 @@
       <p class="muted">{{ 'search.no_results' | t: terms: search.terms | escape }}</p>
       <p><a class="button button--secondary" href="{{ routes.all_products_collection_url }}">{{ 'header.shop_all' | t }}</a></p>
     {%- else -%}
+      <h2 class="visually-hidden">{{ 'collection.products_heading' | t }}</h2>
       <ul class="product-grid product-grid--4">
         {%- for item in search.results -%}{%- if item.object_type == 'product' -%}<li>{% render 'product-card', product: item %}</li>{%- endif -%}{%- endfor -%}
       </ul>

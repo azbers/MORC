@@ -176,7 +176,8 @@
     "guides": "Buying guides",
     "price_from": "From (Rs)",
     "price_to": "To (Rs)",
-    "show_results": "Show results"
+    "show_results": "Show results",
+    "products_heading": "Pairs"
   },
   "blog": {
     "by": "By {{ author }}",
@@ -326,5 +327,75 @@
     "liked": "Added to your liked pairs.",
     "unliked": "Removed from your liked pairs.",
     "link_copied": "Link copied."
+  },
+  "seo_pages": {
+    "story": {
+      "title": "Our Story | A Pakistani Footwear Brand for Men",
+      "description": "Why DAUR Supply exists: men's leather shoes and sneakers from workshops in Lahore, Sialkot and Kasur, checked by hand and dispatched from Islamabad."
+    },
+    "promise": {
+      "title": "Our Promise: Delivery, Exchanges and Defect Cover",
+      "description": "What every DAUR order includes: free delivery across Pakistan, a 5 day size exchange, 30 day defect cover and a pair checked by hand before dispatch."
+    },
+    "about": {
+      "title": "About DAUR Supply | Men's Shoes Online in Pakistan",
+      "description": "DAUR Supply is an online men's footwear brand in Pakistan: leather sneakers, formal shoes, chelsea boots and loafers, dispatched from Islamabad."
+    },
+    "shipping": {
+      "title": "Shipping and Delivery Across Pakistan",
+      "description": "How DAUR Supply delivers: free delivery to every city our couriers reach, 2 to 5 days, dispatch from Islamabad, the Care deposit and paying the rest on delivery."
+    },
+    "returns": {
+      "title": "Returns and Refunds Policy",
+      "description": "When a DAUR Supply pair can be returned, the condition it must be in, who pays the return courier and how refunds are made."
+    },
+    "exchange": {
+      "title": "Size Exchange Policy: 5 Days",
+      "description": "Exchange a DAUR Supply pair for another size within 5 days of delivery: unworn, in the original box. Sale pairs are final for size."
+    },
+    "claims": {
+      "title": "Defect Claims: 30 Day Cover",
+      "description": "How to claim for a manufacturing defect on a DAUR Supply pair within 30 days: what is covered, the photos we need and what happens next."
+    },
+    "cancellation": {
+      "title": "Order Cancellation Policy",
+      "description": "How to cancel a DAUR Supply order before dispatch, what happens after dispatch and how a Care deposit is handled when an order is cancelled."
+    },
+    "size-guide": {
+      "title": "Men's Shoe Size Chart Pakistan: EU, UK, US",
+      "description": "DAUR men's shoe size chart with EU, UK and US sizes and foot length in cm and inches, plus how to measure your foot at home."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "description": "Answers on sizing, delivery times, the Care deposit, payment on delivery, exchanges, defect claims and tracking your DAUR Supply order."
+    },
+    "track": {
+      "title": "Track Your Order",
+      "description": "Follow your DAUR Supply order from confirmation to delivery with the link in your order email or by signing in to your account."
+    },
+    "contact": {
+      "title": "Contact DAUR Supply | WhatsApp, Phone and Email",
+      "description": "Contact DAUR Supply on WhatsApp or phone at 0319 9628735 or by email at contact@daursupply.com for sizing, orders and exchanges."
+    },
+    "giving": {
+      "title": "Our Giving: At Least 5% of Profit",
+      "description": "DAUR Supply sets aside at least 5% of its profit, never added to your price, and gives it each quarter. See the causes and the record."
+    },
+    "offers": {
+      "title": "Offers and Sale Pairs",
+      "description": "Current DAUR Supply offers and men's shoes on sale in Pakistan, with the original price shown beside every reduced pair."
+    },
+    "feed": {
+      "title": "The Feed: DAUR Pairs Up Close",
+      "description": "DAUR Supply men's sneakers, leather shoes and chelsea boots up close, with prices and colours. Save the pairs you like and share them."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "How DAUR Supply collects, uses and protects the personal information you share when you browse the store and place an order."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "The terms that apply when you use the DAUR Supply store and buy from us, including orders, prices, payment and delivery."
+    }
   }
 }

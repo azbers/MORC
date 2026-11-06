@@ -11,7 +11,7 @@
       {%- for block in section.blocks limit: 6 -%}
         {%- if block.settings.image != blank -%}
           {%- assign shown = shown | plus: 1 -%}
-          <li {{ block.shopify_attributes }}><a class="media media--square" href="{{ block.settings.link | default: ig }}"{% if block.settings.link == blank %} target="_blank" rel="noopener"{% endif %}>{{ block.settings.image | image_url: width: 600 | image_tag: widths: '300, 450, 600', sizes: '(min-width: 990px) 16vw, 33vw', loading: 'lazy', alt: block.settings.image.alt | default: block.settings.alt }}</a></li>
+          <li {{ block.shopify_attributes }}><a class="media media--square" href="{{ block.settings.link | default: ig }}"{% if block.settings.link == blank %} target="_blank" rel="noopener"{% endif %}>{%- assign fg_alt = block.settings.image.alt | default: block.settings.alt -%}{{ block.settings.image | image_url: width: 600 | image_tag: widths: '300, 450, 600', sizes: '(min-width: 990px) 16vw, 33vw', loading: 'lazy', alt: fg_alt }}</a></li>
         {%- endif -%}
       {%- endfor -%}
     {%- endcapture -%}

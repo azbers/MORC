@@ -9,6 +9,21 @@
     assign daur_title = settings.seo_home_title | default: "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
     assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Delivered to every city in Pakistan, with a 5 day size exchange."
   endif
+  # Information page templates carry their own title and description, used until the page's
+  # own search fields are filled in Shopify admin (and always in a ?view= preview on another page).
+  if template.name == 'page' and template.suffix != blank
+    assign seo_key = 'seo_pages.' | append: template.suffix
+    assign seo_t = seo_key | append: '.title' | t
+    assign seo_d = seo_key | append: '.description' | t
+    unless seo_t contains seo_key
+      if page.template_suffix != template.suffix or page_title == page.title
+        assign daur_title = seo_t
+      endif
+      if page.template_suffix != template.suffix or page_description == blank
+        assign daur_desc = seo_d
+      endif
+    endunless
+  endif
   if current_page > 1
     assign daur_title = daur_title | append: ', page ' | append: current_page
   endif
@@ -19,7 +34,11 @@
   if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers' or template.name == 'password'
     assign daur_noindex = true
   elsif template.name == 'page'
-    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts'
+    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts' or template.suffix == 'track'
+      assign daur_noindex = true
+    endif
+    # Privacy and Terms are published by Shopify at /policies/; these templates must not compete with them.
+    if template.suffix == 'privacy' or template.suffix == 'terms'
       assign daur_noindex = true
     endif
   endif

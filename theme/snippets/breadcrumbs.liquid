@@ -1,19 +1,62 @@
-{%- comment -%} Visible breadcrumb trail. BreadcrumbList data is printed by structured-data, from the same trail. {%- endcomment -%}
+{%- comment -%}
+  Visible breadcrumb trail and its BreadcrumbList data, printed together from the
+  same items so the two can never disagree. Input: title, parent_title, parent_url.
+{%- endcomment -%}
+{%- liquid
+  assign root = shop.url
+  assign mid_name = ''
+  assign mid_url = ''
+  assign last = ''
+  case template.name
+    when 'product'
+      assign c = nil
+      for col in product.collections
+        unless col.handle == 'men' or col.handle == 'frontpage' or col.handle == 'sale'
+          assign c = col
+          break
+        endunless
+      endfor
+      if c
+        assign mid_name = c.title
+        assign mid_url = c.url
+      endif
+      assign last = product.title | remove_first: 'DAUR '
+    when 'collection'
+      assign last = title | default: collection.title
+    when 'article'
+      assign mid_name = blog.title
+      assign mid_url = blog.url
+      assign last = article.title
+    when 'blog'
+      assign last = blog.title
+    when 'page'
+      if parent_title != blank
+        assign mid_name = parent_title
+        assign mid_url = parent_url
+      endif
+      assign last = title | default: page.title
+    when 'search'
+      assign last = 'search.title' | t
+    else
+      assign last = page_title
+  endcase
+  assign mid_abs = mid_url
+  assign first_char = mid_url | slice: 0
+  if first_char == '/'
+    assign mid_abs = root | append: mid_url
+  endif
+  assign last_pos = 2
+  if mid_name != blank
+    assign last_pos = 3
+  endif
+-%}
 <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumb' | t }}">
   <ol>
     <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
-    {%- case template.name -%}
-      {%- when 'product' -%}
-        {%- assign c = nil -%}
-        {%- for col in product.collections -%}{%- unless col.handle == 'men' or col.handle == 'frontpage' or col.handle == 'sale' -%}{%- assign c = col -%}{%- break -%}{%- endunless -%}{%- endfor -%}
-        {%- if c -%}<li><a href="{{ c.url }}">{{ c.title | escape }}</a></li>{%- endif -%}
-        <li aria-current="page">{{ product.title | remove_first: 'DAUR ' | escape }}</li>
-      {%- when 'collection' -%}<li aria-current="page">{{ title | default: collection.title | escape }}</li>
-      {%- when 'article' -%}<li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li><li aria-current="page">{{ article.title | escape }}</li>
-      {%- when 'blog' -%}<li aria-current="page">{{ blog.title | escape }}</li>
-      {%- when 'page' -%}{%- if parent_title != blank -%}<li><a href="{{ parent_url }}">{{ parent_title | escape }}</a></li>{%- endif -%}<li aria-current="page">{{ title | default: page.title | escape }}</li>
-      {%- when 'search' -%}<li aria-current="page">{{ 'search.title' | t }}</li>
-      {%- else -%}<li aria-current="page">{{ page_title | escape }}</li>
-    {%- endcase -%}
+    {%- if mid_name != blank -%}<li><a href="{{ mid_url }}">{{ mid_name | escape }}</a></li>{%- endif -%}
+    <li aria-current="page">{{ last | escape }}</li>
   </ol>
 </nav>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":{{ 'general.home' | t | json }},"item":{{ root | append: '/' | json }}}{% if mid_name != blank %},{"@type":"ListItem","position":2,"name":{{ mid_name | json }},"item":{{ mid_abs | json }}}{% endif %},{"@type":"ListItem","position":{{ last_pos }},"name":{{ last | json }}}]}
+</script>

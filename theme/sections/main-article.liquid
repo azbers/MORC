@@ -29,13 +29,42 @@
     <h1>{{ article.title | escape }}</h1>
     <p class="caption article__meta">{{ 'blog.by' | t: author: byline }} · <time datetime="{{ pub }}">{{ article.published_at | date: '%-d %B %Y' }}</time>{% if upd > pub %} · {{ 'blog.updated' | t }} <time datetime="{{ upd }}">{{ article.updated_at | date: '%-d %B %Y' }}</time>{% endif %} · {{ 'blog.reading_time' | t: count: mins }}</p>
   </header>
-  {%- if article.image -%}<div class="media media--landscape article__image">{{ article.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: article.image.alt | default: article.title }}</div>{%- endif -%}
+  {%- if article.image -%}<div class="media media--landscape article__image">{%- assign ai_alt = article.image.alt | default: article.title -%}{{ article.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: ai_alt }}</div>{%- endif -%}
   <div class="article__layout">
-    <nav class="article__toc" aria-labelledby="Toc-{{ section.id }}" data-toc hidden>
+    {%- comment -%}
+      Contents list for longer guides (3 or more H2 headings and over 700 words), built here in the
+      page from the guide's own headings so nothing moves once the page has loaded.
+    {%- endcomment -%}
+    {%- liquid
+      assign parts = article.content | split: '<h2'
+      assign toc_items = ''
+      assign body = ''
+      for part in parts
+        if forloop.first
+          assign body = part
+          continue
+        endif
+        assign head = part | split: '</h2>' | first
+        assign head_text = '<h2' | append: head | append: '</h2>' | strip_html | strip
+        if head contains 'id="'
+          assign hid = head | split: 'id="' | last | split: '"' | first
+          assign body = body | append: '<h2' | append: part
+        else
+          assign hid = 'part-' | append: forloop.index0
+          assign body = body | append: '<h2 id="' | append: hid | append: '"' | append: part
+        endif
+        assign head_esc = head_text | escape
+        assign toc_items = toc_items | append: '<li><a href="#' | append: hid | append: '">' | append: head_esc | append: '</a></li>'
+      endfor
+      assign h2_count = parts.size | minus: 1
+    -%}
+    {%- if h2_count >= 3 and words > 700 -%}
+    <nav class="article__toc" aria-labelledby="Toc-{{ section.id }}" data-toc>
       <p class="info__nav-title" id="Toc-{{ section.id }}">{{ 'blog.contents' | t }}</p>
-      <ol data-toc-list></ol>
+      <ol data-toc-list>{{ toc_items }}</ol>
     </nav>
-    <div class="rte" data-article-body data-blog="{{ blog.handle }}" data-live="{% for a in blog.articles limit: 250 %}{{ a.handle }}{% unless forloop.last %},{% endunless %}{% endfor %}">{{ article.content }}</div>
+    {%- endif -%}
+    <div class="rte" data-article-body data-blog="{{ blog.handle }}" data-live="{% for a in blog.articles limit: 250 %}{{ a.handle }}{% unless forloop.last %},{% endunless %}{% endfor %}">{{ body }}</div>
   </div>
   <div class="article__share read-width">
     <p class="info__nav-title">{{ 'blog.share' | t }}</p>

@@ -600,23 +600,6 @@
     $$('[data-like]').forEach((b) => b.setAttribute('aria-pressed', String(liked.includes(b.dataset.like))));
   } catch (err) { /* nothing saved */ }
 
-  /* article: contents list from the guide's own H2 headings, for longer guides */
-  const toc = $('[data-toc]');
-  const artBody = $('[data-article-body]');
-  if (toc && artBody) {
-    const hs = $$('h2', artBody);
-    const words = artBody.textContent.trim().split(/\s+/).length;
-    if (hs.length >= 3 && words > 700) {
-      const list = $('[data-toc-list]', toc);
-      hs.forEach((h, i) => {
-        if (!h.id) h.id = 'part-' + (i + 1) + '-' + h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
-        const li = document.createElement('li'); const a = document.createElement('a');
-        a.href = '#' + h.id; a.textContent = h.textContent.trim(); li.appendChild(a); list.appendChild(li);
-      });
-      toc.hidden = false;
-    }
-  }
-
   /* contact form: check before sending, errors tied to their fields */
   const cf = document.getElementById('ContactForm');
   if (cf) {

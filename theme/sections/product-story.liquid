@@ -17,7 +17,7 @@
   </div>
   {%- if product.media.size > 2 -%}
   <div class="page-width"><ul class="detail-grid">
-    {%- for m in product.media offset: 2 limit: 4 -%}{%- unless m.alt contains 'Drawing' -%}<li class="media media--square">{{ m.preview_image | image_url: width: 900 | image_tag: widths: '450, 675, 900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: m.alt | default: product.title }}</li>{%- endunless -%}{%- endfor -%}
+    {%- for m in product.media offset: 2 limit: 4 -%}{%- unless m.alt contains 'Drawing' -%}<li class="media media--square">{%- assign ps_alt = m.alt | default: product.title -%}{{ m.preview_image | image_url: width: 900 | image_tag: widths: '450, 675, 900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: ps_alt }}</li>{%- endunless -%}{%- endfor -%}
   </ul></div>
   {%- endif -%}
 </section>
