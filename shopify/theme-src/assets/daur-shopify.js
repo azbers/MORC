@@ -222,11 +222,11 @@
   EXT.views.order = function () { location.replace(S.routes.account); };
   EXT.views.track = function (param) {
     const A = window.DAUR_API; const esc = A.esc;
-    A.setMeta('Track your order | DAUR Supply', 'See the status of your DAUR Supply order: confirmed, dispatched with the courier, or delivered. Sign in with a one time code, track the parcel with Leopards, or ask us on WhatsApp.');
+    A.setMeta('Track your order | DAUR Supply', 'Track your DAUR Supply order by order number, phone number or courier tracking number.');
     // Shopify shows an order only to the person who placed it: the order page (one time code by email, no password)
     // carries the live status, the order details and the courier tracking number once the pair is dispatched
-    const steps = [['check', 'Confirmed', 'We call or WhatsApp you to confirm the order.'], ['box', 'Packed and dispatched', 'Usually within 24 hours. You get the courier tracking number.'], ['truck', 'With the courier', 'Follow the parcel on the courier page.'], ['home', 'Delivered', 'Pay the rider in cash when the box is in your hands.']];
-    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair.</h1><p class="aside">See your order status, the order details and the courier tracking number. Three ways, pick the one that suits you.</p></div></section>
+    const steps = [['bag', 'Placed', 'Your order reaches us and your bag shows the Care deposit.'], ['check', 'Confirmed', 'We confirm it with you by call or WhatsApp.'], ['box', 'Dispatched', 'Usually within 24 hours, with your courier tracking number on WhatsApp.'], ['truck', 'Out for delivery', "Follow the parcel on the courier's tracking page."], ['home', 'Delivered', 'Pay the remaining balance to the rider, and enjoy your pair.']];
+    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Your order, at every step.</h1><p class="aside">Check your order status, its details and the courier tracking number in whichever way suits you.</p></div></section>
       <div class="wrap trk" style="padding-block:36px 96px">
         <ol class="trk-steps" aria-label="What your order page shows">${steps.map(([i, t, d], k) => `<li><span class="trk-n mono">0${k + 1}</span><b>${t}</b><span>${d}</span></li>`).join('')}</ol>
         <div class="trk-g">
@@ -239,7 +239,7 @@
             <div class="f-ic"><input id="lcsN" inputmode="text" placeholder="Tracking number, for example LE7..." autocomplete="off" aria-label="Leopards tracking number"></div>
             <button class="btn ghost" type="submit">Open Leopards tracking <span class="arr">&rarr;</span></button></form>
           <form class="tcard trk-c" id="tf" novalidate><span class="mono mute">3 / Our team</span><h2>Ask us on WhatsApp</h2>
-            <p>Ordered with a phone number, or no email to hand? Type your order number or phone number and a person from our team replies with the status.</p>
+            <p>Ordered with a phone number, or no email to hand? Send your order number or phone number and a member of our team will reply with the status.</p>
             <div class="f-ic"><input id="tq" placeholder="#1001 or 03XX XXXXXXX" autocomplete="off" aria-label="Order number, phone number or email"></div>
             <button class="btn ghost" type="submit">Ask on WhatsApp <span class="arr">&rarr;</span></button></form>
         </div></div>`;

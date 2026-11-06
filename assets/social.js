@@ -268,7 +268,7 @@
     // value flex share button
     const share = $('#shareB');
     if (share && !$('#flexB')) {
-      share.insertAdjacentHTML('afterend', `<button class="act flexact" id="flexB">${window.DAUR_ICON ? window.DAUR_ICON('bolt') : ''}<span>Share the value flex card</span></button>`);
+      share.insertAdjacentHTML('afterend', `<button class="act flexact" id="flexB">${window.DAUR_ICON ? window.DAUR_ICON('bolt') : ''}<span>Share the price card</span></button>`);
       $('#flexB').addEventListener('click', () => flexCard(p, v));
     }
   });
@@ -481,7 +481,7 @@
     P.forEach((p, k) => {
       const v = p.variants.find(onSale) || p.variants[0];
       reels.push({ p, v });
-      if (k === 1) reels.push({ text: ['Full grain leather.', 'Checked by hand.', 'Finished with our seal.', 'Delivered to your door.'] });
+      if (k === 1) reels.push({ text: ['Chosen with care.', 'Checked by hand.', 'Finished with our seal.', 'Delivered free to your door.'] });
       if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Aik naya daur.'] });
     });
     const D = '<svg viewBox="-55 20 234 160" aria-hidden="true"><g transform="skewX(-14)"><path fill="currentColor" d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></svg>';
@@ -500,7 +500,7 @@
           <div class="fd-cap">
             <h2>${esc(r.p.name)}</h2><p>${esc(r.v.color)}${r.p.description ? '. ' + esc(r.p.description.split('.')[0]) + '.' : ''}</p>
             <div class="fd-row"><div class="fd-price${onSale(r.v) ? ' sale' : ''}"><b>${fmt(r.v.price)}</b>${onSale(r.v) ? `<s>${fmt(r.v.compareAt)}</s>` : ''}</div>
-            <a class="btn volt" href="${link('product', r.p.id + '~' + r.v.id)}">Shop now <span class="arr">&rarr;</span></a></div>
+            <a class="btn volt" href="${link('product', r.p.id + '~' + r.v.id)}">Find your pair <span class="arr">&rarr;</span></a></div>
             <span class="fd-hash">#DAURsupply #${esc(r.p.category === 'Hybrids' ? 'Casual' : r.p.category)} #AikNayaDaur</span>
           </div></section>`).join('')}</div>`;
     const burst = (host, x, y) => {
@@ -557,6 +557,6 @@
     const it = o.items[0]; const p = prod(it.pid); if (!p) return;
     const v = p.variants.find((x) => x.color === it.color) || p.variants[0];
     const row = document.querySelector('.confirm .main > div[style*="flex"]');
-    if (row) { row.insertAdjacentHTML('beforeend', '<button class="btn ghost" id="oFlex">Share the value flex</button>'); $('#oFlex').addEventListener('click', () => flexCard(p, v)); }
+    if (row) { row.insertAdjacentHTML('beforeend', '<button class="btn ghost" id="oFlex">Share the price card</button>'); $('#oFlex').addEventListener('click', () => flexCard(p, v)); }
   });
 })();

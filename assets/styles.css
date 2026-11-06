@@ -3636,3 +3636,115 @@ body[data-page="feed"] .ftr { display: block !important; }
 .ap-addb { flex: 1 1 96px; height: 40px; padding: 0 10px; border: 0; border-radius: 0; background: var(--cta); color: var(--on-cta); font: 700 13px/1 var(--body); letter-spacing: .02em; white-space: nowrap; cursor: pointer; }
 .ap-addb:hover { background: var(--cta-hover); }
 .ap-sold { font: 400 13px/1.3 var(--body); color: var(--mute); }
+
+/* ==========================================================================
+   COLOUR AND VOICE (6 Nov 2026, owner approved): one warm colour family on
+   the same layout. White navigation, ivory page, stone tiles and footer,
+   charcoal text and buttons, espresso depth, muted brass details, deep olive
+   only for The Slice and WhatsApp, oxblood for sale. Calmer headline sizes.
+   ========================================================================== */
+:root:not([data-theme="dark"]) {
+  --ink: #F6F3ED; --ink-2: #EFEBE3; --ink-3: #E9E4DB; --card: #FFFFFF;
+  --bone: #242321; --text: #242321; --text-2: #3A3835; --mute: #5E5A54; --dim: #6B665E;
+  --volt: #242321; --signal: #4B332B; --signal-rgb: 75, 51, 43; --on-volt: #FFFFFF;
+  --fg-rgb: 36, 35, 33; --bg-rgb: 246, 243, 237; --shadow-rgb: 42, 28, 20;
+  --line: #E2DCD1; --line-2: #CFC6B8;
+  --cta: #242321; --on-cta: #FFFFFF; --cta-hover: #4B332B;
+  --tile: #E9E4DB; --sale: #9B2C23; --sale-flow: linear-gradient(90deg, #9B2C23, #9B2C23);
+  --brand: #2A1C14; --esp: #2A1C14; --espresso: #4B332B;
+  --brass: #A88755; --gold: #A88755; --gold-d: #7F6235;
+  --cream: #E9E4DB; --cream-2: #DDD3C4; --olive: #465347;
+}
+:root[data-theme="dark"] {
+  --ink: #17110D; --ink-2: #1F1813; --ink-3: #2A2019; --card: #17110D;
+  --bone: #F2ECE3; --text: #F2ECE3; --text-2: #DCD3C7; --mute: #B4A898; --dim: #95897B;
+  --volt: #C9A877; --signal: #C9A877; --signal-rgb: 201, 168, 119; --on-volt: #17110D;
+  --fg-rgb: 242, 236, 227; --bg-rgb: 23, 17, 13;
+  --line: #33281F; --line-2: #4A3B2F;
+  --cta: #F2ECE3; --on-cta: #17110D; --cta-hover: #C9A877;
+  --tile: #241C16; --sale: #E07A6E; --olive: #5C6B5D;
+}
+:root:not([data-theme="dark"]) body { background: var(--ink); color: var(--bone); }
+
+/* the white navigation bar stays white; a fine stone line under it */
+:root:not([data-theme="dark"]) .hdr { background: #FFFFFF; border-bottom-color: #E9E4DB; }
+:root:not([data-theme="dark"]) .mnav { background: #FFFFFF !important; }
+:root:not([data-theme="dark"]) .st-nav { background: var(--ink); }
+
+/* notice bar: espresso deep instead of black */
+.tb { background: #2A1C14; color: #F6F3ED; }
+.hstrip { background: var(--tile); }
+
+/* buttons: charcoal, espresso on hover; a visible focus ring */
+.btn:not(.ghost):hover, .btn.volt:hover, .btn-box:not(.ghost):hover { background: var(--cta-hover); border-color: var(--cta-hover); --b: var(--cta-hover); }
+.btn:focus-visible, .btn-box:focus-visible, .ap-addb:focus-visible, .f2-wa:focus-visible { outline: 2px solid #A88755; outline-offset: 3px; }
+.ap-addb:hover { background: var(--cta-hover); }
+.ap-tag, .x-door-t, .x-door-s, .x-chip { background: #FFFFFF; color: #242321 !important; }
+.ap-heart, .ap-heart[aria-pressed="true"] .h-f { color: #242321; }
+:root[data-theme="dark"] .ap-heart { color: #F2ECE3; }
+
+/* eyebrows and small labels in brass ink */
+:root:not([data-theme="dark"]) .eyebrow { color: #7F6235; }
+
+/* Choose your style: one warm family, Sale in a soft oxblood tint */
+.xd { background: linear-gradient(165deg, #FFFFFF 0%, #EFEAE1 100%); }
+.xd.xd-1 { background: linear-gradient(165deg, #F3EFE8 0%, #E3DCD0 100%); }
+.xd.xd-2 { background: linear-gradient(165deg, #F1EBE1 0%, #DDD3C4 100%); }
+.xd.xd-3 { background: linear-gradient(165deg, #F6EEEA 0%, #EAD9D3 100%); }
+.xd-go { background: #4B332B; }
+
+/* The Slice in deep olive, the closing band in espresso deep */
+.f-slice { background: #465347; color: #F6F3ED; }
+.f-slice .eyebrow, .f-slice-note { color: #D9CFA8 !important; }
+.f-slice h2 { color: #F6F3ED; }
+.f-slice p { color: #E2E6DF; }
+.f-slice .btn.ghost, .f-slice .u-link { color: #F6F3ED; }
+.x-seo { background: #2A1C14; color: #F6F3ED; }
+.x-seo h2 { color: #F6F3ED; }
+.x-seo p { color: #E4DACB; }
+.x-seo .link { color: #C9A877; }
+
+/* footer: warm stone, brass ink headings, white help card, olive WhatsApp */
+:root:not([data-theme="dark"]) .ftr.ftr2 { background: #E9E4DB; color: #242321; --fl: rgba(36, 35, 33, .1); --fm: rgba(36, 35, 33, .68); }
+:root:not([data-theme="dark"]) .ftr2 .f2-hero { background: radial-gradient(120% 140% at 0% 0%, #F6F3ED 0%, #E9E4DB 70%); }
+:root:not([data-theme="dark"]) .ftr2 .f2-col h2 { color: #7F6235; }
+:root:not([data-theme="dark"]) .ftr2 .f2-logo, :root:not([data-theme="dark"]) .ftr2 .f2-help h2 { color: #242321; }
+:root[data-theme="dark"] .ftr.ftr2 { background: #120D0A; }
+.f2-wa { background: #465347; color: #FFFFFF !important; }
+.f2-wa:hover { background: #3A463B; }
+.f2-wa .ic path { fill: #FFFFFF; }
+
+/* contact: the WhatsApp card in a soft olive tint */
+.ct-card.main { background: linear-gradient(150deg, #EEF1EC, #D9E0D7) !important; color: #26302A !important; }
+.ct-card.main .ct-d, .ct-card.main .ct-k { color: #3E4A40 !important; }
+
+/* offers: code cards warm, the automatic card in olive tint */
+.of-card { background: linear-gradient(150deg, #FFFFFF 0%, #EFE7DA 100%) !important; }
+.of-card:not(.has-code) { background: linear-gradient(150deg, #F3F5F1 0%, #DFE5DC 100%) !important; box-shadow: 0 20px 40px -30px rgba(40, 52, 42, .5), inset 0 0 0 1px rgba(70, 83, 71, .18); }
+.of-card:not(.has-code) .of-ic, .of-card:not(.has-code) .of-k { color: #465347 !important; }
+.of-copy.ok .mono { background: #465347; }
+.toast { background: #242321; }
+
+/* sale and liked red: oxblood */
+.fd .ra[aria-pressed="true"] .ra-i .f { color: #9B2C23; fill: #9B2C23; }
+.fd .ra[aria-pressed="true"] { border-color: #9B2C23; color: #9B2C23; }
+
+/* calmer headline sizes; body copy a touch larger for reading */
+.rw-head h1 { font-size: clamp(34px, 4.4vw, 56px) !important; }
+.st-hero h1 { font-size: clamp(40px, 5.6vw, 72px) !important; }
+.phero h1 { font-size: clamp(32px, 4vw, 52px) !important; }
+.x-h, .shead h2, .guide-h h2 { font-size: clamp(24px, 2.8vw, 36px) !important; }
+.guide-b p, .clause p, .clause li, .terms .body li, .phero .aside, .x-story p, .st-ch p { font-size: 16.5px; line-height: 1.65; }
+.pdp-help { margin: 10px 0 0; font: 400 14.5px/1.5 var(--body); color: var(--mute); }
+.pdp-help a { color: var(--bone); text-decoration: underline; text-underline-offset: 3px; }
+.pdp-pay { margin: 12px 0 0; padding: 12px 14px; background: #FFFFFF; border: 1px solid var(--line); font: 400 14.5px/1.5 var(--body); color: var(--text-2); }
+:root[data-theme="dark"] .pdp-pay { background: var(--ink-2); }
+@media (prefers-reduced-motion: reduce) { .btn, .btn-box, .ap-addb, .f2-wa { transition: none !important; } }
+
+/* Colour and voice: five step order timeline on Track order */
+.trk-steps { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+@media (max-width: 900px) { .trk-steps { grid-template-columns: 1fr 1fr; } .trk-steps li:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+/* Colour and voice: keep product cards inside their column on 320 px phones */
+.ap-card { grid-template-columns: minmax(0, 1fr); }
+.nf-hero { overflow: hidden; }
+@media (max-width: 359px) { .ap-was { white-space: normal !important; } .ap-card .card-body { min-width: 0; overflow-wrap: anywhere; } }
