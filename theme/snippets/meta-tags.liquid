@@ -34,6 +34,11 @@
   if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers' or template.name == 'password'
     assign daur_noindex = true
   elsif template.name == 'page'
+    # /pages/policies keeps the full policy text (and the size chart source) but stays out of search,
+    # so it never competes with the separate policy pages created at launch
+    if page.handle == 'policies' and template.suffix == blank
+      assign daur_noindex = true
+    endif
     if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts' or template.suffix == 'track'
       assign daur_noindex = true
     endif
