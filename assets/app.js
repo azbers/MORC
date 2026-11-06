@@ -105,7 +105,9 @@
   }
 
   /* ---------------- catalog helpers ---------------- */
-  const prod = (id) => P.find((p) => p.id === id);
+  // the giving pair is hidden from every grid but still resolves for the bag and checkout
+  const prod = (id) => P.find((p) => p.id === id) || ALL.find((p) => p.giving && p.id === id);
+  const GPAIR = ALL.find((p) => p.giving && p.variants.some((v) => (v.stock || {})[0] > 0)) || null;
   const variant = (p, vid) => p.variants.find((v) => v.id === vid) || p.variants[0];
   const stockOf = (v) => Object.values(v.stock || {}).reduce((a, b) => a + b, 0);
   const onSale = (v) => v.compareAt && v.compareAt > v.price;
@@ -160,6 +162,7 @@
   const cartSig = () => cart.map((l) => l.pid + l.vid + l.size + 'x' + l.qty).join('|');
   const saveCart = () => { store.set('cart', cart); store.set('coupon', coupon); paintCounts(); };
   const pairs = () => cart.reduce((a, l) => a + l.qty, 0);
+  const hasGiving = () => cart.some((l) => { const p = prod(l.pid); return p && p.giving; });
   function lineData(l) {
     const p = prod(l.pid); if (!p) return null;
     const v = variant(p, l.vid);
@@ -289,11 +292,12 @@
     const ex = cart.find((l) => l.pid === pid && l.vid === v.id && l.size == size);
     const have = ex ? ex.qty : 0;
     const add = Math.min(qty || 1, max - have);
-    if (add <= 0) { toast('No more stock in EU ' + size); return false; }
+    if (add <= 0) { toast(p.giving ? 'This option is not available right now' : 'No more stock in EU ' + size); return false; }
     if (ex) ex.qty += add; else cart.push({ pid, vid: v.id, size: +size, qty: add });
     saveCart();
     const n = pairs(), fee = C.delivery.fee || 0, gap = C.freeDeliveryPairs - n;
     const ship = !fee || C.advance.freeAll() ? '' : gap === 1 ? ` One more pair and delivery is on us.` : gap <= 0 && n - add < C.freeDeliveryPairs ? ` Delivery is now on us: you keep ${fmt(fee)}.` : '';
+    if (p.giving) { toast('A pair for someone in need, added. Thank you.', 'View bag', openBag); return true; }
     toast(ship ? `EU ${size} added.${ship}` : GIVE.on ? `${p.name}, EU ${size} added. A slice of it goes to someone in need.` : `${p.name}, EU ${size} added`, 'View bag', openBag);
     return true;
   }
@@ -567,10 +571,10 @@
   function lineHTML(d, big) {
     const { p, v, l } = d; const max = (v.stock || {})[l.size] || 0;
     return `<div class="line-item" data-line="${l.pid}|${l.vid}|${l.size}">
-      <a class="th" href="${link('product', p.id + '~' + v.id)}">${visual(p, v)}</a>
+      <a class="th" href="${p.giving ? link('gifts') + '#give' : link('product', p.id + '~' + v.id)}">${p.giving && !(v.images && v.images.length) ? `<span class="gp-th">${ic('gift')}</span>` : visual(p, v)}</a>
       <div class="li-body"><div class="li-top"><b>${esc(p.name)}</b><span>${fmt(d.total)}</span></div>
-      <div class="li-meta">${esc(v.color)} / EU ${l.size} / ${fmt(v.price)} each ${onSale(v) ? `<span class="strike">${fmt(v.compareAt)}</span>` : ''}</div>
-      ${l.qty >= max ? `<div class="li-meta volt">Last ${max} in this size</div>` : ''}
+      <div class="li-meta">${p.giving ? `Handed over on your behalf, size matched to the person / ${fmt(v.price)} each` : `${esc(v.color)} / EU ${l.size} / ${fmt(v.price)} each ${onSale(v) ? `<span class="strike">${fmt(v.compareAt)}</span>` : ''}`}</div>
+      ${l.qty >= max && !p.giving ? `<div class="li-meta volt">Last ${max} in this size</div>` : ''}
       <div class="li-ctl"><div class="qty sm"><button data-q="-1" aria-label="Decrease">&minus;</button><output>${l.qty}</output><button data-q="1" aria-label="Increase" ${l.qty >= max ? 'disabled' : ''}>+</button></div>
       <span style="display:flex;gap:14px">${big ? `<button class="rm" data-mv>Move to liked</button>` : ''}<button class="rm" data-rm>Remove</button></span></div></div></div>`;
   }
@@ -914,6 +918,28 @@
       <div class="gs-cta"><a class="btn volt" href="${link('shop')}">Choose his pair <span class="arr">&rarr;</span></a><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I want to send a pair as a gift with gift packing and a note.')}" target="_blank" rel="noopener">${ic('whatsapp')}Plan a gift on WhatsApp</a></div>
     </div></section>`;
   }
+  // "A pair for someone in need": the buyer pays for one pair, DAUR hands it over in person on their behalf in the quarterly
+  // giving round and sends them the proof privately. The public page shows totals only. Hidden while the product is not on sale.
+  function giveSection() {
+    if (!GPAIR) return '';
+    const v = GPAIR.variants[0];
+    return `<section class="x-sec gift-serve give-pair" id="give"><div class="wrap">
+      <div class="x-hrow"><h2 class="x-h">A pair for someone in need</h2></div>
+      <p class="aside gp-lead">Some gifts go to people you will never meet. Pay for one pair, and we hand it over in person, on your behalf, to someone in need whom we have checked ourselves, in the size that fits them.</p>
+      <div class="gs-grid">
+        <div class="gs-i rv">${ic('gift')}<h3>One pair, one person</h3><p>Your pair is set aside for one person under your own giving number, and handed over in the giving round after this quarter closes.</p></div>
+        <div class="gs-i rv">${ic('mail')}<h3>The proof, sent to you</h3><p>Within 7 days of the handover we send you the evidence privately on WhatsApp and by email: the date, the city, the pair, and a photo that protects the person's dignity.</p></div>
+        <div class="gs-i rv">${ic('check')}<h3>Kept private</h3><p>Our giving page shows totals only: how many pairs were given and in which cities. Your name and the identity of the person who receives the pair stay private.</p></div>
+      </div>
+      <div class="gs-cta"><button class="btn volt" type="button" data-givepair>Give a pair, ${fmt(v.price)} <span class="arr">&rarr;</span></button><a class="btn ghost" href="${waChat('Assalam o Alaikum DAUR Supply, I would like to give a pair to someone in need.')}" target="_blank" rel="noopener">${ic('whatsapp')}Ask about giving a pair</a></div>
+      <p class="form-note gp-fine">Paid in full in advance. We choose a sturdy everyday pair and match the size on the day of the handover. Like every order, it also carries our slice of profit for people in need. Our usual cancellation and refund policy applies until the pair is handed over.</p>
+    </div></section>`;
+  }
+  function bindGive(root) {
+    const b = $('[data-givepair]', root); if (!b || !GPAIR) return;
+    b.addEventListener('click', () => { addToCart(GPAIR.id, GPAIR.variants[0].id, 0, 1); });
+    if (location.hash === '#give') { const s = $('#give', root); if (s) setTimeout(() => s.scrollIntoView({ block: 'start' }), 60); }
+  }
   function bindGifts(root) {
     const shelf = $('#giftShelf', root); if (!shelf) return;
     const n = root.dataset.full ? 12 : 4;
@@ -930,8 +956,9 @@
     app.innerHTML = `<section class="phero x-phero"><div class="wrap"><h1>Gifts</h1><p class="aside">For your son, your husband, your father, your brother, your friend. A pair he will wear for years says more than anything wrapped in a shop bag. Choose it, and we bring it to his door in ${esc(C.delivery.days || '2 to 5 days')}.</p></div></section>
       ${giftServe()}
       ${giftBlock(true)}
+      ${giveSection()}
       ${resources()}`;
-    bindGifts(app); bindCards(app); cycleTiles(app);
+    bindGifts(app); bindCards(app); cycleTiles(app); bindGive(app);
   };
 
   /* ---- Fit notes on the home page: only approved notes from the store with five hearts, the fullest first ---- */
@@ -1275,6 +1302,7 @@
     const [pid, vid] = (param || '').split('~');
     const p = prod(pid) || (SPA && pid ? null : P[0]);
     if (!p) { V.notfound(); return; } // a pair address that does not exist gets the not found page, never a different pair
+    if (p.giving) { location.replace(link('gifts') + '#give'); return; } // the giving pair lives on Gifts, not on a product page
     let v = variant(p, vid);
     let size = null, qty = 1, view = 0, views = [];
     pushRecent(p.id);
@@ -1424,17 +1452,18 @@
       ${C.advance.required ? '' : `<div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>`}
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
       ${promo && t.n ? giftBox() : ''}
-      ${(C.advance.on && C.advance.required || gift.on) && t.n ? careBox(t) : ''}
+      ${(C.advance.on && C.advance.required || gift.on || hasGiving()) && t.n ? careBox(t) : ''}
+      ${hasGiving() ? `<p class="form-note gp-note">${ic('gift')} Your giving pair is handed over on your behalf in the giving round after this quarter closes. We send you the proof privately within 7 days of the handover.</p>` : ''}
       ${keptBox(t)}
       ${GIVE.on && t.n ? `<p class="sum-give">${loaf('', 'mini cut')}<span>A slice of this order goes to someone in need: at least ${GIVE.pct}% of our profit, never added to your total.</span></p>${votePicker()}` : ''}
       ${SELL.retailAnchor ? `<div class="sum-row save"><span>Saved against typical retail</span><span>${fmt(t.retail - t.subtotal + t.discount)}</span></div>` : ''}`;
   }
   // the Care deposit for this exact bag: what is sent first by bank transfer, and what is left for the rider
   function careBox(t) {
-    const A = C.advance, due = gift.on ? t.total : A.due(t.total), rest = t.total - due;
-    return `<div class="care-box"><div class="sum-row"><span><b>${gift.on ? 'Gift, paid in full' : 'Your ' + esc(A.care)}</b></span><span><b>${fmt(due)}</b></span></div>
+    const A = C.advance, gv = !gift.on && hasGiving(), full = gift.on || gv, due = full ? t.total : A.due(t.total), rest = t.total - due;
+    return `<div class="care-box"><div class="sum-row"><span><b>${gift.on ? 'Gift, paid in full' : gv ? 'Paid in full' : 'Your ' + esc(A.care)}</b></span><span><b>${fmt(due)}</b></span></div>
       <div class="sum-row"><span>${rest ? 'Paid when your pair arrives' : 'Nothing to pay on arrival'}</span><span>${fmt(rest)}</span></div>
-      <p class="form-note">${gift.on ? 'Gift orders are paid in full by bank transfer, so the person receiving the pair has nothing to pay. If you cancel before dispatch, the payment is refunded in full.' : rest ? 'Your pair, reserved for you. Send this small deposit by bank transfer after you place the order. It counts towards your price, and if you cancel before dispatch it is refunded in full. Your pair is prepared for dispatch as soon as it reaches us.' : 'For orders above ' + fmt(A.fullAbove) + ', we arrange full payment in advance so your order can be confirmed and prepared smoothly. Our team will guide you through it.'}</p>
+      <p class="form-note">${gv ? 'Orders with a giving pair are paid in full by bank transfer after you place the order. If you cancel before the handover, our usual cancellation and refund policy applies.' : gift.on ? 'Gift orders are paid in full by bank transfer, so the person receiving the pair has nothing to pay. If you cancel before dispatch, the payment is refunded in full.' : rest ? 'Your pair, reserved for you. Send this small deposit by bank transfer after you place the order. It counts towards your price, and if you cancel before dispatch it is refunded in full. Your pair is prepared for dispatch as soon as it reaches us.' : 'For orders above ' + fmt(A.fullAbove) + ', we arrange full payment in advance so your order can be confirmed and prepared smoothly. Our team will guide you through it.'}</p>
       <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
   }
   function giftBox() {
@@ -1541,7 +1570,7 @@
       const order = { id, at: new Date().toISOString(), status: 'Placed', customer: { name: f.name.value.trim(), phone: ph, email: f.email.value.trim(), via: f.via.value, waUpdates: f.waUpdates.checked },
         address: { city: f.city.value.trim(), area: f.area.value.trim(), address: f.address.value.trim(), landmark: f.landmark.value.trim(), postal: f.postal.value.trim(), note: f.note.value.trim() },
         items: t.lines.map((d) => ({ pid: d.p.id, name: d.p.name, color: d.v.color, size: d.l.size, qty: d.l.qty, price: d.v.price })),
-        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: gift.on ? 'Gift, paid in full in advance' : C.advance.required ? 'Advance payment' : 'Cash on Delivery', sliceCause: window.DAUR_SLICE_VOTE(), gift: window.DAUR_GIFT() };
+        subtotal: t.subtotal, discount: t.discount, coupon: t.discount ? coupon : '', delivery: t.delivery || 0, total: t.total, payment: gift.on ? 'Gift, paid in full in advance' : hasGiving() ? 'Paid in full in advance' : C.advance.required ? 'Advance payment' : 'Cash on Delivery', sliceCause: window.DAUR_SLICE_VOTE(), gift: window.DAUR_GIFT() };
       const orders = store.get('orders', []); orders.unshift(order); store.set('orders', orders);
       t.lines.forEach((d) => { d.v.received = d.v.received || Object.assign({}, d.v.stock); d.v.stock[d.l.size] = Math.max(0, (d.v.stock[d.l.size] || 0) - d.l.qty); });
       store.set('catalog', ALL);
@@ -2121,6 +2150,8 @@
 
     ${quarterHTML()}
 
+    ${pairsGivenHTML()}
+
     ${rec.length ? `<section class="sheet x"><div class="wrap">
       ${head('The record', fmt(sum) + ' given so far.', '', 'Every giving we make is listed here with its date and amount.')}
       <div class="gv-rec">${rec.map((r) => `<article class="gv-item rv">${r.photo ? `<img src="${esc(r.photo)}" alt="${esc(r.where || 'Giving record')}" loading="lazy" width="600" height="450">` : ''}<span class="mono mute">${esc(day(r.date))}</span><b>${esc(fmt(+r.amount))}</b>${r.where ? `<h3>${esc(r.where)}</h3>` : ''}${r.note ? `<p>${esc(r.note)}</p>` : ''}</article>`).join('')}</div>
@@ -2136,6 +2167,18 @@
     if (pile && 'IntersectionObserver' in window) { const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { pile.classList.add('on'); io.disconnect(); } }, { threshold: 0.3 }); io.observe(pile); } else if (pile) pile.classList.add('on');
     reveal();
   };
+  // pairs given on behalf of buyers (Content > Metaobjects > Giving round): totals and cities only, never names or faces
+  function pairsGivenHTML() {
+    const R = (Array.isArray(window.DAUR_GIVING_ROUNDS) ? window.DAUR_GIVING_ROUNDS : []).filter((r) => r && +r.pairs > 0).sort((a, b) => String(b.round).localeCompare(String(a.round)));
+    const n = R.reduce((a, r) => a + Math.floor(+r.pairs), 0);
+    if (!n) return '';
+    const lab = (k) => { const m = String(k).match(/^(\d{4})-Q([1-4])$/); return m ? MONTHS[(m[2] - 1) * 3] + ' to ' + MONTHS[(m[2] - 1) * 3 + 2] + ' ' + m[1] : String(k); };
+    return `<section class="sheet x"><div class="wrap">
+      ${head('Pairs given / on behalf of our buyers', `${n} pair${n === 1 ? '' : 's'} handed over so far.`, '', 'Buyers pay for a pair on our Gifts page, and we hand it over in person to someone in need. Each buyer receives the proof privately; here we show totals only.')}
+      <div class="gv-rec">${R.map((r) => `<article class="gv-item rv"><span class="mono mute">${esc(lab(r.round))}</span><b>${Math.floor(+r.pairs)} pair${+r.pairs === 1 ? '' : 's'}</b>${r.cities ? `<h3>${esc(r.cities)}</h3>` : ''}${r.note ? `<p>${esc(r.note)}</p>` : ''}</article>`).join('')}</div>
+      <a class="link" href="${link('gifts')}#give">Give a pair</a>
+    </div></section>`;
+  }
   // this quarter: a slice for every pair sold so far and the buyers' votes, both counted from real orders
   // (shop metafields daur.slice_quarter / slice_pairs / slice_votes, refreshed by a daily routine); nothing shows until there is a count for the current quarter
   function quarterHTML() {

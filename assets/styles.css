@@ -3748,3 +3748,10 @@ body[data-page="feed"] .ftr { display: block !important; }
 .ap-card { grid-template-columns: minmax(0, 1fr); }
 .nf-hero { overflow: hidden; }
 @media (max-width: 359px) { .ap-was { white-space: normal !important; } .ap-card .card-body { min-width: 0; overflow-wrap: anywhere; } }
+/* A pair for someone in need: reuses the gift serve layout; only the lead, fine print and bag thumbnail are new */
+.give-pair .gp-lead { max-width: 62ch; margin: -6px 0 22px; color: var(--mute); font-size: 16px; line-height: 1.6; }
+.give-pair .gp-fine { max-width: 70ch; margin-top: 14px; }
+.gp-th { display: grid; place-items: center; width: 100%; height: 100%; aspect-ratio: 1; background: var(--tile); color: #B0843F; }
+.gp-th .ic { width: 28px; height: 28px; }
+.gp-note { display: flex; gap: 8px; align-items: flex-start; }
+.gp-note .ic { width: 16px; height: 16px; flex: 0 0 16px; margin-top: 2px; color: #B0843F; }

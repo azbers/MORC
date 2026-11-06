@@ -68,6 +68,15 @@ window.DAUR_OFFERS = [{{ offers | strip | remove_last: ',' }}];
 {%- endfor -%}
 {%- endcapture -%}
 window.DAUR_GIVING = [{{ giving | strip | remove_last: ',' }}];
+{%- comment -%} Giving rounds (Content > Metaobjects > Giving round): pairs handed over on behalf of buyers, totals and cities only {%- endcomment -%}
+{%- capture rounds -%}
+{%- for g in shop.metaobjects.giving_round.values limit: 60 -%}
+{%- if g.pairs_given.value -%}
+{ "round": {{ g.round.value | default: '' | json }}, "pairs": {{ g.pairs_given.value | default: 0 }}, "cities": {{ g.cities.value | default: '' | json }}, "note": {{ g.note.value | default: '' | json }} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_GIVING_ROUNDS = [{{ rounds | strip | remove_last: ',' }}];
 window.DAUR_SHOPIFY = {
   param: {{ daur_param | json }},
   routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },

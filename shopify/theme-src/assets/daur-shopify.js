@@ -75,7 +75,12 @@
     variants.forEach((v) => { if (!v.images.length) v.images = loose.slice(); });
     const body = splitBody(r.body);
     const audience = ['Men', 'Women', 'Kids'].find((a) => tags.some((t) => t.toLowerCase() === a.toLowerCase())) || 'Men';
+    // "A pair for someone in need" (tag giving-pair): bought here, handed over by DAUR in the quarterly giving round, size matched
+    // to the person who receives it. It never shows in the shop grids (hidden), only on Gifts, and carries one line size 0.
+    const giving = tags.some((t) => t.toLowerCase() === 'giving-pair');
+    if (giving) { variants.forEach((v) => { const id = Object.values(v.sid)[0], st = Object.values(v.stock)[0] || 0; v.sid = { 0: id }; v.stock = { 0: st }; }); sizes.length = 0; sizes.push(0); }
     return {
+      giving, hidden: giving,
       id: r.handle, name: r.title.replace(/^(DAUR|M\.O\.R\.C\.)\s+/i, ''), audience, group: tagVal(tags, 'group'), category: r.type || 'Footwear',
       silhouette: tagVal(tags, 'silhouette') || 'runner', tag: tagVal(tags, 'badge') || 'Drop 01', createdAt: r.created, sizes,
       description: body.description, specs: body.specs, model: (r.models || [])[0] || null,
@@ -116,7 +121,9 @@
     const vote = window.DAUR_SLICE_VOTE ? window.DAUR_SLICE_VOTE() : '';
     // a gift goes on the order too: packing, who it is for, the note for the box, and that it is paid in full in advance
     const g = window.DAUR_GIFT ? window.DAUR_GIFT() : null;
-    const gift = { 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
+    // a giving pair: paid in full, handed over by DAUR in the quarterly giving round, proof sent privately to the buyer
+    const giving = A.cart.some((l) => { const p = A.prod(l.pid); return p && p.giving; });
+    const gift = { 'Giving pair': giving ? 'Yes, paid in full in advance. Size matched by DAUR. Private proof after handover' : '', 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
     const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: Object.assign({ 'Slice cause': vote }, gift), discount: code || '' }) });
     return u.ok ? u.json() : {};
   }
