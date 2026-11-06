@@ -54,6 +54,7 @@
     /* focus the first control once the panel is really visible (visibility can lag a frame behind the class) */
     const focusIn = () => {
       if (openEl !== el) return true;
+      if (el.contains(document.activeElement)) return true;
       const first = el.querySelector('[data-autofocus]') || el.querySelector('input[type="search"]') || el.querySelector(FOCUSABLE);
       (first || el).focus({ preventScroll: true });
       return el.contains(document.activeElement);
@@ -275,11 +276,8 @@
     if (!code) { inp.setAttribute('aria-invalid', 'true'); D.toast(T.codeEmpty || 'Enter a code first.'); inp.focus(); return; }
     const btn = f.querySelector('button');
     btn.classList.add('is-loading');
-    try {
-      const cart = await fetch(root + '/cart.js').then((r) => r.json());
-      const existing = (cart.discount_codes || []).map((d) => d.code).filter((c) => c.toUpperCase() !== code);
-      await D.cart.code([code].concat(existing).join(','));
-    } catch (err) { D.toast(err.message); }
+    /* one discount code per order (Policies page): a new code replaces the one in the bag */
+    try { await D.cart.code(code); } catch (err) { D.toast(err.message); }
     btn.classList.remove('is-loading');
   });
   document.addEventListener('click', async (e) => {
@@ -420,6 +418,119 @@
       consent.hidden = true;
     });
   }
+
+  /* ---------- bag extras: gift and Slice vote, saved as cart attributes so they reach the order ---------- */
+  let attrTimer = null;
+  const saveAttrs = async (attrs, rerender) => {
+    try {
+      const body = { attributes: attrs };
+      if (rerender) { body.sections = cartSections(); body.sections_url = location.pathname; }
+      const data = await post(root + '/cart/update.js', body);
+      if (rerender) renderSections(data.sections);
+      return data;
+    } catch (err) { D.toast(err.message); return null; }
+  };
+  document.addEventListener('change', async (e) => {
+    const on = e.target.closest('[data-gift-on]');
+    if (on) {
+      const inDrawer = !!on.closest('[data-cart-drawer]');
+      const attrs = on.checked ? { Gift: 'Yes, paid in full in advance', 'Gift packing': 'Requested' } : { Gift: '', 'Gift packing': '', 'Gift for': '', 'Gift note': '' };
+      const was = on.checked;
+      await saveAttrs(attrs, true);
+      D.toast(was ? (T.giftOn || 'Marked as a gift.') : (T.giftOff || 'Gift removed.'));
+      const again = $((inDrawer ? '[data-cart-drawer] ' : '[data-main-cart] ') + '[data-gift-on]');
+      if (again) again.focus({ preventScroll: true });
+      return;
+    }
+    const pack = e.target.closest('[data-gift-pack]');
+    if (pack) saveAttrs({ 'Gift packing': pack.checked ? 'Requested' : '' }, false);
+  });
+  document.addEventListener('input', (e) => {
+    const field = e.target.closest('[data-gift-to], [data-gift-note]');
+    if (!field) return;
+    const box = field.closest('[data-gift-box]');
+    if (field.hasAttribute('data-gift-note')) {
+      const left = box.querySelector('[data-gift-left]');
+      if (left) left.textContent = 240 - field.value.length;
+    }
+    clearTimeout(attrTimer);
+    attrTimer = setTimeout(() => {
+      const a = {};
+      const t = box.querySelector('[data-gift-to]'); if (t) a['Gift for'] = t.value.slice(0, 40);
+      const n = box.querySelector('[data-gift-note]'); if (n) a['Gift note'] = n.value.slice(0, 240);
+      saveAttrs(a, false);
+    }, 600);
+  });
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-vote]');
+    if (!b) return;
+    const pick = b.getAttribute('aria-pressed') === 'true' ? '' : b.dataset.vote;
+    $$('[data-vote]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.vote === pick)));
+    await saveAttrs({ 'Slice cause': pick }, false);
+    if (pick) D.toast((T.voted || 'Your vote: {{ cause }}. Thank you.').replace('{{ cause }}', pick));
+  });
+
+  /* ---------- quick view: the product's own purchase block, fetched from Shopify ---------- */
+  const qv = $('#QuickView');
+  if (qv) {
+    const qBody = $('[data-quick-body]', qv);
+    document.addEventListener('click', async (e) => {
+      const a = e.target.closest('[data-quick-view]');
+      if (!a) return;
+      e.preventDefault();
+      qBody.innerHTML = '<p class="quick__loading" role="status">' + (T.loading || 'Loading') + '</p>';
+      D.open('QuickView', a);
+      try {
+        const url = a.dataset.quickView.split('?')[0] + '?section_id=quick-view';
+        const html = await fetch(url).then((r) => { if (!r.ok) throw new Error('fetch'); return r.text(); });
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const content = doc.querySelector('[data-quick-content]');
+        if (!content) throw new Error('content');
+        qBody.innerHTML = '';
+        qBody.appendChild(content);
+        const run = () => { if (D.initBuy) D.initBuy(content.querySelector('[data-product]')); };
+        if (D.initBuy) run();
+        else { const sc = document.createElement('script'); sc.src = qv.dataset.productJs; sc.onload = run; document.head.appendChild(sc); }
+        const title = content.querySelector('#QuickTitle');
+        if (title) { title.setAttribute('tabindex', '-1'); title.setAttribute('data-autofocus', ''); title.focus({ preventScroll: true }); }
+      } catch (err) {
+        location.href = a.getAttribute('href');
+      }
+    });
+  }
+
+  /* ---------- related products from Shopify recommendations ---------- */
+  $$('[data-recommendations]').forEach(async (el) => {
+    try {
+      const html = await fetch(el.dataset.url).then((r) => { if (!r.ok) throw new Error('fetch'); return r.text(); });
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const fresh = doc.querySelector('[data-recommendations]');
+      if (fresh && fresh.innerHTML.trim()) el.innerHTML = fresh.innerHTML;
+    } catch (err) { /* nothing to show */ }
+  });
+
+  /* ---------- small helpers: sort submits on change; newsletter needs ticked consent ---------- */
+  document.addEventListener('change', (e) => { const s = e.target.closest('[data-autosubmit]'); if (s && s.form) s.form.submit(); });
+  document.addEventListener('submit', (e) => {
+    const f = e.target.closest('.newsletter__form');
+    if (!f) return;
+    const box = f.querySelector('[data-consent-required]');
+    const msg = f.querySelector('[data-consent-error]');
+    if (box && !box.checked) { e.preventDefault(); if (msg) msg.hidden = false; box.focus(); }
+    else if (msg) msg.hidden = true;
+  }, true);
+  /* the browser's own required check stops the submit before it fires; show the same plain message */
+  document.addEventListener('invalid', (e) => {
+    if (!e.target.matches || !e.target.matches('[data-consent-required]')) return;
+    const msg = e.target.closest('form').querySelector('[data-consent-error]');
+    if (msg) { msg.hidden = false; if (msg.id) e.target.setAttribute('aria-describedby', msg.id); }
+  }, true);
+  document.addEventListener('change', (e) => {
+    if (!e.target.matches || !e.target.matches('[data-consent-required]') || !e.target.checked) return;
+    const msg = e.target.closest('form').querySelector('[data-consent-error]');
+    if (msg) msg.hidden = true;
+    e.target.removeAttribute('aria-describedby');
+  });
 
   D.ready = true;
 })();

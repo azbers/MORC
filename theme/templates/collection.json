@@ -1,1 +1,1 @@
-{ "sections": { "main": { "type": "main-collection", "settings": {} } }, "order": ["main"] }
+{ "sections": { "main": { "type": "main-collection", "settings": { "per_page": 24, "show_banner": false, "menu": "daur-main" } } }, "order": ["main"] }

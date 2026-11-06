@@ -31,4 +31,9 @@
     {%- render 'price', product: product -%}
     {%- render 'swatches', product: product -%}
   </div>
+  {%- unless quick == false -%}
+  <div class="card__actions">
+    <a class="card__quick" href="{{ product.url }}" data-quick-view="{{ product.url }}" aria-haspopup="dialog">{% render 'icon', name: 'eye' %}{% if product.available %}{{ 'product.quick_view' | t }}{% else %}{{ 'product.view' | t }}{% endif %}<span class="visually-hidden">: {{ product.title | remove_first: 'DAUR ' | escape }}</span></a>
+  </div>
+  {%- endunless -%}
 </article>

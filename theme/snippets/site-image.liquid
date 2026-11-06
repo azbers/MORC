@@ -1,0 +1,26 @@
+{%- comment -%}
+  One editorial image slot. Input: image (image_picker value), key (test photo key, optional),
+  need (what photo is needed, shown on the placeholder), sizes, widths, loading, alt.
+  Order: the merchant's chosen image; on an unpublished theme with test photos on, a flagged
+  test photo for that key; otherwise a clearly marked placeholder. Never an unmarked stock photo.
+{%- endcomment -%}
+{%- liquid
+  assign load = loading | default: 'lazy'
+  assign w = widths | default: '480, 720, 960, 1200, 1600'
+  assign test_url = ''
+  if image == blank and key != blank and theme.role != 'main' and settings.test_photos
+    capture test_url
+      render 'test-photo', key: key
+    endcapture
+    assign test_url = test_url | strip
+  endif
+-%}
+{%- if image != blank -%}
+  {{ image | image_url: width: 1600 | image_tag: widths: w, sizes: sizes, loading: load, alt: image.alt | default: alt }}
+{%- elsif test_url != '' -%}
+  {%- assign base = test_url | split: '?' | first -%}
+  <img src="{{ base }}?width=960" srcset="{{ base }}?width=480 480w, {{ base }}?width=720 720w, {{ base }}?width=960 960w, {{ base }}?width=1400 1400w" sizes="{{ sizes | default: '50vw' }}" alt="" width="1400" height="1050" loading="{{ load }}">
+  <span class="dev-flag">{{ 'dev.test_photo_short' | t }}</span>
+{%- else -%}
+  <div class="placeholder-art" role="img" aria-label="{{ 'dev.placeholder' | t }}: {{ need | escape }}"><span><strong>{{ 'dev.placeholder' | t }}</strong>{{ need | escape }}</span></div>
+{%- endif -%}

@@ -1,0 +1,17 @@
+{%- comment -%}
+  Quick view content, fetched by core.js from /products/<handle>?section_id=quick-view and shown in the
+  Quick view dialog. Image, name, price, sizes (sold out ones disabled), Add to bag, link to the full page.
+{%- endcomment -%}
+{%- assign current = product.selected_or_first_available_variant -%}
+<div class="quick" data-product-scope data-quick-content>
+  <div class="quick__media media media--square">{% render 'product-media', product: product, index: 0, loading: 'eager', sizes: '(min-width: 750px) 420px, 90vw', widths: '360, 540, 720' %}</div>
+  <div class="quick__info">
+    <h2 class="quick__title" id="QuickTitle">{{ product.title | remove_first: 'DAUR ' | escape }}</h2>
+    <div data-price-wrap>{% render 'price', product: product, variant: current, size: 'large' %}</div>
+    {%- render 'product-buy', product: product, sid: 'quick', context: 'quick' -%}
+    <p><a class="link-arrow" href="{{ product.url }}">{{ 'product.full_details' | t }}{% render 'icon', name: 'arrow-right' %}</a></p>
+  </div>
+</div>
+{% schema %}
+{ "name": "Quick view", "settings": [] }
+{% endschema %}

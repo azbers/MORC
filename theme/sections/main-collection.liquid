@@ -1,21 +1,83 @@
-{%- comment -%} Collection page, Phase 2 build: breadcrumb, title, short introduction, count, sort, grid, pagination. Filters and editorial content arrive in Phase 3. {%- endcomment -%}
+{%- comment -%}
+  Collection page: breadcrumb, title, short introduction, optional banner, product count, filter, sort,
+  active filters with Clear all, grid, pagination, then editorial help below the grid.
+  Filters are Shopify's own storefront filters (Search & Discovery), so only filters the products really
+  support appear. "New In" is the all products list sorted newest first.
+{%- endcomment -%}
+{%- liquid
+  assign is_new_in = false
+  if collection.handle == 'all' and collection.sort_by == 'created-descending'
+    assign is_new_in = true
+  endif
+  if is_new_in
+    assign title = 'collection.new_in' | t
+  elsif collection.handle == 'all'
+    assign title = 'collection.all_pairs' | t
+  else
+    assign title = collection.title
+  endif
+  assign active_count = 0
+  for f in collection.filters
+    if f.type == 'price_range'
+      if f.min_value.value or f.max_value.value
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: f.active_values.size
+    endif
+  endfor
+  assign sort_now = collection.sort_by | default: collection.default_sort_by
+-%}
 {%- paginate collection.products by section.settings.per_page -%}
-<div class="page-width">
-  {%- render 'breadcrumbs' -%}
+<div class="page-width" data-collection>
+  {%- render 'breadcrumbs', title: title -%}
   <header class="collection-head">
-    <h1>{{ collection.title | escape }}</h1>
-    {%- if collection.description != blank -%}<div class="rte muted">{{ collection.description | strip_html | truncatewords: 60 }}</div>{%- endif -%}
+    <h1>{{ title | escape }}</h1>
+    {%- if collection.description != blank -%}<div class="collection-head__intro">{{ collection.description | strip_html | truncatewords: 60 }}</div>{%- endif -%}
   </header>
+  {%- if section.settings.show_banner and collection.image -%}
+    <div class="collection-banner media media--wide">{{ collection.image | image_url: width: 2000 | image_tag: widths: '750, 1100, 1500, 2000', sizes: '100vw', loading: 'eager', alt: collection.image.alt | default: '' }}</div>
+  {%- endif -%}
+
   <div class="collection-bar">
-    <p style="margin:0">{{ 'collection.count' | t: count: collection.products_count }}</p>
-    <form method="get" data-sort-form>
-      <label class="visually-hidden" for="SortBy">{{ 'collection.sort' | t }}</label>
-      <select class="select" id="SortBy" name="sort_by" onchange="this.form.submit()">
-        {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == collection.sort_by or collection.sort_by == blank and o.value == collection.default_sort_by %} selected{% endif %}>{{ o.name | escape }}</option>{%- endfor -%}
-      </select>
-      <noscript><button class="button button--small" type="submit">{{ 'collection.apply' | t }}</button></noscript>
-    </form>
+    <p class="collection-bar__count" aria-live="polite">{{ 'collection.count' | t: count: collection.products_count }}</p>
+    <div class="collection-bar__tools">
+      {%- if collection.filters.size > 0 -%}
+        <button class="button button--secondary button--small" type="button" data-open="FilterDrawer" aria-haspopup="dialog" aria-controls="FilterDrawer" aria-expanded="false">{% render 'icon', name: 'filter' %}{{ 'collection.filter' | t }}{% if active_count > 0 %} ({{ active_count }}){% endif %}</button>
+      {%- endif -%}
+      <form method="get" action="{{ collection.url }}" data-sort-form>
+        {%- for f in collection.filters -%}
+          {%- if f.type == 'price_range' -%}
+            {%- if f.min_value.value -%}<input type="hidden" name="{{ f.min_value.param_name }}" value="{{ f.min_value.value }}">{%- endif -%}
+            {%- if f.max_value.value -%}<input type="hidden" name="{{ f.max_value.param_name }}" value="{{ f.max_value.value }}">{%- endif -%}
+          {%- else -%}
+            {%- for v in f.active_values -%}<input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">{%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <label class="visually-hidden" for="SortBy">{{ 'collection.sort' | t }}</label>
+        <select class="select select--small" id="SortBy" name="sort_by" data-autosubmit>
+          {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sort_now %} selected{% endif %}>{{ o.name | escape }}</option>{%- endfor -%}
+        </select>
+        <noscript><button class="button button--small" type="submit">{{ 'collection.apply' | t }}</button></noscript>
+      </form>
+    </div>
   </div>
+
+  {%- if active_count > 0 -%}
+  <div class="active-filters" aria-label="{{ 'collection.active_filters' | t }}" role="group">
+    {%- for f in collection.filters -%}
+      {%- if f.type == 'price_range' -%}
+        {%- if f.min_value.value or f.max_value.value -%}
+          <a class="chip" href="{{ f.url_to_remove }}">{{ f.label | escape }}: {{ f.min_value.value | default: 0 | money_without_trailing_zeros }} to {{ f.max_value.value | default: f.range_max | money_without_trailing_zeros }}{% render 'icon', name: 'close' %}<span class="visually-hidden"> {{ 'collection.remove_filter' | t }}</span></a>
+        {%- endif -%}
+      {%- else -%}
+        {%- for v in f.active_values -%}<a class="chip" href="{{ v.url_to_remove }}">{{ f.label | escape }}: {{ v.label | escape }}{% render 'icon', name: 'close' %}<span class="visually-hidden"> {{ 'collection.remove_filter' | t }}</span></a>{%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <a class="active-filters__clear" href="{{ collection.url }}?sort_by={{ sort_now }}">{{ 'collection.clear_all' | t }}</a>
+  </div>
+  {%- endif -%}
+
   {%- if collection.products.size > 0 -%}
   <ul class="product-grid product-grid--4">
     {%- for p in collection.products -%}
@@ -23,9 +85,13 @@
     {%- endfor -%}
   </ul>
   {%- else -%}
-  <p class="muted">{{ 'collection.empty' | t }}</p>
-  <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+  <div class="collection-empty">
+    <p>{% if active_count > 0 %}{{ 'collection.empty_filtered' | t }}{% else %}{{ 'collection.empty' | t }}{% endif %}</p>
+    {%- if active_count > 0 -%}<a class="button button--secondary" href="{{ collection.url }}">{{ 'collection.clear_all' | t }}</a>{%- endif -%}
+    <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+  </div>
   {%- endif -%}
+
   {%- if paginate.pages > 1 -%}
   <nav aria-label="{{ 'general.pagination' | t }}">
     <ul class="pagination">
@@ -37,9 +103,89 @@
     </ul>
   </nav>
   {%- endif -%}
+
+  {%- comment -%} editorial help below the grid: this collection's own guide text, other categories, and published guides tagged with this collection's handle {%- endcomment -%}
+  {%- liquid
+    assign guide = collection.metafields.custom.guide
+    assign menu = linklists[section.settings.menu]
+    assign shop_link = menu.links | where: 'title', 'Shop' | first
+    assign guides_html = ''
+    assign guides_found = 0
+    for a in blogs.journal.articles limit: 50
+      if a.tags contains collection.handle and guides_found < 3
+        assign guides_found = guides_found | plus: 1
+        assign t_esc = a.title | escape
+        capture one
+          echo '<li><a href="' | append: a.url | append: '">' | append: t_esc | append: '</a></li>'
+        endcapture
+        assign guides_html = guides_html | append: one
+      endif
+    endfor
+  -%}
+  <aside class="collection-guide" aria-label="{{ 'collection.guide_label' | t }}">
+    {%- if guide != blank -%}<div class="rte collection-guide__text">{{ guide | metafield_tag }}</div>{%- elsif theme.role != 'main' -%}<p class="dev-note">{{ 'dev.collection_guide' | t }}</p>{%- endif -%}
+    <div class="collection-guide__links">
+      {%- if shop_link and shop_link.links.size > 0 -%}
+      <div>
+        <h2 class="h-small">{{ 'collection.more_categories' | t }}</h2>
+        <ul>{%- for l in shop_link.links -%}{%- unless l.url == collection.url -%}<li><a href="{{ l.url }}">{{ l.title | escape }}</a></li>{%- endunless -%}{%- endfor -%}</ul>
+      </div>
+      {%- endif -%}
+      {%- if guides_found > 0 -%}
+      <div>
+        <h2 class="h-small">{{ 'collection.guides' | t }}</h2>
+        <ul>{{ guides_html }}</ul>
+      </div>
+      {%- endif -%}
+    </div>
+  </aside>
 </div>
+
+{%- if collection.filters.size > 0 -%}
+<div class="drawer drawer--left filter-drawer" id="FilterDrawer" role="dialog" aria-modal="true" aria-labelledby="FilterTitle" tabindex="-1" data-drawer>
+  <div class="drawer__head">
+    <h2 id="FilterTitle">{{ 'collection.filter' | t }}</h2>
+    <button class="icon-button" type="button" data-close>{%- render 'icon', name: 'close' -%}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+  </div>
+  <form class="filter-form" method="get" action="{{ collection.url }}">
+    <input type="hidden" name="sort_by" value="{{ sort_now }}">
+    <div class="drawer__body">
+      {%- for f in collection.filters -%}
+      <fieldset class="filter-group">
+        <legend>{{ f.label | escape }}</legend>
+        {%- case f.type -%}
+          {%- when 'price_range' -%}
+            <div class="price-range">
+              <div class="field"><label for="F-{{ forloop.index }}-min">{{ 'collection.price_from' | t }}</label><input class="input" type="number" inputmode="numeric" min="0" max="{{ f.range_max | money_without_currency | remove: ',' }}" id="F-{{ forloop.index }}-min" name="{{ f.min_value.param_name }}" value="{{ f.min_value.value | money_without_currency | remove: ',' }}" placeholder="0"></div>
+              <div class="field"><label for="F-{{ forloop.index }}-max">{{ 'collection.price_to' | t }}</label><input class="input" type="number" inputmode="numeric" min="0" max="{{ f.range_max | money_without_currency | remove: ',' }}" id="F-{{ forloop.index }}-max" name="{{ f.max_value.param_name }}" value="{{ f.max_value.value | money_without_currency | remove: ',' }}" placeholder="{{ f.range_max | money_without_currency | remove: ',' }}"></div>
+            </div>
+          {%- else -%}
+            {%- assign gi = forloop.index -%}
+            <ul class="filter-values">
+              {%- for v in f.values -%}
+              <li><label class="checkbox{% if v.count == 0 and v.active == false %} is-empty{% endif %}"><input type="checkbox" name="{{ v.param_name }}" value="{{ v.value }}" id="F-{{ gi }}-{{ forloop.index }}"{% if v.active %} checked{% endif %}{% if v.count == 0 and v.active == false %} disabled{% endif %}><span>{{ v.label | escape }} <span class="muted">({{ v.count }})</span></span></label></li>
+              {%- endfor -%}
+            </ul>
+        {%- endcase -%}
+      </fieldset>
+      {%- endfor -%}
+    </div>
+    <div class="drawer__foot filter-form__foot">
+      <a class="button button--secondary" href="{{ collection.url }}?sort_by={{ sort_now }}">{{ 'collection.clear_all' | t }}</a>
+      <button class="button" type="submit">{{ 'collection.show_results' | t }}</button>
+    </div>
+  </form>
+</div>
+{%- endif -%}
 <div style="height: var(--section-y)"></div>
 {%- endpaginate -%}
 {% schema %}
-{ "name": "Collection", "settings": [ { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 } ] }
+{
+  "name": "Collection",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "show_banner", "label": "Show the collection image as a banner", "default": false, "info": "Only when the photo adds value; products stay near the top." },
+    { "type": "link_list", "id": "menu", "label": "Menu for other categories" }
+  ]
+}
 {% endschema %}

@@ -1,0 +1,41 @@
+{%- comment -%} Home: product use and lifestyle. Real pairs being worn; captions only, no performance claims. {%- endcomment -%}
+<section class="section" aria-labelledby="Ed-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div><h2 id="Ed-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{%- if section.settings.subheading != blank -%}<p>{{ section.settings.subheading | escape }}</p>{%- endif -%}</div>
+      {%- if section.settings.cta != blank -%}<a class="link-arrow" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+    </div>
+    <ul class="ed-gallery">
+      {%- for block in section.blocks -%}
+      <li class="ed-gallery__item" data-reveal {{ block.shopify_attributes }}>
+        {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}" class="ed-gallery__link">{%- endif -%}
+        <span class="media media--portrait">{% render 'site-image', image: block.settings.image, key: block.settings.test_key, need: block.settings.need, sizes: '(min-width: 990px) 25vw, 50vw' %}</span>
+        {%- if block.settings.caption != blank -%}<span class="ed-gallery__cap">{{ block.settings.caption | escape }}</span>{%- endif -%}
+        {%- if block.settings.link != blank -%}</a>{%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Editorial gallery",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Made to be worn." },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "Find your pair" },
+    { "type": "url", "id": "cta_link", "label": "Link" }
+  ],
+  "blocks": [
+    { "type": "image", "name": "Photo", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Photo", "info": "A real DAUR pair being worn, portrait 4:5." },
+      { "type": "text", "id": "caption", "label": "Caption" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "text", "id": "test_key", "label": "Test photo key (development only)" },
+      { "type": "text", "id": "need", "label": "Placeholder note", "default": "Lifestyle photograph needed" }
+    ] }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "Editorial gallery" }]
+}
+{% endschema %}

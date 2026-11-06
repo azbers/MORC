@@ -1,0 +1,29 @@
+{%- comment -%}
+  Product storytelling after the purchase area. Shown only when real content exists for this pair:
+  metafields custom.story_heading and custom.story_text (Products > the pair > Metafields), plus the pair's own
+  photos after the first two as detail photography. Nothing is written by code.
+{%- endcomment -%}
+{%- liquid
+  assign heading = product.metafields.custom.story_heading.value | default: product.metafields.custom.story_heading
+  assign text = product.metafields.custom.story_text
+  assign lifestyle = product.metafields.custom.lifestyle_image.value
+-%}
+{%- if heading != blank or text != blank or lifestyle != blank -%}
+<section class="section product-story" aria-labelledby="PS-{{ section.id }}">
+  {%- if lifestyle != blank -%}<div class="media media--wide product-story__hero">{{ lifestyle | image_url: width: 2000 | image_tag: widths: '750, 1100, 1500, 2000', sizes: '100vw', loading: 'lazy' }}</div>{%- endif -%}
+  <div class="page-width read-width">
+    {%- if heading != blank -%}<h2 id="PS-{{ section.id }}">{{ heading | escape }}</h2>{%- endif -%}
+    {%- if text != blank -%}<div class="rte lead">{{ text | metafield_tag }}</div>{%- endif -%}
+  </div>
+  {%- if product.media.size > 2 -%}
+  <div class="page-width"><ul class="detail-grid">
+    {%- for m in product.media offset: 2 limit: 4 -%}{%- unless m.alt contains 'Drawing' -%}<li class="media media--square">{{ m.preview_image | image_url: width: 900 | image_tag: widths: '450, 675, 900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: m.alt | default: product.title }}</li>{%- endunless -%}{%- endfor -%}
+  </ul></div>
+  {%- endif -%}
+</section>
+{%- elsif theme.role != 'main' -%}
+<div class="page-width"><p class="dev-note">{{ 'dev.story_empty' | t }}</p></div>
+{%- endif -%}
+{% schema %}
+{ "name": "Product story", "settings": [] }
+{% endschema %}

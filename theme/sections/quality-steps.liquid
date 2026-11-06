@@ -1,0 +1,39 @@
+{%- comment -%} Home: quality check. Four numbered steps, typographic (no invented workshop imagery). Horizontal on desktop, stacked on phones. {%- endcomment -%}
+<section class="section section--muted" aria-labelledby="QC-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div><h2 id="QC-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{%- if section.settings.subheading != blank -%}<p>{{ section.settings.subheading | escape }}</p>{%- endif -%}</div>
+      {%- if section.settings.cta != blank -%}<a class="link-arrow" href="{{ section.settings.cta_link | default: '/pages/contract' }}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+    </div>
+    <ol class="steps">
+      {%- for block in section.blocks -%}
+      <li class="step" data-reveal {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}<div class="media media--landscape">{{ block.settings.image | image_url: width: 900 | image_tag: widths: '450, 675, 900', sizes: '(min-width: 990px) 25vw, 100vw', loading: 'lazy' }}</div>{%- endif -%}
+        <span class="step__num" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+        <h3>{{ block.settings.title | escape }}</h3>
+        <p>{{ block.settings.text | escape }}</p>
+      </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Quality steps",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Every pair gets checked." },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "Our promise" },
+    { "type": "url", "id": "cta_link", "label": "Link" }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Heading" },
+      { "type": "text", "id": "text", "label": "One sentence" },
+      { "type": "image_picker", "id": "image", "label": "Real photo of this step (optional)" }
+    ] }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "Quality steps" }]
+}
+{% endschema %}

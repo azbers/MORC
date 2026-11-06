@@ -1,0 +1,38 @@
+{%- comment -%} Home: our promise. Four compact cards with line icons. The owner confirmed these terms (policies page, 5 Nov 2026). {%- endcomment -%}
+<section class="section" aria-labelledby="Pr-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div><h2 id="Pr-{{ section.id }}">{{ section.settings.heading | escape }}</h2></div>
+      {%- if section.settings.cta != blank -%}<a class="link-arrow" href="{{ section.settings.cta_link | default: '/pages/contract' }}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+    </div>
+    <ul class="promise-cards">
+      {%- for block in section.blocks -%}
+      <li class="promise-card" data-reveal {{ block.shopify_attributes }}>
+        {% render 'icon', name: block.settings.icon %}
+        <h3>{{ block.settings.title | escape }}</h3>
+        <p>{{ block.settings.text | escape }}</p>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Promise cards",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our promise." },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "See all our promises" },
+    { "type": "url", "id": "cta_link", "label": "Link" }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Card", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "truck", "options": [
+        { "value": "truck", "label": "Delivery" }, { "value": "check", "label": "Check" }, { "value": "exchange", "label": "Exchange" }, { "value": "shield", "label": "Shield" }, { "value": "wallet", "label": "Payment" }, { "value": "phone", "label": "Phone" } ] },
+      { "type": "text", "id": "title", "label": "Heading" },
+      { "type": "text", "id": "text", "label": "One sentence", "info": "Show only terms that are in force." }
+    ] }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "Promise cards" }]
+}
+{% endschema %}

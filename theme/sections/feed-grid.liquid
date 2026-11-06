@@ -1,0 +1,43 @@
+{%- comment -%} Home: The Feed. Up to six real DAUR social or product photos chosen in the editor, linked to the real Instagram account. No invented posts. {%- endcomment -%}
+{%- assign ig = settings.instagram_url | default: 'https://www.instagram.com/daursupply' -%}
+<section class="section" aria-labelledby="Fd-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div><h2 id="Fd-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{%- if section.settings.subheading != blank -%}<p>{{ section.settings.subheading | escape }}</p>{%- endif -%}</div>
+      <a class="link-arrow" href="{{ ig }}" target="_blank" rel="noopener">{{ section.settings.cta | escape }}{% render 'icon', name: 'instagram' %}<span class="visually-hidden"> {{ 'general.new_window' | t }}</span></a>
+    </div>
+    {%- assign shown = 0 -%}
+    {%- capture tiles -%}
+      {%- for block in section.blocks limit: 6 -%}
+        {%- if block.settings.image != blank -%}
+          {%- assign shown = shown | plus: 1 -%}
+          <li {{ block.shopify_attributes }}><a class="media media--square" href="{{ block.settings.link | default: ig }}"{% if block.settings.link == blank %} target="_blank" rel="noopener"{% endif %}>{{ block.settings.image | image_url: width: 600 | image_tag: widths: '300, 450, 600', sizes: '(min-width: 990px) 16vw, 33vw', loading: 'lazy', alt: block.settings.image.alt | default: block.settings.alt }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if shown > 0 -%}
+      <ul class="feed-grid">{{ tiles }}</ul>
+    {%- elsif theme.role != 'main' -%}
+      <p class="dev-note">{{ 'dev.feed_empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Feed photos",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "DAUR, beyond the box." },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "Follow @daursupply" }
+  ],
+  "blocks": [
+    { "type": "photo", "name": "Photo", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Photo from a real DAUR post" },
+      { "type": "text", "id": "alt", "label": "Description for screen readers" },
+      { "type": "url", "id": "link", "label": "Link (leave empty for Instagram)" }
+    ] }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "Feed photos" }]
+}
+{% endschema %}

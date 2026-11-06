@@ -1,0 +1,31 @@
+{%- comment -%}
+  Home: three published Journal articles (Shopify exposes only published ones). Category is the first tag,
+  reading time is counted from the article's own words at 200 words a minute.
+{%- endcomment -%}
+{%- assign b = blogs[section.settings.blog] | default: blogs.journal -%}
+{%- if b.articles_count > 0 -%}
+<section class="section" aria-labelledby="Jr-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div><h2 id="Jr-{{ section.id }}">{{ section.settings.heading | escape }}</h2></div>
+      <a class="link-arrow" href="{{ b.url }}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a>
+    </div>
+    <ul class="article-cards">
+      {%- for a in b.articles limit: 3 -%}
+        <li>{% render 'article-card', article: a %}</li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Journal articles",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Read the DAUR Journal." },
+    { "type": "text", "id": "blog", "label": "Blog handle", "default": "journal" },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "Explore the Journal" }
+  ],
+  "presets": [{ "name": "Journal articles" }]
+}
+{% endschema %}

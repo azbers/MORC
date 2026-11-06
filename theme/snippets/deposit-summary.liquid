@@ -1,9 +1,11 @@
 {%- comment -%}
-  Payment split for an amount. Input: total (paisa), context ('cart' or 'product').
+  Payment split for an amount. Input: total (paisa), context ('cart' or 'product'), gift (true when the bag is marked as a gift).
   Uses deposit-calc only. Shows nothing when no advance is asked.
 {%- endcomment -%}
 {%- capture dep_raw -%}{% render 'deposit-calc', total: total %}{%- endcapture -%}
 {%- assign dep_raw = dep_raw | strip -%}
+{%- comment -%} a gift is paid in full in advance (owner rule), so the person receiving it never pays at the door {%- endcomment -%}
+{%- if gift and dep_raw != 'OFF' -%}{%- assign dep_raw = 'FULL' -%}{%- endif -%}
 {%- if dep_raw != 'OFF' -%}
   {%- if dep_raw == 'FULL' -%}
   {%- assign last_limit = 0 -%}
@@ -17,7 +19,7 @@
       <div class="deposit__row"><dt>{{ 'payment.pay_rider' | t }}</dt><dd>{{ 0 | money }}</dd></div>
     </dl>
     {%- assign limit_money = last_limit | money_without_trailing_zeros -%}
-    <p class="deposit__note">{{ 'payment.full_note' | t: limit: limit_money }}</p>
+    {%- if gift -%}<p class="deposit__note">{{ 'payment.gift_note' | t }}</p>{%- else -%}<p class="deposit__note">{{ 'payment.full_note' | t: limit: limit_money }}</p>{%- endif -%}
     {%- if context != 'product' -%}{%- assign wa_num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' -%}<p class="deposit__receipt"><a href="https://wa.me/{{ wa_num }}?text={{ 'payment.receipt_message' | t | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'payment.receipt_link' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a></p>{%- endif -%}
   </div>
   {%- else -%}

@@ -1,0 +1,38 @@
+{%- comment -%}
+  Bag extras ported from the live theme: "This is a gift" (cart attributes Gift, Gift packing, Gift for,
+  Gift note; gifts are paid in full in advance) and the Slice cause vote (cart attribute "Slice cause",
+  causes from Theme settings > Giving). Saved to the cart by core.js through /cart/update.js, so they
+  travel with the order. Input: sid.
+{%- endcomment -%}
+{%- liquid
+  assign is_gift = false
+  if cart.attributes['Gift'] != blank
+    assign is_gift = true
+  endif
+  assign packing = false
+  if cart.attributes['Gift packing'] == 'Requested'
+    assign packing = true
+  endif
+  assign causes = settings.give_causes | split: ','
+-%}
+<div class="gift-box{% if is_gift %} is-on{% endif %}" data-gift-box>
+  <label class="checkbox gift-box__toggle"><input type="checkbox" data-gift-on{% if is_gift %} checked{% endif %}> <span><strong>{% render 'icon', name: 'gift' %}{{ 'cart.gift_title' | t }}</strong><small>{{ 'cart.gift_hint' | t }}</small></span></label>
+  {%- if is_gift -%}
+  <div class="gift-box__fields">
+    <label class="checkbox"><input type="checkbox" data-gift-pack{% if packing %} checked{% endif %}> <span>{{ 'cart.gift_pack' | t }}</span></label>
+    <div class="field"><label for="GiftTo-{{ sid }}">{{ 'cart.gift_to' | t }}</label><input class="input" id="GiftTo-{{ sid }}" maxlength="40" autocomplete="off" value="{{ cart.attributes['Gift for'] | escape }}" data-gift-to></div>
+    <div class="field"><label for="GiftNote-{{ sid }}">{{ 'cart.gift_note' | t }}</label><textarea class="textarea" id="GiftNote-{{ sid }}" maxlength="240" rows="3" aria-describedby="GiftLeft-{{ sid }}" data-gift-note>{{ cart.attributes['Gift note'] | escape }}</textarea><p class="muted field-hint" id="GiftLeft-{{ sid }}"><span data-gift-left>{{ 240 | minus: cart.attributes['Gift note'].size }}</span> {{ 'cart.gift_left' | t }}</p></div>
+    <p class="field-hint">{{ 'cart.gift_fine' | t }}</p>
+  </div>
+  {%- endif -%}
+</div>
+{%- if settings.give_on and causes.size > 1 -%}
+<fieldset class="slice-vote" data-slice-vote>
+  <legend>{{ 'cart.slice_legend' | t }} <span class="muted">{{ 'cart.slice_hint' | t }}</span></legend>
+  <div class="slice-vote__opts">
+    {%- for c in causes -%}{%- assign cs = c | strip -%}
+      <button class="chip-button" type="button" data-vote="{{ cs | escape }}" aria-pressed="{% if cart.attributes['Slice cause'] == cs %}true{% else %}false{% endif %}">{{ cs | escape }}</button>
+    {%- endfor -%}
+  </div>
+</fieldset>
+{%- endif -%}

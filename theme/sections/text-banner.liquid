@@ -1,0 +1,25 @@
+{%- comment -%} Home: our giving, and any short restrained statement with one link. No totals or stories are shown until they exist. {%- endcomment -%}
+{%- unless section.settings.only_if_giving and settings.give_on == false -%}
+<section class="section section--muted" aria-labelledby="Tb-{{ section.id }}">
+  <div class="page-width text-banner" data-reveal>
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 id="Tb-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.text != blank -%}<div class="lead">{{ section.settings.text }}</div>{%- endif -%}
+    {%- if section.settings.cta != blank -%}<p><a class="link-arrow" href="{{ section.settings.cta_link | default: '/pages/giving' }}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a></p>{%- endif -%}
+  </div>
+</section>
+{%- endunless -%}
+{% schema %}
+{
+  "name": "Text banner",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A share that isn’t ours to keep." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>At least 5% of our defined profit contribution is set aside for verified cases of need. The share comes from our profit, never as an additional charge to your order.</p>" },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "Discover the slice" },
+    { "type": "url", "id": "cta_link", "label": "Link" },
+    { "type": "checkbox", "id": "only_if_giving", "label": "Hide when giving is switched off in Theme settings", "default": true }
+  ],
+  "presets": [{ "name": "Text banner" }]
+}
+{% endschema %}

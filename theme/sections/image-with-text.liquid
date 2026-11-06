@@ -1,0 +1,30 @@
+{%- comment -%} Home: brand story. Split editorial layout, 55% image and 45% text on desktop, image first on phones. {%- endcomment -%}
+<section class="section{% if section.settings.muted %} section--muted{% endif %}" aria-labelledby="Story-{{ section.id }}">
+  <div class="page-width split{% if section.settings.flip %} split--flip{% endif %}">
+    <div class="split__media media media--landscape" data-reveal>{% render 'site-image', image: section.settings.image, key: section.settings.test_key, need: section.settings.need, sizes: '(min-width: 990px) 55vw, 100vw' %}</div>
+    <div class="split__text" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h2 id="Story-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.text != blank -%}<div class="lead">{{ section.settings.text }}</div>{%- endif -%}
+      {%- if section.settings.cta != blank -%}<p><a class="button button--secondary" href="{{ section.settings.cta_link | default: '/pages/manifesto' }}">{{ section.settings.cta | escape }}</a></p>{%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Image with text",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Real DAUR finishing, workshop or craft photo. No generic factory stock photos." },
+    { "type": "text", "id": "need", "label": "Placeholder note", "default": "Real DAUR craftsmanship photograph needed" },
+    { "type": "text", "id": "test_key", "label": "Test photo key (development only)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE THINKING BEHIND DAUR" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Same local craft. A new name." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Pakistan has the hands, the skill and the craft. DAUR brings selected footwear under one name, checks every pair and finishes it with details of its own.</p>" },
+    { "type": "text", "id": "cta", "label": "Button", "default": "Read our story" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "checkbox", "id": "flip", "label": "Image on the right", "default": false },
+    { "type": "checkbox", "id": "muted", "label": "Tinted background", "default": false }
+  ],
+  "presets": [{ "name": "Image with text" }]
+}
+{% endschema %}

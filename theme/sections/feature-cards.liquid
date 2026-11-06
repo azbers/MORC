@@ -1,0 +1,40 @@
+{%- comment -%} Home: The DAUR finish (three close up cards) and similar card rows. Text and photos come from the theme editor; nothing is claimed by code. {%- endcomment -%}
+<section class="section{% if section.settings.muted %} section--muted{% endif %}" aria-labelledby="Feat-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div><h2 id="Feat-{{ section.id }}">{{ section.settings.heading | escape }}</h2>{%- if section.settings.subheading != blank -%}<p>{{ section.settings.subheading | escape }}</p>{%- endif -%}</div>
+      {%- if section.settings.cta != blank -%}<a class="link-arrow" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">{{ section.settings.cta | escape }}{% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+    </div>
+    <ul class="feature-cards">
+      {%- for block in section.blocks -%}
+      <li class="feature-card" data-reveal {{ block.shopify_attributes }}>
+        <div class="media media--square">{% render 'site-image', image: block.settings.image, need: block.settings.need, sizes: '(min-width: 990px) 33vw, 100vw' %}</div>
+        <h3>{{ block.settings.title | escape }}</h3>
+        {%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Feature cards",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Branded, not labeled." },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "The leather does the talking. The details make it DAUR." },
+    { "type": "text", "id": "cta", "label": "Link text", "default": "Explore the collection" },
+    { "type": "url", "id": "cta_link", "label": "Link" },
+    { "type": "checkbox", "id": "muted", "label": "Tinted background", "default": false }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Card", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Close up photo", "info": "A real close up of this DAUR detail." },
+      { "type": "text", "id": "need", "label": "Placeholder note", "default": "Close up photograph needed" },
+      { "type": "text", "id": "title", "label": "Heading" },
+      { "type": "textarea", "id": "text", "label": "One sentence", "info": "Describe only what the pair really has. Do not name materials that are not confirmed." }
+    ] }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "Feature cards" }]
+}
+{% endschema %}

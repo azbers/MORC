@@ -14,7 +14,9 @@
     "404_title": "This page has moved on.",
     "404_text": "The collection has not. Find your pair below.",
     "password": "Password",
-    "enter": "Enter"
+    "enter": "Enter",
+    "new_window": "(opens in a new window)",
+    "loading": "Loading"
   },
   "header": {
     "announcement": "Announcement",
@@ -78,7 +80,19 @@
     "code_empty": "Enter a code first.",
     "code_remove": "Remove code {{ code }}",
     "code_not_applicable": "not applied",
-    "code_invalid": "{{ code }} cannot be used on this bag. Check its minimum spend and end date on the Offers page."
+    "code_invalid": "{{ code }} cannot be used on this bag. Check its minimum spend and end date on the Offers page.",
+    "gift_title": "This is a gift",
+    "gift_hint": "Gift packing on request and your own note in the box. Gifts are paid in full in advance.",
+    "gift_pack": "Add gift packing",
+    "gift_to": "Who is it for?",
+    "gift_note": "Your note", "gift_left": "of 240 characters left",
+    "gift_fine": "We place your note with the pair. The price stays off the parcel.",
+    "gift_on": "Marked as a gift: paid in full in advance.",
+    "gift_off": "Gift removed.",
+    "slice_legend": "Where should this quarter's slice go?",
+    "slice_hint": "Your vote travels with your order.",
+    "voted": "Your vote: {{ cause }}. Thank you.",
+    "saved": "Saved."
   },
   "payment": {
     "deposit_title": "Care deposit",
@@ -91,7 +105,8 @@
     "pay_now_full": "Pay in advance",
     "full_note": "Orders above {{ limit }} are paid in full before dispatch, so there is nothing to pay the rider.",
     "receipt_link": "Send your payment receipt on WhatsApp",
-    "receipt_message": "Assalam o Alaikum DAUR, here is my payment receipt for my order"
+    "receipt_message": "Assalam o Alaikum DAUR, here is my payment receipt for my order",
+    "gift_note": "Gift orders are paid in full by bank transfer after you place the order, so the person receiving it never pays at the door. Refunded in full if you cancel before dispatch."
   },
   "product": {
     "from": "From",
@@ -112,7 +127,23 @@
     "choose_option": "Choose colour and size",
     "add": "Add to bag",
     "in_stock": "In stock, ready to dispatch",
-    "low_stock": "Only {{ count }} left in this size"
+    "low_stock": "Only {{ count }} left in this size",
+    "zoom": "Zoom photo {{ n }}",
+    "zoom_title": "Product photo, enlarged",
+    "shipping_policy": "Shipping policy",
+    "payment_info": "Payment information",
+    "exchange_policy": "Exchange policy",
+    "claim_policy": "Claim policy",
+    "acc_description": "Description",
+    "acc_materials": "Materials and construction",
+    "acc_fit": "Fit and sizing",
+    "acc_delivery": "Delivery and payment",
+    "acc_exchange": "Exchanges and defects",
+    "open_size_guide": "Open the size guide",
+    "full_details": "See full details",
+    "quick_view": "Quick view",
+    "view": "View pair",
+    "quick_label": "Quick view"
   },
   "collection": {
     "count": {
@@ -122,10 +153,29 @@
     "sort": "Sort by",
     "apply": "Apply",
     "empty": "No pairs here yet.",
-    "all_title": "Collections"
+    "all_title": "Collections",
+    "new_in": "New In",
+    "all_pairs": "All pairs",
+    "filter": "Filter",
+    "active_filters": "Active filters",
+    "remove_filter": "(remove)",
+    "clear_all": "Clear all",
+    "empty_filtered": "No pairs match these filters.",
+    "guide_label": "Help choosing",
+    "more_categories": "More categories",
+    "guides": "Buying guides",
+    "price_from": "From (Rs)",
+    "price_to": "To (Rs)",
+    "show_results": "Show results"
   },
   "blog": {
-    "by": "By {{ author }}"
+    "by": "By {{ author }}",
+    "reading_time": {
+      "one": "{{ count }} minute read",
+      "other": "{{ count }} minute read"
+    },
+    "read_article": "Read article",
+    "read_article_label": "Read article: {{ title }}"
   },
   "footer": {
     "contact": "Contact",
@@ -157,6 +207,24 @@
     "placeholder": "Temporary placeholder",
     "needs_photo": "A real DAUR photograph goes here",
     "hero_needed": "Real DAUR hero photograph needed before launch",
-    "page_pending": "This page is drawn by the new theme in Phase 4."
+    "page_pending": "This page is drawn by the new theme in Phase 4.",
+    "test_photo_short": "Test photo, not DAUR",
+    "feed_empty": "Development note: add up to six photos from real DAUR posts in the theme editor. Until then only the Instagram link shows.",
+    "story_empty": "Development note: product story is hidden until this pair has a story heading, story text or lifestyle photo in its metafields.",
+    "collection_guide": "Development note: add a short buying guide for this collection in its metafield custom.guide. Nothing is written for you."
+  },
+  "newsletter": {
+    "label": "Email address",
+    "placeholder": "Your email address",
+    "success": "Thank you. You are on the list.",
+    "consent": "Yes, email me new pairs, guides and occasional offers. I can unsubscribe at any time.",
+    "consent_needed": "Please tick the box to agree to our emails before joining.",
+    "privacy": "Privacy policy"
+  },
+  "size_guide": {
+    "title": "Find your DAUR size.",
+    "missing": "The size chart is on our size guide page.",
+    "help": "Between sizes or unsure? Message us before you order and a real person helps you choose.",
+    "full": "Open the full size guide"
   }
 }

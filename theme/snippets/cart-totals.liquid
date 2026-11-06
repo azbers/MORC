@@ -1,4 +1,5 @@
-{%- comment -%} Code field, totals and the payment split. Used in the cart drawer and the bag page. {%- endcomment -%}
+{%- comment -%} Gift and Slice vote, code field, totals and the payment split. Used in the cart drawer and the bag page. Input: sid. {%- endcomment -%}
+{%- render 'cart-extras', sid: sid -%}
 <details class="cart-code"{% if cart.discount_codes.size > 0 %} open{% endif %}>
   <summary>{{ 'cart.code_title' | t }}</summary>
   <form data-code-form novalidate>
@@ -25,4 +26,5 @@
   <div class="cart-summary__row"><span>{{ 'cart.delivery' | t }}</span><span>{{ settings.delivery_price_text | default: 'Free' }}</span></div>
   <div class="cart-summary__row cart-summary__row--total"><span>{{ 'cart.total' | t }}</span><span>{{ cart.total_price | money }}</span></div>
 </div>
-{%- render 'deposit-summary', total: cart.total_price, context: 'cart' -%}
+{%- assign gift_full = false -%}{%- if cart.attributes['Gift'] != blank -%}{%- assign gift_full = true -%}{%- endif -%}
+{%- render 'deposit-summary', total: cart.total_price, context: 'cart', gift: gift_full -%}

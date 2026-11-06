@@ -1,7 +1,66 @@
 {
   "sections": {
     "hero": { "type": "hero", "settings": {} },
-    "featured": { "type": "featured-products", "settings": { "collection": "men", "limit": 4 } }
+    "categories": {
+      "type": "category-cards",
+      "settings": { "heading": "Find your pair.", "subheading": "Footwear for the way you move." },
+      "blocks": {
+        "c1": { "type": "category", "settings": { "collection": "sneakers", "title": "Sneakers", "test_key": "site-sneakers", "need": "Sneakers category photograph needed" } },
+        "c2": { "type": "category", "settings": { "collection": "leather-shoes", "title": "Leather Shoes", "test_key": "site-leather", "need": "Leather shoes category photograph needed" } },
+        "c3": { "type": "category", "settings": { "collection": "casual", "title": "Casual", "test_key": "site-casual", "need": "Casual category photograph needed" } },
+        "c4": { "type": "category", "settings": { "title": "New In", "link": "/collections/all?sort_by=created-descending", "test_key": "site-shop", "need": "New In photograph needed" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"]
+    },
+    "featured": { "type": "featured-products", "settings": { "collection": "men", "limit": 4, "heading": "Selected by DAUR.", "subheading": "Pairs worth getting to know.", "cta": "View all footwear" } },
+    "story": { "type": "image-with-text", "settings": { "eyebrow": "THE THINKING BEHIND DAUR", "heading": "Same local craft. A new name.", "cta": "Read our story", "cta_link": "shopify://pages/manifesto", "need": "Real DAUR finishing or workshop photograph needed" } },
+    "finish": {
+      "type": "feature-cards",
+      "settings": { "heading": "Branded, not labeled.", "subheading": "The leather does the talking. The details make it DAUR.", "cta": "Explore the collection", "muted": true },
+      "blocks": {
+        "f1": { "type": "card", "settings": { "title": "Engraved dubrae", "text": "A laser engraved DAUR metal tag on the bottom lace row.", "need": "Close up of the engraved dubrae needed" } },
+        "f2": { "type": "card", "settings": { "title": "Matte black cotton laces", "text": "Thick matte black woven cotton laces replace the factory laces.", "need": "Close up of the matte black laces needed" } },
+        "f3": { "type": "card", "settings": { "title": "Supply Unit seal", "text": "A matte black rubber seal on the top eyelet. Keep it on until you are sure of the size.", "need": "Close up of the Supply Unit seal needed" } }
+      },
+      "block_order": ["f1", "f2", "f3"]
+    },
+    "quality": {
+      "type": "quality-steps",
+      "settings": { "heading": "Every pair gets checked.", "cta": "Our promise", "cta_link": "shopify://pages/contract" },
+      "blocks": {
+        "q1": { "type": "step", "settings": { "title": "Upper", "text": "Check for cracks and loose grain." } },
+        "q2": { "type": "step", "settings": { "title": "Stitching", "text": "Check for tight, even stitching." } },
+        "q3": { "type": "step", "settings": { "title": "Sole", "text": "Inspect the bond between sole and upper." } },
+        "q4": { "type": "step", "settings": { "title": "Finish", "text": "Replace laces, fit DAUR hardware and prepare the box." } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4"]
+    },
+    "lifestyle": {
+      "type": "editorial-gallery",
+      "settings": { "heading": "Made to be worn.", "cta": "Find your pair" },
+      "blocks": {
+        "l1": { "type": "image", "settings": { "caption": "Everyday", "test_key": "site-door", "need": "Everyday wear photograph needed" } },
+        "l2": { "type": "image", "settings": { "caption": "Office", "test_key": "site-bench", "need": "Office wear photograph needed" } },
+        "l3": { "type": "image", "settings": { "caption": "Out and about", "test_key": "site-checked", "need": "Casual outing photograph needed" } },
+        "l4": { "type": "image", "settings": { "caption": "Occasions", "test_key": "site-leather", "need": "Formal occasion photograph needed" } }
+      },
+      "block_order": ["l1", "l2", "l3", "l4"]
+    },
+    "promise": {
+      "type": "promise-cards",
+      "settings": { "heading": "Our promise.", "cta": "See all our promises", "cta_link": "shopify://pages/contract" },
+      "blocks": {
+        "p1": { "type": "card", "settings": { "icon": "truck", "title": "Free delivery across Pakistan", "text": "Every order, to every city our couriers reach. Usually 2 to 5 days after dispatch." } },
+        "p2": { "type": "card", "settings": { "icon": "check", "title": "Dispatch within 24 hours", "text": "Your pair is handed to the courier within 24 hours of order confirmation." } },
+        "p3": { "type": "card", "settings": { "icon": "exchange", "title": "Five day size exchange", "text": "Message us within 5 days of delivery. Full price pairs, unworn outside, seal attached." } },
+        "p4": { "type": "card", "settings": { "icon": "shield", "title": "Thirty day stitching and sole cover", "text": "If stitching opens or a sole separates in normal wear within 30 days, we replace the pair." } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4"]
+    },
+    "giving": { "type": "text-banner", "settings": { "heading": "A share that isn’t ours to keep.", "cta": "Discover the slice", "cta_link": "shopify://pages/giving", "only_if_giving": true } },
+    "journal": { "type": "journal-latest", "settings": { "heading": "Read the DAUR Journal.", "blog": "journal", "cta": "Explore the Journal" } },
+    "feed": { "type": "feed-grid", "settings": { "heading": "DAUR, beyond the box.", "cta": "Follow @daursupply" } },
+    "newsletter": { "type": "newsletter", "settings": { "heading": "Stay in the loop.", "text": "New pairs, useful guides and the occasional offer. Nothing unnecessary.", "button": "Join DAUR" } }
   },
-  "order": ["hero", "featured"]
+  "order": ["hero", "categories", "featured", "story", "finish", "quality", "lifestyle", "promise", "giving", "journal", "feed", "newsletter"]
 }

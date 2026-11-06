@@ -1,0 +1,23 @@
+{%- comment -%}
+  "You might also like." Four products from Shopify's own related product recommendations for this pair
+  (no random picks). The page first renders an empty shell; core.js fills it from
+  /recommendations/products?section_id=...&product_id=...&limit=4&intent=related. Hidden when Shopify returns none.
+{%- endcomment -%}
+<div data-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4&intent=related">
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+  <section class="section" aria-labelledby="Rec-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head"><div><h2 id="Rec-{{ section.id }}">{{ section.settings.heading | escape }}</h2></div></div>
+    <ul class="product-grid product-grid--4">
+      {%- for p in recommendations.products limit: 4 -%}<li>{% render 'product-card', product: p %}</li>{%- endfor -%}
+    </ul>
+  </div>
+  </section>
+  {%- endif -%}
+</div>
+{% schema %}
+{
+  "name": "Related products",
+  "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "You might also like." } ]
+}
+{% endschema %}

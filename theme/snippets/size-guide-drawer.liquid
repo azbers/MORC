@@ -1,0 +1,31 @@
+{%- comment -%}
+  Size guide drawer. The chart, measuring steps and fit tip are read from the "Size guide" part of the
+  Policies page (Online Store > Pages > Policies), so there is one size chart to maintain.
+{%- endcomment -%}
+{%- liquid
+  assign guide_page = pages['policies']
+  assign guide_html = ''
+  if guide_page.content contains '<h2>Size guide</h2>'
+    assign guide_html = guide_page.content | split: '<h2>Size guide</h2>' | last | split: '<h2>' | first
+  endif
+  assign num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' '
+  assign msg = settings.whatsapp_message | default: 'Hello DAUR Supply, I need help choosing my shoe size.'
+-%}
+<div class="drawer drawer--right size-drawer" id="SizeGuide" role="dialog" aria-modal="true" aria-labelledby="SizeGuideTitle" tabindex="-1" data-drawer>
+  <div class="drawer__head">
+    <h2 id="SizeGuideTitle">{{ 'size_guide.title' | t }}</h2>
+    <button class="icon-button" type="button" data-close>{%- render 'icon', name: 'close' -%}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+  </div>
+  <div class="drawer__body">
+    {%- if guide_html != blank -%}
+      <div class="rte size-drawer__guide">{{ guide_html }}</div>
+    {%- else -%}
+      <p>{{ 'size_guide.missing' | t }}</p>
+    {%- endif -%}
+    <div class="size-drawer__help">
+      <p>{{ 'size_guide.help' | t }}</p>
+      <a class="button button--secondary" href="https://wa.me/{{ num }}?text={{ msg | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'general.whatsapp_chat' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a>
+    </div>
+    <p><a class="link-arrow" href="{{ settings.size_guide_url | default: '/pages/policies#size-guide' }}">{{ 'size_guide.full' | t }}{% render 'icon', name: 'arrow-right' %}</a></p>
+  </div>
+</div>
