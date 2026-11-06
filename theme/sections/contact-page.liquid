@@ -47,20 +47,20 @@
         <p class="caption">{{ 'contact.required_note' | t }}</p>
         <div class="field">
           <label for="Contact-name">{{ 'contact.name' | t }}</label>
-          <input class="input" id="Contact-name" type="text" name="contact[name]" autocomplete="name" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+          <input class="input" id="Contact-name" type="text" name="contact[name]" autocomplete="name" value="{% if form.name %}{{ form.name | escape }}{% elsif customer %}{{ customer.name | escape }}{% endif %}">
         </div>
         <div class="field">
           <label for="Contact-phone">{{ 'contact.phone' | t }}</label>
-          <input class="input" id="Contact-phone" type="tel" name="contact[phone]" autocomplete="tel" inputmode="tel" value="{{ form.phone }}">
+          <input class="input" id="Contact-phone" type="tel" name="contact[phone]" autocomplete="tel" inputmode="tel" value="{{ form.phone | escape }}">
         </div>
         <div class="field">
           <label for="Contact-email">{{ 'contact.email_field' | t }} <span aria-hidden="true">*</span></label>
-          <input class="input" id="Contact-email" type="email" name="contact[email]" autocomplete="email" required aria-required="true" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="Contact-email-error"{% endif %} data-validate="email">
+          <input class="input" id="Contact-email" type="email" name="contact[email]" autocomplete="email" required aria-required="true" value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}"{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="Contact-email-error"{% endif %} data-validate="email">
           <p class="field-error" id="Contact-email-error"{% unless form.errors contains 'email' %} hidden{% endunless %}>{% render 'icon', name: 'alert' %}{{ 'contact.email_error' | t }}</p>
         </div>
         <div class="field">
           <label for="Contact-body">{{ 'contact.message' | t }} <span aria-hidden="true">*</span></label>
-          <textarea class="textarea" id="Contact-body" name="contact[body]" rows="6" required aria-required="true" placeholder="{{ 'contact.message_hint' | t }}"{% if form.errors contains 'body' %} aria-invalid="true" aria-describedby="Contact-body-error"{% endif %} data-validate="text">{{ form.body }}</textarea>
+          <textarea class="textarea" id="Contact-body" name="contact[body]" rows="6" required aria-required="true" placeholder="{{ 'contact.message_hint' | t }}"{% if form.errors contains 'body' %} aria-invalid="true" aria-describedby="Contact-body-error"{% endif %} data-validate="text">{{ form.body | escape }}</textarea>
           <p class="field-error" id="Contact-body-error"{% unless form.errors contains 'body' %} hidden{% endunless %}>{% render 'icon', name: 'alert' %}{{ 'contact.message_error' | t }}</p>
         </div>
         <button class="button button--full" type="submit">{{ 'contact.send' | t }}</button>

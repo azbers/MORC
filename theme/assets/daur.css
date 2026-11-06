@@ -411,7 +411,12 @@ table { border-collapse: collapse; width: 100%; }
 .wa-float__label { display: none; }
 @media (min-width: 750px) { .wa-float { right: var(--s-6); bottom: calc(var(--s-6) + var(--wa-offset, 0px)); } .wa-float__label { display: inline; } }
 @media (max-width: 749px) { .wa-float { width: 48px; padding: 0; justify-content: center; } }
-body.is-locked .wa-float { opacity: 0; pointer-events: none; }
+@media (max-width: 749px) {
+  .js .wa-float { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity var(--d-hover) var(--ease), visibility 0s linear var(--d-hover), bottom var(--d-drawer) var(--ease); }
+  .js.is-scrolled .wa-float { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity var(--d-hover) var(--ease), visibility 0s, bottom var(--d-drawer) var(--ease); }
+  html.js:not(.has-sticky-buy) body.template-product .wa-float { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+body.is-locked .wa-float, html.js body.is-locked .wa-float { opacity: 0; visibility: hidden; pointer-events: none; }
 
 /* footer */
 .site-footer { background: var(--c-muted); color: var(--c-text); margin-top: 0; }
@@ -711,7 +716,7 @@ html.has-sticky-buy .site-footer { padding-bottom: 84px; }
 /* ============ Phase 4: information pages ============ */
 /* page opening */
 .page-hero { padding-block: var(--s-6) var(--s-10); }
-@media (min-width: 750px) { .page-hero { padding-bottom: var(--s-16); } }
+@media (min-width: 750px) { .page-hero { padding-bottom: var(--s-16); } .page-hero:not(.page-hero--image) { padding-bottom: var(--s-8); } }
 .page-hero__grid { display: grid; gap: var(--s-8); align-items: center; padding-top: var(--s-6); }
 @media (min-width: 990px) { .page-hero--image .page-hero__grid { grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); gap: var(--s-12); } }
 .page-hero__text { max-width: 46rem; }

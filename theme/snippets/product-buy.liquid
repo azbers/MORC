@@ -16,7 +16,7 @@
     endif
   endfor
   assign low_at = settings.low_stock_at | default: 2
-  assign guide_url = settings.size_guide_url | default: '/pages/policies#size-guide'
+  assign guide_url = settings.size_guide_url | default: settings.page_size | default: '/pages/policies#size-guide'
   assign form_id = 'ProductForm-' | append: sid
 -%}
 <div class="buy" data-product data-sid="{{ sid }}" data-context="{{ context }}" data-url="{{ product.url }}">
@@ -24,8 +24,8 @@
     <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
     {%- if colour_pos > 0 -%}
       {%- assign ci = colour_pos | minus: 1 -%}{%- assign co = product.options_with_values[ci] -%}
-      <fieldset class="option" data-option="{{ colour_pos }}">
-        <div class="option__head"><legend>{{ co.name | escape }}: <span class="chosen" data-chosen>{{ co.selected_value | escape }}</span></legend></div>
+      <fieldset class="option" data-option="{{ colour_pos }}" aria-labelledby="OptC-{{ sid }}">
+        <div class="option__head"><legend id="OptC-{{ sid }}">{{ co.name | escape }}: <span class="chosen" data-chosen>{{ co.selected_value | escape }}</span></legend></div>
         <div class="colour-list">
           {%- for v in co.values -%}
             {%- liquid
@@ -47,12 +47,12 @@
     {%- endif -%}
     {%- if size_pos > 0 -%}
       {%- assign sx = size_pos | minus: 1 -%}{%- assign so = product.options_with_values[sx] -%}
-      <fieldset class="option" data-option="{{ size_pos }}" data-size-option>
+      <fieldset class="option" data-option="{{ size_pos }}" data-size-option aria-labelledby="OptS-{{ sid }}">
         <div class="option__head">
-          <legend>{{ so.name | escape }}<span class="chosen" data-chosen></span></legend>
+          <legend id="OptS-{{ sid }}">{{ so.name | escape }}<span class="chosen" data-chosen></span></legend>
           <a class="size-guide-link" href="{{ guide_url }}" data-open="SizeGuide" aria-haspopup="dialog">{{ 'product.size_guide' | t }}</a>
         </div>
-        <div class="size-grid" role="radiogroup" aria-describedby="SizeError-{{ sid }}" data-size-grid>
+        <div class="size-grid" role="radiogroup" aria-labelledby="OptS-{{ sid }}" aria-describedby="SizeError-{{ sid }}" data-size-grid>
           {%- for v in so.values -%}
             <input type="radio" id="opt-{{ sid }}-s-{{ forloop.index }}" name="option{{ size_pos }}" value="{{ v | escape }}" required>
             <label for="opt-{{ sid }}-s-{{ forloop.index }}">{{ v | remove: 'EU ' | escape }}<span class="visually-hidden"> {{ v | escape }}</span><span class="visually-hidden" data-sold-label hidden>, {{ 'product.sold_out' | t }}</span></label>

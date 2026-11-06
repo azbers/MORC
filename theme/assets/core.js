@@ -621,5 +621,14 @@
     if (msg) msg.focus();
   }
 
+  /* phones: the WhatsApp button waits until the visitor scrolls, so it never covers the first screen;
+     on product pages it waits for the sticky buy bar and then sits above it (CSS) */
+  (() => {
+    const de = document.documentElement; let tick = false;
+    const set = () => { tick = false; de.classList.toggle('is-scrolled', window.scrollY > 320); };
+    window.addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(set); } }, { passive: true });
+    set();
+  })();
+
   D.ready = true;
 })();
