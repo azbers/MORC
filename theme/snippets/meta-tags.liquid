@@ -1,0 +1,85 @@
+{%- comment -%}
+  Title, description, canonical, robots and link preview tags (ported from the live theme, same rules).
+  Home title and description come from Theme settings > Search.
+{%- endcomment -%}
+{%- liquid
+  assign daur_title = page_title
+  assign daur_desc = page_description
+  if template.name == 'index'
+    assign daur_title = settings.seo_home_title | default: "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
+    assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Delivered to every city in Pakistan, with a 5 day size exchange."
+  endif
+  if current_page > 1
+    assign daur_title = daur_title | append: ', page ' | append: current_page
+  endif
+  if daur_desc == blank
+    assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan, delivered to every city in Pakistan."
+  endif
+  assign daur_noindex = false
+  if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers' or template.name == 'password'
+    assign daur_noindex = true
+  elsif template.name == 'page'
+    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts'
+      assign daur_noindex = true
+    endif
+  endif
+  assign og_desc = daur_desc | strip_html | strip_newlines | truncate: 200
+  assign og_has = false
+  if template.name == 'product' and product.featured_image
+    assign og_img = product.featured_image
+    assign og_has = true
+  elsif template.name == 'article' and article.image
+    assign og_img = article.image
+    assign og_has = true
+  elsif page_image
+    assign og_img = page_image
+    assign og_has = true
+  elsif settings.share_image != blank
+    assign og_img = settings.share_image
+    assign og_has = true
+  endif
+  if og_has
+    assign og_img_url = og_img | image_url: width: 1200, height: 630, crop: 'center', format: 'pjpg' | prepend: 'https:'
+    assign og_img_alt = og_img.alt | default: daur_title
+  else
+    assign og_img_url = 'daur-share.jpg' | asset_url | prepend: 'https:'
+    assign og_img_alt = shop.name | append: " men's leather shoes, delivered across Pakistan"
+  endif
+-%}
+<title>{{ daur_title }}{% unless daur_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
+{%- if daur_desc != blank %}<meta name="description" content="{{ daur_desc | escape }}">{% endif %}
+<link rel="canonical" href="{{ canonical_url }}">
+{%- if daur_noindex %}<meta name="robots" content="noindex">{% endif %}
+{%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:title" content="{{ daur_title | escape }}">
+<meta property="og:description" content="{{ og_desc | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+{%- if template.name == 'product' %}
+<meta property="og:type" content="product">
+<meta property="product:price:amount" content="{{ product.price | money_without_currency | remove: ',' }}">
+<meta property="product:price:currency" content="{{ cart.currency.iso_code }}">
+{%- elsif template.name == 'article' %}
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' }}">
+{%- else %}
+<meta property="og:type" content="website">
+{%- endif %}
+<meta property="og:image" content="{{ og_img_url }}">
+<meta property="og:image:secure_url" content="{{ og_img_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ og_img_alt | escape }}">
+<meta property="og:locale" content="en_PK">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ daur_title | escape }}">
+<meta name="twitter:description" content="{{ og_desc | escape }}">
+<meta name="twitter:image" content="{{ og_img_url }}">
+{%- if settings.favicon %}
+<link rel="icon" type="image/png" sizes="192x192" href="{{ settings.favicon | image_url: width: 192, height: 192, crop: 'center' }}">
+<link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180, crop: 'center' }}">
+{%- else %}
+<link rel="icon" type="image/png" sizes="192x192" href="{{ 'daur-favicon-192.png' | asset_url }}">
+<link rel="icon" type="image/svg+xml" href="{{ 'daur-favicon.svg' | asset_url }}">
+<link rel="apple-touch-icon" href="{{ 'daur-favicon-180.png' | asset_url }}">
+{%- endif %}

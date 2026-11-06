@@ -1,0 +1,139 @@
+{%- comment -%}
+  Structured data printed with the page itself, so search engines read the
+  brand, prices, stock and breadcrumbs without running the storefront script.
+  Only facts the store already states: theme settings for delivery, the
+  5 day exchange, the products as they are in Shopify, and Journal
+  articles (BlogPosting with the store as author and publisher).
+{%- endcomment -%}
+{%- liquid
+  assign root = shop.url
+  assign phone = settings.whatsapp | remove: '+' | remove: ' ' | remove: '-'
+  assign days = settings.delivery_days | default: '' | split: ' '
+  assign tmin = days[0] | plus: 0
+  assign tmax = days[2] | plus: 0
+-%}
+{%- capture ship -%}
+{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":{{ settings.delivery_fee | default: 0 | plus: 0 }},"currency":{{ shop.currency | json }}},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"PK"}{% if tmax > 0 %},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":{{ tmin }},"maxValue":{{ tmax }},"unitCode":"DAY"}}{% endif %}}
+{%- endcapture -%}
+{%- capture returns -%}
+{"@type":"MerchantReturnPolicy","applicableCountry":"PK","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":5,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/ReturnShippingFees","refundType":"https://schema.org/ExchangeRefund"}
+{%- endcapture -%}
+{%- comment -%}
+  The brand entity. One Organization (an OnlineStore, since DAUR sells online
+  only and has no shop front) with a fixed @id, so the home page, About and
+  Contact all describe the same brand. sameAs lists only profiles that exist:
+  Instagram and Facebook, plus any line in Theme settings > Search > Other
+  official profiles. The address is the dispatch city only (Islamabad, owner confirmed 2 Nov 2026); no street address.
+{%- endcomment -%}
+{%- liquid
+  assign org_id = root | append: '/#organization'
+  assign site_id = root | append: '/#website'
+  assign same = 'https://www.instagram.com/daursupply,https://www.facebook.com/daursupply'
+  assign extra_lines = settings.same_as_extra | default: '' | newline_to_br | split: '<br />'
+  for l in extra_lines
+    assign u = l | strip
+    if u contains 'https://'
+      assign same = same | append: ',' | append: u
+    endif
+  endfor
+  assign same = same | split: ','
+  assign mail = settings.support_email | default: shop.email
+-%}
+{%- capture org -%}
+{"@type":"OnlineStore","@id":{{ org_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }},"width":1024,"height":1024},"image":{{ 'daur-share.jpg' | asset_url | prepend: 'https:' | json }},"description":{{ settings.seo_home_description | default: shop.description | json }},"email":{{ mail | json }},"telephone":{{ phone | prepend: '+' | json }},"address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressRegion":"Islamabad Capital Territory","addressCountry":"PK"},"areaServed":{"@type":"Country","name":"Pakistan"},"sameAs":{{ same | json }},"contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":{{ phone | prepend: '+' | json }},"email":{{ mail | json }},"areaServed":"PK","availableLanguage":["en","ur"]},"hasMerchantReturnPolicy":{{ returns }}}
+{%- endcapture -%}
+{%- if template.name == 'index' -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{{ org }},
+{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"alternateName":"DAUR","url":{{ root | append: '/' | json }},"inLanguage":"en-PK","publisher":{"@id":{{ org_id | json }}}}]}
+</script>
+{%- elsif template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' -%}
+{%- liquid
+  assign purl = root | append: page.url
+  if page.handle == 'about'
+    assign ptype = 'AboutPage'
+  else
+    assign ptype = 'ContactPage'
+  endif
+-%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{{ org }},
+{"@type":{{ ptype | json }},"@id":{{ purl | json }},"url":{{ purl | json }},"name":{{ page.title | json }},"inLanguage":"en-PK","isPartOf":{"@id":{{ site_id | json }}},"about":{"@id":{{ org_id | json }}},"mainEntity":{"@id":{{ org_id | json }}}},
+{"@type":"WebSite","@id":{{ site_id | json }},"name":{{ shop.name | json }},"url":{{ root | append: '/' | json }},"publisher":{"@id":{{ org_id | json }}}},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ page.title | json }}}]}]}
+</script>
+{%- elsif template.name == 'product' -%}
+{%- liquid
+  assign ci = 0
+  assign si = 0
+  for o in product.options_with_values
+    assign on = o.name | downcase
+    if on contains 'colo'
+      assign ci = o.position
+    elsif on contains 'size'
+      assign si = o.position
+    endif
+  endfor
+  # the breadcrumb runs through the style collection when the pair is in one, otherwise through the line
+  assign coll = nil
+  for c in product.collections
+    if c.handle == 'sneakers' or c.handle == 'leather-shoes' or c.handle == 'casual'
+      assign coll = c
+    endif
+  endfor
+  unless coll
+    assign coll = product.collections | where: 'handle', 'men' | first
+  endunless
+  assign desc = product.description | split: '<ul' | first | strip_html | strip | strip_newlines
+-%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"ProductGroup","name":{{ product.title | json }},"description":{{ desc | json }},"url":{{ root | append: product.url | json }},"productGroupID":{{ product.id | append: "" | json }},"brand":{"@type":"Brand","name":{{ shop.name | json }}},{% if product.featured_image %}"image":{{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}"variesBy":[{% if ci > 0 %}"https://schema.org/color"{% endif %}{% if ci > 0 and si > 0 %},{% endif %}{% if si > 0 %}"https://schema.org/size"{% endif %}],
+"hasVariant":[
+{%- for v in product.variants -%}
+{%- liquid
+  case ci
+    when 1
+      assign vc = v.option1
+    when 2
+      assign vc = v.option2
+    when 3
+      assign vc = v.option3
+    else
+      assign vc = ''
+  endcase
+  case si
+    when 1
+      assign vs = v.option1
+    when 2
+      assign vs = v.option2
+    when 3
+      assign vs = v.option3
+    else
+      assign vs = ''
+  endcase
+  assign img = v.featured_image | default: product.featured_image
+-%}
+{"@type":"Product","name":{{ product.title | append: ' ' | append: v.title | json }},"sku":{{ v.sku | default: v.id | json }}{% if vc != '' %},"color":{{ vc | json }}{% endif %}{% if vs != '' %},"size":{{ vs | json }}{% endif %}{% if img %},"image":{{ img | image_url: width: 1200 | prepend: 'https:' | json }}{% endif %},"offers":{"@type":"Offer","url":{{ root | append: v.url | json }},"price":{{ v.price | divided_by: 100.0 }},"priceCurrency":{{ shop.currency | json }},"itemCondition":"https://schema.org/NewCondition","availability":"https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}","shippingDetails":{{ ship }},"hasMerchantReturnPolicy":{{ returns }}}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}}{% if coll %},{"@type":"ListItem","position":2,"name":{{ coll.title | json }},"item":{{ root | append: coll.url | json }}}{% endif %},{"@type":"ListItem","position":{% if coll %}3{% else %}2{% endif %},"name":{{ product.title | json }}}]}]
+</script>
+{%- elsif template.name == 'article' -%}
+{%- liquid
+  assign aurl = root | append: article.url
+  assign adesc = article.metafields.global.description_tag | default: article.excerpt_or_content | strip_html | strip | strip_newlines | truncate: 300
+-%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"BlogPosting","headline":{{ article.title | json }},"description":{{ adesc | json }},"url":{{ aurl | json }},"mainEntityOfPage":{"@type":"WebPage","@id":{{ aurl | json }}},"datePublished":{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},"dateModified":{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},"inLanguage":"en-PK",{% if article.image %}"image":{{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}{% if article.tags.size > 0 %}"keywords":{{ article.tags | join: ', ' | json }},{% endif %}"author":{"@type":"Organization","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }}},"publisher":{"@type":"Organization","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }},"logo":{"@type":"ImageObject","url":{{ 'daur-logo.png' | asset_url | prepend: 'https:' | json }}}},"isPartOf":{"@type":"Blog","name":{{ blog.title | json }},"url":{{ root | append: blog.url | json }}}},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":{{ root | append: blog.url | json }}},{"@type":"ListItem","position":3,"name":{{ article.title | json }}}]}]
+</script>
+{%- elsif template.name == 'blog' -%}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"Blog","name":{{ blog.title | json }},"url":{{ root | append: blog.url | json }},"inLanguage":"en-PK","publisher":{"@type":"Organization","name":{{ shop.name | json }},"url":{{ root | append: '/' | json }}}},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ blog.title | json }}}]}]
+</script>
+{%- elsif template.name == 'collection' -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ root | append: '/' | json }}},{"@type":"ListItem","position":2,"name":{{ collection.title | json }}}]}
+</script>
+{%- endif -%}

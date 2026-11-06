@@ -1,0 +1,4 @@
+{%- layout none -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>{{ 'gift_card.title' | t }} | {{ shop.name }}</title>{{ 'daur.css' | asset_url | stylesheet_tag }}{{ content_for_header }}</head>
+<body><main class="page-width not-found"><p class="eyebrow">{{ shop.name }}</p><h1>{{ gift_card.balance | money }}</h1><p>{{ 'gift_card.code' | t }} <strong>{{ gift_card.code | format_code }}</strong></p>{% if gift_card.expired %}<p class="field-error" style="justify-content:center">{{ 'gift_card.expired' | t }}</p>{% endif %}<p><a class="button" href="{{ shop.url }}">{{ 'gift_card.shop' | t }}</a></p></main></body></html>

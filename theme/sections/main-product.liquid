@@ -1,0 +1,136 @@
+{%- comment -%}
+  Product page, Phase 2 build: gallery, title, price, colour, size, size guide link, stock,
+  Add to bag, payment split, delivery and exchange lines. Phase 3 adds the size guide drawer,
+  description sections, storytelling, related products and the sticky phone bar.
+  All values come from the product's own Shopify data. No size is chosen for the buyer.
+{%- endcomment -%}
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign colour_pos = 0
+  assign size_pos = 0
+  for o in product.options_with_values
+    assign on = o.name | downcase
+    if on contains 'colo'
+      assign colour_pos = o.position
+    elsif on contains 'size'
+      assign size_pos = o.position
+    endif
+  endfor
+  assign low_at = settings.low_stock_at | default: 2
+  assign is_dev = false
+  if theme.role != 'main'
+    assign is_dev = true
+  endif
+  assign media_count = product.media.size
+  if is_dev and settings.test_photos
+    capture t0
+      render 'test-photo', key: product.handle, index: 0
+    endcapture
+    if t0 != blank
+      assign media_count = 5
+    endif
+  endif
+-%}
+<div class="page-width">
+  {%- render 'breadcrumbs' -%}
+  <div class="product" data-product data-section-id="{{ section.id }}" data-url="{{ product.url }}">
+    <div class="product__media">
+      <div class="gallery" data-gallery aria-label="{{ 'product.gallery' | t }}" tabindex="0">
+        {%- for i in (1..media_count) -%}
+          {%- assign idx = forloop.index0 -%}{%- if idx == 0 -%}{%- assign load = 'eager' -%}{%- else -%}{%- assign load = 'lazy' -%}{%- endif -%}
+          <div class="media">{% render 'product-media', product: product, index: idx, loading: load, sizes: '(min-width: 990px) 60vw, 88vw', widths: '360, 540, 720, 960, 1200, 1500' %}</div>
+        {%- endfor -%}
+      </div>
+      {%- if media_count > 1 -%}<p class="gallery-count" data-gallery-count aria-hidden="true">1 / {{ media_count }}</p>{%- endif -%}
+    </div>
+
+    <div class="product__info">
+      <h1 class="product__title">{{ product.title | remove_first: 'DAUR ' | escape }}</h1>
+      <div data-price-wrap>{% render 'price', product: product, variant: current, size: 'large' %}</div>
+      {%- if product.type != blank -%}<p class="muted" style="margin-top: var(--s-2)">{{ product.type | escape }}</p>{%- endif -%}
+
+      {%- form 'product', product, data-product-form: '', novalidate: 'novalidate', id: 'ProductForm' -%}
+        <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
+        {%- if colour_pos > 0 -%}
+          {%- assign ci = colour_pos | minus: 1 -%}{%- assign co = product.options_with_values[ci] -%}
+          <fieldset class="option" data-option="{{ colour_pos }}">
+            <div class="option__head"><legend>{{ co.name | escape }}: <span class="chosen" data-chosen>{{ co.selected_value | escape }}</span></legend></div>
+            <div class="colour-list">
+              {%- for v in co.values -%}
+                {%- liquid
+                  assign hex = '#cccccc'
+                  for tag in product.tags
+                    if tag contains 'swatch:'
+                      assign pair = tag | remove_first: 'swatch:' | split: '='
+                      if pair[0] == v
+                        assign hex = pair[1]
+                      endif
+                    endif
+                  endfor
+                -%}
+                <input type="radio" id="opt-{{ section.id }}-c-{{ forloop.index }}" name="option{{ colour_pos }}" value="{{ v | escape }}"{% if v == co.selected_value %} checked{% endif %}>
+                <label for="opt-{{ section.id }}-c-{{ forloop.index }}"><span class="swatch" style="--sw: {{ hex | escape }}" aria-hidden="true"></span>{{ v | escape }}</label>
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endif -%}
+        {%- if size_pos > 0 -%}
+          {%- assign sx = size_pos | minus: 1 -%}{%- assign so = product.options_with_values[sx] -%}
+          <fieldset class="option" data-option="{{ size_pos }}" data-size-option>
+            <div class="option__head">
+              <legend>{{ so.name | escape }}<span class="chosen" data-chosen></span></legend>
+              <a class="size-guide-link" href="{{ settings.size_guide_url | default: '/pages/policies#size-guide' }}">{{ 'product.size_guide' | t }}</a>
+            </div>
+            <div class="size-grid" role="radiogroup" aria-describedby="SizeError-{{ section.id }}" data-size-grid>
+              {%- for v in so.values -%}
+                <input type="radio" id="opt-{{ section.id }}-s-{{ forloop.index }}" name="option{{ size_pos }}" value="{{ v | escape }}" required>
+                <label for="opt-{{ section.id }}-s-{{ forloop.index }}">{{ v | remove: 'EU ' | escape }}<span class="visually-hidden"> {{ v | escape }}</span><span class="visually-hidden" data-sold-label hidden>, {{ 'product.sold_out' | t }}</span></label>
+              {%- endfor -%}
+            </div>
+            <p class="field-error" id="SizeError-{{ section.id }}" data-size-error hidden>{% render 'icon', name: 'alert' %}{{ 'product.choose_size' | t }}</p>
+          </fieldset>
+        {%- endif -%}
+        <noscript>
+          <div class="field"><label for="VariantSelect">{{ 'product.choose_option' | t }}</label>
+          <select class="select" id="VariantSelect" name="id">{% for v in product.variants %}<option value="{{ v.id }}"{% unless v.available %} disabled{% endunless %}>{{ v.title }}{% unless v.available %} ({{ 'product.sold_out' | t }}){% endunless %}</option>{% endfor %}</select></div>
+        </noscript>
+        <p class="stock-line" data-stock aria-live="polite"></p>
+        <input type="hidden" name="quantity" value="1">
+        <button class="button button--full" type="submit" data-add{% unless product.available %} disabled{% endunless %}>{% if product.available %}{{ 'product.add' | t }}{% else %}{{ 'product.sold_out' | t }}{% endif %}</button>
+        <p class="field-error" data-form-error role="alert" hidden></p>
+      {%- endform -%}
+
+      <div data-deposit-wrap style="margin-top: var(--s-5)">{%- render 'deposit-summary', total: current.price, context: 'product' -%}</div>
+      {%- comment -%} the split for each price this product has, so changing colour or size swaps it without a second calculation {%- endcomment -%}
+      {%- assign prices = product.variants | map: 'price' | uniq -%}
+      {%- for pr in prices -%}<template data-deposit-for="{{ pr }}">{% render 'deposit-summary', total: pr, context: 'product' %}</template>{%- endfor -%}
+      {%- assign seen = '' -%}
+      {%- for v in product.variants -%}{%- capture key -%}{{ v.price }}-{{ v.compare_at_price | default: 0 }}{%- endcapture -%}{%- unless seen contains key -%}{%- assign seen = seen | append: '|' | append: key | append: '|' -%}<template data-price-for="{{ key }}">{% render 'price', product: product, variant: v, size: 'large' %}</template>{%- endunless -%}{%- endfor -%}
+
+      <ul class="assure">
+        <li>{% render 'icon', name: 'truck' %}<span>{{ section.settings.delivery_line }}</span></li>
+        <li>{% render 'icon', name: 'wallet' %}<span>{{ section.settings.payment_line }}</span></li>
+        <li>{% render 'icon', name: 'exchange' %}<span data-exchange-line>{% if current.compare_at_price > current.price %}{{ section.settings.exchange_sale_line }}{% else %}{{ section.settings.exchange_line }}{% endif %}</span></li>
+      </ul>
+
+      {%- if product.description != blank -%}
+      <div class="rte" style="margin-top: var(--s-8)">{{ product.description }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+<script type="application/json" data-product-json>
+{"handle":{{ product.handle | json }},"lowAt":{{ low_at | json }},"sizePos":{{ size_pos }},"colourPos":{{ colour_pos }},"exchangeLine":{{ section.settings.exchange_line | json }},"exchangeSaleLine":{{ section.settings.exchange_sale_line | json }},"t":{"in":{{ 'product.in_stock' | t | json }},"low":{{ 'product.low_stock' | t | json }},"out":{{ 'product.sold_out' | t | json }},"add":{{ 'product.add' | t | json }},"unavailable":{{ 'product.unavailable' | t | json }}},
+"variants":[{% for v in product.variants %}{"id":{{ v.id }},"options":{{ v.options | json }},"available":{{ v.available | json }},"price":{{ v.price }},"compare":{{ v.compare_at_price | default: 0 }},"qty":{% if v.inventory_management == 'shopify' %}{{ v.inventory_quantity | default: 0 }}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}{% endfor %}]}
+</script>
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    { "type": "text", "id": "delivery_line", "label": "Delivery line", "default": "Free delivery across Pakistan, 2 to 5 days." },
+    { "type": "text", "id": "payment_line", "label": "Payment line", "default": "Dispatch within 24 hours after order confirmation and payment verification. Remaining amount payable on delivery." },
+    { "type": "text", "id": "exchange_line", "label": "Exchange line (full price)", "default": "5 day size exchange. 30 days on stitching and sole." },
+    { "type": "text", "id": "exchange_sale_line", "label": "Exchange line (sale pair)", "default": "Sale pairs are final for size. 30 days on stitching and sole." }
+  ]
+}
+{% endschema %}

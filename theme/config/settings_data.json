@@ -1,0 +1,15 @@
+{
+  "current": {
+    "whatsapp": "923199628735",
+    "phone_display": "+92 319 9628735",
+    "support_email": "contact@daursupply.com",
+    "delivery_days": "2 to 5 days",
+    "delivery_fee": 0,
+    "low_stock_at": 2,
+    "advance_required": true,
+    "advance_tiers": "3000:500, 8000:1000, 15000:1500",
+    "search_menu": "daur-search",
+    "test_photos": true
+  },
+  "presets": {}
+}

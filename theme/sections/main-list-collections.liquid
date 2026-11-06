@@ -1,0 +1,8 @@
+<div class="page-width">
+  <header class="page-head"><h1>{{ 'collection.all_title' | t }}</h1></header>
+  <ul class="search-suggest__links">{%- for c in collections -%}{%- unless c.handle == 'frontpage' -%}<li><a href="{{ c.url }}">{{ c.title | escape }}</a> <span class="caption">{{ 'collection.count' | t: count: c.products_count }}</span></li>{%- endunless -%}{%- endfor -%}</ul>
+</div>
+<div style="height: var(--section-y)"></div>
+{% schema %}
+{ "name": "Collections list", "settings": [] }
+{% endschema %}

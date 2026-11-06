@@ -1,0 +1,23 @@
+{%- comment -%} Bag page, used when JavaScript is off or a link opens /cart. Same lines, totals and payment split as the drawer. {%- endcomment -%}
+<div class="page-width" data-main-cart data-section-id="{{ section.id }}">
+  <header class="page-head"><h1>{{ 'cart.title' | t }}</h1></header>
+  {%- if cart.item_count == 0 -%}
+    <div class="cart-empty"><p>{{ 'cart.empty_text' | t }}</p><a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a></div>
+  {%- else -%}
+  <div style="display:grid;gap:var(--s-10);grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));align-items:start">
+    <form action="{{ routes.cart_url }}" method="post" id="CartPageForm">
+      <ul class="cart-items">{%- for item in cart.items -%}{% render 'cart-line', item: item, index: forloop.index %}{%- endfor -%}</ul>
+      <noscript><p style="margin-top:var(--s-6)">{%- for item in cart.items -%}<label class="visually-hidden" for="u-{{ forloop.index }}">{{ item.title }}</label><input type="hidden" name="updates[]" id="u-{{ forloop.index }}" value="{{ item.quantity }}">{%- endfor -%}<button class="button button--secondary" type="submit" name="update">{{ 'cart.update' | t }}</button></p></noscript>
+    </form>
+    <div class="section--surface" style="padding:var(--s-6)">
+      {%- render 'cart-totals', sid: 'page' -%}
+      <form action="{{ routes.cart_url }}" method="post"><button class="button button--full" type="submit" name="checkout" data-checkout>{{ 'cart.checkout' | t }}</button></form>
+      <p class="cart-note-line">{% render 'icon', name: 'truck' %}{{ settings.delivery_line | default: 'Free delivery across Pakistan, 2 to 5 days.' }}</p>
+    </div>
+  </div>
+  {%- endif -%}
+</div>
+<div style="height: var(--section-y)"></div>
+{% schema %}
+{ "name": "Bag", "settings": [] }
+{% endschema %}

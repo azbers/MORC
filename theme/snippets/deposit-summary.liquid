@@ -1,0 +1,35 @@
+{%- comment -%}
+  Payment split for an amount. Input: total (paisa), context ('cart' or 'product').
+  Uses deposit-calc only. Shows nothing when no advance is asked.
+{%- endcomment -%}
+{%- capture dep_raw -%}{% render 'deposit-calc', total: total %}{%- endcapture -%}
+{%- assign dep_raw = dep_raw | strip -%}
+{%- if dep_raw != 'OFF' -%}
+  {%- if dep_raw == 'FULL' -%}
+  {%- assign last_limit = 0 -%}
+  {%- assign tiers = settings.advance_tiers | default: '3000:500, 8000:1000, 15000:1500' | split: ',' -%}
+  {%- for tier in tiers -%}{%- assign kv = tier | strip | split: ':' -%}{%- assign l = kv[0] | strip | plus: 0 | times: 100 -%}{%- if l > last_limit -%}{%- assign last_limit = l -%}{%- endif -%}{%- endfor -%}
+  <div class="deposit" data-deposit="full">
+    <p class="deposit__title">{{ 'payment.full_title' | t }}</p>
+    <dl class="deposit__rows">
+      <div class="deposit__row"><dt>{% if context == 'product' %}{{ 'payment.pair_price' | t }}{% else %}{{ 'payment.order_total' | t }}{% endif %}</dt><dd>{{ total | money }}</dd></div>
+      <div class="deposit__row deposit__row--now"><dt>{{ 'payment.pay_now_full' | t }}</dt><dd>{{ total | money }}</dd></div>
+      <div class="deposit__row"><dt>{{ 'payment.pay_rider' | t }}</dt><dd>{{ 0 | money }}</dd></div>
+    </dl>
+    {%- assign limit_money = last_limit | money_without_trailing_zeros -%}
+    <p class="deposit__note">{{ 'payment.full_note' | t: limit: limit_money }}</p>
+  </div>
+  {%- else -%}
+  {%- assign dep = dep_raw | plus: 0 -%}
+  {%- assign rest = total | minus: dep -%}
+  <div class="deposit" data-deposit="{{ dep }}">
+    <p class="deposit__title">{{ 'payment.deposit_title' | t }}</p>
+    <dl class="deposit__rows">
+      <div class="deposit__row"><dt>{% if context == 'product' %}{{ 'payment.pair_price' | t }}{% else %}{{ 'payment.order_total' | t }}{% endif %}</dt><dd>{{ total | money }}</dd></div>
+      <div class="deposit__row deposit__row--now"><dt>{{ 'payment.deposit_now' | t }}</dt><dd>{{ dep | money }}</dd></div>
+      <div class="deposit__row"><dt>{{ 'payment.pay_rider' | t }}</dt><dd>{{ rest | money }}</dd></div>
+    </dl>
+    <p class="deposit__note">{{ 'payment.deposit_note' | t }}</p>
+  </div>
+  {%- endif -%}
+{%- endif -%}

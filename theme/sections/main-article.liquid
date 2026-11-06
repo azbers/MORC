@@ -1,0 +1,15 @@
+{%- comment -%} Journal article, Phase 2 build. Links inside the article that point to a guide not yet published are shown as plain text (see core.js), so readers never land on a missing page. {%- endcomment -%}
+<article class="page-width">
+  {%- render 'breadcrumbs' -%}
+  <header class="page-head read-width">
+    {%- if article.tags.size > 0 -%}<p class="eyebrow">{{ article.tags.first | escape }}</p>{%- endif -%}
+    <h1>{{ article.title | escape }}</h1>
+    <p class="caption">{{ 'blog.by' | t: author: shop.name }} · <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%-d %B %Y' }}</time></p>
+  </header>
+  {%- if article.image -%}<div class="media media--landscape" style="margin-bottom:var(--s-10)">{{ article.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: article.image.alt | default: article.title }}</div>{%- endif -%}
+  <div class="rte" data-article-body data-blog="{{ blog.handle }}" data-live="{% for a in blog.articles limit: 250 %}{{ a.handle }}{% unless forloop.last %},{% endunless %}{% endfor %}">{{ article.content }}</div>
+</article>
+<div style="height: var(--section-y)"></div>
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

@@ -1,0 +1,41 @@
+{%- comment -%} Rendered by Shopify for /search/suggest?section_id=predictive-search. Real products and pages only. {%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- assign res = predictive_search.resources -%}
+  {%- assign total = res.products.size | plus: res.collections.size | plus: res.pages.size | plus: res.articles.size -%}
+  <div class="search-suggest" data-count="{{ res.products.size }}">
+    <div>
+      {%- if res.queries.size > 0 or res.collections.size > 0 -%}
+      <p class="search-suggest__title">{{ 'search.suggestions' | t }}</p>
+      <ul class="search-suggest__links" role="listbox" aria-label="{{ 'search.suggestions' | t }}">
+        {%- for q in res.queries -%}<li><a href="{{ q.url }}" role="option" id="ps-q-{{ forloop.index }}">{{ q.styled_text }}</a></li>{%- endfor -%}
+        {%- for c in res.collections -%}<li><a href="{{ c.url }}" role="option" id="ps-c-{{ forloop.index }}">{{ c.title | escape }}</a></li>{%- endfor -%}
+      </ul>
+      {%- endif -%}
+      {%- if res.pages.size > 0 or res.articles.size > 0 -%}
+      <p class="search-suggest__title" style="margin-top: var(--s-6)">{{ 'search.pages' | t }}</p>
+      <ul class="search-suggest__links">
+        {%- for p in res.pages -%}<li><a href="{{ p.url }}" role="option" id="ps-p-{{ forloop.index }}">{{ p.title | escape }}</a></li>{%- endfor -%}
+        {%- for a in res.articles -%}<li><a href="{{ a.url }}" role="option" id="ps-a-{{ forloop.index }}">{{ a.title | escape }}</a></li>{%- endfor -%}
+      </ul>
+      {%- endif -%}
+    </div>
+    <div>
+      {%- if res.products.size > 0 -%}
+      <p class="search-suggest__title">{{ 'search.products' | t }}</p>
+      <ul class="search-products" role="listbox" aria-label="{{ 'search.products' | t }}">
+        {%- for p in res.products limit: 8 -%}
+        <li><a class="search-product" href="{{ p.url }}" role="option" id="ps-pr-{{ forloop.index }}">
+          <span class="media">{% render 'product-media', product: p, index: 0, sizes: '(min-width: 750px) 20vw, 45vw', widths: '200, 300, 400' %}</span>
+          <span class="search-product__name">{{ p.title | remove_first: 'DAUR ' | escape }}</span>
+          {%- render 'price', product: p -%}
+        </a></li>
+        {%- endfor -%}
+      </ul>
+      {%- endif -%}
+      {%- if total == 0 -%}
+        <p class="search-empty">{{ 'search.no_results' | t: terms: predictive_search.terms | escape }}</p>
+      {%- endif -%}
+      <p style="margin-top: var(--s-6)"><a class="link-arrow" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}">{{ 'search.view_all' | t: terms: predictive_search.terms | escape }}{% render 'icon', name: 'arrow-right' %}</a></p>
+    </div>
+  </div>
+{%- endif -%}

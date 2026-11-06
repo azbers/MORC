@@ -1,0 +1,33 @@
+{%- comment -%}
+  Product card used in every grid (home, collections, search, related, mega menu).
+  Input: product, loading, sizes. Real Shopify data only: no ratings, no invented badges.
+  Badges: Sale (compare at price higher), Sold out, New (tag badge:New).
+{%- endcomment -%}
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign is_new = false
+  if product.tags contains 'badge:New'
+    assign is_new = true
+  endif
+-%}
+<article class="card" data-product-card data-handle="{{ product.handle }}">
+  <a class="card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+    {%- render 'product-media', product: product, index: 0, loading: loading, sizes: sizes | default: '(min-width: 1200px) 25vw, (min-width: 750px) 33vw, 50vw', widths: '240, 360, 480, 640, 800' -%}
+  </a>
+  <div class="card__badges">
+    {%- unless product.available -%}<span class="badge badge--soldout">{{ 'product.sold_out' | t }}</span>
+    {%- else -%}
+      {%- if on_sale -%}<span class="badge badge--sale">{{ 'product.sale' | t }}</span>{%- endif -%}
+      {%- if is_new -%}<span class="badge badge--dark">{{ 'product.new' | t }}</span>{%- endif -%}
+    {%- endunless -%}
+  </div>
+  <div class="card__body">
+    <h3 class="card__title"><a href="{{ product.url }}">{{ product.title | remove_first: 'DAUR ' | escape }}</a></h3>
+    {%- if product.type != blank -%}<span class="card__type">{{ product.type | escape }}</span>{%- endif -%}
+    {%- render 'price', product: product -%}
+    {%- render 'swatches', product: product -%}
+  </div>
+</article>

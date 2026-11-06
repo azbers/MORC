@@ -1,0 +1,8 @@
+{%- comment -%} Floating WhatsApp support. Number and prefilled message from Theme settings > Contact. Stays clear of the sticky purchase bar through --wa-offset. {%- endcomment -%}
+{%- liquid
+  assign num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' | remove: '-'
+  assign msg = message | default: settings.whatsapp_message | default: 'Hello DAUR Supply, I need help choosing my shoe size.'
+-%}
+<a class="wa-float" href="https://wa.me/{{ num }}?text={{ msg | url_encode }}" target="_blank" rel="noopener" data-wa-float>
+  {%- render 'icon', name: 'whatsapp' -%}<span class="wa-float__label">{{ 'general.whatsapp_short' | t }}</span><span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span>
+</a>

@@ -1,0 +1,14 @@
+{%- comment -%} Default page template: breadcrumb, title, page body from Shopify admin. Information pages get their own sections in Phase 4. {%- endcomment -%}
+<div class="page-width">
+  {%- render 'breadcrumbs' -%}
+  <header class="page-head"><h1>{{ page.title | escape }}</h1></header>
+  {%- if page.content != blank -%}
+  <div class="rte">{{ page.content }}</div>
+  {%- elsif theme.role != 'main' -%}
+  <p class="caption">{{ 'dev.page_pending' | t }}</p>
+  {%- endif -%}
+</div>
+<div style="height: var(--section-y)"></div>
+{% schema %}
+{ "name": "Page", "settings": [] }
+{% endschema %}

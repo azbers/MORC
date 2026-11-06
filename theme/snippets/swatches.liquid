@@ -1,0 +1,23 @@
+{%- comment -%} Colour dots from product tags "swatch:Colour name=#hex" (existing store convention). Input: product, max {%- endcomment -%}
+{%- liquid
+  assign max = max | default: 5
+  assign shown = 0
+  assign total = 0
+  for tag in product.tags
+    if tag contains 'swatch:'
+      assign total = total | plus: 1
+    endif
+  endfor
+-%}
+{%- if total > 1 -%}
+<ul class="swatches" aria-label="{{ 'product.colours_count' | t: count: total }}">
+  {%- for tag in product.tags -%}
+    {%- if tag contains 'swatch:' and shown < max -%}
+      {%- assign pair = tag | remove_first: 'swatch:' | split: '=' -%}
+      <li class="swatch" style="--sw: {{ pair[1] | escape }}" title="{{ pair[0] | escape }}"><span class="visually-hidden">{{ pair[0] | escape }}</span></li>
+      {%- assign shown = shown | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if total > max -%}<li class="swatches__more">+{{ total | minus: max }}</li>{%- endif -%}
+</ul>
+{%- endif -%}

@@ -1,0 +1,28 @@
+{%- comment -%}
+  Price for a product or a variant. Input: product, variant (optional), size ('large' optional).
+  A compare at price shows only when it is higher than the price (owner confirmed these are prices really charged).
+{%- endcomment -%}
+{%- liquid
+  if variant
+    assign now = variant.price
+    assign was = variant.compare_at_price
+  else
+    assign now = product.price
+    assign was = product.compare_at_price
+  endif
+  assign on_sale = false
+  if was and was > now
+    assign on_sale = true
+  endif
+-%}
+<div class="price{% if on_sale %} price--sale{% endif %}{% if size == 'large' %} price--large{% endif %}" data-price>
+  {%- if on_sale -%}
+    <span class="visually-hidden">{{ 'product.sale_price' | t }}</span>
+    <span class="price__now">{% if product.price_varies and variant == blank %}{{ 'product.from' | t }} {% endif %}{{ now | money }}</span>
+    <span class="visually-hidden">{{ 'product.regular_price' | t }}</span>
+    <s class="price__compare">{{ was | money }}</s>
+    {%- if size == 'large' -%}{%- assign saved = was | minus: now | money_without_trailing_zeros -%}<span class="price__save">{{ 'product.you_save' | t: amount: saved }}</span>{%- endif -%}
+  {%- else -%}
+    <span class="price__now">{% if product.price_varies and variant == blank %}{{ 'product.from' | t }} {% endif %}{{ now | money }}</span>
+  {%- endif -%}
+</div>

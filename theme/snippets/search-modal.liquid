@@ -1,0 +1,36 @@
+{%- comment -%}
+  Search overlay. Works as a normal form without JavaScript (goes to /search).
+  With JavaScript it shows Shopify predictive search results (section predictive-search) as you type.
+  Suggested categories come from Theme settings > Search > Suggested links menu.
+{%- endcomment -%}
+{%- assign sugg = linklists[settings.search_menu] -%}
+<div class="modal search-modal" id="SearchModal" role="dialog" aria-modal="true" aria-label="{{ 'search.title' | t }}" data-modal>
+  <div class="overlay" data-close></div>
+  <div class="modal__panel">
+    <div class="page-width">
+      <div class="search-modal__bar">
+        <form action="{{ routes.search_url }}" method="get" role="search" data-predictive-form>
+          {%- render 'icon', name: 'search' -%}
+          <label class="visually-hidden" for="SearchInput">{{ 'search.label' | t }}</label>
+          <input class="search-modal__input" id="SearchInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="PredictiveResults" aria-autocomplete="list" data-predictive-input>
+          <input type="hidden" name="options[prefix]" value="last">
+          <button class="button button--small button--secondary" type="reset" data-search-clear hidden>{{ 'search.clear' | t }}</button>
+        </form>
+        <button class="icon-button" type="button" data-close>{%- render 'icon', name: 'close' -%}<span class="visually-hidden">{{ 'search.close' | t }}</span></button>
+      </div>
+      <div class="search-modal__body">
+        <div aria-live="polite" class="visually-hidden" data-predictive-status></div>
+        <div id="PredictiveResults" data-predictive-results>
+          <div class="search-suggest">
+            <div>
+              <p class="search-suggest__title">{{ 'search.suggested' | t }}</p>
+              <ul class="search-suggest__links">
+                {%- for link in sugg.links -%}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

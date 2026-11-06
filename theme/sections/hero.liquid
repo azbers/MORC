@@ -1,0 +1,58 @@
+{%- comment -%}
+  Home hero: one still photograph (separate landscape and portrait images), eyebrow, heading,
+  short text, two buttons to real pages. No video, no carousel. Without a photo it shows a clearly
+  marked placeholder (launch blocker). On the development theme a test photo may stand in, flagged.
+{%- endcomment -%}
+{%- liquid
+  assign img_d = section.settings.image
+  assign img_m = section.settings.image_mobile | default: img_d
+  assign test_url = ''
+  if img_d == blank and theme.role != 'main' and settings.test_photos
+    capture test_url
+      render 'test-photo', key: 'site-hero'
+    endcapture
+    assign test_url = test_url | strip
+  endif
+-%}
+<section class="hero" aria-labelledby="HeroTitle-{{ section.id }}">
+  <div class="hero__media">
+    {%- if img_d != blank -%}
+      <picture>
+        <source media="(max-width: 749px)" srcset="{{ img_m | image_url: width: 750 }} 750w, {{ img_m | image_url: width: 1100 }} 1100w" sizes="100vw">
+        {{ img_d | image_url: width: 2400 | image_tag: widths: '1000, 1400, 1800, 2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: img_d.alt }}
+      </picture>
+    {%- elsif test_url != '' -%}
+      {%- assign base = test_url | split: '?' | first -%}
+      <img src="{{ base }}?width=1600" srcset="{{ base }}?width=750 750w, {{ base }}?width=1200 1200w, {{ base }}?width=1800 1800w" sizes="100vw" alt="" width="1800" height="1200" fetchpriority="high">
+      <span class="dev-flag" style="top:var(--s-3);bottom:auto;left:var(--s-3)">{{ 'dev.test_hero' | t }}</span>
+    {%- else -%}
+      <div class="placeholder-art"><span><strong>{{ 'dev.placeholder' | t }}</strong>{{ 'dev.hero_needed' | t }}</span></div>
+    {%- endif -%}
+  </div>
+  <div class="page-width hero__content">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h1 id="HeroTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h1>
+    {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+    <div class="hero__ctas">
+      {%- if section.settings.cta1 != blank -%}<a class="button button--light" href="{{ section.settings.cta1_link | default: routes.all_products_collection_url }}">{{ section.settings.cta1 | escape }}</a>{%- endif -%}
+      {%- if section.settings.cta2 != blank -%}<a class="button button--ghost-light" href="{{ section.settings.cta2_link | default: '/pages/manifesto' }}">{{ section.settings.cta2 | escape }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo, landscape (desktop)", "info": "A real DAUR photograph, about 16:9, at least 2000 px wide." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Photo, portrait (phone)", "info": "About 4:5, at least 1100 px wide." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Pakistani footwear. A new era." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Aik naya daur." },
+    { "type": "text", "id": "text", "label": "Text", "default": "Thoughtfully selected footwear. Crafted in Pakistan. Finished by DAUR." },
+    { "type": "text", "id": "cta1", "label": "First button", "default": "Shop the collection" },
+    { "type": "url", "id": "cta1_link", "label": "First button link" },
+    { "type": "text", "id": "cta2", "label": "Second button", "default": "Discover DAUR" },
+    { "type": "url", "id": "cta2_link", "label": "Second button link" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

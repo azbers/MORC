@@ -1,0 +1,9 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": { "type": "announcement-bar", "blocks": { "m1": { "type": "message", "settings": { "text": "Same local craft. Zero retail markup.", "link": "" } }, "m2": { "type": "message", "settings": { "text": "Free delivery across Pakistan.", "link": "" } } }, "block_order": ["m1", "m2"], "settings": { "interval": 6 } },
+    "header": { "type": "header", "settings": { "menu": "daur-main", "help_menu": "footer-help", "show_account": true, "mega_item": "Shop", "mega_col1": "Shop by category", "mega_col2": "Featured", "mega_collection": "men", "mega_heading": "Leather shoes", "mega_cta": "Explore the collection", "mega_link": "shopify://collections/leather-shoes" } }
+  },
+  "order": ["announcement", "header"]
+}

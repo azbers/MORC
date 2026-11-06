@@ -1,0 +1,86 @@
+{%- comment -%}
+  Footer: campaign area (one main line, two supporting lines, help text and WhatsApp),
+  four link columns from Online Store > Navigation, contact area, social, payment text, legal.
+  Phone: columns become accordions. Payment methods are written as text, never as logos.
+{%- endcomment -%}
+{%- liquid
+  assign num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' | remove: '-'
+  assign wa_msg = section.settings.wa_message | default: settings.whatsapp_message
+  assign cols = 'menu_shop,menu_help,menu_daur,menu_policies' | split: ','
+-%}
+<footer class="site-footer" role="contentinfo">
+  <div class="page-width">
+    <div class="footer-campaign">
+      <div>
+        <p class="footer-campaign__head">{{ section.settings.headline | escape }}</p>
+        <ul class="footer-campaign__support">
+          {%- if section.settings.support_1 != blank -%}<li>{{ section.settings.support_1 | escape }}</li>{%- endif -%}
+          {%- if section.settings.support_2 != blank -%}<li>{{ section.settings.support_2 | escape }}</li>{%- endif -%}
+        </ul>
+      </div>
+      <div class="footer-help">
+        <p>{{ section.settings.help_text | escape }}</p>
+        <a class="button" href="https://wa.me/{{ num }}?text={{ wa_msg | default: 'Hello DAUR Supply, I need help choosing my shoe size.' | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ section.settings.help_cta | escape }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      {%- for c in cols -%}
+        {%- assign menu = linklists[section.settings[c]] -%}
+        {%- if menu.links.size > 0 -%}
+        <details class="footer-col footer-acc" data-footer-acc>
+          <summary>{{ menu.title | escape }}</summary>
+          <ul>
+            {%- for link in menu.links -%}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{%- endfor -%}
+          </ul>
+        </details>
+        {%- endif -%}
+      {%- endfor -%}
+      <div class="footer-col footer-contact">
+        <h2>{{ 'footer.contact' | t }}</h2>
+        <address>
+          <a href="tel:+{{ num }}">{{ settings.phone_display | default: '+92 319 9628735' }}</a>
+          <a href="https://wa.me/{{ num }}" target="_blank" rel="noopener">{{ 'general.whatsapp_chat' | t }}<span class="visually-hidden"> {{ 'general.opens_whatsapp' | t }}</span></a>
+          {%- assign mail = settings.support_email | default: 'contact@daursupply.com' -%}
+          <a href="mailto:{{ mail }}">{{ mail }}</a>
+        </address>
+        <p>{{ section.settings.dispatch_line | escape }}</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <ul class="footer-social">
+        {%- if settings.instagram_url != blank -%}<li><a class="icon-button" href="{{ settings.instagram_url }}" target="_blank" rel="noopener me">{% render 'icon', name: 'instagram' %}<span class="visually-hidden">{{ 'footer.instagram' | t }}</span></a></li>{%- endif -%}
+        {%- if settings.facebook_url != blank -%}<li><a class="icon-button" href="{{ settings.facebook_url }}" target="_blank" rel="noopener me">{% render 'icon', name: 'facebook' %}<span class="visually-hidden">{{ 'footer.facebook' | t }}</span></a></li>{%- endif -%}
+      </ul>
+      {%- if section.settings.payment_text != blank -%}<p class="footer-pay">{{ section.settings.payment_text | escape }}</p>{%- else -%}<span></span>{%- endif -%}
+      <ul class="footer-legal">
+        <li>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | escape }}</li>
+        {%- if shop.privacy_policy -%}<li><a href="{{ shop.privacy_policy.url }}">{{ 'footer.privacy' | t }}</a></li>{%- endif -%}
+        {%- if shop.terms_of_service -%}<li><a href="{{ shop.terms_of_service.url }}">{{ 'footer.terms' | t }}</a></li>{%- endif -%}
+      </ul>
+    </div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "header", "content": "Campaign area" },
+    { "type": "text", "id": "headline", "label": "Main line", "default": "Same local craft. Zero retail markup." },
+    { "type": "text", "id": "support_1", "label": "Supporting line 1", "default": "Aik naya daur. A new era." },
+    { "type": "text", "id": "support_2", "label": "Supporting line 2", "default": "Your size, right the first time." },
+    { "type": "textarea", "id": "help_text", "label": "Help text", "default": "Message us before you order. A real person answers and helps you choose your perfect fit." },
+    { "type": "text", "id": "help_cta", "label": "Help button", "default": "Chat on WhatsApp" },
+    { "type": "text", "id": "wa_message", "label": "WhatsApp message", "default": "Hello DAUR Supply, I need help choosing my shoe size." },
+    { "type": "header", "content": "Link columns" },
+    { "type": "link_list", "id": "menu_shop", "label": "Column 1", "default": "footer-shop" },
+    { "type": "link_list", "id": "menu_help", "label": "Column 2", "default": "footer-help" },
+    { "type": "link_list", "id": "menu_daur", "label": "Column 3", "default": "footer-daur" },
+    { "type": "link_list", "id": "menu_policies", "label": "Column 4", "default": "footer-policies" },
+    { "type": "header", "content": "Contact and payment" },
+    { "type": "text", "id": "dispatch_line", "label": "Dispatch line", "default": "Dispatch from Islamabad, delivering across Pakistan." },
+    { "type": "text", "id": "payment_text", "label": "Payment methods (text only, list only what is really accepted)", "default": "Advance by bank transfer. Balance in cash to the rider." }
+  ]
+}
+{% endschema %}

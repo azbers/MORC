@@ -1,0 +1,39 @@
+{%- comment -%}
+  Cart drawer. Rendered by Shopify (Section Rendering API) after every cart change, so totals,
+  discounts and the Care deposit always come from Shopify's own cart and the one deposit snippet.
+  Without JavaScript the bag icon goes to /cart instead.
+{%- endcomment -%}
+<div class="drawer drawer--right cart-drawer" id="CartDrawer" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle" tabindex="-1" data-drawer data-cart-drawer>
+  <div class="drawer__head">
+    <h2 id="CartDrawerTitle">{{ 'cart.title' | t }}{% if cart.item_count > 0 %} <span class="muted">({{ cart.item_count }})</span>{% endif %}</h2>
+    <button class="icon-button" type="button" data-close>{%- render 'icon', name: 'close' -%}<span class="visually-hidden">{{ 'cart.close' | t }}</span></button>
+  </div>
+  <div class="drawer__body" data-cart-body>
+    <p class="visually-hidden" aria-live="polite" data-cart-status></p>
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-empty">
+        <h3>{{ 'cart.empty' | t }}</h3>
+        <p>{{ 'cart.empty_text' | t }}</p>
+        <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+      </div>
+    {%- else -%}
+      <ul class="cart-items">
+        {%- for item in cart.items -%}
+          {%- render 'cart-line', item: item, index: forloop.index -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+  {%- if cart.item_count > 0 -%}
+  <div class="drawer__foot">
+    {%- render 'cart-totals', sid: 'drawer' -%}
+    <form action="{{ routes.cart_url }}" method="post">
+      <button class="button button--full" type="submit" name="checkout" data-checkout>{{ 'cart.checkout' | t }}</button>
+    </form>
+    <p class="cart-note-line">{% render 'icon', name: 'truck' %}{{ settings.delivery_line | default: 'Free delivery across Pakistan, 2 to 5 days.' }}</p>
+  </div>
+  {%- endif -%}
+</div>
+{% schema %}
+{ "name": "Cart drawer", "settings": [] }
+{% endschema %}

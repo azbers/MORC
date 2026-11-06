@@ -1,0 +1,11 @@
+{%- comment -%}
+  Cookie choice (ported from the live theme). The answer goes to Shopify's Customer Privacy API,
+  which Shopify and its apps respect. Shown once; hidden until JavaScript confirms no choice exists.
+{%- endcomment -%}
+<div class="consent" role="region" aria-label="{{ 'consent.label' | t }}" data-consent hidden>
+  <p>{{ 'consent.text' | t }} {% if shop.privacy_policy %}<a href="{{ shop.privacy_policy.url }}">{{ 'consent.more' | t }}</a>{% endif %}</p>
+  <div class="consent__actions">
+    <button class="button button--small" type="button" data-consent-choice="all">{{ 'consent.accept' | t }}</button>
+    <button class="button button--small button--secondary" type="button" data-consent-choice="essential">{{ 'consent.essential' | t }}</button>
+  </div>
+</div>

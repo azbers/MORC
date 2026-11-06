@@ -1,0 +1,55 @@
+{%- comment -%}
+  DEVELOPMENT ONLY. Sample photos (Unsplash, free licence) uploaded to Shopify Files on 2026-11-03 so
+  layouts can be checked before real DAUR photos exist. They are NOT DAUR products. They are used only
+  when the theme is not live (theme.role != 'main') and Theme settings > Development > Show test photos is on,
+  and every one carries a visible 'Test photo' flag. Input: key (product handle or site slot), index (0 based).
+  Output: a URL, or nothing.
+{%- endcomment -%}
+{%- liquid
+  assign urls = ''
+  case key
+    when 'moc-runner-v1'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1668069226492-508742b03147.jpg?v=1793676209|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1543508282-6319a3e2621f.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1626947346165-4c2288dadc2a.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1631087606988-a6be38fccaf6.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1614253429340-98120bd6d753.jpg?v=1793676207'
+    when 'phantom-trainer'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1608231387042-66d1773070a5_8c92483e-2416-4214-8114-23f8ecc3cfa4.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1600185365926-3a2ce3cdb9eb.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1523191665038-d75548b1a52a.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1656164603279-b989e21168ba.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1460353581641-37baddab0fa2.jpg?v=1793676207'
+    when 'grid-court-low'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1634316427425-722247ebe036.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1587563871167-1ee9c731aefb.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1625860191460-10a66c7384fb.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1596744288358-45428ce99fc4.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1608230164697-c791326d284c.jpg?v=1793676207'
+    when 'unit-derby-02'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1641893843833-a006778dc00b.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1563434649554-58f91d22ec2c.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1614252235316-8c857d38b5f4.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1603191659812-ee978eeeef76_bd40f99f-af50-4bf9-aa2b-754c92b166bb.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1549290127-7f758fdadff7.jpg?v=1793676208'
+    when 'concrete-mid'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1512374382149-233c42b6a83b.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1542219550-37153d387c27.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1555378322-2d4b84bc2790.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1626379625260-7111605463e8.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1622760808027-095ea611f657.jpg?v=1793676207'
+    when 'volt-signal'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1606107557195-0e29a4b5b4aa.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1542291026-7eec264c27ff.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1595341888016-a392ef81b7de.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1560769629-975ec94e6a86.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1549298916-b41d501d3772.jpg?v=1793676207'
+    when 'ward-chelsea'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1605733160314-4fc7dac4bb16.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1621996659546-b0dd8b7e57af.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1609259886986-a642e7e1dbf9.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1625037676697-295bff156f5a.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1617689563472-c66428e83d17.jpg?v=1793676208'
+    when 'sector-slip'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1616406432452-07bc5938759d_f89d1328-775e-46fe-b6d6-e3462578d7c6.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1533867617858-e7b97e060509.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1519396710158-99d7ed65c7dc.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1625357165350-bdbcb6d7d524.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1541346160430-93fcee38d521.jpg?v=1793676207'
+    when 'saddle-tassel'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1616696038562-574c18066055.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1618545647089-da834ede280c.jpg?v=1793676207|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1525966222134-fcfa99b8ae77.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1609259886986-a642e7e1dbf9_88adae80-d406-4ca6-962b-51634ca650c4.jpg?v=1793676208|https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1653868249587-284b275a1c67.jpg?v=1793676207'
+    when 'site-hero'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1614252235316-8c857d38b5f4_52e62529-ba57-4704-aa0c-02aacf357eb0.jpg?v=1793676207'
+    when 'site-sneakers'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1608231387042-66d1773070a5.jpg?v=1793676207'
+    when 'site-casual'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1616406432452-07bc5938759d.jpg?v=1793676207'
+    when 'site-leather'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1603191659812-ee978eeeef76.jpg?v=1793676208'
+    when 'site-workshop'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1477517787936-70ba786643fd.jpg?v=1793676207'
+    when 'site-checked'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1768550005901-db341b8f0550.jpg?v=1793676208'
+    when 'site-door'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1653868249587-284b275a1c67_35011806-c684-4205-98ac-8805adce0003.jpg?v=1793676208'
+    when 'site-bench'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1768550996860-2d8666f4c0bb.jpg?v=1793676207'
+    when 'site-shop'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1758812820631-ce2d8dc3e5ac.jpg?v=1793676207'
+    when 'site-tools'
+      assign urls = 'https://cdn.shopify.com/s/files/1/0837/0798/6174/files/photo-1777177967028-bd91fe0954a0.jpg?v=1793676208'
+  endcase
+  if urls != ''
+    assign list = urls | split: '|'
+    assign i = index | default: 0
+    echo list[i]
+  endif
+-%}

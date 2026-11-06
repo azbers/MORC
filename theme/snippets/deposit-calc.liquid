@@ -1,0 +1,40 @@
+{%- comment -%}
+  THE ONE Care deposit calculation. Every place that shows an advance amount
+  (bag, cart drawer, product page, notices) captures this snippet; nothing else
+  computes it. Rules come from Theme settings > Payment:
+    advance_required  on/off
+    advance_tiers     "limit:deposit" pairs in rupees, smallest limit first,
+                      each limit INCLUSIVE ("3000:500" = totals up to and
+                      including Rs 3,000 send Rs 500)
+  Above the last limit the order is paid in full in advance.
+  Input:  total (amount in paisa, as Shopify money values)
+  Output: "OFF" (no advance asked), "FULL" (pay full amount in advance),
+          or the advance in paisa, never more than the total.
+{%- endcomment -%}
+{%- liquid
+  assign t = total | default: 0 | plus: 0
+  if settings.advance_required == false or t <= 0
+    echo 'OFF'
+  else
+    assign found = ''
+    assign tiers = settings.advance_tiers | default: '3000:500, 8000:1000, 15000:1500' | split: ','
+    for tier in tiers
+      assign kv = tier | strip | split: ':'
+      if kv.size == 2 and found == ''
+        assign limit = kv[0] | strip | plus: 0 | times: 100
+        assign dep = kv[1] | strip | plus: 0 | times: 100
+        if limit > 0 and t <= limit
+          if dep > t
+            assign dep = t
+          endif
+          assign found = dep | append: ''
+        endif
+      endif
+    endfor
+    if found == ''
+      echo 'FULL'
+    else
+      echo found
+    endif
+  endif
+-%}

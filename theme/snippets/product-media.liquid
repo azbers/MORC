@@ -1,0 +1,38 @@
+{%- comment -%}
+  One product image. Input: product, index (0 based), sizes, loading ('lazy' or 'eager'), widths, class.
+  Development theme only: may swap in a test photo (clearly flagged); a drawing is flagged too.
+  The live theme always shows the product's own media.
+{%- endcomment -%}
+{%- liquid
+  assign i = index | default: 0
+  assign load = loading | default: 'lazy'
+  assign w = widths | default: '360, 540, 720, 960, 1200'
+  assign is_dev = false
+  if theme.role != 'main'
+    assign is_dev = true
+  endif
+  assign test_url = ''
+  if is_dev and settings.test_photos
+    capture test_url
+      render 'test-photo', key: product.handle, index: i
+    endcapture
+    assign test_url = test_url | strip
+  endif
+  assign m = product.media[i]
+  if i == 0 and product.featured_media
+    assign m = product.featured_media
+  endif
+-%}
+{%- if test_url != '' -%}
+  {%- assign base = test_url | split: '?' | first -%}{%- assign v = test_url | split: '?' | last -%}
+  <img class="is-photo {{ class }}" src="{{ base }}?{{ v }}&width=720" srcset="{{ base }}?{{ v }}&width=360 360w, {{ base }}?{{ v }}&width=540 540w, {{ base }}?{{ v }}&width=720 720w, {{ base }}?{{ v }}&width=1080 1080w" sizes="{{ sizes | default: '50vw' }}" alt="{{ 'dev.test_photo_alt' | t: title: product.title | escape }}" width="1080" height="1080" loading="{{ load }}"{% if load == 'eager' %} fetchpriority="high"{% endif %}>
+  <span class="dev-flag">{{ 'dev.test_photo' | t }}</span>
+{%- elsif m -%}
+  {%- assign img = m.preview_image -%}
+  {%- assign alt = m.alt | default: product.title -%}
+  {%- capture extra_class -%}{% unless alt contains 'Drawing' %}is-photo{% endunless %} {{ class }}{%- endcapture -%}
+  {{ img | image_url: width: 1200 | image_tag: widths: w, sizes: sizes, loading: load, alt: alt, class: extra_class }}
+  {%- if is_dev and alt contains 'Drawing' -%}<span class="dev-flag">{{ 'dev.drawing' | t }}</span>{%- endif -%}
+{%- else -%}
+  <div class="placeholder-art" role="img" aria-label="{{ 'dev.no_photo' | t }}"><span><strong>{{ product.title | escape }}</strong>{{ 'dev.no_photo' | t }}</span></div>
+{%- endif -%}

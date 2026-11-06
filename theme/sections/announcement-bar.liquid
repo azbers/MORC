@@ -1,0 +1,33 @@
+{%- comment -%}
+  Announcement bar. One message, or a few that turn slowly (no marquee). Turning pauses on hover,
+  on keyboard focus and when the visitor prefers reduced motion. Only real, current messages.
+{%- endcomment -%}
+{%- if section.blocks.size > 0 -%}
+<div class="announcement" role="region" aria-label="{{ 'header.announcement' | t }}" data-announcement data-interval="{{ section.settings.interval }}" {{ section.shopify_attributes }}>
+  <div class="announcement__inner">
+    <div class="announcement__track">
+      {%- for block in section.blocks -%}
+        <p class="announcement__msg" {% unless forloop.first %}aria-hidden="true"{% endunless %} {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>{%- else -%}{{ block.settings.text | escape }}{%- endif -%}
+        </p>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Announcement bar",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "range", "id": "interval", "label": "Seconds per message (0 keeps the first one still)", "min": 0, "max": 12, "step": 1, "default": 6 }
+  ],
+  "blocks": [
+    { "type": "message", "name": "Message", "settings": [
+      { "type": "text", "id": "text", "label": "Text", "default": "Same local craft. Zero retail markup." },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [{ "name": "Announcement bar", "blocks": [{ "type": "message" }] }]
+}
+{% endschema %}

@@ -1,0 +1,9 @@
+<div class="page-width not-found">
+  <p class="eyebrow">404</p>
+  <h1>{{ 'general.404_title' | t }}</h1>
+  <p class="muted">{{ 'general.404_text' | t }}</p>
+  <div class="hero__ctas"><a class="button" href="{{ routes.all_products_collection_url }}">{{ 'header.shop_all' | t }}</a><a class="button button--secondary" href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></div>
+</div>
+{% schema %}
+{ "name": "404", "settings": [] }
+{% endschema %}

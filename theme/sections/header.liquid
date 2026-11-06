@@ -1,0 +1,153 @@
+{%- comment -%}
+  Site header: logo left, main menu centre, search, account and bag right (desktop);
+  menu button, centred logo, search and bag (mobile).
+  Links come from Online Store > Navigation (menu chosen in the theme editor).
+  The menu item titled like the "Mega menu item" setting (default "Shop") opens the mega menu;
+  its child links are column 1. Column 2 shows products from a chosen collection, column 3 one image.
+{%- endcomment -%}
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign mega_title = section.settings.mega_item | default: 'Shop' | downcase | strip
+  assign help_menu = linklists[section.settings.help_menu]
+-%}
+<header class="site-header" data-header>
+  <div class="page-width header__inner">
+    <div class="header__start">
+      <button class="icon-button menu-toggle" type="button" aria-controls="MobileNav" aria-expanded="false" data-open="MobileNav">
+        {%- render 'icon', name: 'menu' -%}<span class="visually-hidden">{{ 'header.open_menu' | t }}</span>
+      </button>
+      <nav class="header__nav" aria-label="{{ 'header.main_nav' | t }}">
+        <ul class="nav-list">
+          {%- for link in menu.links -%}
+            {%- assign t = link.title | downcase | strip -%}
+            {%- if t == mega_title and link.links.size > 0 -%}
+              <li class="nav-item--mega">
+                <button class="nav-link" type="button" aria-expanded="false" aria-controls="MegaMenu" data-mega-toggle>{{ link.title | escape }}{% render 'icon', name: 'chevron-down' %}</button>
+              </li>
+            {%- else -%}
+              <li><a class="nav-link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </nav>
+    </div>
+    <a class="header__logo" href="{{ routes.root_url }}" aria-label="{{ 'header.home_label' | t: shop: shop.name | escape }}">{%- render 'logo' -%}</a>
+    <div class="header__end">
+      <a class="icon-button" href="{{ routes.search_url }}" data-open="SearchModal" aria-haspopup="dialog">
+        {%- render 'icon', name: 'search' -%}<span class="visually-hidden">{{ 'header.search' | t }}</span>
+      </a>
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a class="icon-button header__account" href="{{ routes.account_url }}">
+          {%- render 'icon', name: 'account' -%}<span class="visually-hidden">{{ 'header.account' | t }}</span>
+        </a>
+      {%- endif -%}
+      <a class="icon-button" href="{{ routes.cart_url }}" data-open="CartDrawer" aria-haspopup="dialog" data-cart-link>
+        {%- render 'icon', name: 'bag' -%}
+        <span class="visually-hidden" data-cart-label>{{ 'header.bag_count' | t: count: cart.item_count }}</span>
+        <span class="cart-count" data-cart-count aria-hidden="true"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  {%- for link in menu.links -%}
+    {%- assign t = link.title | downcase | strip -%}
+    {%- if t == mega_title and link.links.size > 0 -%}
+    <div class="mega" id="MegaMenu" data-mega>
+      <div class="page-width mega__inner">
+        <div>
+          <p class="mega__title">{{ section.settings.mega_col1 | escape }}</p>
+          <ul class="mega__links">
+            {%- for child in link.links -%}<li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>{%- endfor -%}
+            <li><a href="{{ link.url }}">{{ 'header.shop_all' | t }}</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="mega__title">{{ section.settings.mega_col2 | escape }}</p>
+          {%- assign fc = section.settings.mega_collection -%}
+          {%- if fc != blank and fc.products_count > 0 -%}
+          <div class="mega__products">
+            {%- for p in fc.products limit: 2 -%}
+              <a class="mega__product" href="{{ p.url }}">
+                <span class="media">{% render 'product-media', product: p, index: 0, sizes: '200px', widths: '200, 300, 400' %}</span>
+                <span>{{ p.title | remove_first: 'DAUR ' | escape }}</span>
+                {%- render 'price', product: p -%}
+              </a>
+            {%- endfor -%}
+          </div>
+          {%- endif -%}
+          <p style="margin-top: var(--s-4)"><a class="link-arrow" href="{{ routes.all_products_collection_url }}?sort_by=created-descending">{{ 'header.new_arrivals' | t }}{% render 'icon', name: 'arrow-right' %}</a></p>
+        </div>
+        <div>
+          {%- liquid
+            assign f_link = section.settings.mega_link | default: routes.all_products_collection_url
+          -%}
+          <a class="mega__feature" href="{{ f_link }}">
+            <span class="media">
+              {%- if section.settings.mega_image != blank -%}
+                {{ section.settings.mega_image | image_url: width: 900 | image_tag: widths: '450, 675, 900', sizes: '33vw', loading: 'lazy', alt: section.settings.mega_image.alt }}
+              {%- else -%}
+                <span class="placeholder-art"><span><strong>{{ 'dev.placeholder' | t }}</strong>{{ 'dev.needs_photo' | t }}</span></span>
+              {%- endif -%}
+            </span>
+            <span class="mega__feature-text"><h3>{{ section.settings.mega_heading | escape }}</h3><span class="link-arrow">{{ section.settings.mega_cta | escape }}{% render 'icon', name: 'arrow-right' %}</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+  {%- endfor -%}
+</header>
+
+<div class="drawer drawer--left mobile-nav" id="MobileNav" role="dialog" aria-modal="true" aria-labelledby="MobileNavTitle" tabindex="-1" data-drawer>
+  <div class="drawer__head">
+    <h2 id="MobileNavTitle">{{ 'header.menu' | t }}</h2>
+    <button class="icon-button" type="button" data-close>{%- render 'icon', name: 'close' -%}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+  </div>
+  <div class="drawer__body">
+    <ul class="mobile-nav__list">
+      {%- for link in menu.links -%}
+        <li>
+          {%- if link.links.size > 0 -%}
+            <button class="mobile-nav__toggle" type="button" aria-expanded="false" aria-controls="MobileSub-{{ forloop.index }}" data-accordion>{{ link.title | escape }}{% render 'icon', name: 'plus' %}</button>
+            <ul class="mobile-nav__sub" id="MobileSub-{{ forloop.index }}" hidden>
+              {%- for child in link.links -%}<li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>{%- endfor -%}
+              <li><a href="{{ link.url }}">{{ 'header.shop_all' | t }}</a></li>
+            </ul>
+          {%- else -%}
+            <a class="mobile-nav__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+    <div class="mobile-nav__help">
+      {%- for link in help_menu.links -%}<a href="{{ link.url }}">{{ link.title | escape }}</a>{%- endfor -%}
+      {%- assign num = settings.whatsapp | default: '923199628735' | remove: '+' | remove: ' ' -%}
+      <a href="https://wa.me/{{ num }}?text={{ settings.whatsapp_message | default: 'Hello DAUR Supply, I need help choosing my shoe size.' | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'general.whatsapp_chat' | t }}</a>
+      <a href="tel:+{{ num }}">{% render 'icon', name: 'phone' %}{{ settings.phone_display | default: '+92 319 9628735' }}</a>
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}<a href="{{ routes.account_url }}">{% render 'icon', name: 'account' %}{{ 'header.account' | t }}</a>{%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- render 'search-modal' -%}
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Main menu", "default": "main-menu" },
+    { "type": "link_list", "id": "help_menu", "label": "Help links in phone menu", "default": "footer" },
+    { "type": "checkbox", "id": "show_account", "label": "Show account icon", "default": true },
+    { "type": "header", "content": "Mega menu" },
+    { "type": "text", "id": "mega_item", "label": "Menu item that opens the mega menu", "default": "Shop" },
+    { "type": "text", "id": "mega_col1", "label": "Column 1 title", "default": "Shop by category" },
+    { "type": "text", "id": "mega_col2", "label": "Column 2 title", "default": "Featured" },
+    { "type": "collection", "id": "mega_collection", "label": "Featured products from", "info": "Two products are shown. Do not call them best sellers unless sales data supports it." },
+    { "type": "image_picker", "id": "mega_image", "label": "Feature image", "info": "A real DAUR photograph. Landscape, at least 1200 px wide." },
+    { "type": "text", "id": "mega_heading", "label": "Feature heading", "default": "Leather shoes" },
+    { "type": "text", "id": "mega_cta", "label": "Feature link text", "default": "Explore the collection" },
+    { "type": "url", "id": "mega_link", "label": "Feature link" }
+  ]
+}
+{% endschema %}

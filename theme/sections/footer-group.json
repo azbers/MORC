@@ -1,0 +1,8 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": { "type": "footer", "settings": { "menu_shop": "footer-shop", "menu_help": "footer-help", "menu_daur": "footer-daur", "menu_policies": "footer-policies" } }
+  },
+  "order": ["footer"]
+}

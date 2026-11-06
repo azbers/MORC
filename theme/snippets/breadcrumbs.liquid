@@ -1,0 +1,19 @@
+{%- comment -%} Visible breadcrumb trail. BreadcrumbList data is printed by structured-data, from the same trail. {%- endcomment -%}
+<nav class="breadcrumbs" aria-label="{{ 'general.breadcrumb' | t }}">
+  <ol>
+    <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+    {%- case template.name -%}
+      {%- when 'product' -%}
+        {%- assign c = nil -%}
+        {%- for col in product.collections -%}{%- unless col.handle == 'men' or col.handle == 'frontpage' or col.handle == 'sale' -%}{%- assign c = col -%}{%- break -%}{%- endunless -%}{%- endfor -%}
+        {%- if c -%}<li><a href="{{ c.url }}">{{ c.title | escape }}</a></li>{%- endif -%}
+        <li aria-current="page">{{ product.title | remove_first: 'DAUR ' | escape }}</li>
+      {%- when 'collection' -%}<li aria-current="page">{{ collection.title | escape }}</li>
+      {%- when 'article' -%}<li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li><li aria-current="page">{{ article.title | escape }}</li>
+      {%- when 'blog' -%}<li aria-current="page">{{ blog.title | escape }}</li>
+      {%- when 'page' -%}<li aria-current="page">{{ page.title | escape }}</li>
+      {%- when 'search' -%}<li aria-current="page">{{ 'search.title' | t }}</li>
+      {%- else -%}<li aria-current="page">{{ page_title | escape }}</li>
+    {%- endcase -%}
+  </ol>
+</nav>
