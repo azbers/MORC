@@ -656,10 +656,17 @@
         <span class="ap-cat">${esc(lineName(lineOf(p)))}</span>
         <span class="ap-cat">${nC > 1 ? nC + ' colours' : esc(v.color)}</span>
         ${low ? `<span class="ap-low">Only ${stockOf(v)} pairs left</span>` : ''}
-      </a>${window.DAUR_EXT && window.DAUR_EXT.cardExtra ? `<div class="ap-extra">${window.DAUR_EXT.cardExtra(p)}</div>` : ''}</article>`;
+      </a>${addBox(p, v)}${window.DAUR_EXT && window.DAUR_EXT.cardExtra ? `<div class="ap-extra">${window.DAUR_EXT.cardExtra(p)}</div>` : ''}</article>`;
+  }
+  // add to bag straight from the card: a size list with only the sizes in stock, and a button
+  function addBox(p, v) {
+    const z = Object.keys(v.stock || {}).filter((k) => (v.stock[k] || 0) > 0).sort((x, y) => x - y);
+    return `<div class="ap-add">${z.length ? `<select class="ap-size" aria-label="Size for ${esc(p.name)}"><option value="">Size</option>${z.map((k) => `<option value="${k}">EU ${k}</option>`).join('')}</select><button class="ap-addb" type="button" data-cardadd>Add to bag</button>` : `<span class="ap-sold">Sold out</span>`}</div>`;
   }
   function bindCards(root) {
     $$('.card', root).forEach((c) => {
+      const ab = $('[data-cardadd]', c);
+      if (ab && !ab.dataset.bound) { ab.dataset.bound = '1'; ab.addEventListener('click', (e) => { e.preventDefault(); const z = $('.ap-size', c); if (!z.value) { toast('Pick a size first'); z.focus(); return; } addToCart(c.dataset.pid, c.dataset.vid, +z.value, 1); }); }
       const w = $('[data-wish]', c);
       if (w && !w.dataset.bound) { w.dataset.bound = '1'; w.addEventListener('click', (e) => { e.preventDefault(); toggleWish(c.dataset.pid); }); }
       // the second look loads when a mouse comes near the card, or when the card scrolls into view on a phone
