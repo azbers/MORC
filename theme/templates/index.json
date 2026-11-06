@@ -13,7 +13,7 @@
       "block_order": ["c1", "c2", "c3", "c4"]
     },
     "featured": { "type": "featured-products", "settings": { "collection": "men", "limit": 4, "heading": "Selected by DAUR.", "subheading": "Pairs worth getting to know.", "cta": "View all footwear" } },
-    "story": { "type": "image-with-text", "settings": { "eyebrow": "THE THINKING BEHIND DAUR", "heading": "Same local craft. A new name.", "cta": "Read our story", "cta_link": "shopify://pages/manifesto", "need": "Real DAUR finishing or workshop photograph needed" } },
+    "story": { "type": "image-with-text", "settings": { "eyebrow": "THE THINKING BEHIND DAUR", "heading": "Same local craft. A new name.", "cta": "Read our story", "cta_link": "shopify://pages/our-story", "need": "Real DAUR finishing or workshop photograph needed" } },
     "finish": {
       "type": "feature-cards",
       "settings": { "heading": "Branded, not labeled.", "subheading": "The leather does the talking. The details make it DAUR.", "cta": "Explore the collection", "muted": true },
@@ -26,7 +26,7 @@
     },
     "quality": {
       "type": "quality-steps",
-      "settings": { "heading": "Every pair gets checked.", "cta": "Our promise", "cta_link": "shopify://pages/contract" },
+      "settings": { "heading": "Every pair gets checked.", "cta": "Our promise", "cta_link": "shopify://pages/our-promise" },
       "blocks": {
         "q1": { "type": "step", "settings": { "title": "Upper", "text": "Check for cracks and loose grain." } },
         "q2": { "type": "step", "settings": { "title": "Stitching", "text": "Check for tight, even stitching." } },
@@ -48,7 +48,7 @@
     },
     "promise": {
       "type": "promise-cards",
-      "settings": { "heading": "Our promise.", "cta": "See all our promises", "cta_link": "shopify://pages/contract" },
+      "settings": { "heading": "Our promise.", "cta": "See all our promises", "cta_link": "shopify://pages/our-promise" },
       "blocks": {
         "p1": { "type": "card", "settings": { "icon": "truck", "title": "Free delivery across Pakistan", "text": "Every order, to every city our couriers reach. Usually 2 to 5 days after dispatch." } },
         "p2": { "type": "card", "settings": { "icon": "check", "title": "Dispatch within 24 hours", "text": "Your pair is handed to the courier within 24 hours of order confirmation." } },
@@ -57,7 +57,7 @@
       },
       "block_order": ["p1", "p2", "p3", "p4"]
     },
-    "giving": { "type": "text-banner", "settings": { "heading": "A share that isn’t ours to keep.", "cta": "Discover the slice", "cta_link": "shopify://pages/giving", "only_if_giving": true } },
+    "giving": { "type": "text-banner", "settings": { "heading": "A share that isn’t ours to keep.", "cta": "Discover the slice", "cta_link": "shopify://pages/our-giving", "only_if_giving": true } },
     "journal": { "type": "journal-latest", "settings": { "heading": "Read the DAUR Journal.", "blog": "journal", "cta": "Explore the Journal" } },
     "feed": { "type": "feed-grid", "settings": { "heading": "DAUR, beyond the box.", "cta": "Follow @daursupply" } },
     "newsletter": { "type": "newsletter", "settings": { "heading": "Stay in the loop.", "text": "New pairs, useful guides and the occasional offer. Nothing unnecessary.", "button": "Join DAUR" } }
