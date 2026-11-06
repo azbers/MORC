@@ -6,8 +6,8 @@
     { "type": "text", "id": "whatsapp_message", "label": "Prefilled WhatsApp message", "default": "Hello DAUR Supply, I need help choosing my shoe size." },
     { "type": "checkbox", "id": "whatsapp_float", "label": "Show floating WhatsApp button", "default": true },
     { "type": "text", "id": "support_email", "label": "Public email", "default": "contact@daursupply.com" },
-    { "type": "url", "id": "instagram_url", "label": "Instagram", "default": "https://www.instagram.com/daursupply" },
-    { "type": "url", "id": "facebook_url", "label": "Facebook", "default": "https://www.facebook.com/daursupply" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook" },
     { "type": "image_picker", "id": "favicon", "label": "Favicon" }
   ] },
   { "name": "Delivery", "settings": [
@@ -30,7 +30,7 @@
     { "type": "text", "id": "google_verification", "label": "Google site verification code" },
     { "type": "image_picker", "id": "share_image", "label": "Share image (1200 x 630)" },
     { "type": "text", "id": "clarity_id", "label": "Microsoft Clarity project id" },
-    { "type": "link_list", "id": "search_menu", "label": "Suggested links in search", "default": "daur-search" }
+    { "type": "link_list", "id": "search_menu", "label": "Suggested links in search" }
   ] },
   { "name": "Giving (the slice)", "settings": [
     { "type": "checkbox", "id": "give_on", "label": "Show the slice", "default": true },
