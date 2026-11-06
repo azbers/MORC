@@ -576,7 +576,7 @@
       <div class="li-meta">${p.giving ? `Handed over on your behalf, size matched to the person / ${fmt(v.price)} each` : `${esc(v.color)} / EU ${l.size} / ${fmt(v.price)} each ${onSale(v) ? `<span class="strike">${fmt(v.compareAt)}</span>` : ''}`}</div>
       ${l.qty >= max && !p.giving ? `<div class="li-meta volt">Last ${max} in this size</div>` : ''}
       <div class="li-ctl"><div class="qty sm"><button data-q="-1" aria-label="Decrease">&minus;</button><output>${l.qty}</output><button data-q="1" aria-label="Increase" ${l.qty >= max ? 'disabled' : ''}>+</button></div>
-      <span style="display:flex;gap:14px">${big ? `<button class="rm" data-mv>Move to liked</button>` : ''}<button class="rm" data-rm>Remove</button></span></div></div></div>`;
+      <span style="display:flex;gap:14px">${big && !p.giving ? `<button class="rm" data-mv>Move to liked</button>` : ''}<button class="rm" data-rm>Remove</button></span></div></div></div>`;
   }
   function bindLines(root) {
     $$('[data-line]', root).forEach((row) => {
