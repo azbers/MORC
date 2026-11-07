@@ -1,0 +1,33 @@
+name: Fetch free test photos
+on:
+  push:
+    branches: [claude/project-thread-a3ka0z]
+    paths: [tools/photos/list.txt, tools/photos/cut.py, .github/workflows/fetch-photos.yml]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Download photos from Unsplash
+        run: |
+          mkdir -p design/mobile-app/photos/raw
+          while read n id; do
+            [ -z "$n" ] && continue
+            curl -sSfL "https://images.unsplash.com/${id}?fm=jpg&q=80&w=1400" -o "design/mobile-app/photos/raw/${n}.jpg"
+            echo "$n ok"
+          done < tools/photos/list.txt
+      - name: Remove backgrounds
+        run: |
+          pip install -q "rembg[cpu]" pillow
+          python tools/photos/cut.py design/mobile-app/photos/raw design/mobile-app/photos/cut
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add design/mobile-app/photos
+          git commit -m "Add free Unsplash test photos and cutouts"
+          git push
