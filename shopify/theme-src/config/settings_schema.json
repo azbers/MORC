@@ -365,7 +365,7 @@
         "type": "number",
         "id": "m_wallet_amount",
         "label": "Wallet amount (Rs)",
-        "default": 500
+        "default": 350
       }
     ]
   }

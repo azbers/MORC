@@ -169,7 +169,7 @@
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
 {%- if settings.m_app != false %}
-<script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 500 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %}};</script>
+<script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %}};</script>
 <script src="{{ 'daur-m.js' | asset_url }}" defer></script>
 {%- endif %}
 {%- comment -%} pages the shopper is about to open are fetched while the finger is still on the link (Chrome, Edge, Samsung Internet) {%- endcomment -%}

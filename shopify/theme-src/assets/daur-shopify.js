@@ -112,7 +112,10 @@
   const J = { 'Content-Type': 'application/json', Accept: 'application/json' };
   async function syncCart(code) {
     const A = window.DAUR_API;
-    const items = A.cart.map((l) => { const p = A.prod(l.pid); const v = p && A.variant(p, l.vid); return v && v.sid && v.sid[l.size] ? { id: v.sid[l.size], quantity: l.qty } : null; }).filter(Boolean);
+    const items = A.cart.map((l) => { const p = A.prod(l.pid); const v = p && A.variant(p, l.vid); if (!(v && v.sid && v.sid[l.size])) return null;
+      // a pair added on the phone as a gift or to give keeps that note on its order line
+      const properties = l.mode === 'give' ? { Giving: 'A pair for someone in need', Size: 'Matched by DAUR to the person' } : l.mode === 'gift' ? { Gift: 'Yes' } : null;
+      return properties ? { id: v.sid[l.size], quantity: l.qty, properties } : { id: v.sid[l.size], quantity: l.qty }; }).filter(Boolean);
     if (!items.length) return { empty: true };
     await fetch(base + '/cart/clear.js', { method: 'POST', headers: { Accept: 'application/json' } });
     const r = await fetch(base + '/cart/add.js', { method: 'POST', headers: J, body: JSON.stringify({ items }) });
@@ -122,7 +125,7 @@
     // a gift goes on the order too: packing, who it is for, the note for the box, and that it is paid in full in advance
     const g = window.DAUR_GIFT ? window.DAUR_GIFT() : null;
     // a giving pair: paid in full, handed over by DAUR in the quarterly giving round, proof sent privately to the buyer
-    const giving = A.cart.some((l) => { const p = A.prod(l.pid); return p && p.giving; });
+    const giving = A.cart.some((l) => { const p = A.prod(l.pid); return l.mode === 'give' || (p && p.giving); });
     const gift = { 'Giving pair': giving ? 'Yes, paid in full in advance. Size matched by DAUR. Private proof after handover' : '', 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
     const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: Object.assign({ 'Slice cause': vote }, gift), discount: code || '' }) });
     return u.ok ? u.json() : {};
