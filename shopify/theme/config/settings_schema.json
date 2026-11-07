@@ -109,9 +109,18 @@
         "id": "advance_free",
         "label": "Free delivery when every order sends a deposit",
         "options": [
-          { "value": "all", "label": "Free on every order" },
-          { "value": "full", "label": "Free on full advance payment only" },
-          { "value": "none", "label": "Normal delivery fee" }
+          {
+            "value": "all",
+            "label": "Free on every order"
+          },
+          {
+            "value": "full",
+            "label": "Free on full advance payment only"
+          },
+          {
+            "value": "none",
+            "label": "Normal delivery fee"
+          }
         ],
         "default": "all"
       },
@@ -311,6 +320,52 @@
         "label": "Show sample photos (review themes only)",
         "info": "Unsplash photos used to test layouts before real photos exist. They never show on the live theme, but switch this off before you publish.",
         "default": true
+      }
+    ]
+  },
+  {
+    "name": "Mobile app",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Phones and tablets (up to 900 px wide) open the store as an app: bottom bar, floating shoe cards, quick add and a one screen bag. Desktop is not affected."
+      },
+      {
+        "type": "checkbox",
+        "id": "m_app",
+        "label": "Open phones and tablets as an app",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "m_splash",
+        "label": "Show the welcome screen once per visit",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "m_splash_tag",
+        "label": "Welcome screen tag",
+        "default": "Drop 01 is live"
+      },
+      {
+        "type": "checkbox",
+        "id": "m_cutouts",
+        "label": "Use the test cutout photos on cards",
+        "info": "Turn off when real product photos are ready; cards then use each product's first photo.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "m_wallet_code",
+        "label": "Wallet discount code",
+        "info": "A real Shopify discount code worth the wallet amount. Leave empty to hide the wallet."
+      },
+      {
+        "type": "number",
+        "id": "m_wallet_amount",
+        "label": "Wallet amount (Rs)",
+        "default": 500
       }
     ]
   }

@@ -137,6 +137,16 @@
 <link rel="preload" as="font" type="font/woff2" href="{{ 'font-cond-700.woff2' | asset_url }}" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="{{ 'font-sans-400.woff2' | asset_url }}" crossorigin>
 {{ 'styles.css' | asset_url | stylesheet_tag }}
+{%- if settings.m_app != false %}
+{%- comment -%} Phones and tablets open the store as an app (assets/daur-m.js). Desktop never loads it. ?view=classic shows the full website. {%- endcomment -%}
+<script>try{if(matchMedia('(max-width: 900px)').matches&&!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}catch(e){}</script>
+<link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-700.woff2' | asset_url }}" crossorigin media="(max-width: 900px)">
+<link rel="stylesheet" href="{{ 'daur-m.css' | asset_url }}" media="(max-width: 900px)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DAUR">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+{%- endif %}
 {%- comment -%} the small Shopify only stylesheet is printed inline, so it is not a second file holding up the first paint {%- endcomment -%}
 <style>{% render 'daur-theme-css' %}</style>
 <noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}</style></noscript>
@@ -158,6 +168,10 @@
 <script src="{{ 'social.js' | asset_url }}" defer></script>
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
+{%- if settings.m_app != false %}
+<script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 500 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %}};</script>
+<script src="{{ 'daur-m.js' | asset_url }}" defer></script>
+{%- endif %}
 {%- comment -%} pages the shopper is about to open are fetched while the finger is still on the link (Chrome, Edge, Samsung Internet) {%- endcomment -%}
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/cart*","/checkout*","/checkouts/*","/account*","/*?*add*"]}}]},"eagerness":"moderate"}]}</script>
 </body>
