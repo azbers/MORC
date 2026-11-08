@@ -5,6 +5,8 @@
    swaps the cursor on devices with a real mouse. */
 (function () {
   'use strict';
+  // phones and tablets open the app layer (daur-m.js), which hides this page, so the desktop motion stays off there
+  if (document.documentElement.classList.contains('m-on')) return;
   const EXT = window.DAUR_EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   EXT.hooks = EXT.hooks || {};
   const on = (name, fn) => { (EXT.hooks[name] = EXT.hooks[name] || []).push(fn); };

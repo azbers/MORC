@@ -114,7 +114,7 @@
     const A = window.DAUR_API;
     const items = A.cart.map((l) => { const p = A.prod(l.pid); const v = p && A.variant(p, l.vid); if (!(v && v.sid && v.sid[l.size])) return null;
       // a pair added on the phone as a gift or to give keeps that note on its order line
-      const properties = l.mode === 'give' ? { Giving: 'A pair for someone in need', Size: 'Matched by DAUR to the person' } : l.mode === 'gift' ? { Gift: 'Yes' } : null;
+      const properties = l.mode === 'give' ? { 'Order type': 'GIVING: for someone in need, handed over by DAUR', Size: 'Matched by DAUR to the person' } : l.mode === 'gift' ? { 'Order type': 'GIFT: for someone the buyer knows' } : null;
       return properties ? { id: v.sid[l.size], quantity: l.qty, properties } : { id: v.sid[l.size], quantity: l.qty }; }).filter(Boolean);
     if (!items.length) return { empty: true };
     await fetch(base + '/cart/clear.js', { method: 'POST', headers: { Accept: 'application/json' } });
