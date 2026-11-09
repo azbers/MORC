@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DAUR voucher pictures</title>
+<!-- Social media pictures of the voucher cards, drawn with the same code as the app (daur-m-vouchers.js and .css).
+     Open through a local server from the repo root, for example http://127.0.0.1:8767/tools/vouchers/export.html?card=welcome&size=post
+     size: post (1080 x 1350), story (1080 x 1920) or card (the voucher alone, clear background). export.js saves them all.
+     The offers below were checked against the live Shopify discounts on 9 November 2026. Check them again before a new export. -->
+<style>
+@font-face{font-family:'DAUR Cond';src:url(../../assets/font-cond-700.woff2) format('woff2');font-weight:500 900;font-display:block}
+@font-face{font-family:'DAUR Sans';src:url(../../assets/font-sans-400.woff2) format('woff2');font-weight:300 500;font-display:block}
+@font-face{font-family:'DAUR Sans';src:url(../../assets/font-sans-700.woff2) format('woff2');font-weight:600 900;font-display:block}
+:root{--cream:#F4EBDC;--ink:#141011;--red:#B3122A;--brass:#C49A4E}
+*{box-sizing:border-box;margin:0}
+html,body{background:transparent}
+body{font-family:'DAUR Sans',system-ui,sans-serif}
+.cv{position:relative;width:1080px;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center}
+.cv.post{height:1350px;padding:84px 70px 70px}
+.cv.story{height:1920px;padding:250px 70px 240px}
+.cv.bg-cream{background:radial-gradient(90% 60% at 50% 48%,#FBF5EA 0%,var(--cream) 60%,#EADDC7 100%);color:var(--ink)}
+.cv.bg-ink{background:radial-gradient(90% 60% at 50% 48%,#2A2223 0%,var(--ink) 65%,#0B0909 100%);color:#F6EEE1}
+.rays{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mark{position:relative;width:250px;color:currentColor;display:flex;flex-direction:column;align-items:center;gap:6px}
+.mark svg{width:100%;height:auto;display:block}
+.mark small{font:700 15px/1 'DAUR Sans',sans-serif;letter-spacing:.5em;margin-right:-.5em;opacity:.7}
+.head{position:relative;font:700 92px/.96 'DAUR Cond',sans-serif;text-transform:uppercase;letter-spacing:.005em;margin-top:56px;max-width:940px;text-wrap:balance}
+.head em{font-style:normal;color:var(--red)}
+.bg-ink .head em{color:#E2BE76}
+.story .head{font-size:104px;margin-top:80px}
+.stage{position:relative;flex:1;width:100%;display:flex;align-items:center;justify-content:center}
+.card{width:920px;transform:rotate(-3deg);filter:drop-shadow(0 30px 34px rgba(20,16,17,.28)) drop-shadow(0 4px 6px rgba(20,16,17,.18))}
+.story .card{width:960px}
+.bg-ink .card{filter:drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
+.sub{position:relative;font:600 36px/1.3 'DAUR Sans',sans-serif;max-width:900px;text-wrap:balance}
+.sub b{font-weight:800}
+.fine{position:relative;font:500 25px/1.35 'DAUR Sans',sans-serif;opacity:.72;margin-top:16px;max-width:900px}
+.foot{position:relative;display:flex;align-items:center;justify-content:center;gap:18px;margin-top:40px;font:700 24px/1 'DAUR Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.foot i{display:block;width:44px;height:2px;background:currentColor;opacity:.35}
+.story .sub{font-size:40px}
+.story .fine{font-size:28px}
+/* the voucher alone, on a clear background */
+.solo{width:1600px;padding:40px 40px 60px;background:transparent}
+.solo .card{width:100%;transform:none;filter:drop-shadow(0 18px 22px rgba(20,16,17,.25))}
+</style>
+<link rel="stylesheet" href="../../shopify/theme-src/assets/daur-m-vouchers.css">
+</head>
+<body>
+<div id="mApp"></div>
+<script src="../../shopify/theme-src/assets/daur-m-vouchers.js"></script>
+<script>
+// the live offers on 9 November 2026 (Shopify discounts WALLET350, DOUBLEUP, NAYADAUR; compare at prices on Phantom Trainer and Ward Chelsea)
+const NB = ' ';
+const CARDS = {
+  welcome: { bg: 'cream', head: `<em>Rs.${NB}350</em> is already yours.`,
+    card: { tone: 'red', kick: 'Welcome credit', amt: 350, line: 'Waiting in your wallet', code: 'WALLET350', ring: 'Welcome credit', seed: 3 },
+    sub: 'Use code <b>WALLET350</b> on your first order.', fine: 'Once per customer. One code per order.' },
+  doubleup: { bg: 'cream', head: `Spend Rs.${NB}8,000. <em>Keep Rs.${NB}700.</em>`,
+    card: { tone: 'black', kick: 'Double up', amt: 700, line: `On orders of Rs.${NB}8,000 or more`, code: 'DOUBLEUP', tag: 'Ends 25 Nov', ring: 'Credit code', seed: 7 },
+    sub: 'Use code <b>DOUBLEUP</b> at checkout.', fine: 'Ends 25 November 2026. Once per customer. One code per order.' },
+  nayadaur: { bg: 'ink', head: `Spend Rs.${NB}5,500. <em>Keep Rs.${NB}300.</em>`,
+    card: { tone: 'cream', kick: 'Naya daur', amt: 300, line: `On orders of Rs.${NB}5,500 or more`, code: 'NAYADAUR', ring: 'Credit code', seed: 11 },
+    sub: 'Use code <b>NAYADAUR</b> at checkout.', fine: 'Once per customer. One code per order.' },
+  delivery: { bg: 'ink', head: `<em>Rs.${NB}200</em> delivery credit on every order.`,
+    card: { tone: 'red', kick: 'Delivery credit', amt: 200, line: 'On every order in Pakistan', ring: 'Delivery credit', seed: 41 },
+    sub: 'To every city our couriers reach. No code needed.', fine: 'Dispatched from Islamabad. Delivered in 2 to 5 days.' },
+  'phantom-trainer': { bg: 'ink', head: `Phantom Trainer, now <em>Rs.${NB}530 less.</em>`,
+    card: { tone: 'cream', kick: 'Price cut', amt: 530, line: 'Phantom Trainer', price: { now: 4270, was: 4800 }, tag: '11% off', ring: 'Price cut', seed: 21 },
+    sub: `Now <b>Rs.${NB}4,270</b> instead of Rs.${NB}4,800. No code needed.`, fine: 'The new price is already on the pair at daursupply.com.' },
+  'ward-chelsea': { bg: 'cream', head: `Ward Chelsea, now <em>Rs.${NB}530 less.</em>`,
+    card: { tone: 'black', kick: 'Price cut', amt: 530, line: 'Ward Chelsea', price: { now: 4870, was: 5400 }, tag: '10% off', ring: 'Price cut', seed: 26 },
+    sub: `Now <b>Rs.${NB}4,870</b> instead of Rs.${NB}5,400. No code needed.`, fine: 'The new price is already on the pair at daursupply.com.' }
+};
+const WORDMARK = '<svg viewBox="-22 0 462 100" fill="currentColor" aria-hidden="true"><g transform="skewX(-12)" fill-rule="evenodd"><path d="M0,0 H50 A50,50 0 0 1 50,100 H0 Z M27,25 H50 A25,25 0 0 1 50,75 H27 Z"/><path transform="translate(110 0)" d="M0,100 L36,0 H72 L108,100 H79 L54,28 L29,100 Z"/><path transform="translate(226 0)" d="M0,0 H27 V52 A23,23 0 0 0 73,52 V0 H100 V52 A50,48 0 0 1 0,52 Z"/><path transform="translate(340 0)" d="M0,0 H62 A31,31 0 0 1 80,56 L102,100 H71 L51,62 H27 V100 H0 Z M27,20 H61 A11,11 0 0 1 61,42 H27 Z"/></g></svg>';
+// soft rays fanning out from behind the voucher, fading before the words
+function rays(h, cy, ink) {
+  const o = [], n = 48, col = ink ? '#D8B36B' : '#B98B3E';
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2, long = i % 2 === 0, r1 = 300, r2 = long ? 760 : 560;
+    o.push(`<path d="M${540 + Math.cos(a) * r1},${cy + Math.sin(a) * r1 * 0.8}L${540 + Math.cos(a) * r2},${cy + Math.sin(a) * r2 * 0.8}" stroke="${col}" stroke-width="${long ? 3 : 2}" stroke-linecap="round" ${long ? '' : 'stroke-dasharray="6 10"'}/>`);
+  }
+  const star = (x, y, s) => `M${x},${y - s}Q${x},${y} ${x + s},${y}Q${x},${y} ${x},${y + s}Q${x},${y} ${x - s},${y}Q${x},${y} ${x},${y - s}Z`;
+  const st = [[92, cy - 320, 20], [992, cy - 290, 14], [64, cy + 290, 14], [1014, cy + 320, 22], [44, cy - 40, 9], [1040, cy + 40, 10]];
+  return `<svg class="rays" viewBox="0 0 1080 ${h}" aria-hidden="true"><defs><radialGradient id="fade" cx="540" cy="${cy}" r="640" gradientUnits="userSpaceOnUse"><stop offset=".35" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><mask id="m"><rect width="1080" height="${h}" fill="url(#fade)"/></mask></defs>
+    <g mask="url(#m)">${o.join('')}</g>${st.map(([x, y, s], i) => `<path d="${star(x, y, s)}" fill="${i % 2 ? (ink ? '#E0344D' : '#B3122A') : col}"/>`).join('')}</svg>`;
+}
+const q = new URLSearchParams(location.search), key = q.get('card') || 'welcome', size = q.get('size') || 'post', c = CARDS[key];
+const root = document.getElementById('mApp');
+const voucher = `<div class="card dv-w">${DAUR_VOUCHER.card(Object.assign({ cur: 'Rs.' }, c.card))}</div>`;
+if (size === 'card') root.innerHTML = `<div class="solo" id="cv">${voucher}</div>`;
+else {
+  const h = size === 'story' ? 1920 : 1350, cy = size === 'story' ? 930 : 690;
+  root.innerHTML = `<div class="cv ${size} bg-${c.bg}" id="cv">${rays(h, cy, c.bg === 'ink')}
+    <div class="mark">${WORDMARK}<small>SUPPLY</small></div>
+    <h1 class="head">${c.head}</h1>
+    <div class="stage">${voucher}</div>
+    <p class="sub">${c.sub}</p><p class="fine">${c.fine}</p>
+    <div class="foot"><i></i>daursupply.com<i></i></div></div>`;
+}
+window.CARD_KEYS = Object.keys(CARDS);
+</script>
+</body>
+</html>

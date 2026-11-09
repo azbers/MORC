@@ -32,10 +32,10 @@ A="/shopify/theme/assets/"
 html=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>DAUR Supply</title>
 <link rel="stylesheet" href="{A}styles.css"><style>{css}</style>
 <script>try{{if(matchMedia('(max-width: 900px)').matches&&!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}}catch(e){{}}</script>
-<link rel="stylesheet" href="{A}daur-m.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-pdp.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-bag.css" media="(max-width: 900px)">
+<link rel="stylesheet" href="{A}daur-m.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-pdp.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-bag.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-vouchers.css" media="(max-width: 900px)">
 </head><body data-page="{page}"><div class="hdr-ph"></div><main id="app" tabindex="-1">{BODY}</main>
 <script>window.DAUR_CONFIG={json.dumps(cfg)};window.DAUR_STATUSES=[];window.DAUR_FITNOTES={json.dumps(notes)};window.DAUR_JOURNAL=[];window.DAUR_OFFERS={json.dumps(OFFERS)};window.DAUR_GIVING=[];window.DAUR_GIVING_ROUNDS=[];
 window.DAUR_SHOPIFY={{param:{json.dumps(param)},routes:{{root:"/",account:"/account"}},collections:["all","sneakers","leather-shoes","casual","sale"],raw:{json.dumps(raw)}}};</script>
 '''+"".join(f'<script src="{A}{f}" defer></script>' for f in ["daur-shopify.js","shoe.js","icons.js","kicks.js","pile.js","social.js","alive.js","app.js"])+f'''
-<script>window.DAUR_M={{assets:"{A}",walletCode:"WALLET350",walletAmount:350,splash:true,splashTag:"Drop 01 is live",cutouts:true}};</script><script src="{A}daur-m.js" defer></script><script src="{A}daur-m-pdp.js" defer></script><script src="{A}daur-m-bag.js" defer></script></body></html>'''
+<script>window.DAUR_M={{assets:"{A}",walletCode:"WALLET350",walletAmount:350,splash:true,splashTag:"Drop 01 is live",cutouts:true}};</script><script src="{A}daur-m.js" defer></script><script src="{A}daur-m-pdp.js" defer></script><script src="{A}daur-m-bag.js" defer></script><script src="{A}daur-m-vouchers.js" defer></script></body></html>'''
 open(sys.argv[3],'w').write(html)
