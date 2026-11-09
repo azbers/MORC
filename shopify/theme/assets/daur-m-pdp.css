@@ -279,7 +279,10 @@ html.m-on.m-pdp-on .m-sheet.on~.m-toast{bottom:auto}
 .px-box.k-give.shut .bx-seal{opacity:1;animation:px-pop .42s cubic-bezier(.3,1.6,.5,1) .05s both}
 
 /* ---------- the size guide card ---------- */
+.px-sgs{position:relative}
 .px-sgs .sg-p{margin:-4px 0 14px;font-size:13.5px}
+.px-sgx{position:absolute;right:-4px;top:-6px;width:40px;height:40px;border:0;border-radius:50%;padding:0;background:var(--px-soft);color:var(--px-ink);display:flex;align-items:center;justify-content:center}
+.px-sgx svg{width:18px;height:18px}
 .sg-fit{padding:16px 16px 16px;border-radius:12px;background:var(--px-soft)}
 .sg-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .sg-top label{font-size:13px;font-weight:600;color:var(--px-mute)}
