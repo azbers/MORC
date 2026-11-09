@@ -92,7 +92,7 @@
     "tag": "<path d=\"M237.66,153,153,237.66a8,8,0,0,1-11.31,0L42.34,138.34A8,8,0,0,1,40,132.69V40h92.69a8,8,0,0,1,5.65,2.34l99.32,99.32A8,8,0,0,1,237.66,153Z\" class=\"d\"/><path d=\"M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z\"/>",
     "box": "<path d=\"M128,129.09V232a8,8,0,0,1-3.84-1l-88-48.18a8,8,0,0,1-4.16-7V80.18a8,8,0,0,1,.7-3.25Z\" class=\"d\"/><path d=\"M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32l80.34,44-29.77,16.3-80.35-44ZM128,120,47.66,76l33.9-18.56,80.34,44ZM40,90l80,43.78v85.79L40,175.82Zm176,85.78h0l-80,43.79V133.82l32-17.51V152a8,8,0,0,0,16,0V107.55L216,90v85.77Z\"/>",
     "gift": "<path d=\"M208,128v72a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V128Z\" class=\"d\"/><path d=\"M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08a13.69,13.69,0,0,1-4.5,10c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51Zm-64.09.36A16.63,16.63,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92-9.72-1-25.44-4-34.92-12.39a13.69,13.69,0,0,1-4.5-10A16.6,16.6,0,0,1,84.87,36.87ZM40,88h80v32H40Zm16,48h64v64H56Zm144,64H136V136h64Zm16-80H136V88h80v32Z\"/>",
-    "hand": "<path d=\"M16,152H48v56H16a8,8,0,0,1-8-8V160A8,8,0,0,1,16,152ZM192.54,40A39.12,39.12,0,0,0,156,64a39.12,39.12,0,0,0-36.54-24C97.67,40,80,58.31,80,80c0,14.56,7,27.71,16.73,40H140a20,20,0,0,1,0,40h4l37.78-8.68C203.82,135.07,232,109.23,232,80,232,58.31,214.33,40,192.54,40Z\" class=\"d\"/><path d=\"M230.33,141.06a24.34,24.34,0,0,0-18.61-4.77C230.5,117.33,240,98.48,240,80c0-26.47-21.29-48-47.46-48A47.58,47.58,0,0,0,156,48.75,47.58,47.58,0,0,0,119.46,32C93.29,32,72,53.53,72,80c0,11,3.24,21.69,10.06,33a31.87,31.87,0,0,0-14.75,8.4L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56ZM119.46,48A31.15,31.15,0,0,1,148.6,67a8,8,0,0,0,14.8,0,31.15,31.15,0,0,1,29.14-19C209.59,48,224,62.65,224,80c0,19.51-15.79,41.58-45.66,63.9l-11.09,2.55A28,28,0,0,0,140,112H100.68C92.05,100.36,88,90.12,88,80,88,62.65,102.41,48,119.46,48ZM16,160H40v40H16Zm203.43,8.21-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9Z\"/>",
+    "hand": "<circle class=\"d\" cx=\"128\" cy=\"58\" r=\"40\"/><circle cx=\"128\" cy=\"58\" r=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"16\"/><path fill-rule=\"evenodd\" d=\"M36,240 V176 a70,70 0 0 1 70,-70 h44 a70,70 0 0 1 70,70 v64 Z M128,243.6 C57.6,198.8 64,141.2 96,134.8 C115.2,132.2 128,147.6 128,157.8 C128,147.6 140.8,132.2 160,134.8 C192,141.2 198.4,198.8 128,243.6 Z\"/><path d=\"M128,227.4 C77.4,195.2 82,153.8 105,149.2 C118.8,147.4 128,158.4 128,165.8 C128,158.4 137.2,147.4 151,149.2 C174,153.8 178.6,195.2 128,227.4 Z\"/>",
     "shield": "<path d=\"M216,56v56c0,96-88,120-88,120S40,208,40,112V56a8,8,0,0,1,8-8H208A8,8,0,0,1,216,56Z\" class=\"d\"/><path d=\"M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z\"/>",
     "user": "<path d=\"M224,128a95.76,95.76,0,0,1-31.8,71.37A72,72,0,0,0,128,160a40,40,0,1,0-40-40,40,40,0,0,0,40,40,72,72,0,0,0-64.2,39.37h0A96,96,0,1,1,224,128Z\" class=\"d\"/><path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM74.08,197.5a64,64,0,0,1,107.84,0,87.83,87.83,0,0,1-107.84,0ZM96,120a32,32,0,1,1,32,32A32,32,0,0,1,96,120Zm97.76,66.41a79.66,79.66,0,0,0-36.06-28.75,48,48,0,1,0-59.4,0,79.66,79.66,0,0,0-36.06,28.75,88,88,0,1,1,131.52,0Z\"/>",
     "camera": "<path d=\"M208,64H176L160,40H96L80,64H48A16,16,0,0,0,32,80V192a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V80A16,16,0,0,0,208,64ZM128,168a36,36,0,1,1,36-36A36,36,0,0,1,128,168Z\" class=\"d\"/><path d=\"M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z\"/>",
@@ -161,7 +161,7 @@
     shop: (c) => !c || c === 'All' ? root + '/collections/all' : c === 'Sale' ? root + '/collections/sale' : root + '/collections/' + ({ Sneakers: 'sneakers', Leather: 'leather-shoes', Hybrids: 'casual' }[c] || 'all'),
     product: (h) => root + '/products/' + h
   };
-  const TITLE = { bag: 'Your bag', giving: 'Give a pair', gifts: 'Gifts', offers: 'Wallet', feed: 'The Feed', liked: 'Liked', offline: 'Offline' };
+  const TITLE = { bag: 'Your bag', giving: 'Philanthropy', gifts: 'Gifts', offers: 'Wallet', feed: 'The Feed', liked: 'Liked', offline: 'Offline' };
   const PAGE_T = { manifesto: 'Our story', contract: 'Our promise', track: 'Track order', policies: 'Policies', about: 'About us', contact: 'Contact', notfound: 'Not found', search: 'Search', list: 'Alerts', runway: 'Runway' };
 
   /* ---------- shell ---------- */
@@ -209,7 +209,7 @@
     const badge = API.onSale(v) ? `<span class="m-badge">${API.pct(v)}% off</span>` : '';
     const inner = `${img(p, v, 'c-img')}${big ? '' : badge}<span class="c-n">${esc(p.name)}</span><span class="c-t">${esc(p.category)}</span><span class="c-p">${price(v)}</span>`;
     const act = mode === 'gift' ? `<button class="m-act" type="button" data-quick="${esc(p.id)}" data-mode="gift">${ic('gift')}<span>Gift</span></button>`
-      : mode === 'give' ? `<button class="m-act g" type="button" data-quick="${esc(p.id)}" data-mode="give">${ic('hand')}<span>Give</span></button>`
+      : mode === 'give' ? `<button class="m-act g" type="button" data-quick="${esc(p.id)}" data-mode="give">${ic('hand')}<span>Sponsor</span></button>`
         : `<button class="m-plus" type="button" data-quick="${esc(p.id)}" aria-label="Quick add ${esc(p.name)}"><i>${ic('plus', 2.6)}</i></button>`;
     return `<div class="${big ? 'm-card' : 'm-tile'}" style="--tn:${TINT[t]}"><a href="${href.product(p.id)}" data-m class="c-link" aria-label="${esc(p.name + ', ' + p.category + ', ' + fmt(v.price))}"></a>${inner}
       <button class="m-heart" type="button" data-wish="${esc(p.id)}" aria-pressed="${wished(p.id)}" aria-label="Save ${esc(p.name)}">${ic('heart')}</button>${act}</div>`;
@@ -226,7 +226,7 @@
   /* ---------- small shared pieces ---------- */
   // gift and give, side by side: gold for someone you know, green for someone in need
   // gift or give: two cards that say plainly who the pair is for and what happens next
-  const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Give a pair'}</b><small class="r5-who">${g ? 'For someone you know' : 'For someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You pick the style and size. Your note goes in the box, sent to his door.' : 'DAUR matches the size and hands it over in person. You get a private photo.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Give a pair'}${ic('arrow')}</span></a>`; };
+  const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You pick the style and size. Your note goes in the box, sent to his door.' : 'We match the size and hand it over with care, in person. A private photo reaches you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
   const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot, Kasur'], ['chat', 'Every order confirmed on WhatsApp']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
   const socRow = (cls) => `<div class="m-soc ${cls || ''}">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'} aria-label="${n}: ${esc(h)}">${ic(k)}</a>`).join('')}</div>`;
@@ -393,9 +393,9 @@
       <div class="p-stage"><span class="p-ring" aria-hidden="true"></span>${img(p, v, 'p-img')}<span class="p-cat">${esc(p.category)}</span>${save ? `<span class="p-stk">Save<br>${esc(NF(save))}</span>` : ''}</div>
       <div class="p-info"><h1 class="p-n">${esc(p.name)}</h1><div class="p-pr"><b>${esc(fmt(v.price))}</b>${save ? `<s>${esc(fmt(v.compareAt))}</s><span class="p-save">You keep ${esc(fmt(save))}</span>` : ''}</div>
         <p class="p-meta">${ic('truck')}${esc(delTxt())} · ${esc(days())}</p></div>
-      <div class="m-sec"><div class="m-row"><h3 style="margin:0">Who is it for?</h3><button class="m-link" type="button" data-explain>${ic('help')}Gift or Give?</button></div>
+      <div class="m-sec"><div class="m-row"><h3 style="margin:0">Who is it for?</h3><button class="m-link" type="button" data-explain>${ic('help')}Gift or Philanthropy?</button></div>
         <div class="m-modes" role="group" aria-label="Who is this pair for">${MODES.map(([k, l, i]) => `<button type="button" class="md-${k}" data-pmode="${k}" aria-pressed="${state.mode === k}"><span class="md-i">${ic(i)}</span><b>${l}</b><small>${k === 'me' ? 'Your size' : KIND[k].who}</small></button>`).join('')}</div>
-        ${state.mode === 'gift' ? `<p class="m-modenote">${ic('gift')}<span><b>Gift for someone you know.</b> You pick his size. Gift packing and your note are added in the bag. Paid in full, nothing to pay at his door.</span></p>` : give ? `<p class="m-modenote g">${ic('hand')}<span><b>Give to someone in need.</b> No size needed. DAUR matches the size, hands it over in person, adds ${esc(fmt(DAUR_ADD))} of its own and sends you a private photo.</span></p>` : ''}</div>
+        ${state.mode === 'gift' ? `<p class="m-modenote">${ic('gift')}<span><b>Gift for someone you know.</b> You pick his size. Gift packing and your note are added in the bag. Paid in full, nothing to pay at his door.</span></p>` : give ? `<p class="m-modenote g">${ic('hand')}<span><b>Sponsor a pair for someone in need.</b> No size needed. DAUR matches the size, hands it over in person, adds ${esc(fmt(DAUR_ADD))} of its own and sends you a private photo.</span></p>` : ''}</div>
       <div class="m-sec"><div class="m-row"><h3 style="margin:0">About</h3>${notes.length ? `<button class="m-more" type="button" data-notes>${notes.length} fit ${notes.length === 1 ? 'note' : 'notes'}</button>` : ''}</div>
         <p style="margin-top:8px">${esc(state.more ? p.description : first)} ${p.description && p.description !== first || p.specs ? `<button class="m-more" type="button" data-more>${state.more ? 'Less' : 'More'}</button>` : ''}</p>
         ${state.more && p.specs ? `<ul class="m-specs">${Object.keys(p.specs).map((k) => `<li><span>${esc(k)}</span><b>${esc(p.specs[k])}</b></li>`).join('')}</ul>` : ''}</div>
@@ -417,7 +417,7 @@
   function paintBuy(p, v) {
     const b = buyBar();
     const give = state.mode === 'give', ok = give || !!state.size;
-    const label = give ? 'Give this pair' : !state.size ? 'Pick your size' : (state.mode === 'gift' ? 'Add as gift' : 'Add to bag') + ' · EU ' + state.size;
+    const label = give ? 'Sponsor this pair' : !state.size ? 'Pick your size' : (state.mode === 'gift' ? 'Add as gift' : 'Add to bag') + ' · EU ' + state.size;
     b.innerHTML = `<span class="bb-l">${esc(fmt(v.price))} · ${esc(delTxt())} · ${esc(days())}</span>
       <div class="bb-r"><button class="m-round" type="button" data-wish="${esc(p.id)}" aria-pressed="${wished(p.id)}" aria-label="Save to Liked">${ic('heart')}</button>
       <button class="m-cta${give ? ' give' : ''}" type="button" data-add aria-disabled="${!ok}"><span>${esc(label)}</span></button></div>`;
@@ -485,13 +485,13 @@
     const lineHtml = ({ d, i, mode }) => {
       const x = pic(d.p, d.v);
       return `<div class="m-line${mode !== 'me' ? ' k-' + mode : ''}" style="--tn:${TINT[tintOf(d.p)]}"><a class="ln-img" href="${href.product(d.p.id)}" data-m><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt="${esc(d.p.name)}"></a>
-        <div class="ln-t">${mode === 'gift' ? `<span class="ln-tag">${ic('gift')}Gift</span>` : mode === 'give' ? `<span class="ln-tag g">${ic('hand')}Giving</span>` : ''}<b>${esc(d.p.name)}</b><small>${esc(d.v.color)} · ${mode === 'give' ? 'Size matched by DAUR' : 'EU ' + esc(d.l.size)}</small><span class="ln-p">${esc(fmt(d.total))}</span></div>
+        <div class="ln-t">${mode === 'gift' ? `<span class="ln-tag">${ic('gift')}Gift</span>` : mode === 'give' ? `<span class="ln-tag g">${ic('hand')}Philanthropy</span>` : ''}<b>${esc(d.p.name)}</b><small>${esc(d.v.color)} · ${mode === 'give' ? 'Size matched by DAUR' : 'EU ' + esc(d.l.size)}</small><span class="ln-p">${esc(fmt(d.total))}</span></div>
         <div class="m-step"><button class="on" type="button" data-qty="${i}" data-d="1" aria-label="Add one">+</button><span>${d.l.qty}</span><button type="button" data-qty="${i}" data-d="-1" aria-label="${d.l.qty > 1 ? 'Remove one' : 'Remove pair'}">&#8722;</button></div></div>`;
     };
     const own = L.filter((x) => x.mode === 'me'), gifts = L.filter((x) => x.mode === 'gift'), gives = L.filter((x) => x.mode === 'give');
     const mixed = gifts.length || gives.length;
     const head = (k) => k === 'me' ? `<div class="bg-h me">${ic('bag')}<b>For you</b><small>${plan.ownPairs} ${plan.ownPairs === 1 ? 'pair' : 'pairs'}</small></div>`
-      : `<div class="bg-h ${k}">${ic(KIND[k].icon)}<b>${k === 'gift' ? 'Gifts' : 'Giving'}</b><small>${KIND[k].who}</small></div>`;
+      : `<div class="bg-h ${k}">${ic(KIND[k].icon)}<b>${k === 'gift' ? 'Gifts' : 'Philanthropy'}</b><small>${KIND[k].who}</small></div>`;
     const field = (key, f, label, ph, type, max, val) => `<label><span>${label}</span>${f === 'note' ? `<textarea data-gd="${esc(key)}" data-gf="note" maxlength="240" rows="2" placeholder="${esc(ph)}">${esc(val || '')}</textarea>` : `<input data-gd="${esc(key)}" data-gf="${f}" type="${type}" maxlength="${max}" placeholder="${esc(ph)}" value="${esc(val || '')}"${type === 'tel' ? ' inputmode="tel" autocomplete="off"' : ''}>`}</label>`;
     const form = (key, title) => { const d = key === 'all' ? g.all : (g.each[key] || {}); return `<fieldset class="gd" id="gd-${esc(key.replace(/\W/g, '_'))}"><legend>${title}</legend>
       ${field(key, 'to', 'His name', 'Ali Raza', 'text', 40, d.to)}${field(key, 'phone', 'His phone', '03xx xxxxxxx', 'tel', 15, d.phone)}
@@ -505,12 +505,12 @@
     const pay = plan.onlyFull
       ? `<div class="m-pay"><h3>${ic('card')}How you pay</h3><div class="pay-o solo" aria-pressed="true"><span class="po-r" aria-hidden="true"></span><span class="po-t"><b>Paid in full now</b><small>${gives.length && !gifts.length ? 'Nothing for anyone to pay later' : 'Nothing to pay at his door'}</small></span><span class="po-a">${esc(fmt(total))}</span></div></div>`
       : `<div class="m-pay"><h3>${ic('card')}How would you like to pay?</h3>
-        ${opt('adv', plan.full ? 'Gifts and giving now, the rest at your door' : 'Advance now, the rest at your door', plan.full ? 'Your own pairs are paid when they arrive' : 'Only ' + fmt(plan.adv) + ' now, ' + fmt(Math.max(0, total - plan.adv)) + ' to the rider', plan.adv)}
+        ${opt('adv', plan.full ? 'Gifts and philanthropy now, the rest at your door' : 'Advance now, the rest at your door', plan.full ? 'Your own pairs are paid when they arrive' : 'Only ' + fmt(plan.adv) + ' now, ' + fmt(Math.max(0, total - plan.adv)) + ' to the rider', plan.adv)}
         ${opt('full', 'Everything now', 'Nothing to pay at your door', total)}</div>`;
     view.innerHTML = `<div class="m-pad m-bag">
       ${own.length ? `${mixed ? head('me') : ''}${own.map(lineHtml).join('')}` : ''}
       ${gifts.length ? `<div class="bg-grp gift">${head('gift')}${gifts.map(lineHtml).join('')}${giftForms}</div>` : ''}
-      ${gives.length ? `<div class="bg-grp give">${head('give')}${gives.map(lineHtml).join('')}<div class="m-givebox">${ic('hand')}<span><b>DAUR adds ${esc(fmt(DAUR_ADD * nGive))}.</b> For every pair you give we add ${esc(fmt(DAUR_ADD))}: the ${esc(fmt(DEL))} delivery we do not spend, and ${esc(fmt(DAUR_ADD - DEL))} of our own. You get a private photo after the handover.</span></div></div>` : ''}
+      ${gives.length ? `<div class="bg-grp give">${head('give')}${gives.map(lineHtml).join('')}<div class="m-givebox">${ic('hand')}<span><b>DAUR adds ${esc(fmt(DAUR_ADD * nGive))}.</b> For every pair you sponsor we add ${esc(fmt(DAUR_ADD))}: the ${esc(fmt(DEL))} delivery we do not spend, and ${esc(fmt(DAUR_ADD - DEL))} of our own. You get a private photo after the handover.</span></div></div>` : ''}
       <a class="m-credits" href="${href.offers}" data-m><span class="w-i">${ic('wallet')}</span><span class="w-t"><b>${cr.use ? esc(fmt(off + delivery)) + ' in credits on this order' : 'Your credits'}</b><small>${cr.chosen && !cr.chosen.ok ? 'Add ' + esc(fmt(cr.chosen.need)) + ' more to use ' + esc(cr.chosen.code) : cr.use ? esc(cr.use.label) + (delivery ? ' + delivery credit' : '') : 'Tap to see them'}</small></span>${ic('arrow')}</a>
       <div class="m-sum"><div><span>Pairs</span><span>${esc(fmt(t.subtotal))}</span></div>
         ${t.sale ? `<div><span>Sale saving</span><span class="s-g">${esc(fmt(t.sale))} kept</span></div>` : ''}
@@ -547,15 +547,15 @@
     const vote = store.get('sliceVote', '');
     view.innerHTML = `<div class="m-gv">
       <section class="gv-hero"><img class="gv-ph" src="${PH('boy-hill')}" alt="A smiling boy on a green hillside" fetchpriority="high"><span class="gv-dots" aria-hidden="true">${'<i></i>'.repeat(14)}</span>
-        <div class="gv-t"><span class="m-kick">${ic('hand')}Give a pair</span><h1>One pair.<br>One person.<br>By hand.</h1><p>Pick any pair. We match the size, hand it over in person and add ${esc(fmt(DAUR_ADD))} of our own.</p><a class="m-cta gold" href="#gvPick" data-jump>Choose a pair</a></div></section>
+        <div class="gv-t"><span class="m-kick">${ic('hand')}Philanthropy</span><h1>One pair.<br>One person.<br>By hand.</h1><p>Pick any pair. We match the size, hand it over in person and add ${esc(fmt(DAUR_ADD))} of our own.</p><a class="m-cta gold" href="#gvPick" data-jump>Choose a pair</a></div></section>
       <div class="gv-stats">${given ? `<span><b>${NF(given)}</b><small>pairs given</small></span><span><b>${cities.length || 1}</b><small>${cities.length === 1 ? 'city' : 'cities'}</small></span>` : `<span><b>Round 1</b><small>handover after ${esc(quarterEnd())}</small></span>`}<span><b>7 days</b><small>to your private photo</small></span><span><b>+${esc(fmt(DAUR_ADD))}</b><small>from DAUR per pair</small></span></div>
       <section class="gv-card gv-anim">${handover(gp)}<b>From your hands to theirs.</b></section>
       <section class="gv-pick" id="gvPick"><h2 class="m-h2 m-pad">Choose the pair</h2>
         <div class="gv-rail">${all.map((p) => { const v = firstV(p), x = pic(p, v); return `<button class="gv-p" type="button" data-gp="${esc(p.id)}" aria-pressed="${p.id === state.gp}" style="--tn:${TINT[tintOf(p)]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt=""><b>${esc(p.name)}</b><small>${esc(fmt(v.price))}</small></button>`; }).join('')}</div>
         ${gp ? `<div class="gv-sel" style="--tn:${TINT[tintOf(gp)]}">${img(gp, gv, 'gv-sel-i')}<div><b>${esc(gp.name)}</b><small>${esc(gv.color)} · size matched by DAUR</small><span>${esc(fmt(gv.price))}</span></div></div>
-        <button class="m-hold" type="button" id="mHold" data-pid="${esc(gp.id)}"><span class="hold-r" aria-hidden="true"></span><span class="hold-t">${ic('hand')}Hold to give</span></button><p class="m-mute gv-hint">Press and hold. Or tap twice.</p>` : ''}</section>
+        <button class="m-hold" type="button" id="mHold" data-pid="${esc(gp.id)}"><span class="hold-r" aria-hidden="true"></span><span class="hold-t">${ic('hand')}Hold to sponsor</span></button><p class="m-mute gv-hint">Press and hold. Or tap twice.</p>` : ''}</section>
       <section class="gv-steps m-pad"><h2 class="m-h2">How it reaches them</h2>
-        ${[['heart', 'You pick a pair', 'DAUR adds ' + fmt(DAUR_ADD) + ' to every pair given.'], ['user', 'We match the size', 'To the person who receives it.'], ['hand', 'Handed over in person', 'In the round after the quarter closes.'], ['camera', 'A private photo, to you', 'Within 7 days of the handover.']].map(([i, h, p], k) => `<div class="gv-step" style="--tn:${tn(k)}"><span class="gv-n">${ic(i)}</span><span><b>${h}</b><small>${p}</small></span><em>0${k + 1}</em></div>`).join('')}</section>
+        ${[['heart', 'You pick a pair', 'DAUR adds ' + fmt(DAUR_ADD) + ' to every pair sponsored.'], ['user', 'We match the size', 'To the person who receives it.'], ['hand', 'Handed over in person', 'In the round after the quarter closes.'], ['camera', 'A private photo, to you', 'Within 7 days of the handover.']].map(([i, h, p], k) => `<div class="gv-step" style="--tn:${tn(k)}"><span class="gv-n">${ic(i)}</span><span><b>${h}</b><small>${p}</small></span><em>0${k + 1}</em></div>`).join('')}</section>
       <section class="gv-faces"><h2 class="m-h2 m-pad">Who a pair can reach</h2>
         <div class="gv-mosaic">${['girl-red', 'boys-corn', 'old-man', 'boy-smile', 'girl-fire', 'boy-pot'].map((n, i) => `<img class="f${i}" src="${PH(n)}" alt="" loading="lazy">`).join('')}</div></section>
       ${GIVE.on ? `<section class="gv-slice"><span class="m-kick">${ic('spark')}The Slice</span><h2>At least ${GIVE.pct}% of our profit, every quarter.</h2><p>From every order, never added to your price.</p>
@@ -585,11 +585,12 @@
     // a double tap or the keyboard gives at once, so no one needs to hold
     b.addEventListener('click', (e) => { if (done) return; if (e.detail === 0) { finish(); return; } taps += 1; clearTimeout(tapT); tapT = setTimeout(() => { taps = 0; }, 420); if (taps >= 2) { taps = 0; finish(); } });
   }
-  function burst(el) {
+  function burst(el, love) {
     if (reduce) return;
     const r = el.getBoundingClientRect();
+    if (love) { const p = document.createElement('span'); p.className = 'r6-pulse'; p.style.left = (r.left + r.width / 2) + 'px'; p.style.top = (r.top + r.height / 2) + 'px'; document.body.appendChild(p); setTimeout(() => p.remove(), 900); }
     for (let i = 0; i < 14; i++) {
-      const h = document.createElement('span'); h.className = 'm-burst'; h.innerHTML = ic('heart');
+      const h = document.createElement('span'); h.className = 'm-burst' + (love ? ' love' : ''); h.innerHTML = ic('heart');
       h.style.left = (r.left + r.width / 2) + 'px'; h.style.top = (r.top + r.height / 2) + 'px';
       const a = (Math.PI * 2 * i) / 14, d = 70 + Math.random() * 60;
       h.style.setProperty('--x', Math.cos(a) * d + 'px'); h.style.setProperty('--y', (Math.sin(a) * d - 40) + 'px');
@@ -597,7 +598,7 @@
     }
   }
   function observeIn() {
-    const els = $$('.gv-mosaic img, .gv-step, .pg-sec, .gf-f, .fd-post', view);
+    const els = $$('.gv-mosaic img, .gv-step, .pg-sec, .gf-f, .fd-post, .r6-row, .r6-steps li, .r6-rt li, .r6-ch, .r6-mk>div', view);
     if (!('IntersectionObserver' in window) || reduce) return;
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -30px' });
     els.forEach((e) => { if (e.getBoundingClientRect().top > innerHeight) { e.classList.add('pre'); io.observe(e); } });
@@ -605,14 +606,18 @@
 
   /* ---------- gifts ---------- */
   V.gifts = function () {
-    const all = P(), hero = all.find((p) => p.id === 'ward-chelsea') || all[0], hv = hero && firstV(hero);
-    view.innerHTML = `<div class="m-gf">
-      <section class="gf-hero"><div class="gf-box" aria-hidden="true"><span class="gf-lid"></span><span class="gf-base"><i></i></span>${hero ? img(hero, hv, 'gf-shoe', '') : ''}<span class="gf-sp s1"></span><span class="gf-sp s2"></span><span class="gf-sp s3"></span></div>
-        <span class="m-kick">${ic('gift')}Gifts</span><h1>Gift a pair.</h1><p>Your note inside. Size swap in ${C.exchangeDays || 5} days.</p></section>
-      <div class="gf-facts">${[['gift', 'Gift packing', 'On request'], ['note', 'Your note', 'Up to 240 letters'], ['shield', 'Paid in full', 'Nothing at his door']].map(([i, b, s], k) => `<span class="gf-f" style="--tn:${tn(k + 1)}">${ic(i)}<b>${b}</b><small>${s}</small></span>`).join('')}</div>
-      <div class="m-row m-pad" style="margin-top:22px"><h2 class="m-h2">Pick the pair</h2><span class="m-mute">${all.length} pairs</span></div>
+    const all = P();
+    const hang = ['m-ward-brown.webp', 'm-moc-oxblood.webp', 'm-saddle.webp'];
+    const bow = '<svg class="r6-bow" viewBox="0 0 64 40" aria-hidden="true"><path d="M32 20C22 6 6 4 6 14s16 10 26 6zM32 20c10-14 26-16 26-6s-16 10-26 6z"/><path d="M32 20l-8 18M32 20l8 18" fill="none" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="20" r="5"/></svg>';
+    view.innerHTML = `<div class="m-gf r6-gf">
+      <section class="r6-ghero"><div class="r6-hang" aria-hidden="true">${hang.map((h, i) => `<span class="r6-h h${i}"><i class="r6-rib"></i>${bow}<img src="${asset(h)}" alt=""></span>`).join('')}</div>
+        <div class="r6-gt"><span class="r6-gk">${ic('gift')}Gifts from DAUR</span><h1>To keep you running through my mind.</h1><p>A pair chosen by you, your note inside, sent to his door with nothing to pay.</p>
+        <a class="r6-gift" href="#gfPick" data-jump>${ic('heart')}Choose his pair</a></div></section>
+      <ol class="r6-steps">${[['gift', 'You choose', 'The pair and his size'], ['note', 'You write', 'A note of up to 240 letters'], ['box', 'We wrap', 'Gift packing on request'], ['truck', 'He opens', 'At his door, fully paid']].map(([i, b, t], k) => `<li style="--i:${k}"><span>${ic(i)}</span><b>${b}</b><small>${t}</small></li>`).join('')}</ol>
+      <div class="r6-swap">${ic('swap')}<span><b>Wrong size? It happens.</b><small>He can swap it within ${C.exchangeDays || 5} days.</small></span></div>
+      <div class="m-row m-pad" style="margin-top:26px" id="gfPick"><h2 class="m-h2">Pick the pair</h2><span class="m-mute">${all.length} pairs</span></div>
       <div class="m-grid">${all.map((p) => card(p, false, 'gift')).join('')}</div>
-      <a class="gv-out" href="${href.giving}" data-m style="margin-top:26px"><img src="${PH('boys-corn')}" alt=""><span><b>Give one to someone in need</b><small>Handed over in person</small></span>${ic('arrow')}</a>
+      <a class="r6-phil" href="${href.giving}" data-m><span class="r6-pi">${ic('hand')}</span><span><b>Philanthropy</b><small>A pair for someone in need, handed over with care</small></span>${ic('arrow')}</a>
     </div>`;
     observeIn();
   };
@@ -772,7 +777,7 @@
   }
   function blocksHtml(bl, nodes) {
     return bl.map((b) => {
-      if (b.t === 'p') return `<p${b.big ? ' class="big"' : ''}>${b.h}</p>`;
+      if (b.t === 'p') return `<p${b.big && b.h.replace(/<[^>]+>/g, '').length < 170 ? ' class="big"' : ''}>${b.h}</p>`;
       if (b.t === 'h3') return `<h3>${b.h}</h3>`;
       if (b.t === 'list') return `<${b.ordered ? 'ol' : 'ul'} class="pg-list">${b.items.map((i) => `<li>${i}</li>`).join('')}</${b.ordered ? 'ol' : 'ul'}>`;
       if (b.t === 'tiles') {
@@ -789,17 +794,60 @@
       return '';
     }).join('');
   }
+  // contact: every way to reach a person, with what each is best for
+  function contactBody() {
+    const row = (cls, i, k, v, t, u, ext) => `<a class="r6-ch ${cls}" href="${u}"${ext ? ' target="_blank" rel="noopener"' : ''}><span class="r6-chi">${ic(i)}</span><span class="r6-cht"><small>${k}</small><b>${esc(v)}</b><em>${t}</em></span>${ic('arrow')}</a>`;
+    return `<div class="m-pad r6-contact">
+      <div class="r6-chs">${row('wa', 'wa', 'WhatsApp', waNice(), 'Quickest for sizing, orders and exchanges', 'https://wa.me/' + WA, 1)}${row('call', 'phone', 'Call', waNice(), 'Same number as WhatsApp', 'tel:+' + WA)}${row('mail', 'mail', 'Email', 'contact@daursupply.com', 'For anything that needs photos or detail', 'mailto:contact@daursupply.com')}${row('ig', 'ig', 'Instagram', '@daursupply', 'New pairs and fit checks', 'https://www.instagram.com/daursupply', 1)}${row('fb', 'fb', 'Facebook', 'facebook.com/daursupply', 'Message us any time', 'https://www.facebook.com/daursupply', 1)}</div>
+      <div class="r6-hours"><span class="r6-hi">${ic('clock')}</span><span><b>Monday to Saturday</b><small>10 am to 7 pm, Pakistan time.</small></span></div>
+      <div class="r6-from"><span class="r6-pin">${ic('pin')}</span><span><b>Sent from Islamabad</b><small>An online store. Every pair ships to your door anywhere in Pakistan.</small></span></div></div>`;
+  }
+  // about: where a pair comes from and how you know it is ours
+  function aboutBody() {
+    const stop = (n, t, s) => `<li><i>${n}</i><b>${t}</b><small>${s}</small></li>`;
+    return `<section class="r6-route m-pad"><span class="r5-no">Where a pair comes from</span><h2 class="m-h2">From the workshop to your door.</h2>
+        <ol class="r6-rt">${stop('1', 'Lahore, Sialkot and Kasur', 'Made by workshops we work with directly')}${stop('2', 'Checked by hand', 'Every pair, before it is boxed')}${stop('3', 'Islamabad', 'Packed and sent from here')}${stop('4', 'Your door', '2 to 5 days anywhere in Pakistan')}</ol></section>
+      <section class="r6-marks m-pad"><span class="r5-no">How you know it is ours</span><div class="r6-mk">
+        <div><svg viewBox="0 0 80 60" aria-hidden="true"><path d="M6,40 C20,20 40,44 52,26 C60,14 70,18 74,24" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg><b>Thick matte black laces</b><small>Cotton, never shiny</small></div>
+        <div><svg viewBox="0 0 80 60" aria-hidden="true"><rect x="22" y="14" width="36" height="34" rx="6" fill="none" stroke="currentColor" stroke-width="5"/><path d="M32,31 h16" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><b>Engraved metal tag</b><small>On the lace</small></div>
+        <div><svg viewBox="0 0 80 60" aria-hidden="true"><circle cx="40" cy="30" r="22" fill="none" stroke="currentColor" stroke-width="5"/><path d="M32,20 h8 a10,10 0 0 1 0,20 h-8 z" fill="currentColor"/></svg><b>The DAUR seal</b><small>Stamped on every box</small></div></div></section>
+      <section class="r6-nums m-pad">${[['3', 'workshop cities'], [String(C.exchangeDays || 5), 'day size swap'], ['30', 'day defect promise'], [NF(DEL), 'rupee delivery credit']].map(([n, t]) => `<span><b>${n}</b><small>${t}</small></span>`).join('')}</section>`;
+  }
+  // the Journal: a magazine, not a list of links
+  function journal(src, pg) {
+    const items = [...src.querySelectorAll('.j-list article')].map((a) => {
+      const h = a.querySelector('h2 a'); if (!h) return null;
+      const im = a.querySelector('.j-thumb img'), meta = [...a.querySelectorAll('.j-meta span')].map((x) => txt(x));
+      return { u: h.getAttribute('href'), t: txt(h), ex: txt(a.querySelector('.j-ex') || { textContent: '' }), img: im ? (im.currentSrc || im.getAttribute('src')) : '', tag: meta.length > 1 ? meta[0] : '', mins: meta[meta.length - 1] || '' };
+    }).filter(Boolean);
+    if (!items.length) return false;
+    const tags = [...src.querySelectorAll('.j-chips a')].map((a) => ({ u: a.getAttribute('href'), l: txt(a), on: a.getAttribute('aria-current') === 'page' }));
+    const COV = [['m-saddle-black.webp', 'red'], ['m-ward-brown.webp', 'esp'], ['m-grid.webp', 'crm'], ['m-moc-oxblood.webp', 'grn'], ['m-phantom.webp', 'ink'], ['m-derby.webp', 'crm'], ['m-sector.webp', 'esp'], ['m-volt.webp', 'grn']];
+    const cover = (x, i, cls) => x.img ? `<span class="r6-cv ${cls}"><img src="${esc(x.img)}" alt="" loading="lazy"></span>` : `<span class="r6-cv ${cls} v-${COV[i % COV.length][1]}"><img class="cut" src="${asset(COV[i % COV.length][0])}" alt="" loading="lazy"><i>${esc(x.tag || 'Journal')}</i></span>`;
+    const lead = items[0], rest = items.slice(1);
+    state.pageTitle = 'The DAUR Journal';
+    view.innerHTML = `<div class="r6-j">
+      <header class="r6-jh m-pad"><span class="r6-jk">The DAUR Journal</span><h1>${pg.title || 'Guides for men who wear their shoes'}</h1><p>${pg.aside || ''}</p></header>
+      ${tags.length ? `<nav class="r6-tags" aria-label="Topics">${tags.map((t) => `<a href="${esc(t.u)}"${parse(t.u) ? ' data-m' : ''}${t.on ? ' aria-current="page"' : ''}>${esc(t.l)}</a>`).join('')}</nav>` : ''}
+      <a class="r6-lead m-pad" href="${esc(lead.u)}" data-m>${cover(lead, 0, 'big')}<span class="r6-lt"><small>${esc([lead.tag, lead.mins].filter(Boolean).join(' · '))}</small><b>${esc(lead.t)}</b><span>${esc(lead.ex)}</span><em>Read more<i>${ic('arrow')}</i></em></span></a>
+      <h2 class="m-h2 m-pad r6-jl">Latest guides</h2>
+      <div class="r6-list m-pad">${rest.map((x, i) => `<a class="r6-row" href="${esc(x.u)}" data-m style="--i:${Math.min(i, 8)}">${cover(x, i + 1, 'sm')}<span><small>${esc([x.tag, x.mins].filter(Boolean).join(' · '))}</small><b>${esc(x.t)}</b><em>${esc(x.ex)}</em></span></a>`).join('')}</div>
+      <div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers, usually within working hours.</span>${talk()}</div></div>`;
+    observeIn();
+    return true;
+  }
   V.page = function () {
     let src = document.getElementById('app'); if (!src) return;
     let page = document.body.dataset.page || 'page';
     if (cur.remote) {
       // a page from the store, read from the copy fetched in the background (or fetched now, with its shape on screen)
       const doc = DOCS.get(cur.remote);
-      if (!doc) { const want = cur.remote; view.innerHTML = skeleton(''); H.classList.add('m-loading'); fetchDoc(want).then(() => { H.classList.remove('m-loading'); if (cur.remote === want) render(); }, () => { location.href = want; }); return; }
+      if (!doc) { const want = cur.remote; view.innerHTML = skeleton(''); H.classList.add('m-loading'); fetchDoc(want).then(() => { H.classList.remove('m-loading'); if (cur.remote === want) { render(); backTo(); } }, () => { location.href = want; }); return; }
       src = doc.getElementById('app') || doc.querySelector('main') || doc.body; page = 'page';
       if (doc.title) document.title = doc.title;
     } else if (cur.a && document.body.dataset.page !== cur.a) { try { API.draw(cur.a); } catch (e) { location.reload(); return; } page = cur.a; }
     const pg = harvest(src);
+    if (/^\/blogs\/[^/]+\/?(tagged\/[^/]+\/?)?$/.test(location.pathname) && journal(src, pg)) return;
     // the storefront has not drawn this page yet: keep its shape on screen until it does
     if (!pg.title && !pg.secs.length) { view.innerHTML = skeleton(PAGE_T[page] || ''); state.pageTitle = PAGE_T[page] || 'DAUR Supply'; return; }
     const words = pg.secs.reduce((a, s) => a + s.blocks.reduce((x, b) => x + JSON.stringify(b.h || b.items || '').length, 0), 0);
@@ -815,12 +863,12 @@
       <section class="pg-hero r5-hero v-${art ? 'crm' : vis[1]}" style="--tn:${tn(hi)};--tn2:${tn(hi + 2)}"><span class="r5-hdm" aria-hidden="true">${DMARK}</span><img class="pg-cut" src="${asset(art ? 'm-' + cut + '.webp' : vis[0])}" alt=""><span class="pg-blob" aria-hidden="true"></span>
         ${pg.kick ? `<span class="m-kick">${esc(pg.kick)}</span>` : ''}<h1>${pg.title || esc(state.pageTitle)}</h1>${pg.aside ? `<p>${pg.aside}</p>` : ''}
         ${pg.ctas.length ? `<div class="pg-ctas">${pg.ctas.slice(0, 2).map((x, i) => `<a class="${i === 0 ? 'm-cta' : 'm-ghost'}" href="${esc(x.h)}"${parse(x.h) ? ' data-m' : ''}>${esc(x.l)}</a>`).join('')}</div>` : ''}</section>
-      ${pk === 'contact' ? `<div class="m-pad r5-ctalk">${talk('big')}</div>` : ''}
+      ${pk === 'contact' ? contactBody() : pk === 'about' ? aboutBody() : ''}
       ${pg.chips.length ? `<div class="m-pills pg-chips">${pg.chips.map((c) => `<a class="m-pill alt" href="${esc(c.h)}" data-jump="${esc(c.h.slice(1))}">${esc(c.l)}</a>`).join('')}</div>` : ''}
-      ${pg.secs.map((s, i) => fold
+      ${(pk === 'contact' ? [] : pg.secs).map((s, i) => fold
         ? `<details class="pg-sec pg-acc"${s.id ? ` id="${esc(s.id)}"` : ''}${i === 0 ? ' open' : ''} style="--tn:${tn(i)}"><summary><span>${s.kick ? `<small>${esc(s.kick)}</small>` : ''}<b>${s.title || 'More'}</b></span>${ic('chev')}</summary><div>${blocksHtml(s.blocks, nodes)}</div></details>`
         : `<section class="pg-sec r5-sec${i % 4 === 2 ? ' dark' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${s.title ? `<span class="r5-no">${String(i + 1).padStart(2, '0')}</span>` : ''}${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${blocksHtml(s.blocks, nodes)}</section>`).join('')}
-      ${pk === 'contact' ? '' : `<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers, usually within working hours.</span>${talk()}</div>`}
+      ${pk === 'contact' ? '' : `${pk === 'about' ? `<div class="m-pad r6-acta"><a class="m-cta" href="${href.shop()}" data-m>Explore the pairs</a><a class="m-ghost" href="${root}/pages/manifesto" data-m>Read our story</a></div>` : ''}<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers, usually within working hours.</span>${talk()}</div>`}
     </div>`;
     nodes.forEach((n, i) => { const ph = view.querySelector(`[data-node="${i}"]`); if (ph) ph.appendChild(n); });
     $$('img', view).forEach((im) => im.addEventListener('error', () => { im.style.display = 'none'; }, { once: true }));
@@ -881,7 +929,7 @@
     if (r.v !== cur.v && r.v === 'shop') state.q = r.q != null ? r.q : null;
     if (r.v === 'shop') state.shopCat = r.a;
     cur = r;
-    if (push !== false && !same) history.pushState({ m: 1 }, '', u);
+    if (push !== false && !same) { keepPlace(); history.pushState({ m: 1 }, '', u); }
     if (r.v === 'shop' && view.querySelector('.m-search') && same) { V.shop(); return; }
     if (r.v !== 'shop') view.innerHTML = '';
     const run = () => { render(push === false ? 'back' : 'in'); window.scrollTo(0, 0); };
@@ -890,7 +938,24 @@
     const t = { home: 'DAUR Supply', shop: 'Shop | DAUR Supply' }[r.v] || (TITLE[r.v] ? TITLE[r.v] + ' | DAUR Supply' : '');
     if (t) document.title = t; else if (r.v === 'product') document.title = API.prod(r.a).name + ' | DAUR Supply';
   }
-  window.addEventListener('popstate', () => { const r = parse(location.href); if (r) { cur = r; render('back'); } else location.reload(); });
+  // every screen remembers where it was: the scroll, and how far the endless home had grown
+  try { history.scrollRestoration = 'manual'; } catch (e) { /* older browsers restore on their own */ }
+  const PLACE_K = 'daur.mPlace';
+  const places = () => { try { return JSON.parse(sessionStorage.getItem(PLACE_K) || '{}'); } catch (e) { return {}; } };
+  function keepPlace() {
+    const k = location.pathname + location.search, more = $('#mMore');
+    const p = places(); p[k] = { y: Math.round(window.scrollY), more: more ? +(more.dataset.k || 0) : 0, cat: state.homeCat || '' };
+    const keys = Object.keys(p); if (keys.length > 40) delete p[keys[0]];
+    try { sessionStorage.setItem(PLACE_K, JSON.stringify(p)); } catch (e) { /* private mode: no memory */ }
+  }
+  function backTo() {
+    const pl = places()[location.pathname + location.search]; if (!pl) return;
+    if (cur.v === 'home') { for (let i = +($('#mMore') || { dataset: {} }).dataset.k || 0; i < pl.more; i++) moreHome(); }
+    let n = 0; const go2 = () => { window.scrollTo(0, pl.y); if (Math.abs(window.scrollY - pl.y) > 4 && n++ < 12) requestAnimationFrame(go2); };
+    requestAnimationFrame(go2);
+  }
+  window.addEventListener('popstate', () => { const r = parse(location.href); if (r) { cur = r; const pl = places()[location.pathname + location.search]; if (pl && pl.cat) state.homeCat = pl.cat; render('back'); backTo(); } else location.reload(); });
+  window.addEventListener('pagehide', keepPlace);
 
   /* ---------- sheets and toast ---------- */
   function openSheet(html) { sheet.classList.remove('r5-full'); sheet.innerHTML = '<div class="m-grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); }
@@ -914,8 +979,9 @@
     const n = API.cart.reduce((a, l) => a + l.qty, 0);
     const all = P(), saleN = all.filter((p) => p.variants.some(API.onSale)).length;
     const big = (h, t, sub, cls) => `<a class="r5-nav${cls ? ' ' + cls : ''}" href="${h}" data-m><b>${esc(t)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}${ic('chevr')}</a>`;
-    const tile = (h, v, t, sub) => `<a class="r5-tile v-${VIS[v][1]}" href="${h}" data-m><img src="${asset(VIS[v][0])}" alt="" loading="lazy"><span><b>${t}</b><small>${sub}</small></span></a>`;
-    const act = (h, i, t, badge) => `<a class="r5-act" href="${h}"${parse(h) ? ' data-m' : ''}><span class="r5-ai">${ic(i)}${badge ? `<em>${badge}</em>` : ''}</span><small>${t}</small></a>`;
+    const ILL = {"story": "<svg class=\"r6-ill\" viewBox=\"0 0 160 120\" aria-hidden=\"true\"><path class=\"ln\" d=\"M14,92 C40,70 70,62 104,66 C128,68 146,76 152,88\"/><path class=\"st\" d=\"M20,100 C46,80 76,72 108,76 C130,78 146,84 150,94\"/><path class=\"nd\" d=\"M96,20 L60,96\"/><circle class=\"ey\" cx=\"94\" cy=\"24\" r=\"4\"/><path class=\"th\" d=\"M94,24 C120,10 140,30 128,48 C118,62 100,58 104,78\"/></svg>", "promise": "<svg class=\"r6-ill\" viewBox=\"0 0 160 120\" aria-hidden=\"true\"><g class=\"seal\"><circle cx=\"80\" cy=\"56\" r=\"34\"/><circle cx=\"80\" cy=\"56\" r=\"25\" class=\"in\"/><path class=\"ck\" d=\"M66,57 l10,10 l20,-22\"/></g><path class=\"rb\" d=\"M64,86 l-10,28 l14,-6 l8,12 l6,-30\"/><path class=\"rb\" d=\"M96,86 l10,28 l-14,-6 l-8,12 l-6,-30\"/></svg>", "feed": "<svg class=\"r6-ill\" viewBox=\"0 0 160 120\" aria-hidden=\"true\"><g class=\"pc p1\"><rect x=\"34\" y=\"22\" width=\"56\" height=\"66\" rx=\"4\"/><rect x=\"40\" y=\"28\" width=\"44\" height=\"40\" class=\"ph\"/></g><g class=\"pc p2\"><rect x=\"70\" y=\"18\" width=\"56\" height=\"66\" rx=\"4\"/><rect x=\"76\" y=\"24\" width=\"44\" height=\"40\" class=\"ph\"/><path class=\"sn\" d=\"M80,58 C84,50 92,48 98,48 L104,42 C106,40 110,40 112,42 L116,48 C118,50 118,56 118,58 Z\"/></g></svg>", "journal": "<svg class=\"r6-ill\" viewBox=\"0 0 160 120\" aria-hidden=\"true\"><path class=\"bk\" d=\"M80,30 C64,22 40,22 22,28 V98 C40,92 64,92 80,100 C96,92 120,92 138,98 V28 C120,22 96,22 80,30 Z\"/><path class=\"bk\" d=\"M80,30 V100\"/><path class=\"pg\" d=\"M80,30 C96,22 120,22 138,28 V98 C120,92 96,92 80,100 Z\"/><path class=\"tx\" d=\"M34,44 H68 M34,56 H68 M34,68 H60 M92,44 H126 M92,56 H126\"/></svg>"};
+    const tile = (h, k, cls, t, sub, i) => `<a class="r5-tile r6-tile v-${cls}" href="${h}" data-m style="--i:${i}">${ILL[k]}<span><b>${t}</b><small>${sub}</small></span></a>`;
+    const act = (h, i, t, badge, c) => `<a class="r5-act ${c || ''}" href="${h}"${parse(h) ? ' data-m' : ''}><span class="r5-ai">${ic(i)}${badge ? `<em>${badge}</em>` : ''}</span><small>${t}</small></a>`;
     const bal = DEL + (W.code && W.on() ? W.amt : 0);
     openSheet(`<div class="r5-menu">
       <div class="r5-mh">${logo(true)}<button class="m-ib m-soft" type="button" data-mclose aria-label="Close menu">${ic('x')}</button></div>
@@ -924,9 +990,9 @@
       <div class="r5-kh"><h4 class="r5-k">For someone else</h4><button type="button" class="m-link" data-explain>${ic('help')}Which one?</button></div>
       <div class="r5-duo">${duo('gift', true)}${duo('give', true)}</div>
       <h4 class="r5-k">Yours</h4>
-      <div class="r5-acts">${act(href.bag, 'bag', 'Bag', n || '')}${act(href.liked, 'heart', 'Liked')}${act(root + '/pages/track', 'truck', 'Track')}${act(S.routes.account || root + '/account', 'user', 'Account')}</div>
+      <div class="r5-acts">${act(href.bag, 'bag', 'Bag', n || '', 'c-brass')}${act(href.liked, 'heart', 'Liked', '', 'c-red')}${act(root + '/pages/track', 'truck', 'Track', '', 'c-grn')}${act(S.routes.account || root + '/account', 'user', 'Account', '', 'c-ink')}</div>
       <h4 class="r5-k">DAUR</h4>
-      <div class="r5-tiles">${tile(root + '/pages/manifesto', 'manifesto', 'Our story', 'Why DAUR exists')}${tile(root + '/pages/contract', 'contract', 'Our promise', 'What we owe you')}<a class="r5-tile v-photo" href="${href.feed}" data-m><img src="${asset('m-g-boy-hill.webp')}" alt="" loading="lazy"><span><b>The Feed</b><small>Pairs in real life</small></span></a>${tile(root + '/blogs/journal', 'journal', 'Journal', 'Care, fit and style')}</div>
+      <div class="r5-tiles">${tile(root + '/pages/manifesto', 'story', 'esp', 'Our story', 'Stitched in three cities', 0)}${tile(root + '/pages/contract', 'promise', 'grn', 'Our promise', 'What we owe you', 1)}${tile(href.feed, 'feed', 'ink', 'The Feed', 'Pairs in real life', 2)}${tile(root + '/blogs/journal', 'journal', 'red', 'Journal', 'Care, fit and style', 3)}</div>
       <h4 class="r5-k">Talk to us</h4>${talk()}
       <div class="r5-rows"><a href="${root}/pages/contact" data-m>${ic('chat')}<span>Contact and opening hours</span>${ic('chevr')}</a><a href="${root}/pages/policies" data-m>${ic('note')}<span>Delivery, exchange and policies</span>${ic('chevr')}</a><a href="${root}/pages/about" data-m>${ic('story')}<span>About DAUR Supply</span>${ic('chevr')}</a></div>
       ${socRow('menu')}
@@ -937,16 +1003,16 @@
   // gift or give, side by side, so no one has to guess
   function explain() {
     const row = (i, t) => `<li>${ic(i)}<span>${t}</span></li>`;
-    openSheet(`<h3 class="sh-h">Gift or Give?</h3><p class="m-mute sh-p">Two ways to buy a pair for someone else.</p>
+    openSheet(`<h3 class="sh-h">Gift or Philanthropy?</h3><p class="m-mute sh-p">Two ways to buy a pair for someone else.</p>
       <div class="m-xp">
         <div class="xp gift"><span class="xp-i">${ic('gift')}</span><b>Gift</b><small>For someone you know</small>
           <ul>${row('check', 'You pick his size')}${row('note', 'Your note in the box')}${row('box', 'Gift packing on request')}${row('truck', 'Sent to the address you enter')}</ul>
           <a class="m-cta gold" href="${href.gifts}" data-m>Gift a pair</a></div>
-        <div class="xp give"><span class="xp-i">${ic('hand')}</span><b>Give</b><small>For someone in need</small>
+        <div class="xp give"><span class="xp-i">${ic('hand')}</span><b>Philanthropy</b><small>For someone in need</small>
           <ul>${row('user', 'DAUR matches the size')}${row('hand', 'Handed over in person')}${row('camera', 'A private photo to you')}${row('coins', 'DAUR adds ' + fmt(DAUR_ADD) + ' per pair')}</ul>
-          <a class="m-cta give" href="${href.giving}" data-m>Give a pair</a></div>
+          <a class="m-cta give" href="${href.giving}" data-m>Sponsor a pair</a></div>
       </div>
-      <p class="sh-foot">${ic('tag')}<span>In your bag and on your order, each pair is marked <b class="t-gift">Gift</b> or <b class="t-give">Giving</b>.</span></p>`);
+      <p class="sh-foot">${ic('tag')}<span>In your bag and on your order, each pair is marked <b class="t-gift">Gift</b> or <b class="t-give">Philanthropy</b>.</span></p>`);
   }
   function walletSheet() {
     openSheet(`<div class="m-wsheet"><div class="of-wallet sm"><span class="b-dm">${DMARK}</span><span class="m-kick">${ic('wallet')}Your wallet</span><b class="of-amt">${esc(fmt(W.amt))}</b><small>Ready for your first order</small></div>
@@ -959,12 +1025,12 @@
   }
   function paintQuick() {
     const p = API.prod(state.qp), v = API.variant(p, state.qv), x = pic(p, v), give = state.qm === 'give';
-    const label = give ? 'Give this pair' : !state.qs ? 'Pick your size' : (state.qm === 'gift' ? 'Add as gift' : 'Add to bag') + ' · EU ' + state.qs;
-    openSheet(`<div class="m-qa"><span class="q-img" style="--tn:${TINT[tintOf(p)]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt=""></span><span class="q-t">${state.qm !== 'me' ? `<span class="ln-tag${give ? ' g' : ''}">${ic(give ? 'hand' : 'gift')}${give ? 'Giving' : 'Gift'}</span>` : ''}<b>${esc(p.name)}</b><span class="m-mute">${esc(v.color)}</span><b>${esc(fmt(v.price))}</b></span></div>
+    const label = give ? 'Sponsor this pair' : !state.qs ? 'Pick your size' : (state.qm === 'gift' ? 'Add as gift' : 'Add to bag') + ' · EU ' + state.qs;
+    openSheet(`<div class="m-qa"><span class="q-img" style="--tn:${TINT[tintOf(p)]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt=""></span><span class="q-t">${state.qm !== 'me' ? `<span class="ln-tag${give ? ' g' : ''}">${ic(give ? 'hand' : 'gift')}${give ? 'Philanthropy' : 'Gift'}</span>` : ''}<b>${esc(p.name)}</b><span class="m-mute">${esc(v.color)}</span><b>${esc(fmt(v.price))}</b></span></div>
       ${p.variants.length > 1 ? `<div class="m-cols" style="margin-top:16px">${p.variants.map((y, i) => { const z = pic(p, y); return `<button class="m-col" type="button" data-qv="${esc(y.id)}" aria-pressed="${y.id === v.id}" aria-label="${esc(y.color)}" style="--tn:${tn(tintOf(p) + i)}"><img class="${z.cut ? '' : 'blend'}" src="${esc(z.src)}" alt=""></button>`; }).join('')}</div>` : ''}
       ${give ? `<p class="m-modenote g" style="margin-top:16px">${ic('hand')}<span>We match the size to the person and send you a private photo after the handover.</span></p>`
         : `<h3 class="q-h">Size (EU)</h3><div class="m-sizes">${p.sizes.map((s) => { const q = (v.stock || {})[s] || 0; return `<button class="m-size" type="button" data-qs="${esc(s)}" aria-pressed="${state.qs == s}"${q > 0 ? '' : ' disabled'}>${esc(s)}</button>`; }).join('')}</div>`}
-      <button class="m-cta wide${give ? ' give' : ''}" type="button" data-qadd aria-disabled="${!give && !state.qs}"><span>${esc(label)}</span></button>`);
+      <button class="m-cta wide${give ? ' give' : state.qm === 'gift' ? ' r6-gift' : ''}" type="button" data-qadd aria-disabled="${!give && !state.qs}"><span>${esc(label)}</span></button>`);
   }
   // a pair for someone in need is reserved in the size we hold most of; DAUR swaps it to the right size before the handover
   const giveSize = (v) => { const s = Object.keys(v.stock || {}).sort((a, b) => (v.stock[b] || 0) - (v.stock[a] || 0))[0]; return s && v.stock[s] > 0 ? +s : null; };
@@ -1121,7 +1187,7 @@
   function splash() {
     let seen = false; try { seen = sessionStorage.getItem('daur.mSplash') === '1'; sessionStorage.setItem('daur.mSplash', '1'); } catch (e) { seen = true; }
     if (seen || M.splash === false || cur.v !== 'home') return;
-    document.body.insertAdjacentHTML('beforeend', `<div class="m-splash r5-sp" id="mSplash" role="dialog" aria-label="Welcome to DAUR Supply"><span class="r5-sp-in"><span class="r5-sp-wm">${WORDMARK}</span><b class="r5-sp-line">${esc(M.splashLine || 'Naya DAUR.')}</b></span></div>`);
+    document.body.insertAdjacentHTML('beforeend', `<div class="m-splash r5-sp" id="mSplash" role="dialog" aria-label="Welcome to DAUR Supply"><span class="r6-sks" aria-hidden="true"><i class="k1"><svg class="r6-sk" viewBox="0 0 200 110" aria-hidden="true"><path d="M12,80 C14,62 30,54 52,52 L78,32 C84,26 96,26 102,32 L120,50 C142,54 170,60 186,72 L186,82 Z"/><path d="M8,82 H188 a8,8 0 0 1 0,16 H16 a8,8 0 0 1 -8,-16 Z"/><path d="M70,42 l12,10 M80,36 l12,10 M90,32 l12,10"/><path d="M150,62 C162,64 174,68 184,74"/><path d="M24,74 C42,66 62,64 84,66" stroke-dasharray="4 5"/></svg></i><i class="k2"><svg class="r6-sk" viewBox="0 0 200 140" aria-hidden="true"><path d="M44,10 H96 V70 C120,72 160,80 180,100 V114 H32 Z"/><path d="M28,114 H184 a6,6 0 0 1 0,14 H34 a6,6 0 0 1 -6,-14 Z"/><path d="M60,18 V64 M80,18 V64"/><path d="M44,10 C40,4 52,2 54,10"/></svg></i><i class="k3"><svg class="r6-sk" viewBox="0 0 200 110" aria-hidden="true"><path d="M12,80 C14,62 30,54 52,52 L78,32 C84,26 96,26 102,32 L120,50 C142,54 170,60 186,72 L186,82 Z"/><path d="M8,82 H188 a8,8 0 0 1 0,16 H16 a8,8 0 0 1 -8,-16 Z"/><path d="M70,42 l12,10 M80,36 l12,10 M90,32 l12,10"/><path d="M150,62 C162,64 174,68 184,74"/><path d="M24,74 C42,66 62,64 84,66" stroke-dasharray="4 5"/></svg></i><i class="k4"><svg class="r6-sk" viewBox="0 0 200 140" aria-hidden="true"><path d="M44,10 H96 V70 C120,72 160,80 180,100 V114 H32 Z"/><path d="M28,114 H184 a6,6 0 0 1 0,14 H34 a6,6 0 0 1 -6,-14 Z"/><path d="M60,18 V64 M80,18 V64"/><path d="M44,10 C40,4 52,2 54,10"/></svg></i></span><span class="r5-sp-in"><span class="r5-sp-wm">${WORDMARK}<sup>SUPPLY</sup></span><b class="r5-sp-line">${esc(M.splashLine || 'Naya DAUR.')}</b></span></div>`);
     const s = $('#mSplash');
     const out = () => { if (s.classList.contains('out')) return; s.classList.add('out'); setTimeout(() => s.remove(), 450); };
     s.addEventListener('click', out);
@@ -1154,6 +1220,8 @@
     get cur() { return cur; }, get state() { return state; }, reduce,
     tap: (name, fn) => { TAPS[name] = fn; }
   };
+  // every gift button answers with a little love
+  app.addEventListener('click', (e) => { const g = e.target.closest('.m-act[data-mode=gift], .px-cta.k-gift, [data-pxfor=gift], .r5-card.gift, .r6-gift, [data-love]'); if (g) burst(g, true); }, true);
   app.addEventListener('click', (e) => {
     const t = e.target.closest('a,button,summary,[data-tap]'); if (!t) return;
     for (const k in TAPS) if (t.dataset[k] !== undefined && TAPS[k](t, e, t.dataset) !== false) { e.stopImmediatePropagation(); return; }
@@ -1183,6 +1251,7 @@
   }
   function boot() {
   netPaint();
+  try { const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0]; if (nav && nav.type === 'back_forward') setTimeout(backTo, 60); } catch (e) { /* only a convenience */ }
   warm();
   // a finger on a link starts fetching its page before the tap ends
   app.addEventListener('touchstart', (e) => { const a = e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });

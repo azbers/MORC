@@ -68,7 +68,7 @@
   /* ---------- one pair in the bag ---------- */
   function item(x, g) {
     const { d, l, i, mode } = x, p = d.p, v = d.v, im = pic(p, v), sale = API.onSale(v);
-    const tag = mode === 'gift' ? `<span class="xb-tag gift">${ic('gift')}Gift</span>` : mode === 'give' ? `<span class="xb-tag give">${ic('hand')}Giving</span>` : '';
+    const tag = mode === 'gift' ? `<span class="xb-tag gift">${ic('gift')}Gift</span>` : mode === 'give' ? `<span class="xb-tag give">${ic('hand')}Philanthropy</span>` : '';
     const meta = esc(v.color) + ' · ' + (mode === 'give' ? 'Size matched by DAUR' : 'EU ' + esc(l.size));
     const step = `<div class="xb-step" role="group" aria-label="How many ${esc(p.name)}">
         <button type="button" data-qty="${i}" data-d="-1" aria-label="${l.qty > 1 ? 'One less' : 'Remove ' + esc(p.name)}">${xi(l.qty > 1 ? 'minus' : 'trash')}</button>
@@ -192,7 +192,7 @@
           : [many ? m.nGive + ' pairs for people in need, fully covered' : 'A pair for someone in need, fully covered', 'They receive it with nothing to pay.'];
       return `<section class="xb-pay"><h2 class="xb-h">How you pay</h2><div class="xb-po solo"><span class="xb-po-t"><b>${t}</b><small>${s}</small></span><span class="xb-po-a"><b>${esc(fmt(p.now))}</b><small>today</small></span></div></section>`;
     }
-    const what = m.nGift && m.nGive ? 'gifts and giving' : m.nGift ? (m.nGift > 1 ? 'gifts' : 'gift') : 'giving';
+    const what = m.nGift && m.nGive ? 'gifts and philanthropy' : m.nGift ? (m.nGift > 1 ? 'gifts' : 'gift') : 'philanthropy';
     const one = p.ownPairs === 1;
     const advT = p.full ? 'Cover the ' + what + ' today' : (one ? 'Reserve it with ' : 'Reserve them with ') + fmt(p.adv);
     const advS = p.full ? 'Your own ' + (one ? 'pair' : 'pairs') + ': ' + fmt(door) + ' at your door' : fmt(door) + (one ? ' when it reaches your door' : ' when they reach your door');
@@ -238,7 +238,7 @@
   function empty() {
     document.documentElement.classList.remove('xb-typing');
     const pick = P().slice(0, 4);
-    view.innerHTML = `<div class="xb xb-empty"><div class="xb-em"><span class="xb-em-img"><img src="${asset('m-ward-brown.webp')}" alt=""></span><h2 class="xb-h xl">Your bag is empty</h2>
+    view.innerHTML = `<div class="xb xb-empty"><div class="xb-em"><span class="r6-box" aria-hidden="true"><span class="r6-shadow"></span><span class="r6-lid"><b>DAUR</b></span><span class="r6-tissue"></span><span class="r6-base"><span class="r6-seal">${MX.DMARK}</span><b>DAUR<sup>SUPPLY</sup></b><small>Made in Pakistan</small></span><i class="r6-dust d1"></i><i class="r6-dust d2"></i><i class="r6-dust d3"></i></span><h2 class="xb-h xl">Your box is waiting</h2>
       <p>${W.code ? esc(fmt(W.amt + DEL)) + ' in credits is waiting for your first pair.' : 'Pick a pair and it waits here for you.'}</p><a class="m-cta solo" href="${href.shop()}" data-m>Shop the pairs</a></div>
       ${pick.length ? `<div class="m-row m-pad xb-em-h"><h2 class="m-h2">Start with these</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div><div class="m-grid">${pick.map((p) => card(p, false)).join('')}</div>` : ''}
       ${API.wish.length ? `<a class="gv-out" href="${href.liked}" data-m style="margin-top:22px"><span class="f-i">${ic('heart')}</span><span><b>${pl(API.wish.length, 'liked pair', 'liked pairs')}</b><small>Pick up where you left off</small></span>${ic('arrow')}</a>` : ''}</div>`;
@@ -249,7 +249,7 @@
     document.documentElement.classList.remove('xb-typing');
     const g = gift(), mixed = m.gifts.length || m.gives.length;
     const grp = (list, title, n) => (list.length ? `${mixed ? `<div class="xb-lbl"><span>${title}</span><small>${pl(n, 'pair', 'pairs')}</small></div>` : ''}<div class="xb-its">${list.map((x) => item(x, g)).join('')}</div>` : '');
-    view.innerHTML = `<div class="xb xb-bag m-pad">${grp(m.own, 'For you', m.nOwn)}${grp(m.gifts, 'Gifts', m.nGift)}${grp(m.gives, 'Giving', m.nGive)}
+    view.innerHTML = `<div class="xb xb-bag m-pad">${grp(m.own, 'For you', m.nOwn)}${grp(m.gifts, 'Gifts', m.nGift)}${grp(m.gives, 'Philanthropy', m.nGive)}
       ${nudge(m)}${summary(m)}${payment(m)}${bank(m)}${vote()}${trust()}</div>`;
     bar(m);
   }
