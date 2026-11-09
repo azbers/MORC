@@ -2469,7 +2469,9 @@
     reveal();
     if (!(page === 'contract' && param)) window.scrollTo(0, 0);
   }
-  window.DAUR_API = { C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; } };
+  window.DAUR_API = { C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; },
+    // draws another storefront view into #app without a page load (the phone app layer uses it to open pages instantly)
+    draw(page, param) { if (!V[page] || /^(list|runway)$/.test(page)) return false; document.body.dataset.page = page; delete app.dataset.full; V[page](param || ''); hook('after', { page, param: param || '' }); return true; } };
   const EXT = window.DAUR_EXT || { views: {}, hooks: {} };
   Object.assign(V, EXT.views);
   const hook = (name, arg) => (EXT.hooks[name] || []).forEach((fn) => fn(arg));

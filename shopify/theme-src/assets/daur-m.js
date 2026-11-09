@@ -132,6 +132,7 @@
   /* ---------- routes: real store addresses, drawn in place ---------- */
   const COL = { sneakers: 'Sneakers', 'leather-shoes': 'Leather', leather: 'Leather', casual: 'Hybrids', hybrids: 'Hybrids', sale: 'Sale' };
   const NATIVE = { giving: 'giving', gifts: 'gifts', offers: 'offers', feed: 'feed', liked: 'liked' };
+  const DRAWN = { manifesto: 'manifesto', contract: 'contract', track: 'track', policies: 'policies', about: 'about', contact: 'contact' };
   function parse(u) {
     const url = new URL(u, location.href);
     if (url.origin !== location.origin) return null;
@@ -145,6 +146,8 @@
     if ((m = p.match(/^\/products\/([^/]+)\/?$/)) && API.prod(m[1]) && API.prod(m[1]).giving) return { v: 'giving' };
     if (/^\/cart\/?$/.test(p)) return { v: 'bag' };
     if ((m = p.match(/^\/pages\/([^/]+)\/?$/)) && NATIVE[m[1]]) return { v: NATIVE[m[1]] };
+    // pages the storefront draws from its own code open in place, with no page load
+    if ((m = p.match(/^\/pages\/([^/]+)\/?$/)) && DRAWN[m[1]] && API.draw) return { v: 'page', a: DRAWN[m[1]], hash: url.hash };
     return null;
   }
   const href = {
@@ -208,7 +211,7 @@
   }
   function row(p) {
     const v = firstV(p), t = tintOf(p), x = pic(p, v);
-    return `<a class="m-li" href="${href.product(p.id)}" data-m><span class="l-img" style="--tn:${TINT[t]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt="" loading="lazy"></span><span class="l-t"><b>${esc(p.name)}</b><small>${esc(p.category)} · EU ${esc(p.sizes[0])} to ${esc(p.sizes[p.sizes.length - 1])}</small></span><span class="l-p">${esc(fmt(v.price))}</span></a>`;
+    return `<div class="m-li"><a class="c-link" href="${href.product(p.id)}" data-m aria-label="${esc(p.name + ', ' + fmt(v.price))}"></a><span class="l-img" style="--tn:${TINT[t]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt="" loading="lazy"></span><span class="l-t"><b>${esc(p.name)}</b><small>${esc(p.category)} · EU ${esc(p.sizes[0])} to ${esc(p.sizes[p.sizes.length - 1])}</small><span class="l-p">${price(v)}</span></span><button class="l-add" type="button" data-quick="${esc(p.id)}" aria-label="Add ${esc(p.name)} to bag">${ic('bag')}</button></div>`;
   }
   const cats = () => { const s = []; P().forEach((p) => { if (!s.includes(p.category)) s.push(p.category); }); return s; };
   const inCat = (p, c) => !c || c === 'All' || c === 'Popular' || (c === 'Sale' ? p.variants.some(API.onSale) : p.category === c);
@@ -226,24 +229,77 @@
 
   /* ---------- views ---------- */
   const V = {};
+  const saving = (p) => Math.max.apply(null, p.variants.map((v) => API.onSale(v) ? v.compareAt - v.price : 0));
+  /* ---------- home: offers that run out, then pairs that never stop ---------- */
+  function offerSlides() {
+    const out = [];
+    const daysLeft = (e) => { if (!e) return 0; const d = Math.ceil((new Date(e) - new Date()) / 864e5); return d > 0 ? d : 0; };
+    if (W.code && W.on()) out.push({ k: 'Waiting in your wallet', big: fmt(W.amt), l: 'Yours on your first order. It goes to waste if you never use it.', cta: 'Use it now', h: href.offers });
+    coupons().forEach((c) => { const d = daysLeft(c.ends); out.push({ k: d ? (d === 1 ? 'Last day' : 'Ends in ' + d + ' days') : 'Live now', big: fmt(c.amt) + ' off', l: (c.min ? 'On orders of ' + fmt(c.min) + ' or more. ' : '') + 'Code ' + c.code + ', applied for you.', cta: 'See the offer', h: href.offers }); });
+    P().filter((p) => p.variants.some(API.onSale)).sort((x, y) => saving(y) - saving(x)).slice(0, 3).forEach((p) => { const v = p.variants.find(API.onSale); out.push({ k: 'Price cut · ' + API.pct(v) + '% off', big: fmt(v.compareAt - v.price) + ' off', l: p.name + ', now ' + fmt(v.price) + ' instead of ' + fmt(v.compareAt) + '.', cta: 'Grab it', h: href.product(p.id), p, v }); });
+    out.push({ k: 'On every order', big: fmt(DEL), l: 'Delivery credit. Your pair travels to any city in Pakistan on us.', cta: 'Shop all', h: href.shop() });
+    return out;
+  }
+  function promo() {
+    const sl = offerSlides();
+    return `<section class="m-promo" aria-roledescription="carousel" aria-label="Offers"><div class="pr-track" id="mPromo">${sl.map((x, i) => `<a class="pr-s" href="${x.h}" data-m aria-label="${esc(x.big + ', ' + x.l)}"><span class="pr-k">${ic(i === 0 && x.cta === 'Use it now' ? 'wallet' : x.p ? 'tag' : 'clock')}${esc(x.k)}</span><b class="pr-big">${esc(x.big)}</b><span class="pr-l">${esc(x.l)}</span><span class="pr-go">${esc(x.cta)}${ic('arrow')}</span>${x.p ? img(x.p, x.v, 'pr-img', '') : `<span class="pr-dm">${DMARK}</span>`}</a>`).join('')}</div>
+      <div class="pr-dots" aria-hidden="true">${sl.map((x, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div></section>`;
+  }
+  function bindPromo() {
+    const t = $('#mPromo'); if (!t) return;
+    const dots = $$('.pr-dots i', view), n = t.children.length; let i = 0, hold = false, tm;
+    const mark = () => { const k = Math.round(t.scrollLeft / Math.max(1, t.clientWidth)); if (k !== i) { i = k; dots.forEach((d, j) => d.classList.toggle('on', j === i)); } };
+    t.addEventListener('scroll', () => { cancelAnimationFrame(tm); tm = requestAnimationFrame(mark); }, { passive: true });
+    ['touchstart', 'pointerdown'].forEach((ev) => t.addEventListener(ev, () => { hold = true; clearTimeout(t._r); t._r = setTimeout(() => { hold = false; }, 6000); }, { passive: true }));
+    if (reduce || n < 2) return;
+    clearInterval(V._promo);
+    V._promo = setInterval(() => { if (!t.isConnected) { clearInterval(V._promo); return; } if (hold || document.hidden) return; t.scrollTo({ left: ((i + 1) % n) * t.clientWidth, behavior: 'smooth' }); }, 4200);
+  }
+  // after Fresh in the home page keeps going: sale, each style, then more pairs, batch after batch
+  const shuffle = (a, seed) => { const r = a.slice(); let x = seed || 7; for (let k = r.length - 1; k > 0; k--) { x = (x * 9301 + 49297) % 233280; const j = Math.floor(x / 233280 * (k + 1)); [r[k], r[j]] = [r[j], r[k]]; } return r; };
+  function homeBlock(k) {
+    const all = P();
+    const plan = [];
+    if (hasSale()) plan.push(['On sale now', all.filter((p) => p.variants.some(API.onSale)), href.shop('Sale')]);
+    cats().forEach((c) => plan.push([c, all.filter((p) => p.category === c), href.shop(c)]));
+    if (k < plan.length) return plan[k];
+    const round = k - plan.length;
+    if (round >= 4) return null;
+    return [['More for you', 'Picked for you', 'Worth a second look', 'Before you go'][round], shuffle(all, round + 3), href.shop()];
+  }
+  function moreHome() {
+    const box = $('#mMore'); if (!box) return;
+    const k = +(box.dataset.k || 0), b = homeBlock(k);
+    if (!b) { box.insertAdjacentHTML('beforeend', `<div class="m-end"><b>You have seen every pair.</b><span class="m-mute">New pairs land here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
+    box.dataset.k = k + 1;
+    if (b[1].length) box.insertAdjacentHTML('beforeend', `<div class="m-row m-pad" style="margin-top:28px"><h2 class="m-h2">${esc(b[0])}</h2><a class="m-link" href="${b[2]}" data-m>See all</a></div><div class="m-grid">${b[1].map((p) => card(p, false)).join('')}</div>`);
+    else moreHome();
+  }
+  function bindMore() {
+    const s = $('#mMoreSent'); if (!s || !('IntersectionObserver' in window)) { for (let i = 0; i < 4; i++) moreHome(); return; }
+    const near = () => { const x = $('#mMoreSent'); return x && x.getBoundingClientRect().top < innerHeight + 600; };
+    const io = new IntersectionObserver((es) => { if (!es[0].isIntersecting) return; let n = 0; do { moreHome(); n++; } while (near() && n < 2); if (!$('#mMoreSent')) io.disconnect(); }, { rootMargin: '600px 0px' });
+    io.observe(s);
+    // the observer only speaks on a change, so a long scroll checks again
+    const chk = () => { if (!$('#mMoreSent') || cur.v !== 'home') { window.removeEventListener('scroll', chk); return; } if (near()) moreHome(); };
+    window.addEventListener('scroll', chk, { passive: true });
+  }
   V.home = function () {
     const all = P();
-    const hero = all.find((p) => p.variants.some(API.onSale) && CUT[p.id]) || all.find((p) => CUT[p.id]) || all[0];
-    const hv = hero && firstV(hero);
-    const c = state.homeCat || 'Popular';
+    const c = state.homeCat || 'All';
     const list = all.filter((p) => inCat(p, c));
-    const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).filter((p) => p !== hero).slice(0, 3);
-    const pc = cats().concat(hasSale() ? ['Sale'] : []);
-    const notes = allNotes();
-    view.innerHTML = `${hero ? `<a class="m-banner" href="${href.product(hero.id)}" data-m><span class="b-dm">${DMARK}</span><span class="b-k">${esc(hero.tag || 'Drop 01')}</span><span class="b-n">${esc(hero.name)}</span><span class="b-row"><span class="b-go">Shop now</span><span class="b-p">${esc(fmt(hv.price))}${API.onSale(hv) ? `<s>${esc(NF(hv.compareAt))}</s>` : ''}</span></span>${img(hero, hv, '', hero.name)}</a>` : ''}
-      ${ticker()}
-      <div class="m-pills" role="group" aria-label="Filter">${pills(['Popular'].concat(pc), c, 'data-hcat')}</div>
+    const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
+    const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
+    view.innerHTML = `${promo()}
+      <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
+      ${ticker()}
       <div class="m-row m-pad" style="margin-top:26px"><h2 class="m-h2">Buying for someone else?</h2><button class="m-link" type="button" data-explain>${ic('help')}Which one?</button></div>
       <div class="m-duo m-pad">${duo('gift')}${duo('give')}</div>
       <div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Fresh in</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div>
       <div class="m-rows">${fresh.map(row).join('')}</div>
-      ${follow()}`;
+      <div id="mMore" data-k="0"></div><div id="mMoreSent" class="m-skel" aria-hidden="true"><div class="sk-row"><div class="sk sk-c"></div><div class="sk sk-c"></div></div></div>`;
+    bindPromo(); bindMore();
   };
   /* ---------- shop: search, style, sort and filter ---------- */
   const SORTS = [['feat', 'Featured'], ['new', 'Newest'], ['low', 'Price: low to high'], ['high', 'Price: high to low'], ['save', 'Biggest saving']];
@@ -252,7 +308,6 @@
   const fam = (c) => (FAM.find(([, r]) => r.test(c || '')) || ['Other colours'])[0];
   const F = () => (state.f = state.f || { sizes: [], cols: [], price: '', sale: false, stock: false });
   const fCount = () => { const f = F(); return f.sizes.length + f.cols.length + (f.price ? 1 : 0) + (f.sale ? 1 : 0) + (f.stock ? 1 : 0); };
-  const saving = (p) => Math.max.apply(null, p.variants.map((v) => API.onSale(v) ? v.compareAt - v.price : 0));
   function shopList(c, q, f) {
     let list = P().filter((p) => inCat(p, c) && (!q || (p.name + ' ' + p.category + ' ' + p.variants.map((v) => v.color).join(' ')).toLowerCase().includes(q)));
     if (f.sizes.length) list = list.filter((p) => p.variants.some((v) => f.sizes.some((z) => ((v.stock || {})[z] || 0) > 0)));
@@ -730,6 +785,7 @@
   }
   V.page = function () {
     const src = document.getElementById('app'); if (!src) return;
+    if (cur.a && document.body.dataset.page !== cur.a) { try { API.draw(cur.a); } catch (e) { location.reload(); return; } }
     const page = document.body.dataset.page || 'page';
     const pg = harvest(src);
     // the storefront has not drawn this page yet: keep its shape on screen until it does
@@ -981,7 +1037,7 @@
     if (d.wallet !== undefined) return walletSheet();
     if (d.wish) { e.preventDefault(); API.toggleWish(d.wish); const on = wished(d.wish); $$(`[data-wish="${d.wish}"]`).forEach((b) => b.setAttribute('aria-pressed', on)); toast(on ? 'Saved to Liked' : 'Removed from Liked', on ? 'See all' : '', href.liked); if (cur.v === 'liked' && !on) render(); return; }
     if (d.quick) { e.preventDefault(); return quick(d.quick, d.mode); }
-    if (d.hcat) { state.homeCat = d.hcat; V.home(); return; }
+    if (d.hcat) { state.homeCat = d.hcat; $$('[data-hcat]', view).forEach((b) => b.setAttribute('aria-pressed', b.dataset.hcat === d.hcat)); const all = P().filter((p) => inCat(p, d.hcat)); const car = $('.m-car', view); if (car) { car.innerHTML = all.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'; car.scrollLeft = 0; } return; }
     if (d.scat) { state.shopCat = d.scat; history.replaceState({ m: 1 }, '', href.shop(d.scat)); V.shop(); return; }
     if (d.pmode) { state.mode = d.pmode; V.product(); return; }
     if (d.pv) { state.pv = d.pv; const p = API.prod(state.pid), v = API.variant(p, d.pv); if (state.size && !((v.stock || {})[state.size] > 0)) state.size = null; V.product(); return; }
@@ -1059,8 +1115,31 @@
   }, true);
 
   /* ---------- start: after every deferred view file has loaded ---------- */
+  // pages the app cannot draw itself are fetched ahead, so they open as if already there
+  function warm() {
+    try {
+      if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+        const sr = document.createElement('script'); sr.type = 'speculationrules';
+        sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*' }, { not: { href_matches: ['/cart*', '/checkout*', '/account*', '/discount/*'] } }] }, eagerness: 'moderate' }],
+          prefetch: [{ urls: [root + '/blogs/journal'], eagerness: 'eager' }] });
+        document.head.appendChild(sr);
+      } else {
+        const done = new Set();
+        const pre = (h) => { if (done.has(h)) return; done.add(h); const l = document.createElement('link'); l.rel = 'prefetch'; l.href = h; document.head.appendChild(l); };
+        app.addEventListener('touchstart', (e) => { const a = e.target.closest('a[href]'); if (a && !a.hasAttribute('data-m') && a.origin === location.origin && !/\/(cart|checkout|account)/.test(a.pathname)) pre(a.href); }, { passive: true });
+      }
+    } catch (e) { /* prefetch is only a speed up */ }
+  }
+  // the cookie question, made small: one line above the tab bar, asked once
+  function slimCookies() {
+    const fix = (box) => { if (!box || box.dataset.slim) return; box.dataset.slim = '1'; const t = box.querySelector('.ck-t'); if (t) t.innerHTML = 'Cookies keep your bag and likes saved on this phone. <a href="' + root + '/pages/policies#privacy">Privacy</a>'; const a = box.querySelector('[data-ck=all]'), e = box.querySelector('[data-ck=ess]'); if (a) a.textContent = 'Accept'; if (e) e.textContent = 'Only essential'; };
+    fix(document.getElementById('ck'));
+    if ('MutationObserver' in window) { const mo = new MutationObserver(() => { const b = document.getElementById('ck'); if (b) { fix(b); mo.disconnect(); } }); mo.observe(document.body, { childList: true }); setTimeout(() => mo.disconnect(), 15000); }
+  }
   function boot() {
   netPaint();
+  warm();
+  slimCookies();
   render();
   splash();
   // a page the storefront draws a moment later (a slow answer from the store) is read again once it changes
