@@ -172,7 +172,7 @@
   const saveGift = () => store.set('gift', gift);
   window.DAUR_GIFT = () => (gift.on && cart.length ? gift : null);
   // the payment plan of this bag, for the order (same attributes the phone bag sends)
-  window.DAUR_PLAN = () => { const t = totals(); if (!t.n || !C.advance.deposits()) return null; const p = bagPlan(t); return { now: fmt(p.now), door: p.door ? fmt(p.door) : '', text: (p.covered ? 'Gifts and giving paid now: ' : 'Advance now: ') + fmt(p.now) + '. At the door: ' + fmt(p.door) }; };
+  window.DAUR_PLAN = () => { const t = totals(); if (!t.n || !C.advance.deposits()) return null; const p = bagPlan(t); return { now: fmt(p.now), door: p.door ? fmt(p.door) : '', text: p.choice === 'full' ? 'Full payment now: ' + fmt(p.now) : (p.covered ? 'Gifts and giving paid now: ' : 'Advance now: ') + fmt(p.now) + '. At the door: ' + fmt(p.door) }; };
   // on Shopify: what the store said about the code in the bag, for this exact bag
   let shopCode = { code: '', sig: '', err: '', saving: 0, note: '' };
   const cartSig = () => cart.map((l) => l.pid + l.vid + l.size + 'x' + l.qty).join('|');
@@ -1463,7 +1463,7 @@
       <div class="sum-row"><span>Subtotal, ${t.n} pair${t.n > 1 ? 's' : ''}</span><span>${fmt(t.subtotal)}</span></div>
       ${t.sale ? `<div class="sum-row mute"><span>Before sale</span><span class="strike">${fmt(t.before)}</span></div>` : ''}
       ${promo ? `<div class="promo"><input id="promo" placeholder="Discount code" value="${esc(coupon)}" aria-label="Discount code" autocomplete="off"><button id="promoBtn">${coupon && !t.couponErr ? 'Remove' : 'Apply'}</button></div>${t.couponErr ? `<span class="code-msg err">${esc(t.couponErr)}</span>` : SHOP && coupon && shopCode.code === coupon && shopCode.note ? `<span class="code-msg ok">${esc(shopCode.note)}</span>` : ''}${!t.couponErr && C.advance && C.advance.on && C.advance.code && coupon === C.advance.code ? `<a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a>` : ''}${SHOP ? '<span class="code-msg">Your code goes to checkout with your bag, already applied. Gift card? Enter it on the payment step at checkout.</span>' : ''}` : ''}
-      ${t.discount ? `<div class="sum-row save"><span>${esc(coupon)} / ${esc(t.cp.label || 'Discount')}</span><span>&minus; ${fmt(t.discount)}</span></div>${t.cp.phone ? '<p class="form-note">This code is linked to one WhatsApp number. It is checked when you place the order.</p>' : ''}` : ''}
+      ${t.discount ? `<div class="sum-row save"><span>${coupon === store.get('dAuto', '') ? esc(creditName(coupon)) : esc(coupon) + ' / ' + esc(t.cp.label || 'Discount')}</span><span>&minus; ${fmt(t.discount)}</span></div>${t.cp.phone ? '<p class="form-note">This code is linked to one WhatsApp number. It is checked when you place the order.</p>' : ''}` : ''}
       ${t.free && C.advance.freeAll() ? `<div class="sum-row"><span>Delivery</span><span>${fmt(C.advance.delCredit)}</span></div><div class="sum-row save"><span>Delivery credit</span><span>&minus; ${fmt(C.advance.delCredit)}</span></div>` : `<div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>`}
       ${C.advance.required ? '' : `<div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>`}
       <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
@@ -1480,7 +1480,11 @@
     const isGive = (d) => d.p.giving || d.l.mode === 'give', isOwn = (d) => !isGive(d) && d.l.mode !== 'gift';
     const give = t.lines.filter(isGive), own = gift.on ? [] : t.lines.filter(isOwn);
     const covered = gift.on ? t.total : t.lines.filter((d) => !isOwn(d)).reduce((a, d) => a + d.total, 0);
-    return Object.assign(C.advance.plan(own.reduce((a, d) => a + d.l.qty, 0), covered, t.total), { ownPairs: own.reduce((a, d) => a + d.l.qty, 0), nGive: give.reduce((a, d) => a + d.l.qty, 0) });
+    const p = Object.assign(C.advance.plan(own.reduce((a, d) => a + d.l.qty, 0), covered, t.total), { ownPairs: own.reduce((a, d) => a + d.l.qty, 0), nGive: give.reduce((a, d) => a + d.l.qty, 0) });
+    // the buyer may choose to pay everything today (same choice and same saved answer as the phone bag)
+    p.adv = p.now; p.canChoose = !p.onlyCovered && p.door > 0; p.choice = p.canChoose && store.get('mPay', 'adv') === 'full' ? 'full' : 'adv';
+    if (p.choice === 'full') { p.now = t.total; p.door = 0; }
+    return p;
   }
   function careBox(t) {
     const p = bagPlan(t), one = p.ownPairs === 1;
@@ -1488,7 +1492,12 @@
     const note = gift.on ? 'Gift orders are paid in full by bank transfer, so no bill reaches him. Only the pair and your note. If you cancel before dispatch, the payment is refunded in full.'
       : p.onlyCovered ? 'A pair for someone in need is paid in full by bank transfer after you place the order. They receive it with nothing to pay. If you cancel before the handover, our usual cancellation and refund policy applies.'
       : p.covered ? 'The Philanthropy pair is paid today by bank transfer. Your own ' + (one ? 'pair is' : 'pairs are') + ' paid at your door.'
-      : 'Your ' + (one ? 'pair' : 'pairs') + ', reserved for you. Send ' + fmt(p.now) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full. Prefer to pay everything today? Tell us on WhatsApp and nothing is left for the door.';
+      : 'Your ' + (one ? 'pair' : 'pairs') + ', reserved for you. Send ' + fmt(p.now) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full.';
+    const opt = (k, title, sub, amt) => `<button type="button" class="pay-ch" role="radio" data-paych="${k}" aria-checked="${p.choice === k}"><i aria-hidden="true"></i><span><b>${title}</b><small>${sub}</small></span><span class="pc-a"><b>${fmt(amt)}</b><small>today</small></span></button>`;
+    if (p.canChoose) return `<div class="care-box"><span class="mono mute">How you pay</span><div class="pay-chs" role="radiogroup" aria-label="How you pay">
+      ${opt('adv', p.covered ? 'Cover the Philanthropy today' : (one ? 'Reserve it with ' : 'Reserve them with ') + fmt(p.adv), fmt(t.total - p.adv) + (one ? ' when it reaches your door' : ' when they reach your door'), p.adv)}${opt('full', 'Done in one go', 'Nothing to pay at the door', t.total)}</div>
+      <p class="form-note">${p.choice === 'full' ? 'Send ' + fmt(t.total) + ' by bank transfer after you place the order. If you cancel before dispatch it comes back to you in full.' : 'Send ' + fmt(p.adv) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full.'}</p>
+      <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
     return `<div class="care-box"><div class="sum-row"><span><b>${head}</b></span><span><b>${fmt(p.now)}</b></span></div>
       <div class="sum-row"><span>${p.door ? (one || !p.ownPairs ? 'When it reaches your door' : 'When they reach your door') : 'Nothing to pay at the door'}</span><span>${fmt(p.door)}</span></div>
       <p class="form-note">${note}</p>
@@ -1511,11 +1520,22 @@
     const to = $('#giftTo'); if (to) to.addEventListener('input', () => { gift.to = to.value.slice(0, 40); saveGift(); });
     const nt = $('#giftNote'); if (nt) nt.addEventListener('input', () => { gift.note = nt.value.slice(0, 240); saveGift(); $('#giftN').textContent = 240 - gift.note.length; });
   }
+  /* The wallet, as on the phone: the welcome credit (Theme settings > Mobile app > wallet code) or the biggest live credit
+     the bag qualifies for goes on the bag by itself, and Shopify confirms the amount. Removing it switches the wallet off. */
+  const WAL = { code: String((window.DAUR_M || {}).walletCode || '').trim().toUpperCase(), amt: +(window.DAUR_M || {}).walletAmount || 350, on: () => !!WAL.code && store.get('mWallet', 'on') === 'on', tried: '' };
+  function walletPick(sub) {
+    const amtOf = (o) => { const m = String((o.title || '') + ' ' + (o.details || '')).match(/Rs\.?\s*([\d,]+)\s*off/i); return m ? +m[1].replace(/,/g, '') : 0; };
+    const best = (window.DAUR_OFFERS || []).filter((o) => o.code && String(o.code).toUpperCase() !== WAL.code && amtOf(o) > 0 && (!o.ends || new Date(o.ends) > new Date()) && sub >= (+o.min || 0)).map((o) => ({ code: String(o.code).toUpperCase(), amt: amtOf(o) })).sort((x, y) => y.amt - x.amt)[0];
+    return best && best.amt > WAL.amt ? best.code : WAL.code;
+  }
+  const creditName = (c) => (c && c === WAL.code ? 'Welcome credit' : c + ' credit');
   function bindPromo(cb) {
+    $$('[data-paych]').forEach((x) => x.addEventListener('click', () => { store.set('mPay', x.dataset.paych); cb(); }));
     const b = $('#promoBtn'); if (!b) return;
-    const apply = async () => {
+    const apply = async (auto) => {
+      auto = auto === true;
       const t = totals();
-      if (coupon && !t.couponErr && b.textContent === 'Remove') { coupon = ''; shopCode = { code: '', sig: '', err: '', saving: 0, note: '' }; saveCart(); cb(); toast('Code removed'); if (SHOP && SHOP.checkCode) SHOP.checkCode(''); return; }
+      if (!auto && coupon && !t.couponErr && b.textContent === 'Remove') { if (coupon === store.get('dAuto', '')) store.set('mWallet', 'off'); coupon = ''; shopCode = { code: '', sig: '', err: '', saving: 0, note: '' }; saveCart(); cb(); toast('Code removed'); if (SHOP && SHOP.checkCode) SHOP.checkCode(''); return; }
       coupon = $('#promo').value.trim().toUpperCase(); saveCart();
       if (SHOP && SHOP.checkCode && coupon) {
         // ask Shopify now, with the pairs in this bag, so the buyer knows at once and never types the code again at checkout
@@ -1527,7 +1547,9 @@
         else if (adv) shopCode.note = 'Free delivery code added. Pay in full or send a ' + C.advance.care + ' of ' + fmt(C.advance.deposit) + ' or more, and send us the receipt on WhatsApp.';
         else if (r.pending) shopCode.note = 'Code saved. It goes to checkout with your bag.';
         else if (!r.found || !r.applicable) shopCode.err = 'This code does not apply to the pairs in your bag. Check the spelling or the conditions on the Offers page.';
-        else { shopCode.saving = r.saving; shopCode.note = r.saving ? coupon + ' applied: you save ' + fmt(r.saving) + '.' : coupon + ' applied. Your saving shows at checkout.'; }
+        else { shopCode.saving = r.saving; shopCode.note = r.saving ? (auto ? creditName(coupon) + ' used: you keep ' : coupon + ' applied: you save ') + fmt(r.saving) + '.' : coupon + ' applied. Your saving shows at checkout.'; }
+        // a wallet credit that does not fit this bag steps aside quietly
+        if (auto && (shopCode.err || !shopCode.saving)) { coupon = ''; shopCode = { code: '', sig: '', err: '', saving: 0, note: '' }; saveCart(); SHOP.checkCode(''); cb(); return; }
         cb();
         toast(shopCode.err ? 'Code not applied' : shopCode.note.split('.')[0]);
         return;
@@ -1537,6 +1559,14 @@
     };
     b.addEventListener('click', apply);
     $('#promo').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); apply(); } });
+    if (SHOP && SHOP.checkCode && cart.length && WAL.on()) {
+      const sig = cartSig(), mine = store.get('dAuto', '');
+      if ((!coupon || coupon === mine) && WAL.tried !== sig) {
+        WAL.tried = sig;
+        const pick = walletPick(totals().subtotal);
+        if (pick && !(coupon === pick && shopCode.code === pick && shopCode.sig === sig)) { $('#promo').value = pick; store.set('dAuto', pick); apply(true); }
+      }
+    }
   }
 
   /* ---- checkout ---- */
