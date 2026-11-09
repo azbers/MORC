@@ -1453,3 +1453,5 @@ html.m-on{--r6-love:#D61F3C;--r6-love2:#A50F2A;--r6-paper:#FAF7F2}
 #mApp .sh-foot .t-gift{background:var(--r6-love,#D61F3C);color:#fff;padding:1px 7px;border-radius:6px}
 #mApp .sh-foot .t-give{background:#1F4D3A;color:#fff;padding:1px 7px;border-radius:6px}
 #mApp .r5-sec.dark .m-ghost{border-color:rgba(255,255,255,.7)!important;color:#fff!important;background:transparent!important;opacity:1!important}
+#mApp~.r5-sp .r5-sp-wm,.r5-sp .r5-sp-wm{padding-right:62px;box-sizing:border-box}
+.r5-sp .r5-sp-wm sup{right:0!important;top:2px!important;font-size:11px!important;letter-spacing:.18em!important}
