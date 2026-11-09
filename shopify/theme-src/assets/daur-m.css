@@ -1026,3 +1026,66 @@ html.m-on .daur-load{display:none!important}
 .pg-tile em{color:var(--m-brass)!important}
 .m-pills.pg-chips .m-pill{background:var(--m-surf)}
 .pg-help a{background:var(--m-ink)!important;color:#fff!important}
+
+/* ===== Round 4 professional pass: one ink, one surface, one accent. Flat, quiet, precise. ===== */
+html.m-on{--m-ink:#111;--m-ink2:#111;--m-mute:#6B6B6B;--m-line:#E6E4E0;--m-soft:#F4F3F1;--m-goldsoft:#F4F3F1}
+#mApp{-webkit-font-smoothing:antialiased}
+/* top bar: plain white, hairline when scrolled content passes under it */
+.m-top{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 -1px 0 var(--m-line)}
+.m-top.clear{box-shadow:none}
+.m-ib{border-radius:10px}.m-ib.m-solid{box-shadow:none;border:1px solid var(--m-line)}
+.m-chip{background:var(--m-soft)!important;color:var(--m-ink);font-weight:600;height:34px;border-radius:8px}
+.m-logo small{color:var(--m-mute)}
+/* tab bar: white, hairline, the bag is a tab like the others */
+.m-tab{background:#fff;border-radius:0;box-shadow:inset 0 1px 0 var(--m-line);height:calc(60px + var(--m-safe))}
+.m-tab .t-row{height:58px;margin-top:2px}
+.m-tab svg{color:#8A8A8A}.m-tab [aria-current=page] svg{color:var(--m-ink)}
+.m-tab [aria-current=page] i{background:var(--m-ink)}
+.m-tab .t-bag{position:relative;left:auto;top:auto;margin:0 auto;width:48px;height:48px;border:0;border-radius:0;background:transparent;box-shadow:none}
+.m-tab .t-bag svg{color:var(--m-ink)}
+.m-tab .t-n{right:2px;top:4px;background:var(--m-urg);border:2px solid #fff}
+.m-view{padding-bottom:calc(96px + var(--m-safe))}
+html.m-on .ck{bottom:calc(72px + var(--m-safe))!important;border-radius:10px!important;box-shadow:0 1px 0 var(--m-line),0 8px 24px rgba(0,0,0,.08)!important}
+.v-bag~.m-toast{bottom:calc(80px + var(--m-safe))}
+/* surfaces: smaller radii, no glow, no pastel */
+#mApp :is(.m-c,.m-li,.cr-row,.of-t,.gf-f,.m-trust,.m-vote,.m-dep,.m-now,.m-codeline,.pay-o,.gd,.m-xp,.m-mtiles>*,.m-mduo>*){border-radius:12px!important;box-shadow:none!important}
+#mApp :is(.pg-hero,.gf-hero,.of-wallet,.m-wallet,.m-promo .pr-s,.m-givebox){border-radius:14px!important;box-shadow:none!important}
+.pg-hero{background:var(--m-soft)!important}.pg-hero .pg-blob{display:none}
+.pg-hero .pg-cut{animation:none;filter:drop-shadow(0 10px 10px rgba(0,0,0,.12))}
+.pg-hero p{color:#444}
+.gf-hero{background:var(--m-soft)!important}#mApp .gf-hero p{color:#444}
+.gf-base,.gf-lid{background:#111!important;box-shadow:none}
+.gf-f{background:var(--m-soft)!important}.gf-f small{color:var(--m-mute)}.gf-f svg{color:var(--m-ink)}
+.of-wallet,.m-wallet{background:#111!important}
+.of-wallet .of-amt{background:none;-webkit-text-fill-color:#fff;color:#fff}
+.of-wallet .m-kick{color:rgba(255,255,255,.7)}.of-wallet .b-dm{color:rgba(255,255,255,.06)}
+.m-wallet .w-i{background:rgba(255,255,255,.1);color:#fff;border-radius:10px}
+.cr-row{border:1px solid var(--m-line)}.cr-row.on{border-color:var(--m-ink)}
+.cr-i{background:var(--m-soft)!important;color:var(--m-ink)!important;border-radius:10px}
+.of-t{background:#fff!important;border:1px solid var(--m-line)}.of-t.on{border-color:var(--m-ink);box-shadow:none}
+.of-r{border-left:1px dashed var(--m-line)}.of-r button{border:1px solid var(--m-line)}.of-r .use{border-color:#111}
+.of-r .use[aria-pressed=true]{background:#111}.of-l small{color:var(--m-mute)}
+.m-dep,.m-now{background:var(--m-soft)!important}.m-now span{color:var(--m-mute)}
+.m-givebox{background:var(--m-soft)!important}.m-givebox svg{color:var(--m-ink)}
+.m-tog.light[aria-pressed=true] .m-sw,.m-wallet[aria-pressed=true] .m-sw{background:#fff}
+.m-wallet[aria-pressed=true] .m-sw::after{background:#111}
+/* controls: crisp, 8px corners, black primary */
+#mApp :is(.m-cta,.m-buy button,.m-search,.m-tool){border-radius:8px!important;box-shadow:none!important}
+.m-pill{border-radius:999px}
+.m-pill[aria-pressed=true]{background:#111;color:#fff}
+.m-trust svg,.m-vote-o button[aria-pressed=true]{color:var(--m-ink)}
+.m-vote-o button[aria-pressed=true]{background:#111;border-color:#111;color:#fff}
+.m-sheet{border-radius:14px 14px 0 0}.m-scrim{background:rgba(0,0,0,.36)}
+/* motion: short and plain */
+.m-view.m-in,.m-view.m-back{animation-duration:.22s}
+.m-tab .t-bag{width:auto;height:56px;flex-direction:column;gap:5px;color:var(--m-ink)}
+.m-tab .t-bag svg{color:#8A8A8A}.m-tab .t-bag[aria-current=page] svg{color:var(--m-ink)}
+.m-tab .t-n{right:50%;margin-right:-22px;top:6px}
+.m-chip{box-shadow:none!important}
+#mApp :is(.m-plus,.l-add,.m-act){background:#111!important;color:#fff!important;box-shadow:none!important}
+#mApp :is(.m-plus,.l-add,.m-act) svg{color:#fff!important}
+/* quick add: a plain round button inside the card, not a notch */
+#mApp .m-plus,#mApp .m-tile .m-plus{right:10px;bottom:10px;width:36px;height:36px;border-radius:50%;padding:0;align-items:center}
+#mApp .m-plus i{width:auto;height:auto;background:none}
+#mApp .m-plus svg{width:18px;height:18px}
+.m-tool svg{color:var(--m-ink)}

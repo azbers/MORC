@@ -148,6 +148,8 @@
     if ((m = p.match(/^\/pages\/([^/]+)\/?$/)) && NATIVE[m[1]]) return { v: NATIVE[m[1]] };
     // pages the storefront draws from its own code open in place, with no page load
     if ((m = p.match(/^\/pages\/([^/]+)\/?$/)) && DRAWN[m[1]] && API.draw) return { v: 'page', a: DRAWN[m[1]], hash: url.hash };
+    // every other content page (policy pages, the Journal and its guides, search) is fetched in the background and drawn in place
+    if (/^\/(pages\/[^/]+|blogs\/[^?#]+|policies\/[^/]+|search)\/?$/.test(p) && !/^\/pages\/(alerts|runway)\/?$/.test(p) && window.DOMParser && window.fetch) return { v: 'page', remote: url.pathname + url.search, hash: url.hash };
     return null;
   }
   const href = {
@@ -193,8 +195,7 @@
   function paintTab() {
     const n = API.cart.reduce((a, l) => a + l.qty, 0);
     const a = (v, h, icon, label) => `<a href="${h}" data-m aria-label="${label}"${cur.v === v ? ' aria-current="page"' : ''}>${ic(icon)}<i></i></a>`;
-    tab.innerHTML = `<div class="t-row">${a('home', href.home, 'home', 'Home')}${a('shop', href.shop(), 'search', 'Shop and search')}<span></span>${a('liked', href.liked, 'heart', 'Liked')}<button class="t-btn" type="button" data-menu aria-label="Menu">${ic('grid')}<i></i></button></div>
-      <a class="t-bag" href="${href.bag}" data-m aria-label="Bag, ${n} ${n === 1 ? 'pair' : 'pairs'}"${cur.v === 'bag' ? ' aria-current="page"' : ''}>${ic('bag')}<span class="t-n">${n || ''}</span></a>`;
+    tab.innerHTML = `<div class="t-row">${a('home', href.home, 'home', 'Home')}${a('shop', href.shop(), 'search', 'Shop and search')}<a class="t-bag" href="${href.bag}" data-m aria-label="Bag, ${n} ${n === 1 ? 'pair' : 'pairs'}"${cur.v === 'bag' ? ' aria-current="page"' : ''}>${ic('bag')}<span class="t-n">${n || ''}</span><i></i></a>${a('liked', href.liked, 'heart', 'Liked')}<button class="t-btn" type="button" data-menu aria-label="Menu">${ic('grid')}<i></i></button></div>`;
     tab.classList.toggle('m-off', cur.v === 'product' || (cur.v === 'bag' && API.cart.length > 0));
   }
 
@@ -784,9 +785,15 @@
     }).join('');
   }
   V.page = function () {
-    const src = document.getElementById('app'); if (!src) return;
-    if (cur.a && document.body.dataset.page !== cur.a) { try { API.draw(cur.a); } catch (e) { location.reload(); return; } }
-    const page = document.body.dataset.page || 'page';
+    let src = document.getElementById('app'); if (!src) return;
+    let page = document.body.dataset.page || 'page';
+    if (cur.remote) {
+      // a page from the store, read from the copy fetched in the background (or fetched now, with its shape on screen)
+      const doc = DOCS.get(cur.remote);
+      if (!doc) { const want = cur.remote; view.innerHTML = skeleton(''); H.classList.add('m-loading'); fetchDoc(want).then(() => { H.classList.remove('m-loading'); if (cur.remote === want) render(); }, () => { location.href = want; }); return; }
+      src = doc.getElementById('app') || doc.querySelector('main') || doc.body; page = 'page';
+      if (doc.title) document.title = doc.title;
+    } else if (cur.a && document.body.dataset.page !== cur.a) { try { API.draw(cur.a); } catch (e) { location.reload(); return; } page = cur.a; }
     const pg = harvest(src);
     // the storefront has not drawn this page yet: keep its shape on screen until it does
     if (!pg.title && !pg.secs.length) { view.innerHTML = skeleton(PAGE_T[page] || ''); state.pageTitle = PAGE_T[page] || 'DAUR Supply'; return; }
@@ -812,6 +819,27 @@
     observeIn();
     if (location.hash) { const t = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (t && view.contains(t)) { if (t.tagName === 'DETAILS') t.open = true; setTimeout(() => t.scrollIntoView({ block: 'start' }), 60); } }
   };
+
+  /* ---------- background copies of store pages: fetched once, kept for the visit ---------- */
+  const FIRST = location.pathname + location.search;
+  const DOCS = new Map(), PEND = new Map();
+  // the page the visit started on is kept as it arrived, so coming back to it later still shows the store copy
+  try { const first = document.getElementById('app'); if (first) { const d = document.implementation.createHTMLDocument(document.title); d.body.appendChild(first.cloneNode(true)); DOCS.set(FIRST, d); } } catch (e) { /* the live page is read instead */ }
+  function fetchDoc(u) {
+    if (DOCS.has(u)) return Promise.resolve(DOCS.get(u));
+    if (PEND.has(u)) return PEND.get(u);
+    const p = fetch(u, { credentials: 'same-origin', headers: { Accept: 'text/html' } }).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then((h) => { const d = new DOMParser().parseFromString(h, 'text/html'); DOCS.set(u, d); PEND.delete(u); return d; }, (e) => { PEND.delete(u); throw e; });
+    PEND.set(u, p); return p;
+  }
+  const warmDoc = (h) => { try { const r = parse(h); if (r && r.remote && !DOCS.has(r.remote) && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData)) fetchDoc(r.remote).catch(() => {}); } catch (e) { /* only a speed up */ } };
+  // pair photos are fetched while the shopper looks around, so a product page opens with its pictures ready
+  function warmImages() {
+    const list = P(); let i = 0;
+    const next = (dl) => { while (i < list.length && (!dl || dl.timeRemaining() > 4)) { const p = list[i++], v = firstV(p), x = pic(p, v); const a = new Image(); a.decoding = 'async'; a.src = x.src; (v.images || []).slice(0, 2).forEach((s) => { const b = new Image(); b.src = sized(s, 900); }); } if (i < list.length) idle(next); };
+    idle(next);
+  }
+  const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(() => fn(null), 400));
 
   /* ---------- navigation ---------- */
   function render(dir) {
@@ -841,7 +869,7 @@
       if (navigator.onLine === false) { state.retry = u; cur = { v: 'offline' }; render('in'); window.scrollTo(0, 0); return; }
       view.innerHTML = skeleton(''); H.classList.add('m-loading'); window.scrollTo(0, 0); location.href = u; return;
     }
-    const same = r.v === cur.v && r.a === cur.a;
+    const same = r.v === cur.v && r.a === cur.a && r.remote === cur.remote;
     if (r.v !== cur.v && r.v === 'shop') state.q = r.q != null ? r.q : null;
     if (r.v === 'shop') state.shopCat = r.a;
     cur = r;
@@ -1017,6 +1045,7 @@
     const d = t.dataset;
     if (d.jump !== undefined) { e.preventDefault(); const el = document.getElementById(d.jump || (t.getAttribute('href') || '').slice(1)); if (el) { if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); } return; }
     if (t.tagName === 'A' && d.m !== undefined) { e.preventDefault(); closeSheet(); go(t.getAttribute('href')); return; }
+    if (t.tagName === 'A' && d.m === undefined && !t.target && !t.hasAttribute('download') && (view.contains(t) || sheet.contains(t)) && t.origin === location.origin && !/^#/.test(t.getAttribute('href') || '') && parse(t.href)) { e.preventDefault(); closeSheet(); go(t.href); return; }
     if (t.tagName === 'A' && view.contains(t) && /^#./.test(t.getAttribute('href') || '')) { const el = document.getElementById(t.getAttribute('href').slice(1)); if (el) { e.preventDefault(); if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
     if (d.menu !== undefined) return menu();
     if (d.explain !== undefined) return explain();
@@ -1139,6 +1168,10 @@
   function boot() {
   netPaint();
   warm();
+  // a finger on a link starts fetching its page before the tap ends
+  app.addEventListener('touchstart', (e) => { const a = e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });
+  app.addEventListener('pointerover', (e) => { const a = e.target.closest && e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });
+  idle(() => { warmImages(); [root + '/blogs/journal'].forEach(warmDoc); });
   slimCookies();
   render();
   splash();
