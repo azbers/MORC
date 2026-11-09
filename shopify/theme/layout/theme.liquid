@@ -163,6 +163,7 @@
 <main id="app" tabindex="-1">{{ content_for_layout }}</main>
 {% render 'daur-data', product: product, daur_param: daur_param %}
 {%- if settings.test_photos and theme.role != 'main' %}{% render 'daur-test-photos' %}{% endif %}
+<script>window.DAUR_PAY={bank:{{ settings.pay_bank_name | default: 'Bank name' | json }},title:{{ settings.pay_bank_title | default: 'DAUR Supply' | json }},number:{{ settings.pay_bank_number | default: '' | json }},iban:{{ settings.pay_bank_iban | default: '' | json }},wallets:[{name:"EasyPaisa",number:{{ settings.pay_ep_number | default: '' | json }},title:{{ settings.pay_ep_title | default: '' | json }}},{name:"JazzCash",number:{{ settings.pay_jc_number | default: '' | json }},title:{{ settings.pay_jc_title | default: '' | json }}}]};</script>
 <script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
 <script src="{{ 'shoe.js' | asset_url }}" defer></script>
 <script src="{{ 'icons.js' | asset_url }}" defer></script>
@@ -173,7 +174,7 @@
 <script src="{{ 'alive.js' | asset_url }}" defer></script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
 {%- if settings.m_app != false %}
-<script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %}};</script>
+<script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %},bank:window.DAUR_PAY};</script>
 <script src="{{ 'daur-m.js' | asset_url }}" defer></script>
 <script src="{{ 'daur-m-pdp.js' | asset_url }}" defer></script>
 <script src="{{ 'daur-m-bag.js' | asset_url }}" defer></script>

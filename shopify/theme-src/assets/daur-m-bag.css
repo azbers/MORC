@@ -207,3 +207,24 @@ html[data-mv=bag] #mApp .m-sheet:not(.on)~.m-toast{bottom:calc(132px + var(--m-s
 
 @media (max-width:350px){#mApp .xb-f2{grid-template-columns:minmax(0,1fr)}#mApp .xb-row{grid-template-columns:84px minmax(0,1fr);gap:12px}#mApp .xb-img{width:84px;height:84px;border-radius:12px}#mApp .xb-img img{width:74px;height:60px}#mApp .xb-po-a b{font-size:19px}#mApp .xb-trust li{font-size:11px}}
 @media (min-width:640px){#mApp .xb-bag{max-width:640px;margin:0 auto;width:100%}}
+
+/* payment cards: bank, EasyPaisa and JazzCash as cards in one sideways row */
+#mApp .xb-pcs{display:flex;gap:12px;margin:0 -20px;padding:2px 20px 6px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#mApp .xb-pcs::-webkit-scrollbar{display:none}
+#mApp .xb-pc{position:relative;flex:0 0 86%;max-width:340px;min-height:204px;scroll-snap-align:center;display:flex;flex-direction:column;gap:12px;padding:18px 18px 16px;border-radius:18px;overflow:hidden;color:#fff;background:#111;box-shadow:0 10px 24px -14px rgba(0,0,0,.55)}
+#mApp .xb-pc:only-child{flex-basis:100%;max-width:none}
+#mApp .xb-pc.k-easypaisa{background:#0f3d2e}
+#mApp .xb-pc.k-jazzcash{background:#6d1019}
+#mApp .xb-pc header{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+#mApp .xb-pc small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+#mApp .xb-pc-n b{display:block;margin-top:3px;font-size:19px;font-weight:700;letter-spacing:.01em;color:#fff}
+#mApp .xb-chip{flex:none;width:40px;height:29px;color:#d9b36a}
+#mApp .xb-pc-m{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+#mApp .xb-pc-m>span{min-width:0}
+#mApp .xb-pc-m b{display:block;margin-top:4px;font-size:19px;font-weight:500;letter-spacing:.04em;color:#fff;overflow-wrap:anywhere;-webkit-user-select:all;user-select:all}
+#mApp .xb-pc-m.sm{margin-top:0}
+#mApp .xb-pc-m.sm b{font-size:13px;letter-spacing:.02em}
+#mApp .xb-pc b.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#mApp .xb-pc footer{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
+#mApp .xb-pc footer b{display:block;margin-top:3px;font-size:14px;font-weight:600;color:#fff}
+#mApp .xb-pc-i{font-size:11px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.55)}

@@ -368,5 +368,62 @@
         "default": 350
       }
     ]
+  },
+  {
+    "name": "Payment accounts",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The accounts shown as payment cards in the bag on phone and desktop. Leave a number empty to hide that card."
+      },
+      {
+        "type": "text",
+        "id": "pay_bank_name",
+        "label": "Bank name",
+        "default": "Bank name"
+      },
+      {
+        "type": "text",
+        "id": "pay_bank_title",
+        "label": "Bank account title",
+        "default": "DAUR Supply"
+      },
+      {
+        "type": "text",
+        "id": "pay_bank_number",
+        "label": "Bank account number",
+        "default": "0000 0000 0000 0000"
+      },
+      {
+        "type": "text",
+        "id": "pay_bank_iban",
+        "label": "IBAN",
+        "default": "PK00 BANK 0000 0000 0000 0000"
+      },
+      {
+        "type": "text",
+        "id": "pay_ep_number",
+        "label": "EasyPaisa number",
+        "default": "0300 0000000"
+      },
+      {
+        "type": "text",
+        "id": "pay_ep_title",
+        "label": "EasyPaisa account title",
+        "default": "DAUR Supply"
+      },
+      {
+        "type": "text",
+        "id": "pay_jc_number",
+        "label": "JazzCash number",
+        "default": "0300 0000000"
+      },
+      {
+        "type": "text",
+        "id": "pay_jc_title",
+        "label": "JazzCash account title",
+        "default": "DAUR Supply"
+      }
+    ]
   }
 ]

@@ -16,7 +16,8 @@
      sells, either here or by printing window.DAUR_M.bank = { bank, title, number, iban, wallets: [{ name, number, title }] }
      from Theme settings. The IBAN below fails the bank check on purpose, so no transfer can reach a real account. */
   let mb = M.bank; if (typeof mb === 'string') { try { mb = JSON.parse(mb); } catch (e) { mb = null; } }
-  const BANK = Object.assign({ bank: 'Bank name', title: 'DAUR Supply', number: '0000 0000 0000 0000', iban: 'PK00 BANK 0000 0000 0000 0000', wallets: [] }, mb || {});
+  const BANK = Object.assign({ bank: 'Bank name', title: 'DAUR Supply', number: '0000 0000 0000 0000', iban: 'PK00 BANK 0000 0000 0000 0000', wallets: [{ name: 'EasyPaisa', number: '0300 0000000', title: 'DAUR Supply' }, { name: 'JazzCash', number: '0300 0000000', title: 'DAUR Supply' }] }, mb || {});
+  window.DAUR_PAYCARDS = () => payCards();
   const MAIL = String(C.supportEmail || 'contact@daursupply.com');
 
   /* ---------- icons the core set does not carry (Phosphor, MIT licence, same two tone style) ---------- */
@@ -206,18 +207,27 @@
     const items = m.L.map((x) => x.d.p.name + ' (' + x.d.v.color + (x.mode === 'give' ? ')' : ') EU ' + x.l.size) + (x.qty > 1 ? ' x' + x.qty : '') + (x.mode === 'gift' ? ', gift' : x.mode === 'give' ? ', giving' : '')).join('; ');
     return 'Assalam o Alaikum DAUR, I have sent ' + fmt(amt) + ' for my order: ' + items + '. My receipt is attached.';
   }
+  // every way to pay is its own card: the bank account first, then each mobile wallet (swipe sideways)
+  const CHIP = '<svg class="xb-chip" viewBox="0 0 44 32" aria-hidden="true"><rect x=".75" y=".75" width="42.5" height="30.5" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 11h13M1 21h13M30 11h13M30 21h13M14 1v30M30 1v30" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+  function payCards() {
+    const out = [];
+    if (BANK.number || BANK.iban) out.push({ k: 'bank', kind: 'Bank transfer', name: BANK.bank, title: BANK.title, main: ['Account number', BANK.number], extra: BANK.iban ? ['IBAN', BANK.iban] : null });
+    (BANK.wallets || []).filter((w) => w && w.number).forEach((w) => out.push({ k: String(w.name || 'wallet').toLowerCase().replace(/[^a-z]/g, ''), kind: 'Mobile wallet', name: w.name || 'Mobile wallet', title: w.title || BANK.title, main: ['Mobile account', w.number], extra: null }));
+    return out;
+  }
   function bank(m) {
-    const amt = m.plan.now, msg = receiptText(m, amt);
-    const row = (k, val, copy, mono) => `<div class="xb-card-r"><span><small>${esc(k)}</small><b${mono ? ' class="mono"' : ''}>${esc(val)}</b></span>${copy ? `<button type="button" class="xb-cp" data-xcopy="${esc(String(val).replace(/\s+/g, ''))}" aria-label="Copy ${esc(k)}">${ic('copy')}<span>Copy</span></button>` : ''}</div>`;
-    const wal = (BANK.wallets || []).filter((w) => w && w.number);
+    const amt = m.plan.now, msg = receiptText(m, amt), cards = payCards();
+    const cp = (label, val) => `<button type="button" class="xb-cp" data-xcopy="${esc(String(val).replace(/\s+/g, ''))}" aria-label="Copy ${esc(label)}">${ic('copy')}<span>Copy</span></button>`;
+    const one = (c, i) => `<article class="xb-pc k-${esc(c.k)}" role="listitem" aria-label="${esc(c.name)}"><span class="xb-card-dm" aria-hidden="true">${DMARK}</span>
+        <header><span class="xb-pc-n"><small>${esc(c.kind)}</small><b>${esc(c.name)}</b></span>${CHIP}</header>
+        <div class="xb-pc-m"><span><small>${esc(c.main[0])}</small><b class="mono">${esc(c.main[1])}</b></span>${cp(c.main[0], c.main[1])}</div>
+        ${c.extra ? `<div class="xb-pc-m sm"><span><small>${esc(c.extra[0])}</small><b class="mono">${esc(c.extra[1])}</b></span>${cp(c.extra[0], c.extra[1])}</div>` : ''}
+        <footer><span><small>Account title</small><b>${esc(c.title || '')}</b></span><span class="xb-pc-i">${i + 1} / ${cards.length}</span></footer></article>`;
+    const names = cards.slice(1).map((c) => c.name);
     return `<section class="xb-bank" aria-label="Where to send your payment">
       <div class="xb-bk-h"><h2 class="xb-h">Send ${esc(fmt(amt))}</h2><button type="button" class="xb-cp lt" data-xcopy="${Math.round(amt)}" aria-label="Copy the amount">${ic('copy')}<span>Copy amount</span></button></div>
-      <p class="xb-bk-s">From any bank app, now or right after you place your order.</p>
-      <div class="xb-card"><span class="xb-card-dm" aria-hidden="true">${DMARK}</span>
-        <div class="xb-card-h">${xi('bank')}<b>${esc(BANK.bank)}</b></div>
-        ${BANK.title ? row('Account title', BANK.title, false, false) : ''}${BANK.number ? row('Account number', BANK.number, true, true) : ''}${BANK.iban ? row('IBAN', BANK.iban, true, true) : ''}
-        ${wal.map((w) => row(w.name || 'Mobile wallet', w.number + (w.title ? ', ' + w.title : ''), true, true)).join('')}
-      </div>
+      <p class="xb-bk-s">Pay the way you already do, now or right after you place your order.${names.length ? ' Swipe for ' + esc(names.join(' and ')) + '.' : ''}</p>
+      <div class="xb-pcs" role="list">${cards.map(one).join('')}</div>
       <a class="xb-wa" href="https://wa.me/${esc(WA)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${ic('wa')}<span>Send the receipt on WhatsApp</span></a>
       <a class="xb-mail" href="mailto:${esc(MAIL)}?subject=${encodeURIComponent('Payment receipt')}&amp;body=${encodeURIComponent(msg)}">Or email it to ${esc(MAIL)}</a>
     </section>`;

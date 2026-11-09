@@ -3767,3 +3767,17 @@ body[data-page="feed"] .ftr { display: block !important; }
 .pay-ch span { display: grid; gap: 2px; font-family: var(--body); font-size: 14px; line-height: 1.3; }
 .pay-ch small { font-size: 12.5px; color: var(--mute); }
 .pay-ch .pc-a { text-align: right; }
+
+/* Payment cards in the desktop bag: bank, EasyPaisa and JazzCash */
+.pay-cards { display: grid; gap: 8px; margin: 4px 0 2px; }
+.pay-card { position: relative; display: grid; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #1b1a18; color: #fff; font-family: var(--body); overflow: hidden; }
+.pay-card.k-easypaisa { background: #0f3d2e; }
+.pay-card.k-jazzcash { background: #6d1019; }
+.pay-card small, .pay-card .pc-k { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.62); }
+.pay-card .pc-n { font-size: 17px; font-weight: 700; letter-spacing: .01em; margin-top: -4px; }
+.pay-card .pc-r { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.14); }
+.pay-card .pc-r b { display: block; margin-top: 2px; font-size: 15px; font-weight: 500; letter-spacing: .04em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; user-select: all; }
+.pay-card .pc-t b { display: block; margin-top: 2px; font-size: 13.5px; font-weight: 600; }
+.pay-card .pc-cp { flex: none; min-width: 64px; min-height: 36px; padding: 0 12px; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; background: transparent; color: #fff; font: 600 12px/1 var(--body); letter-spacing: .04em; cursor: pointer; transition: background-color .18s ease, color .18s ease; }
+.pay-card .pc-cp:hover { background: #fff; color: #1b1a18; }
+.pay-card .pc-cp:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }

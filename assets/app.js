@@ -1486,6 +1486,23 @@
     if (p.choice === 'full') { p.now = t.total; p.door = 0; }
     return p;
   }
+  /* Where the payment goes: the bank account, EasyPaisa and JazzCash as cards (Theme settings > Payment accounts, printed as
+     window.DAUR_PAY). The defaults are placeholders that no transfer can reach, until the owner types the real accounts. */
+  function payCards() {
+    const P0 = Object.assign({ bank: 'Bank name', title: 'DAUR Supply', number: '0000 0000 0000 0000', iban: 'PK00 BANK 0000 0000 0000 0000', wallets: [{ name: 'EasyPaisa', number: '0300 0000000', title: 'DAUR Supply' }, { name: 'JazzCash', number: '0300 0000000', title: 'DAUR Supply' }] }, window.DAUR_PAY || {});
+    const list = [];
+    if (P0.number || P0.iban) list.push({ k: 'bank', kind: 'Bank transfer', name: P0.bank, title: P0.title, rows: [['Account number', P0.number], ['IBAN', P0.iban]].filter((r) => r[1]) });
+    (P0.wallets || []).filter((w) => w && w.number).forEach((w) => list.push({ k: String(w.name || 'wallet').toLowerCase().replace(/[^a-z]/g, ''), kind: 'Mobile wallet', name: w.name, title: w.title || P0.title, rows: [['Mobile account', w.number]] }));
+    if (!list.length) return '';
+    return `<div class="pay-cards" role="list" aria-label="Where to send your payment">${list.map((c) => `<div class="pay-card k-${esc(c.k)}" role="listitem"><span class="pc-k">${esc(c.kind)}</span><b class="pc-n">${esc(c.name)}</b>
+      ${c.rows.map((r) => `<span class="pc-r"><span><small>${esc(r[0])}</small><b>${esc(r[1])}</b></span><button type="button" class="pc-cp" data-paycopy="${esc(String(r[1]).replace(/\s+/g, ''))}" aria-label="Copy ${esc(r[0])}">Copy</button></span>`).join('')}
+      <span class="pc-t"><small>Account title</small><b>${esc(c.title || '')}</b></span></div>`).join('')}</div>`;
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest && e.target.closest('[data-paycopy]'); if (!b) return;
+    const done = () => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1600); };
+    try { navigator.clipboard.writeText(b.dataset.paycopy).then(done, () => toast('Press and hold the number to copy it')); } catch (err) { toast('Press and hold the number to copy it'); }
+  });
   function careBox(t) {
     const p = bagPlan(t), one = p.ownPairs === 1;
     const head = gift.on ? 'Your gift, covered today' : p.onlyCovered ? 'Philanthropy, covered today' : p.covered ? 'Philanthropy, covered today' : one ? 'Reserve it today' : 'Reserve them today';
@@ -1497,10 +1514,12 @@
     if (p.canChoose) return `<div class="care-box"><span class="mono mute">How you pay</span><div class="pay-chs" role="radiogroup" aria-label="How you pay">
       ${opt('adv', p.covered ? 'Cover the Philanthropy today' : (one ? 'Reserve it with ' : 'Reserve them with ') + fmt(p.adv), fmt(t.total - p.adv) + (one ? ' when it reaches your door' : ' when they reach your door'), p.adv)}${opt('full', 'Done in one go', 'Nothing to pay at the door', t.total)}</div>
       <p class="form-note">${p.choice === 'full' ? 'Send ' + fmt(t.total) + ' by bank transfer after you place the order. If you cancel before dispatch it comes back to you in full.' : 'Send ' + fmt(p.adv) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full.'}</p>
+      ${payCards()}
       <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
     return `<div class="care-box"><div class="sum-row"><span><b>${head}</b></span><span><b>${fmt(p.now)}</b></span></div>
       <div class="sum-row"><span>${p.door ? (one || !p.ownPairs ? 'When it reaches your door' : 'When they reach your door') : 'Nothing to pay at the door'}</span><span>${fmt(p.door)}</span></div>
       <p class="form-note">${note}</p>
+      ${payCards()}
       <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
   }
   function giftBox() {
