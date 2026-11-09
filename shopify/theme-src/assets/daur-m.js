@@ -1040,7 +1040,26 @@
   // a page shown again from the browser's back cache drops its loading state
   window.addEventListener('pageshow', (e) => { if (e.persisted) { H.classList.remove('m-loading'); if (view.querySelector('.m-skel')) render(); } });
 
-  /* ---------- start ---------- */
+  /* ---------- shared with the view files ----------
+     daur-m-pdp.js (product page) and daur-m-bag.js (bag and payment) load after this file and replace V.product
+     and V.bag through window.DAUR_MX, so each area can be worked on in its own file. MX.tap('name', fn) adds a
+     handler for buttons that carry data-name; fn returns false to let the built in handlers run as well. */
+  const TAPS = {};
+  window.DAUR_MX = {
+    V, API, C, M, I, ic, esc, fmt, NF, store, asset, txt, sized, pic, img, firstV, price, notesFor, allNotes, wished, minP, delTxt, days, DEL, DAUR_ADD, GIVE,
+    WA, waNice, SOC, KIND, MODES, TINT, tn, tintOf, P, CUT, DMARK, WORDMARK, logo, href, root, parse, go, render, paintTop, paintTab, card, row, cats, inCat, hasSale,
+    view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
+    W, CODE, credits, coupons, payPlan, giftUnits, GD, gdOf, giftMissing, checkout, lineProps, orderType, orderNote,
+    get cur() { return cur; }, get state() { return state; }, reduce,
+    tap: (name, fn) => { TAPS[name] = fn; }
+  };
+  app.addEventListener('click', (e) => {
+    const t = e.target.closest('a,button,summary,[data-tap]'); if (!t) return;
+    for (const k in TAPS) if (t.dataset[k] !== undefined && TAPS[k](t, e, t.dataset) !== false) { e.stopImmediatePropagation(); return; }
+  }, true);
+
+  /* ---------- start: after every deferred view file has loaded ---------- */
+  function boot() {
   netPaint();
   render();
   splash();
@@ -1055,4 +1074,6 @@
   const solid = () => { const v = window.scrollY > 40; if (v !== sol) { sol = v; top.classList.toggle('solid', v); } };
   window.addEventListener('scroll', solid, { passive: true }); solid();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { paintTab(); paintTop(); if (cur.v === 'bag') V.bag(); } });
+  }
+  if (document.readyState === 'loading' || document.readyState === 'interactive') document.addEventListener('DOMContentLoaded', boot, { once: true }); else boot();
 })();

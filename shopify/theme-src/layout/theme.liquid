@@ -142,6 +142,8 @@
 <script>try{if(matchMedia('(max-width: 900px)').matches&&!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}catch(e){}</script>
 <link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-700.woff2' | asset_url }}" crossorigin media="(max-width: 900px)">
 <link rel="stylesheet" href="{{ 'daur-m.css' | asset_url }}" media="(max-width: 900px)">
+<link rel="stylesheet" href="{{ 'daur-m-pdp.css' | asset_url }}" media="(max-width: 900px)">
+<link rel="stylesheet" href="{{ 'daur-m-bag.css' | asset_url }}" media="(max-width: 900px)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DAUR">
@@ -171,6 +173,8 @@
 {%- if settings.m_app != false %}
 <script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %}};</script>
 <script src="{{ 'daur-m.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-m-pdp.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-m-bag.js' | asset_url }}" defer></script>
 {%- endif %}
 {%- comment -%} pages the shopper is about to open are fetched while the finger is still on the link (Chrome, Edge, Samsung Internet) {%- endcomment -%}
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/cart*","/checkout*","/checkouts/*","/account*","/*?*add*"]}}]},"eagerness":"moderate"}]}</script>
