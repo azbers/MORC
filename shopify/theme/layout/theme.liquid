@@ -142,8 +142,9 @@
 <script>try{if(matchMedia('(max-width: 900px)').matches&&!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}catch(e){}</script>
 <link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-700.woff2' | asset_url }}" crossorigin media="(max-width: 900px)">
 <link rel="stylesheet" href="{{ 'daur-m.css' | asset_url }}" media="(max-width: 900px)">
-<link rel="stylesheet" href="{{ 'daur-m-pdp.css' | asset_url }}" media="(max-width: 900px)">
-<link rel="stylesheet" href="{{ 'daur-m-bag.css' | asset_url }}" media="(max-width: 900px)">
+{%- comment -%} the product page and bag styles hold up the first paint only on the page that opens with them; elsewhere they load alongside and are ready long before a tap opens a pair or the bag {%- endcomment -%}
+{%- if template.name == 'product' %}<link rel="stylesheet" href="{{ 'daur-m-pdp.css' | asset_url }}" media="(max-width: 900px)">{% else %}<link rel="stylesheet" href="{{ 'daur-m-pdp.css' | asset_url }}" media="print" onload="this.media='(max-width: 900px)'">{% endif %}
+{%- if template.name == 'cart' %}<link rel="stylesheet" href="{{ 'daur-m-bag.css' | asset_url }}" media="(max-width: 900px)">{% else %}<link rel="stylesheet" href="{{ 'daur-m-bag.css' | asset_url }}" media="print" onload="this.media='(max-width: 900px)'">{% endif %}
 <link rel="stylesheet" href="{{ 'daur-m-vouchers.css' | asset_url }}" media="(max-width: 900px)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">

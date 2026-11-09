@@ -117,6 +117,15 @@
   const maxPct = (p) => Math.max(...p.variants.map(pct));
   const audienceLabel = (p) => p.group ? p.audience + ' / ' + p.group : p.audience;
   const lineName = (k) => catLabel[k] || k;
+  // Shopify's image server resizes on request. The catalog and brand photos arrive with a width already in the URL
+  // (width=1400 or 2400); it is replaced with the width asked for, so a srcset really offers smaller files.
+  function cdnW(src, w) {
+    if (!/(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src)) return src;
+    const b = src.replace(/([?&])(width|height)=\d+&?/g, '$1').replace(/[?&]$/, '');
+    return b + (b.includes('?') ? '&' : '?') + 'width=' + w;
+  }
+  // on a phone the app layer (daur-m.js) draws the screen and this page stays hidden, so its pictures are never fetched
+  const APPV = document.documentElement.classList.contains('m-on');
   function visual(p, v, opts) {
     opts = opts || {};
     if (v.images && v.images.length) {
@@ -124,11 +133,11 @@
       const src = v.images[Math.min(k, v.images.length - 1)];
       // Shopify resizes on request: a phone takes a small file, a wide screen a sharp one. A picture that is only seen
       // on hover or later in a cycle waits (data-src) until it is about to show, so the first screen loads first.
-      const cdn = /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src);
-      const at = (w) => cdn ? src + (src.includes('?') ? '&' : '?') + 'width=' + w : src;
+      const cdn = /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src);
+      const at = (w) => cdn ? cdnW(src, w) : src;
       const ss = cdn ? [360, 540, 720, 1000, 1400].map((w) => at(w) + ' ' + w + 'w').join(', ') : '';
       const d = opts.defer ? 'data-' : '';
-      return `<img ${d}src="${esc(at(720))}"${ss ? ` ${d}srcset="${esc(ss)}" sizes="${esc(opts.sizes || '(min-width: 1024px) 50vw, 100vw')}"` : ''} alt="${esc(opts.alt != null ? opts.alt : p.name + ' in ' + v.color)}" width="1200" height="1200" ${opts.eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+      return `<img ${d}src="${esc(at(720))}"${ss ? ` ${d}srcset="${esc(ss)}" sizes="${esc(opts.sizes || '(min-width: 1024px) 50vw, 100vw')}"` : ''} alt="${esc(opts.alt != null ? opts.alt : p.name + ' in ' + v.color)}" width="1200" height="1200" ${opts.eager && !APPV ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
     }
     return SHOE.render({ name: p.name, colorway: v.color, silhouette: p.silhouette, palette: v.palette }, opts);
   }
@@ -755,14 +764,14 @@
   const TP = window.DAUR_TEST_PHOTOS || null;
   const simg = (k) => (C.img && C.img[k]) || (TP && TP.site && TP.site[k]) || '';
   // Shopify's image server resizes on request, so phones download a small file and wide screens a sharp one
-  const cdnW = (src, w) => /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) && !/[?&]width=/.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=' + w : src;
+
   const srcset = (src) => /(cdn\.shopify\.com|\/cdn\/shop\/)/.test(src) ? [480, 800, 1200, 1800].map((w) => cdnW(src, w) + ' ' + w + 'w').join(', ') : '';
   function photo(k, alt, o) {
     o = o || {};
     const src = typeof k === 'string' && !/[/.]/.test(k) ? simg(k) : k;
     if (!src) return '';
     const ss = srcset(src);
-    return `<img src="${esc(cdnW(src, 1200))}"${ss ? ` srcset="${esc(ss)}" sizes="${esc(o.sizes || '100vw')}"` : ''} alt="${esc(alt || '')}" width="1600" height="1200" ${o.eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+    return `<img src="${esc(cdnW(src, 1200))}"${ss ? ` srcset="${esc(ss)}" sizes="${esc(o.sizes || '100vw')}"` : ''} alt="${esc(alt || '')}" width="1600" height="1200" ${o.eager && !APPV ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
   }
   const STORY = 'In the workshops of Lahore, Sialkot and Kasur, skilled hands make fine leather shoes every day. Too often that craft reaches the buyer without a name of its own, at a price shaped by labels rather than the work. DAUR exists to offer a more considered way to buy. We work with those workshops, select the pairs we believe deserve a place in the collection, check each one by hand and give it a distinctive DAUR finish.';
   const STORY_HOME = 'DAUR began with a simple idea: good footwear should be thoughtfully chosen, well finished and fairly presented. We work with skilled workshops in Lahore, Sialkot and Kasur, select the pairs we believe deserve a place in the collection, check each one by hand and give it a distinctive DAUR finish.';

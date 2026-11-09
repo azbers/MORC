@@ -690,7 +690,8 @@ html[data-mv=giving] .m-top .m-ib.m-soft{-webkit-backdrop-filter:none;backdrop-f
 .m-search,.m-pill.alt{background:#fff;box-shadow:0 1px 0 var(--m-line)}
 
 /* loading: the shape of the page shows at once, never a blank screen */
-html.m-on:not(.m-own) #app{visibility:hidden}
+/* the storefront page underneath is never shown on a phone; display:none (not just hidden) keeps its pictures from downloading */
+html.m-on:not(.m-own) #app{display:none}
 html.m-on:not(.m-own) body::before{content:"";position:fixed;inset:0;z-index:90;background:
   linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0)) 0 0/60% 100% no-repeat,
   linear-gradient(#ECEAE6,#ECEAE6) 20px 84px/calc(100% - 40px) 170px no-repeat,

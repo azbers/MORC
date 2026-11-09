@@ -40,8 +40,18 @@
     if (s) return { src: sized(s, 640), cut: false };
     return { src: asset('m-hero.webp'), cut: true };
   }
-  const sized = (s, w) => /cdn\.shopify|\/cdn\/shop\//.test(s) ? s + (s.includes('?') ? '&' : '?') + 'width=' + w : s;
-  const img = (p, v, cls, alt) => { const x = pic(p, v); return `<img class="${cls}${x.cut ? '' : ' blend'}" src="${esc(x.src)}" alt="${esc(alt == null ? p.name + ', ' + v.color : alt)}" loading="lazy" decoding="async">`; };
+  // Shopify's image server resizes on request. A URL that already carries a width (the catalog prints width=1400) has it
+  // replaced, never doubled: "&width=1400&width=900" made the server send the 1400 pixel file.
+  const sized = (s, w) => { if (!/cdn\.shopify|\/cdn\/shop\//.test(s)) return s; const b = s.replace(/([?&])(width|height)=\d+&?/g, '$1').replace(/[?&]$/, ''); return b + (b.includes('?') ? '&' : '?') + 'width=' + w; };
+  // every pair cutout also ships 400 pixels wide (m-<name>-400.webp), so a card on a phone takes the small file
+  const CUTW = { hero: 452, 'ward-brown': 506 };
+  const cutSet = (src) => { const m = /\/m-([a-z-]+)\.webp$/.exec(src); return m && !/^g-|-400$/.test(m[1]) ? `${src.replace(/\.webp$/, '-400.webp')} 400w, ${src} ${CUTW[m[1]] || 640}w` : ''; };
+  const SIZES = { 'c-img': '(max-width: 900px) 52vw, 300px' };
+  // the first pictures a screen draws are fetched at once and first (they are what the shopper sees, and what
+  // PageSpeed measures as the largest paint); the rest wait until they are about to scroll into view
+  let EAGER = 0;
+  const load = () => (EAGER > 0 ? (EAGER--, EAGER === 1 ? 'fetchpriority="high"' : 'loading="eager"') : 'loading="lazy"');
+  const img = (p, v, cls, alt) => { const x = pic(p, v), ss = x.cut && SIZES[cls] ? cutSet(x.src) : ''; return `<img class="${cls}${x.cut ? '' : ' blend'}" src="${esc(x.src)}"${ss ? ` srcset="${esc(ss)}" sizes="${SIZES[cls]}"` : ''} alt="${esc(alt == null ? p.name + ', ' + v.color : alt)}" ${load()} decoding="async">`; };
   const firstV = (p) => p.variants.find((v) => API.stockOf(v) > 0) || p.variants[0];
   const price = (v) => esc(fmt(v.price)) + (API.onSale(v) ? ` <s>${esc(NF(v.compareAt))}</s>` : '');
   const notesFor = (pid) => (window.DAUR_FITNOTES || []).filter((n) => n.pid === pid);
@@ -220,7 +230,7 @@
   }
   function row(p) {
     const v = firstV(p), t = tintOf(p), x = pic(p, v);
-    return `<div class="m-li"><a class="c-link" href="${href.product(p.id)}" data-m aria-label="${esc(p.name + ', ' + fmt(v.price))}"></a><span class="l-img" style="--tn:${TINT[t]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt="" loading="lazy"></span><span class="l-t"><b>${esc(p.name)}</b><small>${esc(p.category)} · EU ${esc(p.sizes[0])} to ${esc(p.sizes[p.sizes.length - 1])}</small><span class="l-p">${price(v)}</span></span><button class="l-add" type="button" data-quick="${esc(p.id)}" aria-label="Add ${esc(p.name)} to bag">${ic('bag')}</button></div>`;
+    return `<div class="m-li"><a class="c-link" href="${href.product(p.id)}" data-m aria-label="${esc(p.name + ', ' + fmt(v.price))}"></a><span class="l-img" style="--tn:${TINT[t]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}"${x.cut && cutSet(x.src) ? ` srcset="${esc(cutSet(x.src))}" sizes="96px"` : ''} alt="" loading="lazy" decoding="async"></span><span class="l-t"><b>${esc(p.name)}</b><small>${esc(p.category)} · EU ${esc(p.sizes[0])} to ${esc(p.sizes[p.sizes.length - 1])}</small><span class="l-p">${price(v)}</span></span><button class="l-add" type="button" data-quick="${esc(p.id)}" aria-label="Add ${esc(p.name)} to bag">${ic('bag')}</button></div>`;
   }
   const cats = () => { const s = []; P().forEach((p) => { if (!s.includes(p.category)) s.push(p.category); }); return s; };
   const inCat = (p, c) => !c || c === 'All' || c === 'Popular' || (c === 'Sale' ? p.variants.some(API.onSale) : p.category === c);
@@ -890,7 +900,9 @@
   const FIRST = location.pathname + location.search;
   const DOCS = new Map(), PEND = new Map();
   // the page the visit started on is kept as it arrived, so coming back to it later still shows the store copy
-  try { const first = document.getElementById('app'); if (first) { const d = document.implementation.createHTMLDocument(document.title); d.body.appendChild(first.cloneNode(true)); DOCS.set(FIRST, d); } } catch (e) { /* the live page is read instead */ }
+  // the copy is kept in a parsed (inert) document: a createHTMLDocument copy ignores loading="lazy" and downloaded every
+  // picture of the hidden storefront page at once (about 1.7 MB of photos on the home page)
+  try { const first = document.getElementById('app'); if (first) { const d = new DOMParser().parseFromString('<!doctype html><title></title>', 'text/html'); d.title = document.title; d.body.appendChild(d.importNode(first, true)); DOCS.set(FIRST, d); } } catch (e) { /* the live page is read instead */ }
   function fetchDoc(u) {
     if (DOCS.has(u)) return Promise.resolve(DOCS.get(u));
     if (PEND.has(u)) return PEND.get(u);
@@ -899,10 +911,11 @@
     PEND.set(u, p); return p;
   }
   const warmDoc = (h) => { try { const r = parse(h); if (r && r.remote && !DOCS.has(r.remote) && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData)) fetchDoc(r.remote).catch(() => {}); } catch (e) { /* only a speed up */ } };
-  // pair photos are fetched while the shopper looks around, so a product page opens with its pictures ready
+  // the picture each product page opens with is fetched while the shopper looks around, so it is ready on the tap.
+  // Only that picture: the gallery photos load on the product page itself, at the size the phone asks for.
   function warmImages() {
     const list = P(); let i = 0;
-    const next = (dl) => { while (i < list.length && (!dl || dl.timeRemaining() > 4)) { const p = list[i++], v = firstV(p), x = pic(p, v); const a = new Image(); a.decoding = 'async'; a.src = x.src; (v.images || []).slice(0, 2).forEach((s) => { const b = new Image(); b.src = sized(s, 900); }); } if (i < list.length) idle(next); };
+    const next = (dl) => { while (i < list.length && (!dl || dl.timeRemaining() > 4)) { const p = list[i++], v = firstV(p), x = pic(p, v); const a = new Image(); a.decoding = 'async'; a.src = x.cut ? x.src : sized((v.images || [])[0] || x.src, 1000); } if (i < list.length) idle(next); };
     idle(next);
   }
   const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(() => fn(null), 400));
@@ -925,6 +938,7 @@
   }
   function render(dir) {
     const k = vkey(cur);
+    EAGER = 2;
     if (k !== shown) {
       stash();
       const c = KEEP[cur.v] && VC.get(k);
@@ -1308,7 +1322,9 @@
   // a finger on a link starts fetching its page before the tap ends
   app.addEventListener('touchstart', (e) => { const a = e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });
   app.addEventListener('pointerover', (e) => { const a = e.target.closest && e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });
-  idle(() => { warmImages(); [root + '/blogs/journal'].forEach(warmDoc); });
+  // fetching ahead waits for the shopper's first touch or scroll, so it never competes with the first screen
+  const later = () => { ['touchstart', 'scroll', 'pointerdown', 'keydown'].forEach((e) => removeEventListener(e, later, true)); idle(() => { warmImages(); [root + '/blogs/journal'].forEach(warmDoc); }); };
+  ['touchstart', 'scroll', 'pointerdown', 'keydown'].forEach((e) => addEventListener(e, later, { capture: true, passive: true }));
   slimCookies();
   render();
   splash();
@@ -1321,7 +1337,8 @@
   // the clear top bar over a photo turns solid once the page scrolls under it
   let sol = false;
   const solid = () => { const v = window.scrollY > 40; if (v !== sol) { sol = v; top.classList.toggle('solid', v); } };
-  window.addEventListener('scroll', solid, { passive: true }); solid();
+  // read on the next frame, not straight after the first screen is drawn, so the browser is not made to lay it out twice
+  window.addEventListener('scroll', solid, { passive: true }); requestAnimationFrame(solid);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { paintTab(); paintTop(); if (cur.v === 'bag') V.bag(); } });
   }
   if (document.readyState === 'loading' || document.readyState === 'interactive') document.addEventListener('DOMContentLoaded', boot, { once: true }); else boot();

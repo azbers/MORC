@@ -29,10 +29,12 @@ import os
 BODY=open(os.environ['BODY']).read() if os.environ.get('BODY') else '<div class="wrap daur-plain"><h1>Plain server copy</h1></div>'
 css=open('/home/claude/MORC/shopify/theme/snippets/daur-theme-css.liquid').read()
 A="/shopify/theme/assets/"
+# same as layout/theme.liquid: product and bag styles block the first paint only on their own page
+lazycss=lambda f,own: f'<link rel="stylesheet" href="{A}{f}" media="(max-width: 900px)">' if own else f'<link rel="stylesheet" href="{A}{f}" media="print" onload="this.media=\'(max-width: 900px)\'">'
 html=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>DAUR Supply</title>
 <link rel="stylesheet" href="{A}styles.css"><style>{css}</style>
 <script>try{{if(matchMedia('(max-width: 900px)').matches&&!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}}catch(e){{}}</script>
-<link rel="stylesheet" href="{A}daur-m.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-pdp.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-bag.css" media="(max-width: 900px)"><link rel="stylesheet" href="{A}daur-m-vouchers.css" media="(max-width: 900px)">
+<link rel="stylesheet" href="{A}daur-m.css" media="(max-width: 900px)">{lazycss("daur-m-pdp.css", page=="product")}{lazycss("daur-m-bag.css", page=="cart")}<link rel="stylesheet" href="{A}daur-m-vouchers.css" media="(max-width: 900px)">
 </head><body data-page="{page}"><div class="hdr-ph"></div><main id="app" tabindex="-1">{BODY}</main>
 <script>window.DAUR_CONFIG={json.dumps(cfg)};window.DAUR_STATUSES=[];window.DAUR_FITNOTES={json.dumps(notes)};window.DAUR_JOURNAL=[];window.DAUR_OFFERS={json.dumps(OFFERS)};window.DAUR_GIVING=[];window.DAUR_GIVING_ROUNDS=[];
 window.DAUR_SHOPIFY={{param:{json.dumps(param)},routes:{{root:"/",account:"/account"}},collections:["all","sneakers","leather-shoes","casual","sale"],raw:{json.dumps(raw)}}};</script>
