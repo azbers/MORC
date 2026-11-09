@@ -1550,3 +1550,7 @@ html[data-mv=giving],html[data-mv=giving] body,#mApp .m-view.v-giving{background
 #mApp .c-r small{font-weight:500;color:#7A7A7A;font-size:11px}
 #mApp .m-chip span{display:inline-flex;align-items:baseline;gap:4px}
 #mApp .m-chip .r7-cr{font-size:10.5px;font-weight:600;opacity:.7}
+html[data-mv=giving] #mApp .m-top:not(.clear),html[data-mv=giving] #mApp .m-top{background:rgba(11,26,23,.86)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html[data-mv=giving] #mApp .m-top .m-top-t{color:#F4EDE0!important}
+html[data-mv=giving] #mApp .m-top .m-ib{background:rgba(244,237,224,.12)!important;color:#F4EDE0!important}
+html[data-mv=giving] #mApp .m-top .m-ib svg{color:#F4EDE0!important}
