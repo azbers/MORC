@@ -1,7 +1,7 @@
 /* DAUR mobile app: product page.
    Replaces V.product through window.DAUR_MX (see daur-m.js). The first screen holds everything a buyer needs to
    decide: the pair centred over a large DAUR wordmark on the same white to grey surface as the listings, its photos
-   in the same frame (swipe), sizes down the left, colours down the right, the price, and one gold button. Adding
+   in the same frame (swipe), sizes down the left, colours down the right, the price, and one black button. Adding
    puts the pair into a DAUR box that closes and drops into the bag. Below the frame: who the pair is for (with real
    photos), fit notes told as stories and rated in hearts, the details, and more pairs. Sizes, colours, modes and the
    button repaint in place, so nothing reloads while the buyer decides. */
@@ -34,8 +34,6 @@
   }
   const when = (d) => { if (!d) return ''; const t = new Date(d + 'T12:00:00'); return isNaN(t) ? '' : new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(t); };
   const initials = (n) => String(n || 'DAUR buyer').trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
-  const AV = ['#F1DDBF', '#D9E8DC', '#DCE4F3', '#F3D8D3', '#E7DFF2', '#EDE3CF'];
-  const avOf = (n) => { let h = 0; String(n || '').split('').forEach((c) => { h = (h * 31 + c.charCodeAt(0)) >>> 0; }); return AV[h % AV.length]; };
 
   /* ---------- the size chart of the store (the same numbers as the desktop size guide) ---------- */
   const SIZES = [[39, 5, 6, 24.1, 24.7], [40, 6, 7, 24.8, 25.4], [41, 7, 8, 25.5, 26.0], [42, 8, 9, 26.1, 26.7], [43, 9, 10, 26.8, 27.4], [44, 10, 11, 27.5, 28.0], [45, 11, 12, 28.1, 28.7], [46, 12, 13, 28.8, 29.4]];
@@ -135,7 +133,7 @@
   function story(n) {
     const r = Math.max(1, Math.min(5, Math.round(+n.rating || 5)));
     const meta = [n.city, n.size ? 'Bought EU ' + n.size : '', n.fit || ''].filter(Boolean).join(' · ');
-    return `<article class="px-story"><header><span class="st-av" style="--av:${avOf(n.name)}" aria-hidden="true">${esc(initials(n.name))}</span>
+    return `<article class="px-story"><header><span class="st-av" aria-hidden="true">${esc(initials(n.name))}</span>
         <span class="st-who"><b>${esc(n.name || 'DAUR buyer')}</b><small>${esc(meta)}</small></span>${hearts(r, 'sm')}</header>
       ${n.title || n.body ? `<div class="st-say">${n.title ? `<h3>${esc(n.title)}</h3>` : ''}${n.body ? `<p>${esc(n.body)}</p>` : ''}</div>` : ''}
       ${n.photo ? `<img class="st-ph" src="${esc(n.photo)}" alt="Photo from ${esc(n.name || 'a buyer')}" loading="lazy">` : ''}
@@ -172,7 +170,7 @@
     return `<section class="px-sec px-rel"><div class="m-row"><h2 class="px-h">More from the drop</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div></section><div class="m-grid">${list.map((x) => card(x, false)).join('')}</div>`;
   }
 
-  /* ---------- the button: gold, with the price on it, and it tells the buyer the next step ---------- */
+  /* ---------- the button: the app's black primary, with the price on it, and it tells the buyer the next step ---------- */
   // phase: nothing (choose or add), 'pack' (the box is being packed) or 'done' (the box is in the bag)
   function bar(p, v, phase) {
     const b = buyBar(); b.classList.add('px-buy');
