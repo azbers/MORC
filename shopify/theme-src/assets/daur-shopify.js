@@ -127,7 +127,10 @@
     // a giving pair: paid in full, handed over by DAUR in the quarterly giving round, proof sent privately to the buyer
     const giving = A.cart.some((l) => { const p = A.prod(l.pid); return l.mode === 'give' || (p && p.giving); });
     const gift = { 'Giving pair': giving ? 'Yes, paid in full in advance. Size matched by DAUR. Private proof after handover' : '', 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
-    const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: Object.assign({ 'Slice cause': vote }, gift), discount: code || '' }) });
+    // how the order is paid, on the same rule as the phone bag
+    const pl = window.DAUR_PLAN ? window.DAUR_PLAN() : null;
+    const pay = pl ? { 'Payment plan': pl.text, 'Pay now': pl.now, 'Pay at door': pl.door } : {};
+    const u = await fetch(base + '/cart/update.js', { method: 'POST', headers: J, body: JSON.stringify({ attributes: Object.assign({ 'Slice cause': vote }, gift, pay), discount: code || '' }) });
     return u.ok ? u.json() : {};
   }
   // checks a code against the real Shopify cart: is it known, does it apply to these pairs, and what it saves
