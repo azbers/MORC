@@ -356,7 +356,7 @@ html.m-on.m-pdp-on .ck{bottom:calc(130px + var(--m-safe))!important}
 .m-toast{position:fixed;left:16px;right:16px;bottom:calc(98px + var(--m-safe));z-index:70;background:var(--m-ink);color:#fff;border-radius:20px;padding:12px 12px 12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;transform:translateY(20px);opacity:0;pointer-events:none;transition:transform .3s,opacity .3s}
 .m-toast.on{transform:none;opacity:1;pointer-events:auto}
 .m-toast span{min-width:0}
-.m-toast a{min-height:38px;padding:0 14px;border-radius:999px;background:var(--m-gold);color:var(--m-ink)!important;border:0;font-weight:700;font-size:13px;display:flex;align-items:center;flex-shrink:0;white-space:nowrap}
+.m-toast a{min-height:38px;padding:0 14px;border-radius:8px;background:#fff;color:#111!important;border:0;font-weight:700;font-size:13px;display:flex;align-items:center;flex-shrink:0;white-space:nowrap}
 html.m-on.m-pdp-on .m-toast{bottom:calc(132px + var(--m-safe))}
 .v-bag~.m-toast{bottom:calc(98px + var(--m-safe))}
 
