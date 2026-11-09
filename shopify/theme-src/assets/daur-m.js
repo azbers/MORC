@@ -116,6 +116,10 @@
     "card": "<path d=\"M232,96v96a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V96Z\" class=\"d\"/><path d=\"M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm0,16V88H32V64Zm0,128H32V104H224v88Zm-16-24a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h32A8,8,0,0,1,208,168Zm-64,0a8,8,0,0,1-8,8H120a8,8,0,0,1,0-16h16A8,8,0,0,1,144,168Z\"/>",
     "seal": "<path d=\"M232,128c0,12.51-17.82,21.95-22.68,33.69-4.68,11.32,1.42,30.65-7.78,39.85s-28.53,3.1-39.85,7.78C150,214.18,140.5,232,128,232s-22-17.82-33.69-22.68c-11.32-4.68-30.65,1.42-39.85-7.78s-3.1-28.53-7.78-39.85C41.82,150,24,140.5,24,128s17.82-22,22.68-33.69C51.36,83,45.26,63.66,54.46,54.46S83,51.36,94.31,46.68C106.05,41.82,115.5,24,128,24S150,41.82,161.69,46.68c11.32,4.68,30.65-1.42,39.85,7.78s3.1,28.53,7.78,39.85C214.18,106.05,232,115.5,232,128Z\" class=\"d\"/><path d=\"M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-11.55,39.29c-4.79,5-9.75,10.17-12.38,16.52-2.52,6.1-2.63,13.07-2.73,19.82-.1,7-.21,14.33-3.32,17.43s-10.39,3.22-17.43,3.32c-6.75.1-13.72.21-19.82,2.73-6.35,2.63-11.52,7.59-16.52,12.38S132,224,128,224s-9.15-4.92-14.11-9.69-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82-2.63-6.35-7.59-11.52-12.38-16.52S32,132,32,128s4.92-9.15,9.69-14.11,9.75-10.17,12.38-16.52c2.52-6.1,2.63-13.07,2.73-19.82.1-7,.21-14.33,3.32-17.43S70.51,56.9,77.55,56.8c6.75-.1,13.72-.21,19.82-2.73,6.35-2.63,11.52-7.59,16.52-12.38S124,32,128,32s9.15,4.92,14.11,9.69,10.17,9.75,16.52,12.38c6.1,2.52,13.07,2.63,19.82,2.73,7,.1,14.33.21,17.43,3.32s3.22,10.39,3.32,17.43c.1,6.75.21,13.72,2.73,19.82,2.63,6.35,7.59,11.52,12.38,16.52S224,124,224,128,219.08,137.15,214.31,142.11ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z\"/>",
     "clock": "<path d=\"M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z\" class=\"d\"/><path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z\"/>",
+    "phone": "<path d=\"M223.94,174.08A48.33,48.33,0,0,1,176,216,136,136,0,0,1,40,80,48.33,48.33,0,0,1,81.92,32.06a8,8,0,0,1,8.3,4.8l21.13,47.2a8,8,0,0,1-.66,7.53L89.32,117a7.93,7.93,0,0,0-.54,7.81c8.27,16.93,25.77,34.22,42.75,42.41a7.92,7.92,0,0,0,7.83-.59l25-21.3a8,8,0,0,1,7.59-.69l47.16,21.13A8,8,0,0,1,223.94,174.08Z\" class=\"d\"/><path d=\"M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z\"/>",
+    "pkg": "<path d=\"M128,129.09V232a8,8,0,0,1-3.84-1l-88-48.18a8,8,0,0,1-4.16-7V80.18a8,8,0,0,1,.7-3.25Z\" class=\"d\"/><path d=\"M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32l80.34,44-29.77,16.3-80.35-44ZM128,120,47.66,76l33.9-18.56,80.34,44ZM40,90l80,43.78v85.79L40,175.82Zm176,85.78h0l-80,43.79V133.82l32-17.51V152a8,8,0,0,0,16,0V107.55L216,90v85.77Z\"/>",
+    "chevr": "<path d=\"M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z\"/>",
+    "quote": "<path d=\"M108,72v72H40a8,8,0,0,1-8-8V72a8,8,0,0,1,8-8h60A8,8,0,0,1,108,72Zm108-8H156a8,8,0,0,0-8,8v64a8,8,0,0,0,8,8h68V72A8,8,0,0,0,216,64Z\" class=\"d\"/><path d=\"M100,56H40A16,16,0,0,0,24,72v64a16,16,0,0,0,16,16h60v8a32,32,0,0,1-32,32,8,8,0,0,0,0,16,48.05,48.05,0,0,0,48-48V72A16,16,0,0,0,100,56Zm0,80H40V72h60ZM216,56H156a16,16,0,0,0-16,16v64a16,16,0,0,0,16,16h60v8a32,32,0,0,1-32,32,8,8,0,0,0,0,16,48.05,48.05,0,0,0,48-48V72A16,16,0,0,0,216,56Zm0,80H156V72h60Z\"/>",
     "star": "<path d=\"M229.06,108.79l-48.7,42,14.88,62.79a8.4,8.4,0,0,1-12.52,9.17L128,189.09,73.28,222.74a8.4,8.4,0,0,1-12.52-9.17l14.88-62.79-48.7-42A8.46,8.46,0,0,1,31.73,94L95.64,88.8l24.62-59.6a8.36,8.36,0,0,1,15.48,0l24.62,59.6L224.27,94A8.46,8.46,0,0,1,229.06,108.79Z\" class=\"d\"/><path d=\"M239.18,97.26A16.38,16.38,0,0,0,224.92,86l-59-4.76L143.14,26.15a16.36,16.36,0,0,0-30.27,0L90.11,81.23,31.08,86a16.46,16.46,0,0,0-9.37,28.86l45,38.83L53,211.75a16.38,16.38,0,0,0,24.5,17.82L128,198.49l50.53,31.08A16.4,16.4,0,0,0,203,211.75l-13.76-58.07,45-38.83A16.43,16.43,0,0,0,239.18,97.26Zm-15.34,5.47-48.7,42a8,8,0,0,0-2.56,7.91l14.88,62.8a.37.37,0,0,1-.17.48c-.18.14-.23.11-.38,0l-54.72-33.65a8,8,0,0,0-8.38,0L69.09,215.94c-.15.09-.19.12-.38,0a.37.37,0,0,1-.17-.48l14.88-62.8a8,8,0,0,0-2.56-7.91l-48.7-42c-.12-.1-.23-.19-.13-.5s.18-.27.33-.29l63.92-5.16A8,8,0,0,0,103,91.86l24.62-59.61c.08-.17.11-.25.35-.25s.27.08.35.25L153,91.86a8,8,0,0,0,6.75,4.92l63.92,5.16c.15,0,.24,0,.33.29S224,102.63,223.84,102.73Z\"/>"
     };
   // Phosphor icons (MIT licence): two tone, so the soft fill carries the colour of whatever button holds them
@@ -221,7 +225,8 @@
 
   /* ---------- small shared pieces ---------- */
   // gift and give, side by side: gold for someone you know, green for someone in need
-  const duo = (k) => { const K = KIND[k]; return `<a class="m-duo-a ${k}" href="${k === 'gift' ? href.gifts : href.giving}" data-m><span class="d-i">${ic(K.icon)}</span><b>${k === 'gift' ? 'Gift a pair' : 'Give a pair'}</b><small>${K.who}</small><em>${k === 'gift' ? 'You pick the size. Your note inside.' : 'We match the size and hand it over.'}</em></a>`; };
+  // gift or give: two cards that say plainly who the pair is for and what happens next
+  const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Give a pair'}</b><small class="r5-who">${g ? 'For someone you know' : 'For someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You pick the style and size. Your note goes in the box, sent to his door.' : 'DAUR matches the size and hands it over in person. You get a private photo.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Give a pair'}${ic('arrow')}</span></a>`; };
   const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot, Kasur'], ['chat', 'Every order confirmed on WhatsApp']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
   const socRow = (cls) => `<div class="m-soc ${cls || ''}">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'} aria-label="${n}: ${esc(h)}">${ic(k)}</a>`).join('')}</div>`;
@@ -295,8 +300,8 @@
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
-      <div class="m-row m-pad" style="margin-top:26px"><h2 class="m-h2">Buying for someone else?</h2><button class="m-link" type="button" data-explain>${ic('help')}Which one?</button></div>
-      <div class="m-duo m-pad">${duo('gift')}${duo('give')}</div>
+      <section class="r5-for m-pad"><div class="r5-for-h"><h2 class="m-h2">Buying for someone else?</h2><button class="m-link" type="button" data-explain>${ic('help')}Which one?</button></div>
+      <div class="r5-duo">${duo('gift')}${duo('give')}</div></section>
       <div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Fresh in</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div>
       <div class="m-rows">${fresh.map(row).join('')}</div>
       <div id="mMore" data-k="0"></div><div id="mMoreSent" class="m-skel" aria-hidden="true"><div class="sk-row"><div class="sk sk-c"></div><div class="sk sk-c"></div></div></div>`;
@@ -804,15 +809,18 @@
     const plain = (pg.title || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     state.pageTitle = PAGE_T[page] || plain.split(/[.:]/)[0].slice(0, 30) || 'DAUR Supply';
     const hi = [...location.pathname].reduce((a, ch) => a + ch.charCodeAt(0), 0);
+    const pk = /\/blogs\//.test(location.pathname) ? 'journal' : /\/pages\/faq/.test(location.pathname) ? 'faq' : /\/search/.test(location.pathname) ? 'search' : VIS[page] ? page : 'page';
+    const vis = VIS[pk], art = /\/blogs\/[^/]+\/[^/]+/.test(location.pathname);
     view.innerHTML = `<div class="m-pg">
-      <section class="pg-hero" style="--tn:${tn(hi)};--tn2:${tn(hi + 2)}"><img class="pg-cut" src="${asset('m-' + cut + '.webp')}" alt=""><span class="pg-blob" aria-hidden="true"></span>
+      <section class="pg-hero r5-hero v-${art ? 'crm' : vis[1]}" style="--tn:${tn(hi)};--tn2:${tn(hi + 2)}"><span class="r5-hdm" aria-hidden="true">${DMARK}</span><img class="pg-cut" src="${asset(art ? 'm-' + cut + '.webp' : vis[0])}" alt=""><span class="pg-blob" aria-hidden="true"></span>
         ${pg.kick ? `<span class="m-kick">${esc(pg.kick)}</span>` : ''}<h1>${pg.title || esc(state.pageTitle)}</h1>${pg.aside ? `<p>${pg.aside}</p>` : ''}
         ${pg.ctas.length ? `<div class="pg-ctas">${pg.ctas.slice(0, 2).map((x, i) => `<a class="${i === 0 ? 'm-cta' : 'm-ghost'}" href="${esc(x.h)}"${parse(x.h) ? ' data-m' : ''}>${esc(x.l)}</a>`).join('')}</div>` : ''}</section>
+      ${pk === 'contact' ? `<div class="m-pad r5-ctalk">${talk('big')}</div>` : ''}
       ${pg.chips.length ? `<div class="m-pills pg-chips">${pg.chips.map((c) => `<a class="m-pill alt" href="${esc(c.h)}" data-jump="${esc(c.h.slice(1))}">${esc(c.l)}</a>`).join('')}</div>` : ''}
       ${pg.secs.map((s, i) => fold
         ? `<details class="pg-sec pg-acc"${s.id ? ` id="${esc(s.id)}"` : ''}${i === 0 ? ' open' : ''} style="--tn:${tn(i)}"><summary><span>${s.kick ? `<small>${esc(s.kick)}</small>` : ''}<b>${s.title || 'More'}</b></span>${ic('chev')}</summary><div>${blocksHtml(s.blocks, nodes)}</div></details>`
-        : `<section class="pg-sec${i % 3 === 1 ? ' tint' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${blocksHtml(s.blocks, nodes)}</section>`).join('')}
-      <div class="pg-help"><a href="https://wa.me/${esc(C.whatsapp || '')}" target="_blank" rel="noopener">${ic('chat')}<span><b>Questions?</b><small>WhatsApp ${esc(String(C.whatsapp || '').replace(/^92/, '0').replace(/(\d{4})(\d{7})/, '$1 $2'))}</small></span>${ic('arrow')}</a></div>
+        : `<section class="pg-sec r5-sec${i % 4 === 2 ? ' dark' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${s.title ? `<span class="r5-no">${String(i + 1).padStart(2, '0')}</span>` : ''}${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${blocksHtml(s.blocks, nodes)}</section>`).join('')}
+      ${pk === 'contact' ? '' : `<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers, usually within working hours.</span>${talk()}</div>`}
     </div>`;
     nodes.forEach((n, i) => { const ph = view.querySelector(`[data-node="${i}"]`); if (ph) ph.appendChild(n); });
     $$('img', view).forEach((im) => im.addEventListener('error', () => { im.style.display = 'none'; }, { once: true }));
@@ -885,7 +893,7 @@
   window.addEventListener('popstate', () => { const r = parse(location.href); if (r) { cur = r; render('back'); } else location.reload(); });
 
   /* ---------- sheets and toast ---------- */
-  function openSheet(html) { sheet.innerHTML = '<div class="m-grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); }
+  function openSheet(html) { sheet.classList.remove('r5-full'); sheet.innerHTML = '<div class="m-grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); }
   function closeSheet() { sheet.classList.remove('on'); scrim.classList.remove('on'); }
   scrim.addEventListener('click', closeSheet);
   let sy = null;
@@ -896,22 +904,35 @@
     toastEl.innerHTML = `<span>${esc(msg)}</span>` + (action ? `<a href="${url}" data-m>${esc(action)}</a>` : '');
     toastEl.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => toastEl.classList.remove('on'), 2800);
   }
+  // the menu: wallet card, the shop in big type, gift or give, your things, DAUR, and a way to talk to us
+  const VIS = {
+    manifesto: ['m-hero.webp', 'esp'], contract: ['m-ward-brown.webp', 'grn'], about: ['m-moc-oxblood.webp', 'red'], contact: ['m-sector.webp', 'ink'],
+    policies: ['m-saddle.webp', 'crm'], track: ['m-derby.webp', 'esp'], faq: ['m-grid.webp', 'crm'], journal: ['m-saddle-black.webp', 'red'], search: ['m-volt.webp', 'crm'], page: ['m-phantom.webp', 'ink']
+  };
+  const talk = (cls) => `<div class="r5-talk ${cls || ''}"><a class="wa" href="https://wa.me/${WA}" target="_blank" rel="noopener">${ic('wa')}<b>WhatsApp</b><small>${esc(waNice())}</small></a><a class="call" href="tel:+${WA}">${ic('phone')}<b>Call</b><small>${esc(waNice())}</small></a><a class="mail" href="mailto:contact@daursupply.com">${ic('mail')}<b>Email</b><small>contact@daursupply.com</small></a></div>`;
   function menu() {
-    const L = (h, i, t, cls, sub) => `<a class="${cls || ''}" href="${h}"${parse(h) ? ' data-m' : ''}>${ic(i)}<span>${t}${sub ? `<small>${sub}</small>` : ''}</span></a>`;
     const n = API.cart.reduce((a, l) => a + l.qty, 0);
-    openSheet(`<div class="m-row m-menu-h">${logo(true)}<span class="m-mute">Lahore · Sialkot · Kasur</span></div>
-      <div class="m-mtiles">${L(href.shop(), 'grid', 'Shop all', 'mt shop')}${hasSale() ? L(href.shop('Sale'), 'tag', 'Sale', 'mt sale') : L(href.feed, 'camera', 'The Feed', 'mt sale')}${L(href.offers, 'wallet', 'Wallet', 'mt off')}</div>
-      <h4 class="mn-k">For someone else</h4>
-      <div class="m-mduo">${L(href.gifts, 'gift', 'Gift a pair', 'gift', 'Someone you know')}${L(href.giving, 'hand', 'Give a pair', 'give', 'Someone in need')}</div>
-      <button type="button" class="m-mhelp" data-explain>${ic('help')}What is the difference?</button>
-      <h4 class="mn-k">Your orders</h4>
-      <div class="m-menu">${L(href.bag, 'bag', 'Bag', '', n ? n + (n === 1 ? ' pair' : ' pairs') : '')}${L(href.liked, 'heart', 'Liked')}${L(root + '/pages/track', 'truck', 'Track order')}${L(S.routes.account || root + '/account', 'user', 'Account')}</div>
-      <h4 class="mn-k">DAUR</h4>
-      <div class="m-menu">${L(root + '/pages/manifesto', 'story', 'Our story')}${L(root + '/pages/contract', 'shield', 'Our promise')}${hasSale() ? L(href.feed, 'camera', 'The Feed') : ''}${L(root + '/blogs/journal', 'book', 'Journal')}</div>
-      <h4 class="mn-k">Help</h4>
-      <div class="m-menu">${L(root + '/pages/contact', 'chat', 'Contact')}${L(root + '/pages/policies', 'note', 'Policies')}</div>
-      <h4 class="mn-k">Find us</h4>${socRow('menu')}
-      <a class="m-classic" href="${location.pathname}?view=classic">Open the full website</a>`);
+    const all = P(), saleN = all.filter((p) => p.variants.some(API.onSale)).length;
+    const big = (h, t, sub, cls) => `<a class="r5-nav${cls ? ' ' + cls : ''}" href="${h}" data-m><b>${esc(t)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}${ic('chevr')}</a>`;
+    const tile = (h, v, t, sub) => `<a class="r5-tile v-${VIS[v][1]}" href="${h}" data-m><img src="${asset(VIS[v][0])}" alt="" loading="lazy"><span><b>${t}</b><small>${sub}</small></span></a>`;
+    const act = (h, i, t, badge) => `<a class="r5-act" href="${h}"${parse(h) ? ' data-m' : ''}><span class="r5-ai">${ic(i)}${badge ? `<em>${badge}</em>` : ''}</span><small>${t}</small></a>`;
+    const bal = DEL + (W.code && W.on() ? W.amt : 0);
+    openSheet(`<div class="r5-menu">
+      <div class="r5-mh">${logo(true)}<button class="m-ib m-soft" type="button" data-mclose aria-label="Close menu">${ic('x')}</button></div>
+      <a class="r5-mcard" href="${href.offers}" data-m><span class="r5-mc-dm">${DMARK}</span><small>DAUR wallet</small><b>${esc(fmt(bal))}</b><span class="r5-mc-go">In credits, ready to use${ic('arrow')}</span></a>
+      <nav class="r5-navs" aria-label="Shop">${big(href.shop(), 'Shop all', all.length + ' pairs')}${saleN ? big(href.shop('Sale'), 'Sale', saleN + (saleN === 1 ? ' pair' : ' pairs') + ' reduced', 'sale') : ''}${cats().map((c) => { const k = all.filter((p) => p.category === c).length; return big(href.shop(c), c, k + (k === 1 ? ' pair' : ' pairs'), 'cat'); }).join('')}</nav>
+      <div class="r5-kh"><h4 class="r5-k">For someone else</h4><button type="button" class="m-link" data-explain>${ic('help')}Which one?</button></div>
+      <div class="r5-duo">${duo('gift', true)}${duo('give', true)}</div>
+      <h4 class="r5-k">Yours</h4>
+      <div class="r5-acts">${act(href.bag, 'bag', 'Bag', n || '')}${act(href.liked, 'heart', 'Liked')}${act(root + '/pages/track', 'truck', 'Track')}${act(S.routes.account || root + '/account', 'user', 'Account')}</div>
+      <h4 class="r5-k">DAUR</h4>
+      <div class="r5-tiles">${tile(root + '/pages/manifesto', 'manifesto', 'Our story', 'Why DAUR exists')}${tile(root + '/pages/contract', 'contract', 'Our promise', 'What we owe you')}<a class="r5-tile v-photo" href="${href.feed}" data-m><img src="${asset('m-g-boy-hill.webp')}" alt="" loading="lazy"><span><b>The Feed</b><small>Pairs in real life</small></span></a>${tile(root + '/blogs/journal', 'journal', 'Journal', 'Care, fit and style')}</div>
+      <h4 class="r5-k">Talk to us</h4>${talk()}
+      <div class="r5-rows"><a href="${root}/pages/contact" data-m>${ic('chat')}<span>Contact and opening hours</span>${ic('chevr')}</a><a href="${root}/pages/policies" data-m>${ic('note')}<span>Delivery, exchange and policies</span>${ic('chevr')}</a><a href="${root}/pages/about" data-m>${ic('story')}<span>About DAUR Supply</span>${ic('chevr')}</a></div>
+      ${socRow('menu')}
+      <p class="r5-foot">Made in workshops in Lahore, Sialkot and Kasur. Sent from Islamabad.</p>
+      <a class="m-classic" href="${location.pathname}?view=classic">Open the full website</a></div>`);
+    sheet.classList.add('r5-full');
   }
   // gift or give, side by side, so no one has to guess
   function explain() {
@@ -1043,6 +1064,7 @@
   app.addEventListener('click', (e) => {
     const t = e.target.closest('a,button,summary'); if (!t) return;
     const d = t.dataset;
+    if (d.mclose !== undefined) { e.preventDefault(); closeSheet(); return; }
     if (d.jump !== undefined) { e.preventDefault(); const el = document.getElementById(d.jump || (t.getAttribute('href') || '').slice(1)); if (el) { if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); } return; }
     if (t.tagName === 'A' && d.m !== undefined) { e.preventDefault(); closeSheet(); go(t.getAttribute('href')); return; }
     if (t.tagName === 'A' && d.m === undefined && !t.target && !t.hasAttribute('download') && (view.contains(t) || sheet.contains(t)) && t.origin === location.origin && !/^#/.test(t.getAttribute('href') || '') && parse(t.href)) { e.preventDefault(); closeSheet(); go(t.href); return; }
@@ -1099,13 +1121,7 @@
   function splash() {
     let seen = false; try { seen = sessionStorage.getItem('daur.mSplash') === '1'; sessionStorage.setItem('daur.mSplash', '1'); } catch (e) { seen = true; }
     if (seen || M.splash === false || cur.v !== 'home') return;
-    document.body.insertAdjacentHTML('beforeend', `<div class="m-splash" id="mSplash" role="dialog" aria-label="Welcome to DAUR Supply">
-      <span class="s-ring"></span><span class="s-ring r2"></span><span class="s-wm">${WORDMARK}<small>SUPPLY</small></span>
-      <img class="s-img" src="${asset('m-hero.webp')}" alt="">
-      <span class="s-live"><i></i>${esc(M.splashTag || 'Drop 01 is live')}</span>
-      <h1>Aik naya daur.</h1><p>From ${esc(fmt(minP()))} · ${esc(delTxt())} · ${C.exchangeDays || 5} day size swap</p>
-      <span class="s-notch"></span><button class="s-go" type="button" aria-label="Enter the store">${ic('arrow', 2.2)}</button>
-      <span class="s-wallet">${ic('wallet')}${esc(fmt(DEL + (W.code ? W.amt : 0)))} in credits is waiting in your wallet</span></div>`);
+    document.body.insertAdjacentHTML('beforeend', `<div class="m-splash r5-sp" id="mSplash" role="dialog" aria-label="Welcome to DAUR Supply"><span class="r5-sp-in"><span class="r5-sp-wm">${WORDMARK}</span><b class="r5-sp-line">${esc(M.splashLine || 'Naya DAUR.')}</b></span></div>`);
     const s = $('#mSplash');
     const out = () => { if (s.classList.contains('out')) return; s.classList.add('out'); setTimeout(() => s.remove(), 450); };
     s.addEventListener('click', out);

@@ -84,8 +84,7 @@
       label: money(c.amt) + ' off' + (c.min ? ' orders of ' + money(c.min) + ' or more' : '') + ' with code ' + c.code + '. ' + (endTag(c.ends) ? endTag(c.ends) + '. ' : '') + 'See the offer.' }));
     P().filter((p) => p.variants.some(API.onSale)).sort((x, y) => saving(y) - saving(x)).slice(0, 3).forEach((p, i) => {
       const v = p.variants.find(API.onSale);
-      out.push({ tone: 'cream', kick: 'Price cut', amt: v.compareAt - v.price, line: short(p.name), price: { now: v.price, was: v.compareAt }, tag: API.pct(v) + '% off', go: true, seed: 21 + i * 5, h: href.product(p.id), cls: 'dv-hasshoe',
-        art: `<span class="dv-shoe">${MX.img(p, v, 'dv-im', '')}</span>`, label: p.name + ', ' + money(v.compareAt - v.price) + ' off. Now ' + money(v.price) + ' instead of ' + money(v.compareAt) + '. Grab it.' });
+      out.push({ tone: 'cream', kick: 'Price cut', amt: v.compareAt - v.price, line: short(p.name), price: { now: v.price, was: v.compareAt }, tag: API.pct(v) + '% off', go: true, seed: 21 + i * 5, h: href.product(p.id), ring: 'Price cut', label: p.name + ', ' + money(v.compareAt - v.price) + ' off. Now ' + money(v.price) + ' instead of ' + money(v.compareAt) + '. Grab it.' });
     });
     out.push({ tone: 'red', kick: 'Delivery credit', amt: DEL, line: 'On every order in Pakistan', go: true, ring: 'Delivery credit', seed: 41, h: href.shop(),
       label: money(DEL) + ' delivery credit on every order in Pakistan. Shop all.' });
@@ -130,7 +129,11 @@
         foot: `<button type="button" class="dv-code dv-copy" data-copy="${esc(c.code)}" aria-label="Copy ${esc(c.code)}">${esc(c.code)}${ic('copy')}</button><button type="button" class="dvw-use" data-code="${esc(c.code)}" aria-pressed="${picked}">${on ? ic('check') + 'In use' : picked ? 'Picked' : W.code && wal ? 'Use instead' : 'Use'}</button>`, more: lock })}</div>`;
     }).join('');
     view.innerHTML = `<div class="m-of dvw-page">
-      <section class="of-wallet"><span class="b-dm">${MX.DMARK}</span><span class="m-kick">${ic('wallet')}Your credits</span><b class="of-amt">${esc(fmt(bal))}</b><small>${has ? 'Ready for the bag you have now.' : 'Ready for your next order.'}</small></section>
+      <div class="m-pad"><section class="r5-bank" aria-label="${esc('DAUR wallet, ' + fmt(bal) + ' in credits')}"><span class="r5-bk-dm" aria-hidden="true">${MX.DMARK}</span>
+        <span class="r5-bk-top"><span class="r5-bk-wm">${MX.WORDMARK}<small>WALLET</small></span><span class="r5-bk-chip" aria-hidden="true"><i></i><i></i><i></i></span></span>
+        <span class="r5-bk-mid"><small>Credit balance</small><b>${esc(fmt(bal))}</b></span>
+        <span class="r5-bk-bot"><span><small>Status</small><b>${has ? 'Ready for this bag' : 'Ready for your next order'}</b></span><span><small>Credits</small><b>${1 + (W.code && wal ? 1 : 0)} active</b></span></span></section>
+        <p class="r5-bk-note">${ic('lock')}Credits come off your total at checkout. They are not cash and cannot be withdrawn.</p></div>
       <div class="m-pad"><h2 class="m-h2" style="margin-top:24px">In your wallet</h2></div>
       <div class="dvw-list">${delivery}${welcome}</div>
       <div class="m-row m-pad" style="margin-top:26px"><h2 class="m-h2">More credits</h2><span class="m-mute">One per order</span></div>
