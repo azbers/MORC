@@ -104,7 +104,7 @@
     ['touchstart', 'pointerdown'].forEach((ev) => t.addEventListener(ev, () => { hold = true; clearTimeout(rest); rest = setTimeout(() => { hold = false; }, 6000); }, { passive: true }));
     clearInterval(timer);
     if (MX.reduce || n < 2) return;
-    timer = setInterval(() => { if (!t.isConnected) { clearInterval(timer); return; } if (hold || document.hidden) return; t.scrollTo({ left: ((i + 1) % n) * t.clientWidth, behavior: 'smooth' }); }, 4200);
+    timer = setInterval(() => { if (!t.isConnected) return; if (hold || document.hidden) return; i = Math.round(t.scrollLeft / Math.max(1, t.clientWidth)); t.scrollTo({ left: ((i + 1) % n) * t.clientWidth, behavior: 'smooth' }); }, 4200);
   }
   const home = V.home;
   if (home) V.home = function () { const r = home.apply(this, arguments); carousel(); return r; };

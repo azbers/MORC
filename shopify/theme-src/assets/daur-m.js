@@ -164,6 +164,7 @@
   const TITLE = { bag: 'Your bag', giving: 'Philanthropy', gifts: 'Gifts', offers: 'Wallet', feed: 'The Feed', liked: 'Liked', offline: 'Offline' };
   const PAGE_T = { manifesto: 'Our story', contract: 'Our promise', track: 'Track order', policies: 'Policies', about: 'About us', contact: 'Contact', notfound: 'Not found', search: 'Search', list: 'Alerts', runway: 'Runway' };
 
+  const SEO_HOME = (start0 => start0 && start0.v === 'home' && document.title.length > 14 ? document.title : "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan")(parse(location.href));
   /* ---------- shell ---------- */
   const start = parse(location.href) || { v: 'page' };
   H.classList.add('m-own');
@@ -190,7 +191,7 @@
     const n = API.cart.reduce((a, l) => a + l.qty, 0);
     const cred = DEL + (W.on() ? W.amt : 0);
     const right = (v === 'home' || v === 'shop')
-      ? `<a class="m-chip" href="${href.offers}" data-m aria-label="${esc(fmt(cred))} in credits, open your wallet">${ic('wallet')}<span>${esc(fmt(cred))}</span></a>`
+      ? `<a class="m-chip" href="${href.offers}" data-m aria-label="${esc(fmt(cred))} in credits, open your wallet">${ic('wallet')}<span>${esc(fmt(cred))}<small class="r7-cr">credit</small></span></a>`
       : v === 'bag' ? '<span class="m-ib" aria-hidden="true"></span>'
         : `<a class="m-ib m-soft m-bagbtn" href="${href.bag}" data-m aria-label="Bag, ${n} ${n === 1 ? 'pair' : 'pairs'}">${ic('bag')}${n ? `<i>${n}</i>` : ''}</a>`;
     top.innerHTML = left + mid + right;
@@ -198,8 +199,9 @@
   }
   function paintTab() {
     const n = API.cart.reduce((a, l) => a + l.qty, 0);
-    const a = (v, h, icon, label) => `<a href="${h}" data-m aria-label="${label}"${cur.v === v ? ' aria-current="page"' : ''}>${ic(icon)}<i></i></a>`;
-    tab.innerHTML = `<div class="t-row">${a('home', href.home, 'home', 'Home')}${a('shop', href.shop(), 'search', 'Shop and search')}<a class="t-bag" href="${href.bag}" data-m aria-label="Bag, ${n} ${n === 1 ? 'pair' : 'pairs'}"${cur.v === 'bag' ? ' aria-current="page"' : ''}>${ic('bag')}<span class="t-n">${n || ''}</span><i></i></a>${a('liked', href.liked, 'heart', 'Liked')}<button class="t-btn" type="button" data-menu aria-label="Menu">${ic('grid')}<i></i></button></div>`;
+    const lk = API.wish.map(API.prod).filter((p) => p && !p.hidden && !p.giving).length;
+    const a = (v, h, icon, label, cnt) => `<a href="${h}" data-m aria-label="${label}${cnt ? ', ' + cnt : ''}"${cur.v === v ? ' aria-current="page"' : ''}>${ic(icon)}${cnt != null ? `<span class="t-n t-lk">${cnt || ''}</span>` : ''}<i></i></a>`;
+    tab.innerHTML = `<div class="t-row">${a('home', href.home, 'home', 'Home')}${a('shop', href.shop(), 'search', 'Shop and search')}<a class="t-bag" href="${href.bag}" data-m aria-label="Bag, ${n} ${n === 1 ? 'pair' : 'pairs'}"${cur.v === 'bag' ? ' aria-current="page"' : ''}>${ic('bag')}<span class="t-n">${n || ''}</span><i></i></a>${a('liked', href.liked, 'heart', 'Liked', lk)}<button class="t-btn" type="button" data-menu aria-label="Menu">${ic('grid')}<i></i></button></div>`;
     tab.classList.toggle('m-off', cur.v === 'product' || (cur.v === 'bag' && API.cart.length > 0));
   }
 
@@ -207,7 +209,9 @@
   function card(p, big, mode) {
     const v = firstV(p), t = tintOf(p);
     const badge = API.onSale(v) ? `<span class="m-badge">${API.pct(v)}% off</span>` : '';
-    const inner = `${img(p, v, 'c-img')}${big ? '' : badge}<span class="c-n">${esc(p.name)}</span><span class="c-t">${esc(p.category)}</span><span class="c-p">${price(v)}</span>`;
+    const fn = notesFor(p.id), fr = fn.length ? (fn.reduce((a, n) => a + (+n.rating || 0), 0) / fn.length) : 0;
+    const rate = fn.length ? `<span class="c-r" aria-label="${fr.toFixed(1)} out of 5 hearts from ${fn.length} fit notes">${ic('heart')}${fr.toFixed(1)}<small>(${fn.length})</small></span>` : '';
+    const inner = `${img(p, v, 'c-img')}${big ? '' : badge}${rate}<span class="c-n">${esc(p.name)}</span><span class="c-t">${esc(p.category)}</span><span class="c-p">${price(v)}</span>`;
     const act = mode === 'gift' ? `<button class="m-act" type="button" data-quick="${esc(p.id)}" data-mode="gift">${ic('gift')}<span>Gift</span></button>`
       : mode === 'give' ? `<button class="m-act g" type="button" data-quick="${esc(p.id)}" data-mode="give">${ic('hand')}<span>Sponsor</span></button>`
         : `<button class="m-plus" type="button" data-quick="${esc(p.id)}" aria-label="Quick add ${esc(p.name)}"><i>${ic('plus', 2.6)}</i></button>`;
@@ -259,7 +263,7 @@
     ['touchstart', 'pointerdown'].forEach((ev) => t.addEventListener(ev, () => { hold = true; clearTimeout(t._r); t._r = setTimeout(() => { hold = false; }, 6000); }, { passive: true }));
     if (reduce || n < 2) return;
     clearInterval(V._promo);
-    V._promo = setInterval(() => { if (!t.isConnected) { clearInterval(V._promo); return; } if (hold || document.hidden) return; t.scrollTo({ left: ((i + 1) % n) * t.clientWidth, behavior: 'smooth' }); }, 4200);
+    V._promo = setInterval(() => { if (!t.isConnected) return; if (hold || document.hidden) return; i = Math.round(t.scrollLeft / Math.max(1, t.clientWidth)); t.scrollTo({ left: ((i + 1) % n) * t.clientWidth, behavior: 'smooth' }); }, 4200);
   }
   // after Fresh in the home page keeps going: sale, each style, then more pairs, batch after batch
   const shuffle = (a, seed) => { const r = a.slice(); let x = seed || 7; for (let k = r.length - 1; k > 0; k--) { x = (x * 9301 + 49297) % 233280; const j = Math.floor(x / 233280 * (k + 1)); [r[k], r[j]] = [r[j], r[k]]; } return r; };
@@ -270,7 +274,7 @@
     cats().forEach((c) => plan.push([c, all.filter((p) => p.category === c), href.shop(c)]));
     if (k < plan.length) return plan[k];
     const round = k - plan.length;
-    if (round >= 4) return null;
+    if (round >= 1) return null;
     return [['More for you', 'Picked for you', 'Worth a second look', 'Before you go'][round], shuffle(all, round + 3), href.shop()];
   }
   function moreHome() {
@@ -284,11 +288,13 @@
   function bindMore() {
     const s = $('#mMoreSent'); if (!s || !('IntersectionObserver' in window)) { for (let i = 0; i < 4; i++) moreHome(); return; }
     const near = () => { const x = $('#mMoreSent'); return x && x.getBoundingClientRect().top < innerHeight + 600; };
-    const io = new IntersectionObserver((es) => { if (!es[0].isIntersecting) return; let n = 0; do { moreHome(); n++; } while (near() && n < 2); if (!$('#mMoreSent')) io.disconnect(); }, { rootMargin: '600px 0px' });
+    if (V._moreIO) V._moreIO.disconnect();
+    const io = V._moreIO = new IntersectionObserver((es) => { if (!es[0].isIntersecting) return; let n = 0; do { moreHome(); n++; } while (near() && n < 2); if (!$('#mMoreSent')) io.disconnect(); }, { rootMargin: '600px 0px' });
     io.observe(s);
+    if (V._moreChk) window.removeEventListener('scroll', V._moreChk);
     // the observer only speaks on a change, so a long scroll checks again
     const chk = () => { if (!$('#mMoreSent') || cur.v !== 'home') { window.removeEventListener('scroll', chk); return; } if (near()) moreHome(); };
-    window.addEventListener('scroll', chk, { passive: true });
+    V._moreChk = chk; window.addEventListener('scroll', chk, { passive: true });
   }
   V.home = function () {
     const all = P();
@@ -297,6 +303,7 @@
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
     view.innerHTML = `${promo()}
+      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>Men's shoes from workshops in Lahore, Sialkot and Kasur, checked by hand and sent from Islamabad.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
@@ -553,7 +560,7 @@
       <section class="gv-pick" id="gvPick"><h2 class="m-h2 m-pad">Choose the pair</h2>
         <div class="gv-rail">${all.map((p) => { const v = firstV(p), x = pic(p, v); return `<button class="gv-p" type="button" data-gp="${esc(p.id)}" aria-pressed="${p.id === state.gp}" style="--tn:${TINT[tintOf(p)]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt=""><b>${esc(p.name)}</b><small>${esc(fmt(v.price))}</small></button>`; }).join('')}</div>
         ${gp ? `<div class="gv-sel" style="--tn:${TINT[tintOf(gp)]}">${img(gp, gv, 'gv-sel-i')}<div><b>${esc(gp.name)}</b><small>${esc(gv.color)} · size matched by DAUR</small><span>${esc(fmt(gv.price))}</span></div></div>
-        <button class="m-hold" type="button" id="mHold" data-pid="${esc(gp.id)}"><span class="hold-r" aria-hidden="true"></span><span class="hold-t">${ic('hand')}Hold to sponsor</span></button><p class="m-mute gv-hint">Press and hold. Or tap twice.</p>` : ''}</section>
+        <button class="m-hold" type="button" id="mHold" data-pid="${esc(gp.id)}"><span class="hold-r" aria-hidden="true"></span><span class="hold-t">${ic('hand')}Sponsor this pair</span></button><p class="m-mute gv-hint">One tap adds it to your bag. DAUR matches the size.</p>` : ''}</section>
       <section class="gv-steps m-pad"><h2 class="m-h2">How it reaches them</h2>
         ${[['heart', 'You pick a pair', 'DAUR adds ' + fmt(DAUR_ADD) + ' to every pair sponsored.'], ['user', 'We match the size', 'To the person who receives it.'], ['hand', 'Handed over in person', 'In the round after the quarter closes.'], ['camera', 'A private photo, to you', 'Within 7 days of the handover.']].map(([i, h, p], k) => `<div class="gv-step" style="--tn:${tn(k)}"><span class="gv-n">${ic(i)}</span><span><b>${h}</b><small>${p}</small></span><em>0${k + 1}</em></div>`).join('')}</section>
       <section class="gv-faces"><h2 class="m-h2 m-pad">Who a pair can reach</h2>
@@ -583,7 +590,7 @@
     b.addEventListener('pointerup', stop); b.addEventListener('pointerleave', stop); b.addEventListener('pointercancel', stop);
     b.addEventListener('contextmenu', (e) => e.preventDefault());
     // a double tap or the keyboard gives at once, so no one needs to hold
-    b.addEventListener('click', (e) => { if (done) return; if (e.detail === 0) { finish(); return; } taps += 1; clearTimeout(tapT); tapT = setTimeout(() => { taps = 0; }, 420); if (taps >= 2) { taps = 0; finish(); } });
+    b.addEventListener('click', (e) => { if (done) return; if (e.detail === 0) { finish(); return; } finish(); });
   }
   function burst(el, love) {
     if (reduce) return;
@@ -607,10 +614,13 @@
   /* ---------- gifts ---------- */
   V.gifts = function () {
     const all = P();
-    const hang = ['m-ward-brown.webp', 'm-moc-oxblood.webp', 'm-saddle.webp'];
-    const bow = '<svg class="r6-bow" viewBox="0 0 64 40" aria-hidden="true"><path d="M32 20C22 6 6 4 6 14s16 10 26 6zM32 20c10-14 26-16 26-6s-16 10-26 6z"/><path d="M32 20l-8 18M32 20l8 18" fill="none" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="20" r="5"/></svg>';
+    // one pair resting on an open DAUR gift box, a satin ribbon and a handwritten tag: calm, not busy
+    const bow = '<svg class="r7-bow" viewBox="0 0 120 64" aria-hidden="true"><path d="M60 34C44 10 12 4 10 22c-1 14 26 16 50 12z"/><path d="M60 34c16-24 48-30 50-12 1 14-26 16-50 12z"/><path class="r7-bt" d="M56 36 40 62M64 36l16 26" fill="none" stroke-width="7" stroke-linecap="round"/><ellipse cx="60" cy="34" rx="9" ry="8"/></svg>';
     view.innerHTML = `<div class="m-gf r6-gf">
-      <section class="r6-ghero"><div class="r6-hang" aria-hidden="true">${hang.map((h, i) => `<span class="r6-h h${i}"><i class="r6-rib"></i>${bow}<img src="${asset(h)}" alt=""></span>`).join('')}</div>
+      <section class="r6-ghero r7-ghero"><div class="r7-stage" aria-hidden="true"><span class="r7-glow"></span><span class="r7-hearts">${'<i></i>'.repeat(7)}</span>
+          <span class="r7-box"><span class="r7-lid"><i class="r7-rv"></i></span><span class="r7-base"><i class="r7-rv"></i><i class="r7-rh"></i><b>DAUR<sup>SUPPLY</sup></b></span>${bow}</span>
+          <img class="r7-shoe" src="${asset('m-saddle.webp')}" alt="">
+          <span class="r7-tag"><i class="r7-str"></i><span class="r7-card"><em>For you,</em><small>with love</small></span></span></div>
         <div class="r6-gt"><span class="r6-gk">${ic('gift')}Gifts from DAUR</span><h1>To keep you running through my mind.</h1><p>A pair chosen by you, your note inside, sent to his door with nothing to pay.</p>
         <a class="r6-gift" href="#gfPick" data-jump>${ic('heart')}Choose his pair</a></div></section>
       <ol class="r6-steps">${[['gift', 'You choose', 'The pair and his size'], ['note', 'You write', 'A note of up to 240 letters'], ['box', 'We wrap', 'Gift packing on request'], ['truck', 'He opens', 'At his door, fully paid']].map(([i, b, t], k) => `<li style="--i:${k}"><span>${ic(i)}</span><b>${b}</b><small>${t}</small></li>`).join('')}</ol>
@@ -898,7 +908,39 @@
   const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(() => fn(null), 400));
 
   /* ---------- navigation ---------- */
+  const KEEP = { home: 1, shop: 1, gifts: 1, giving: 1, feed: 1, page: 1, offers: 0 };
+  const VC = new Map();
+  let shown = '';
+  const vkey = (r) => r.v + '|' + (r.a || '') + '|' + (r.remote || '');
+  function stash() {
+    if (!shown || !KEEP[shown.split('|')[0]] || !view.firstChild || view.querySelector('.m-skel[aria-busy]')) return;
+    const f = document.createDocumentFragment(); while (view.firstChild) f.appendChild(view.firstChild);
+    VC.delete(shown); VC.set(shown, { f, t: state.pageTitle, d: document.title, cls: view.className });
+    if (VC.size > 10) VC.delete(VC.keys().next().value);
+  }
+  // hearts, counts and anything a person changed elsewhere are brought up to date on a screen that comes back
+  function freshen() {
+    $$('[data-wish]', view).forEach((b) => b.setAttribute('aria-pressed', wished(b.dataset.wish)));
+    if (cur.v === 'home') bindMore();
+  }
   function render(dir) {
+    const k = vkey(cur);
+    if (k !== shown) {
+      stash();
+      const c = KEEP[cur.v] && VC.get(k);
+      if (c) {
+        VC.delete(k);
+        const old0 = $('#mBuy'); if (old0) old0.remove();
+        H.classList.toggle('m-pdp-on', false); H.dataset.mv = cur.v;
+        view.className = c.cls.replace(/\s*m-(in|back)\b/g, '');
+        view.textContent = ''; view.appendChild(c.f); shown = k;
+        if (c.t) state.pageTitle = c.t; if (c.d) document.title = c.d;
+        freshen();
+        if (dir) { view.classList.remove('m-in', 'm-back'); void view.offsetWidth; view.classList.add(dir === 'back' ? 'm-back' : 'm-in'); }
+        paintTop(); paintTab(); return;
+      }
+    }
+    shown = k;
     const old = $('#mBuy'); if (old) old.remove();
     H.classList.toggle('m-pdp-on', cur.v === 'product');
     H.dataset.mv = cur.v;
@@ -930,12 +972,12 @@
     if (r.v === 'shop') state.shopCat = r.a;
     cur = r;
     if (push !== false && !same) { keepPlace(); history.pushState({ m: 1 }, '', u); }
+    if (same && push !== false && !r.hash && !(r.v === 'shop' && r.q != null)) { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return; }
     if (r.v === 'shop' && view.querySelector('.m-search') && same) { V.shop(); return; }
-    if (r.v !== 'shop') view.innerHTML = '';
     const run = () => { render(push === false ? 'back' : 'in'); window.scrollTo(0, 0); };
     // drawn at once: no snapshot step between the tap and the new screen, so a tap never feels stuck
     run();
-    const t = { home: 'DAUR Supply', shop: 'Shop | DAUR Supply' }[r.v] || (TITLE[r.v] ? TITLE[r.v] + ' | DAUR Supply' : '');
+    const t = { home: SEO_HOME, shop: 'Shop | DAUR Supply' }[r.v] || (TITLE[r.v] ? TITLE[r.v] + ' | DAUR Supply' : '');
     if (t) document.title = t; else if (r.v === 'product') document.title = API.prod(r.a).name + ' | DAUR Supply';
   }
   // every screen remembers where it was: the scroll, and how far the endless home had grown
@@ -1152,7 +1194,7 @@
     if (d.funset) { const f = F(), [k, v] = d.funset.split(':'); if (k === 'size') f.sizes = f.sizes.filter((x) => x !== v); if (k === 'col') f.cols = f.cols.filter((x) => x !== v); if (k === 'price') f.price = ''; if (k === 'sale') f.sale = false; if (k === 'stock') f.stock = false; V.shop(); return; }
     if (d.back !== undefined) { if (history.state && history.state.m) history.back(); else if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) history.back(); else go(href.home); return; }
     if (d.wallet !== undefined) return walletSheet();
-    if (d.wish) { e.preventDefault(); API.toggleWish(d.wish); const on = wished(d.wish); $$(`[data-wish="${d.wish}"]`).forEach((b) => b.setAttribute('aria-pressed', on)); toast(on ? 'Saved to Liked' : 'Removed from Liked', on ? 'See all' : '', href.liked); if (cur.v === 'liked' && !on) render(); return; }
+    if (d.wish) { e.preventDefault(); API.toggleWish(d.wish); const on = wished(d.wish); $$(`[data-wish="${d.wish}"]`).forEach((b) => b.setAttribute('aria-pressed', on)); paintTab(); toast(on ? 'Saved to Liked' : 'Removed from Liked', on ? 'See all' : '', href.liked); if (cur.v === 'liked' && !on) render(); return; }
     if (d.quick) { e.preventDefault(); return quick(d.quick, d.mode); }
     if (d.hcat) { state.homeCat = d.hcat; $$('[data-hcat]', view).forEach((b) => b.setAttribute('aria-pressed', b.dataset.hcat === d.hcat)); const all = P().filter((p) => inCat(p, d.hcat)); const car = $('.m-car', view); if (car) { car.innerHTML = all.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'; car.scrollLeft = 0; } return; }
     if (d.scat) { state.shopCat = d.scat; history.replaceState({ m: 1 }, '', href.shop(d.scat)); V.shop(); return; }
@@ -1245,6 +1287,16 @@
   }
   // the cookie question, made small: one line above the tab bar, asked once
   function slimCookies() {
+    // the answer is kept twice, on the phone and in a first party cookie, so a cleared store or an in app browser does not ask again
+    const CK = 'daur_consent', fromCookie = () => { const m = document.cookie.match(/(?:^|; )daur_consent=([^;]+)/); return m ? decodeURIComponent(m[1]) : ''; };
+    const saveCk = (v) => { try { document.cookie = CK + '=' + encodeURIComponent(v) + '; max-age=31536000; path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); } catch (e) { /* cookies blocked */ } };
+    let had = ''; try { had = JSON.parse(localStorage.getItem('daur.consent') || '""'); } catch (e) { had = ''; }
+    const ck = fromCookie();
+    if (!had && ck) { try { localStorage.setItem('daur.consent', JSON.stringify(ck)); } catch (e) { /* private mode */ } had = ck; }
+    if (had && !ck) saveCk(had);
+    // the choice is saved the moment the finger lifts, before anything else can swallow the tap
+    document.addEventListener('pointerup', (e) => { const b = e.target.closest && e.target.closest('#ck [data-ck]'); if (!b) return; const v = b.dataset.ck === 'all' ? 'all' : 'essential'; saveCk(v); try { localStorage.setItem('daur.consent', JSON.stringify(v)); } catch (x) { /* private mode */ } }, true);
+    if (had) { const kill = () => { const b = document.getElementById('ck'); if (b) b.remove(); }; kill(); if ('MutationObserver' in window) { const mo = new MutationObserver(kill); mo.observe(document.body, { childList: true }); setTimeout(() => mo.disconnect(), 15000); } return; }
     const fix = (box) => { if (!box || box.dataset.slim) return; box.dataset.slim = '1'; const t = box.querySelector('.ck-t'); if (t) t.innerHTML = 'Cookies keep your bag and likes saved on this phone. <a href="' + root + '/pages/policies#privacy">Privacy</a>'; const a = box.querySelector('[data-ck=all]'), e = box.querySelector('[data-ck=ess]'); if (a) a.textContent = 'Accept'; if (e) e.textContent = 'Only essential'; };
     fix(document.getElementById('ck'));
     if ('MutationObserver' in window) { const mo = new MutationObserver(() => { const b = document.getElementById('ck'); if (b) { fix(b); mo.disconnect(); } }); mo.observe(document.body, { childList: true }); setTimeout(() => mo.disconnect(), 15000); }

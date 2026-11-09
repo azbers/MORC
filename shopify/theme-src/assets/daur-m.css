@@ -1455,3 +1455,98 @@ html.m-on{--r6-love:#D61F3C;--r6-love2:#A50F2A;--r6-paper:#FAF7F2}
 #mApp .r5-sec.dark .m-ghost{border-color:rgba(255,255,255,.7)!important;color:#fff!important;background:transparent!important;opacity:1!important}
 #mApp~.r5-sp .r5-sp-wm,.r5-sp .r5-sp-wm{padding-right:62px;box-sizing:border-box}
 .r5-sp .r5-sp-wm sup{right:0!important;top:2px!important;font-size:11px!important;letter-spacing:.18em!important}
+/* round 7: the tab you are on is filled, the others are outlines; liked shows its count */
+#mApp .m-tab svg .d{opacity:0;transition:opacity .2s}
+#mApp .m-tab [aria-current=page] svg .d{opacity:1}
+#mApp .m-tab [aria-current=page] svg{animation:r7-tab .32s cubic-bezier(.3,1.6,.5,1)}
+@keyframes r7-tab{0%{transform:scale(.82)}100%{transform:none}}
+#mApp .m-tab a{position:relative}
+#mApp .m-tab .t-n.t-lk{position:absolute;top:4px;right:50%;margin-right:-24px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#9B0F1E;color:#fff;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;font-style:normal}
+#mApp .m-tab .t-n.t-lk:empty{display:none}
+#mApp .m-tab a[href*="liked"][aria-current=page] svg{color:#9B0F1E}
+@media (prefers-reduced-motion:reduce){#mApp .m-tab [aria-current=page] svg{animation:none}}
+/* round 7: gift hero, one pair on an open DAUR gift box, deep crimson */
+#mApp .r7-ghero{background:radial-gradient(120% 80% at 50% 18%,#8E1426 0%,#5A0A18 48%,#2E050D 100%)!important;padding:0 22px 34px;margin-top:0}
+.r7-stage{position:relative;height:330px;margin:0 -22px}
+.r7-glow{position:absolute;left:50%;top:46%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,170,.32),rgba(255,214,170,0) 65%)}
+.r7-box{position:absolute;left:50%;bottom:28px;width:210px;height:118px;margin-left:-105px}
+.r7-base{position:absolute;inset:26px 0 0;border-radius:6px 6px 10px 10px;background:linear-gradient(180deg,#F6EAD6,#E3CFAE);box-shadow:0 26px 30px -12px rgba(0,0,0,.55),inset 0 -10px 18px rgba(120,80,40,.18);overflow:hidden}
+.r7-base b{position:absolute;left:14px;bottom:10px;font:800 14px/1 "DAUR Cond","DAUR Sans",system-ui,sans-serif;letter-spacing:.2em;color:#5A0A18}
+.r7-base b sup{font-size:6px;letter-spacing:.24em;margin-left:3px;vertical-align:8px}
+.r7-lid{position:absolute;left:-8px;right:-8px;top:0;height:30px;border-radius:6px;background:linear-gradient(180deg,#FBF2E2,#EAD8B8);box-shadow:0 6px 10px rgba(0,0,0,.25);transform-origin:20% 100%}
+.r7-rv{position:absolute;left:50%;top:0;bottom:0;width:22px;margin-left:-11px;background:linear-gradient(90deg,#A50F2A,#D61F3C 45%,#A50F2A);box-shadow:inset 1px 0 0 rgba(255,215,160,.6),inset -1px 0 0 rgba(255,215,160,.6)}
+.r7-rh{position:absolute;left:0;right:0;top:44%;height:18px;background:linear-gradient(180deg,#A50F2A,#D61F3C 45%,#A50F2A)}
+.r7-bow{position:absolute;left:50%;top:-34px;width:96px;height:52px;margin-left:-48px;fill:#D61F3C;stroke:#A50F2A;filter:drop-shadow(0 4px 4px rgba(0,0,0,.3));z-index:3}
+.r7-bow .r7-bt{stroke:#B8122F}
+.r7-shoe{position:absolute;left:50%;bottom:118px;width:236px;margin-left:-128px;transform:rotate(-9deg);filter:drop-shadow(0 22px 16px rgba(0,0,0,.5));z-index:2}
+.r7-tag{position:absolute;right:20px;top:96px;transform-origin:50% 0;z-index:4}
+.r7-str{display:block;width:1.5px;height:44px;margin:0 auto;background:linear-gradient(#E8C87A,#B0843F)}
+.r7-card{display:flex;flex-direction:column;align-items:center;padding:10px 14px 9px;border-radius:4px;background:#FBF4E6;box-shadow:0 10px 18px rgba(0,0,0,.35);transform:rotate(6deg);position:relative}
+.r7-card::before{content:"";position:absolute;top:5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#2E050D;opacity:.5}
+.r7-card em{font:italic 600 19px/1.1 Georgia,"Times New Roman",serif;color:#5A0A18;margin-top:6px}
+.r7-card small{font:italic 13px/1.2 Georgia,serif;color:#8E1426}
+.r7-hearts i{position:absolute;bottom:40px;width:12px;height:12px;background:#FF8FA3;opacity:0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z'/%3E%3C/svg%3E") center/contain no-repeat}
+.r7-hearts i:nth-child(1){left:18%;animation-delay:0s}.r7-hearts i:nth-child(2){left:30%;animation-delay:1.6s;width:9px;height:9px}.r7-hearts i:nth-child(3){left:44%;animation-delay:3.1s}.r7-hearts i:nth-child(4){left:58%;animation-delay:.8s;width:8px;height:8px}.r7-hearts i:nth-child(5){left:70%;animation-delay:2.4s}.r7-hearts i:nth-child(6){left:82%;animation-delay:4s;width:10px;height:10px}.r7-hearts i:nth-child(7){left:10%;animation-delay:4.8s;width:8px;height:8px}
+#mApp .r7-ghero .r6-gk{color:#E8C87A}
+#mApp .r7-ghero .r6-gt h1{color:#FBF4E6}
+#mApp .r7-ghero .r6-gt p{color:rgba(251,244,230,.82)}
+#mApp .r7-ghero .r6-gift{box-shadow:0 0 0 1.5px rgba(255,215,160,.55),0 12px 24px rgba(0,0,0,.35)!important}
+@media (prefers-reduced-motion:no-preference){
+  .r7-hearts i{animation:r7-rise 6.4s linear infinite}
+  .r7-tag{animation:r7-swing 4.6s ease-in-out infinite}
+  .r7-shoe{animation:r7-float 5.2s ease-in-out infinite}
+  .r7-lid{animation:r7-lid 5.2s ease-in-out infinite}
+  .r7-glow{animation:r7-glow 5.2s ease-in-out infinite}
+}
+@keyframes r7-rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.85}100%{transform:translateY(-250px) scale(1.1);opacity:0}}
+@keyframes r7-swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes r7-float{0%,100%{transform:translateY(0) rotate(-9deg)}50%{transform:translateY(-8px) rotate(-7deg)}}
+@keyframes r7-lid{0%,100%{transform:rotate(-7deg) translateY(-6px)}50%{transform:rotate(-10deg) translateY(-10px)}}
+@keyframes r7-glow{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+
+/* round 7: Philanthropy in a deep royal scheme: midnight emerald, antique gold, ivory */
+#mApp{--rz-bg:#0B1A17;--rz-bg2:#10261F;--rz-card:#143029;--rz-line:rgba(232,200,122,.18);--rz-gold:#D9B66A;--rz-gold2:#A9823E;--rz-ivory:#F4EDE0;--rz-mute:rgba(244,237,224,.66)}
+html[data-mv=giving],html[data-mv=giving] body,#mApp .m-view.v-giving{background:var(--rz-bg)!important}
+#mApp .m-gv{background:linear-gradient(180deg,var(--rz-bg) 0%,var(--rz-bg2) 60%,var(--rz-bg) 100%);color:var(--rz-ivory);padding-bottom:28px}
+#mApp .m-gv .gv-hero{background:var(--rz-bg)}
+#mApp .m-gv .gv-hero::after{background:linear-gradient(180deg,rgba(11,26,23,.2) 0%,rgba(11,26,23,.05) 30%,rgba(11,26,23,.82) 70%,var(--rz-bg) 100%)}
+#mApp .m-gv .gv-t .m-kick,#mApp .m-gv .m-kick{color:var(--rz-gold)!important}
+#mApp .m-gv h1,#mApp .m-gv h2,#mApp .m-gv .m-h2,#mApp .m-gv b{color:var(--rz-ivory)!important}
+#mApp .m-gv .m-cta.gold{background:linear-gradient(135deg,#ECD08A,var(--rz-gold2))!important;color:#10261F!important}
+#mApp .m-gv .gv-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow:visible;padding:18px 16px 4px}
+#mApp .m-gv .gv-stats>span{min-width:0;background:var(--rz-card);border:1px solid var(--rz-line);border-radius:14px}
+#mApp .m-gv .gv-stats b{color:var(--rz-gold)!important;white-space:normal}
+#mApp .m-gv .gv-stats small,#mApp .m-gv small,#mApp .m-gv .m-mute,#mApp .m-gv .gv-hint{color:var(--rz-mute)!important}
+#mApp .m-gv .gv-card{background:var(--rz-card);border:1px solid var(--rz-line);border-radius:18px}
+#mApp .m-gv .gv-rail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;overflow:visible;padding:14px 16px 4px;scroll-snap-type:none}
+#mApp .m-gv .gv-p{min-height:0;padding:8px 8px 10px;border-radius:14px;border:1.5px solid var(--rz-line);background:linear-gradient(180deg,#FBF7EF,#ECE4D4)!important}
+#mApp .m-gv .gv-p b{color:#10261F!important;font-size:12px}
+#mApp .m-gv .gv-p small{color:#4A5A52!important;font-size:11px}
+#mApp .m-gv .gv-p img{height:58px}
+#mApp .m-gv .gv-p[aria-pressed=true]{border-color:var(--rz-gold);box-shadow:0 0 0 2px var(--rz-gold),0 10px 22px rgba(0,0,0,.35)}
+#mApp .m-gv .gv-sel{background:var(--rz-card)!important;border:1px solid var(--rz-line);border-radius:18px}
+#mApp .m-gv .gv-sel span{color:var(--rz-gold)}
+#mApp .m-gv .m-hold{background:linear-gradient(135deg,#ECD08A,var(--rz-gold2));color:#10261F}
+#mApp .m-gv .m-hold .hold-t svg{color:#10261F}
+#mApp .m-gv .m-hold .hold-r{background:linear-gradient(90deg,#1F6B52,#2E8C6C)}
+#mApp .m-gv .m-hold.ok{background:#1F6B52;color:#fff}
+#mApp .m-gv .gv-step{background:var(--rz-card)!important;border:1px solid var(--rz-line);border-radius:16px}
+#mApp .m-gv .gv-step .gv-n{background:rgba(217,182,106,.14)!important;color:var(--rz-gold)}
+#mApp .m-gv .gv-step em{color:var(--rz-gold)}
+#mApp .m-gv .gv-mosaic img{border-radius:12px;box-shadow:0 0 0 1px var(--rz-line)}
+#mApp .m-gv .gv-slice{background:radial-gradient(120% 120% at 100% 0%,#24493D,#0E2019 65%);border:1px solid var(--rz-line);border-radius:20px}
+#mApp .m-gv .gv-out{background:var(--rz-card);border:1px solid var(--rz-line);border-radius:18px;color:var(--rz-ivory)}
+#mApp .m-gv .gv-out svg{color:var(--rz-gold)}
+#mApp .m-gv .gv-step,#mApp .m-gv .gv-sel,#mApp .m-gv .gv-card,#mApp .m-gv .gv-slice,#mApp .m-gv .gv-out{margin-left:16px;margin-right:16px}
+#mApp .m-gv .gv-steps .gv-step{margin-left:0;margin-right:0}
+.r7-stage{height:350px}.r7-shoe{width:210px!important;height:170px;object-fit:contain;margin-left:-112px!important;bottom:112px!important}
+.r7-shoe{width:230px!important;height:150px!important;margin-left:-118px!important;bottom:120px!important}
+/* round 7: home opening line, hearts on cards, credit label */
+#mApp .r7-intro{padding-top:14px;padding-bottom:2px}
+#mApp .r7-intro h1{margin:0;font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif!important;font-size:27px!important;line-height:1.02;text-transform:uppercase!important;color:#111}
+#mApp .r7-intro p{margin:6px 0 0;font-size:13.5px;line-height:1.45;color:#5C5C5C;max-width:40ch}
+#mApp .c-r{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:#111;margin-top:2px;position:relative;z-index:1}
+#mApp .c-r svg{width:13px;height:13px;color:#9B0F1E}#mApp .c-r svg .d{opacity:1}
+#mApp .c-r small{font-weight:500;color:#7A7A7A;font-size:11px}
+#mApp .m-chip span{display:inline-flex;align-items:baseline;gap:4px}
+#mApp .m-chip .r7-cr{font-size:10.5px;font-weight:600;opacity:.7}

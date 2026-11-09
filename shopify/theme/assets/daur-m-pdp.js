@@ -126,6 +126,7 @@
     return `<div class="px-fp k-me"><ul>
       <li>${ic('box')}<span><b>Dispatched within 24 hours</b> of your order being confirmed on WhatsApp</span></li>
       <li>${ic('truck')}<span><b>At your door in ${esc(days())}</b>, in any city in Pakistan</span></li>
+      <li>${ic('wallet')}<span><b>Rs. 500 now to reserve it</b>, the rest at your door</span></li>
       <li>${isSale(v) ? `${ic('tag')}<span><b>Sale price, so the size is final.</b> Measure first with the size guide, or ask us on WhatsApp</span>` : `${ic('swap')}<span><b>Size swap within ${EX} days</b> if the fit is not right</span>`}</li></ul></div>`;
   }
 
