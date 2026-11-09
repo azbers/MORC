@@ -347,9 +347,9 @@
      Gift packing, plus Gift details when something is missing. Attributes: Order type, Payment plan, Pay now, Pay at door,
      Credits used, Slice cause, Giving pair, Gift, Gift details, Gift packing, Opened in. */
   function nag(miss, total) {
-    const all = miss === total;
+    const what = miss === total ? (total > 1 ? 'your ' + total + ' gifts' : 'your gift') : miss + ' of your ' + total + ' gifts';
     openSheet(`<div class="xb xb-nag"><span class="xb-nag-i">${ic('gift')}</span><h3 class="xb-h">Who receives ${total > 1 ? 'your gifts' : 'your gift'}?</h3>
-      <p>${all ? (total > 1 ? 'Your ' + total + ' gifts have' : 'Your gift has') : miss + ' of your ' + total + ' gifts ' + (miss === 1 ? 'has' : 'have')} no name or address yet. Add ${miss > 1 ? 'them' : 'it'} now, or we will ask you on WhatsApp after your order.</p>
+      <p>The details for ${what} are not complete yet. Add them now, or we will ask you on WhatsApp after your order.</p>
       <button type="button" class="m-cta wide" data-xnaggo><span>Continue to checkout</span></button>
       <button type="button" class="xb-nag-b" data-xnagadd>Add details now</button></div>`);
   }
