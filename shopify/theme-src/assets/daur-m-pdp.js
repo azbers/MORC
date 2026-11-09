@@ -238,7 +238,7 @@
     const lo = rows[0][3], hi = rows[rows.length - 1][4];
     const start = rowOf(s.size || (p.sizes.map(Number).includes(42) ? 42 : rows[Math.floor(rows.length / 2)][0])) || rows[0];
     const cm0 = Math.round(((start[3] + start[4]) / 2) * 10) / 10;
-    openSheet(`<div class="px-sgs"><h3 class="sh-h">Size guide</h3><p class="px-mute sg-p">Men's sizes. Find your EU size by the length of your foot.</p>
+    openSheet(`<div class="px-sgs"><h3 class="sh-h">Size guide</h3><button class="px-sgx" type="button" data-pxsgx aria-label="Close the size guide">${ic('x')}</button><p class="px-mute sg-p">Men's sizes. Find your EU size by the length of your foot.</p>
       <div class="sg-fit"><div class="sg-top"><label for="pxCm">Your foot length</label><output id="pxCmOut" for="pxCm">${cm0.toFixed(1)} cm</output></div>
         <input type="range" id="pxCm" min="${lo}" max="${hi}" step="0.1" value="${cm0}" aria-label="Your foot length in centimetres">
         <div class="sg-res"><span class="sg-k">Your size</span><b id="pxCmEu"></b><small id="pxCmUk"></small></div>
@@ -449,7 +449,10 @@
     paintRail(); bar(p, v);
   });
   MX.tap('pxbuy', (t) => { buy(t); });
-  MX.tap('pxsg', () => { sizeSheet(); });
+  MX.tap('pxsg', () => { sizeSheet(); const x = $('.px-sgx'); if (x) x.focus({ preventScroll: true }); });
+  MX.tap('pxsgx', () => { closeSheet(); const b = $('.px-sgb', view); if (b) b.focus({ preventScroll: true }); });
+  // the size guide card also closes with the Escape key on a keyboard
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('#mSheet.on .px-sgs')) { closeSheet(); const b = $('.px-sgb', view); if (b) b.focus({ preventScroll: true }); } });
   MX.tap('pxpick', (t, e, d) => {
     if (!d.pxpick) return;
     const s = st(); s.size = d.pxpick; closeSheet(); unask();
