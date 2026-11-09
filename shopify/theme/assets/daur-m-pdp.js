@@ -13,7 +13,7 @@
       <div class="fp-t"><b>One pair, one person, handed over in person.</b><p>We match the size to the person who receives it and add ${d(R(Pt))} of our own to every pair you sponsor. A private photo of the moment reaches you within 7 days of the handover.</p><a class="fp-a" href="${nt.giving}" data-m>How philanthropy works ${w("arrow")}</a></div></div>`:`<div class="px-fp k-me"><ul>
       <li>${w("box")}<span><b>Dispatched within 24 hours</b> of your order being confirmed on WhatsApp</span></li>
       <li>${w("truck")}<span><b>At your door in ${d(it())}</b>, in any city in Pakistan</span></li>
-      <li>${w("wallet")}<span><b>Rs. 500 now to reserve it</b>, the rest at your door</span></li>
+      <li>${w("wallet")}<span><b>Rs. 1,000 now to reserve it</b>, the rest at your door</span></li>
       <li>${X(s)?`${w("tag")}<span><b>Sale price, so the size is final.</b> Measure first with the size guide, or ask us on WhatsApp</span>`:`${w("swap")}<span><b>Size swap within ${lt} days</b> if the fit is not right</span>`}</li></ul></div>`}function os(t){const s=Math.max(1,Math.min(5,Math.round(+t.rating||5))),e=[t.city,t.size?"Bought EU "+t.size:"",t.fit||""].filter(Boolean).join(" \xB7 ");return`<article class="px-story"><header><span class="st-av" aria-hidden="true">${d(Vt(t.name))}</span>
         <span class="st-who"><b>${d(t.name||"DAUR buyer")}</b><small>${d(e)}</small></span>${J(s,"sm")}</header>
       ${t.title||t.body?`<div class="st-say">${t.title?`<h3>${d(t.title)}</h3>`:""}${t.body?`<p>${d(t.body)}</p>`:""}</div>`:""}

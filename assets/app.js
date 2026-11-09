@@ -24,16 +24,16 @@
   // what this order sends first: the tier amount, or the whole total above the last limit
   C.advance.due = (total) => { const t = C.advance.tiers.find(([lim]) => total <= lim); return t ? Math.min(t[1], total) : total; };
   /* The payment rule shared with the phone bag (payPlan in daur-m.js): gifts and Philanthropy pairs are paid in full today;
-     a bag of your own pairs is reserved with Rs 500 for one pair or Rs 1,000 for two or more, and the rest is paid at the door.
+     a bag of your own pairs is reserved with Rs 1,000 whatever its total (owner 2026-11-09), and the rest is paid at the door.
      own: number of own pairs, covered: value of the gift and Philanthropy pairs, total: order total. */
-  C.advance.one = 500; C.advance.more = 1000; C.advance.delCredit = (window.DAUR_M && +window.DAUR_M.deliveryCredit) || 200;
+  C.advance.one = 1000; C.advance.more = 1000; C.advance.delCredit = (window.DAUR_M && +window.DAUR_M.deliveryCredit) || 200;
   C.advance.plan = (own, covered, total) => { const now = covered ? Math.min(total, covered) : Math.min(total, own > 1 ? C.advance.more : C.advance.one); return { now: own ? now : total, door: own ? Math.max(0, total - now) : 0, covered: covered > 0, onlyCovered: !own }; };
   // free delivery when every order sends a deposit first: 'all' (every order), 'full' (full advance payment only) or 'none'
   C.advance.free = ['all', 'full', 'none'].includes(C.advance.free) ? C.advance.free : 'all';
   C.advance.freeText = () => C.advance.free === 'all' ? 'Delivery is free on every order.' : C.advance.free === 'full' ? 'Delivery is free when you pay the full amount in advance. Otherwise one flat fee of ' + fmt(C.delivery.fee) + ', free on ' + C.freeDeliveryPairs + ' pairs or more.' : 'Delivery is one flat fee of ' + fmt(C.delivery.fee) + ' for any city, free on ' + C.freeDeliveryPairs + ' pairs or more.';
   C.advance.deposits = () => C.advance.on && C.advance.required;
   C.advance.freeAll = () => C.advance.deposits() && C.advance.free === 'all';
-  C.advance.tierText = () => fmt(C.advance.one) + ' for one pair, ' + fmt(C.advance.more) + ' for two or more. Gifts and Philanthropy pairs are covered in full when you order.';
+  C.advance.tierText = () => fmt(C.advance.one) + ' on any order of pairs for yourself, whatever the total. Gifts and Philanthropy pairs are covered in full when you order.';
   // the polite name for the token payment that also earns free delivery
   C.advance.care = 'Care deposit';
   if (SHOP) C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, C.followUp || {});
@@ -2364,7 +2364,7 @@
         <li><b>One saving per order.</b> ${A.freeAll() ? 'One discount code per order. Delivery stays free.' : 'Free delivery and a discount code do not combine. The saving that is bigger for you applies.'}</li>
         <li><b>Tracking.</b> At dispatch you receive the courier name, tracking number and tracking link on WhatsApp. They also show on the <a class="link" href="${link('track')}">Track order</a> page.</li></ul>`],
       ...(A.on && A.required ? [['advance', 'Advance payment and ' + A.care, `<p><b>Your pair, reserved for you.</b> We keep ordering simple. A small ${esc(A.care)} confirms your order and reserves your pair. It counts towards your purchase, and you pay the remaining balance when your order arrives.</p>
-        <div class="size-wrap"><table class="size-table care-t"><thead><tr><th>Your order</th><th>Paid today</th></tr></thead><tbody><tr><td>One pair for you</td><td><b>${fmt(A.one)}</b></td></tr><tr><td>Two or more pairs for you</td><td><b>${fmt(A.more)}</b></td></tr><tr><td>Gifts and Philanthropy pairs</td><td><b>Their full price</b></td></tr></tbody></table></div><ol>
+        <div class="size-wrap"><table class="size-table care-t"><thead><tr><th>Your order</th><th>Paid today</th></tr></thead><tbody><tr><td>Pairs for you, any order total</td><td><b>${fmt(A.one)}</b></td></tr><tr><td>Gifts and Philanthropy pairs</td><td><b>Their full price</b></td></tr></tbody></table></div><ol>
         <li>Place your order and choose bank transfer at checkout. Your bag shows the exact ${esc(A.care)} for your order.</li>
         <li>Send the ${esc(A.care)}, or the full amount if you prefer, to the bank account shown when you order. We also share the details on WhatsApp.</li>
         <li>Send us your payment receipt on ${wa} with your order number.</li>

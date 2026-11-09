@@ -2,7 +2,7 @@
    checkout button, so nothing in the core file changes.
    - Gift details are never required. Every gift pair has its own form folded under it; whatever is left empty is asked on
      WhatsApp after the order, and the order line says so for the team.
-   - One clear total, then how to pay (Rs 500 or Rs 1,000 to reserve own pairs, gifts and giving covered today), then the
+   - One clear total, then how to pay (Rs 1,000 to reserve own pairs, gifts and giving covered today), then the
      bank account itself with copy buttons and a WhatsApp receipt, so the buyer never leaves the bag to look for them.
    - Taps change the bag in place: no reload, no spinner, the scroll position and open forms stay where they were. */
 (function () {

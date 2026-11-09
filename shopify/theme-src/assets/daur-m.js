@@ -459,12 +459,12 @@
     }
     return { list, chosen, use };
   }
-  // what is paid now and what at the door: gifts and giving in full; own pairs a fixed advance of Rs 500 (one pair) or Rs 1,000 (more)
+  // what is paid now and what at the door: gifts and giving in full; own pairs a fixed advance of Rs 1,000 whatever the total (owner 2026-11-09)
   function payPlan(lines, total) {
     const sum = (k) => lines.filter((x) => x.mode === k).reduce((a, x) => a + x.total, 0);
     const own = lines.filter((x) => x.mode === 'me'), ownPairs = own.reduce((a, x) => a + x.qty, 0);
     const full = sum('gift') + sum('give');
-    const adv = full ? Math.min(total, full) : Math.min(total, ownPairs > 1 ? 1000 : 500);
+    const adv = full ? Math.min(total, full) : Math.min(total, 1000);
     const onlyFull = !own.length;
     const choice = onlyFull ? 'full' : store.get('mPay', 'adv') === 'full' ? 'full' : 'adv';
     const now = choice === 'full' ? total : adv;
