@@ -2354,7 +2354,7 @@ body:has(.sticky-buy) .ftr .wrap { padding-bottom: calc(96px + env(safe-area-ins
 .gal-main .stage-badge, .gal-main .ptag { z-index: 3; }
 .gal-main .gal-edge { z-index: 2; }
 .gal-dots { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 4; display: flex; align-items: center; gap: 2px; padding: 0 8px; border-radius: 999px; background: rgba(42, 28, 20, .32); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.gal-dot { --a: 0; width: calc(14px + 18px * var(--a)); height: 26px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
+.gal-dot { --a: 0; width: calc(24px + 8px * var(--a)); height: 26px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
 .gal-dot::before { content: ""; width: calc(100% - 6px); height: 3px; border-radius: 3px; background: #F6F1E8; opacity: calc(.45 + .55 * var(--a)); }
 .gal-dot:focus-visible { outline: 2px solid #F6F1E8; outline-offset: -4px; border-radius: 6px; }
 .gal-main.zooming .gal-dots { opacity: 0; pointer-events: none; }
@@ -3707,7 +3707,7 @@ body[data-page="feed"] .ftr { display: block !important; }
 /* footer: warm stone, brass ink headings, white help card, olive WhatsApp */
 :root:not([data-theme="dark"]) .ftr.ftr2 { background: #E9E4DB; color: #242321; --fl: rgba(36, 35, 33, .1); --fm: rgba(36, 35, 33, .68); }
 :root:not([data-theme="dark"]) .ftr2 .f2-hero { background: radial-gradient(120% 140% at 0% 0%, #F6F3ED 0%, #E9E4DB 70%); }
-:root:not([data-theme="dark"]) .ftr2 .f2-col h2 { color: #7F6235; }
+:root:not([data-theme="dark"]) .ftr2 .f2-col h2 { color: #6B5129; }
 :root:not([data-theme="dark"]) .ftr2 .f2-logo, :root:not([data-theme="dark"]) .ftr2 .f2-help h2 { color: #242321; }
 :root[data-theme="dark"] .ftr.ftr2 { background: #120D0A; }
 .f2-wa { background: #465347; color: #FFFFFF !important; }

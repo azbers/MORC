@@ -1040,7 +1040,7 @@ html.m-on{--m-ink:#111;--m-ink2:#111;--m-mute:#6B6B6B;--m-line:#E6E4E0;--m-soft:
 /* tab bar: white, hairline, the bag is a tab like the others */
 .m-tab{background:#fff;border-radius:0;box-shadow:inset 0 1px 0 var(--m-line);height:calc(60px + var(--m-safe))}
 .m-tab .t-row{height:58px;margin-top:2px}
-.m-tab svg{color:#8A8A8A}.m-tab [aria-current=page] svg{color:var(--m-ink)}
+.m-tab svg{color:#6B6B6B}.m-tab [aria-current=page] svg{color:var(--m-ink)}
 .m-tab [aria-current=page] i{background:var(--m-ink)}
 .m-tab .t-bag{position:relative;left:auto;top:auto;margin:0 auto;width:48px;height:48px;border:0;border-radius:0;background:transparent;box-shadow:none}
 .m-tab .t-bag svg{color:var(--m-ink)}
@@ -1080,7 +1080,7 @@ html.m-on .ck{bottom:calc(72px + var(--m-safe))!important;border-radius:10px!imp
 /* motion: short and plain */
 .m-view.m-in,.m-view.m-back{animation-duration:.22s}
 .m-tab .t-bag{width:auto;height:56px;flex-direction:column;gap:5px;color:var(--m-ink)}
-.m-tab .t-bag svg{color:#8A8A8A}.m-tab .t-bag[aria-current=page] svg{color:var(--m-ink)}
+.m-tab .t-bag svg{color:#6B6B6B}.m-tab .t-bag[aria-current=page] svg{color:var(--m-ink)}
 .m-tab .t-n{right:50%;margin-right:-22px;top:6px}
 .m-chip{box-shadow:none!important}
 #mApp :is(.m-plus,.l-add,.m-act){background:#111!important;color:#fff!important;box-shadow:none!important}
@@ -1585,3 +1585,6 @@ html[data-mv=giving] #mApp .m-top .m-ib svg{color:#F4EDE0!important}
 .r8-go svg{width:18px;height:18px}.r8-go:active{transform:scale(.98)}
 .r8-ln{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:6px;font-size:13px;font-weight:600;color:rgba(255,255,255,.72)!important}
 @media (prefers-reduced-motion:reduce){.r8-st li{transition:none}}
+
+/* cookie line on phones: the privacy link is underlined so it does not rely on colour alone */
+html.m-on .ck .ck-t a{text-decoration:underline!important;text-underline-offset:3px;font-weight:600}

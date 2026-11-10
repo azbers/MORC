@@ -38,7 +38,7 @@ html.m-on{--px-surf:linear-gradient(180deg,#fff 0%,#F7F6F4 45%,#ECEBE8 100%);--p
 .px-rail{position:absolute;top:16px;display:flex;flex-direction:column;align-items:center;gap:5px}
 .px-rail.l{left:8px;width:58px}
 .px-rail.r{right:10px;top:70px;width:46px;gap:9px}
-.px-lab{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8A8A8A;margin:0 0 3px;white-space:nowrap;line-height:1.2}
+.px-lab{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6B6B6B;margin:0 0 3px;white-space:nowrap;line-height:1.2}
 .px-lab small{font-size:9px;letter-spacing:.1em}
 .px-sz{width:54px;height:clamp(38px,10.4vw,44px);border:0;border-radius:10px;padding:0;background:transparent;color:#6B6B6B;font:600 16.5px/1 "DAUR Sans","Outfit",system-ui,sans-serif;font-variant-numeric:tabular-nums;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s,box-shadow .2s,transform .2s}
 .px-sz[aria-checked=true]{background:var(--px-ink);color:#fff;font-weight:700;box-shadow:none;transform:none}
@@ -60,7 +60,7 @@ html.m-on{--px-surf:linear-gradient(180deg,#fff 0%,#F7F6F4 45%,#ECEBE8 100%);--p
 .px-price{position:absolute;left:18px;bottom:18px;display:flex;flex-direction:column;gap:3px}
 .px-price b{font-family:var(--px-cond);font-size:36px;line-height:.95;font-weight:700;letter-spacing:.005em;color:var(--px-ink);white-space:nowrap}
 .pp-was{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;font-size:13px;line-height:1.2}
-.pp-was s{color:#8A8A8A}
+.pp-was s{color:#6B6B6B}
 .pp-was em{font-style:normal;font-weight:700;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--px-red)}
 .pp-del{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--px-mute)}
 .pp-del svg{width:16px;height:16px;color:var(--px-ink)}
@@ -169,7 +169,7 @@ html.m-on{--px-surf:linear-gradient(180deg,#fff 0%,#F7F6F4 45%,#ECEBE8 100%);--p
 .fm-m{position:relative;height:6px;margin:14px 0 9px;border-radius:6px;background:#E2E0DC}
 .fm-m::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:#CFCFCF;border-radius:2px}
 .fm-k{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--px-ink);border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1);transform:translate(-50%,-50%)}
-.fm-s{display:flex;justify-content:space-between;font-size:11px;color:#8A8A8A}
+.fm-s{display:flex;justify-content:space-between;font-size:11px;color:#6B6B6B}
 .px-stories{display:grid;gap:14px;margin-top:16px}
 .px-story{padding:16px 16px 14px;border-radius:12px;background:#fff;border:1px solid var(--px-line)}
 .px-story header{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:11px;align-items:center}
@@ -182,7 +182,7 @@ html.m-on{--px-surf:linear-gradient(180deg,#fff 0%,#F7F6F4 45%,#ECEBE8 100%);--p
 #mApp .st-say h3{margin:0 0 4px;font-size:15.5px;line-height:1.3;font-weight:700}
 .st-say p{margin:0;font-size:15px;line-height:1.55;color:#333}
 .st-ph{display:block;margin-top:12px;width:100%;max-height:320px;object-fit:cover;border-radius:10px}
-.px-story footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:11px;font-size:12px;color:#8A8A8A}
+.px-story footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:11px;font-size:12px;color:#6B6B6B}
 .px-story footer:empty{display:none}
 .st-v{display:inline-flex;align-items:center;gap:5px;font-weight:600;color:var(--px-green)}
 .st-v svg{width:16px;height:16px}
@@ -301,7 +301,7 @@ html.m-on.m-pdp-on .m-sheet.on~.m-toast{bottom:auto}
 .px-pick{width:100%;min-height:52px;margin-top:12px;border:0;border-radius:8px;background:var(--px-ink);color:#fff;font-size:15px;font-weight:700}
 .px-pick:disabled{background:#E6E4E0;color:#6B6B6B}
 #mApp .sg-t{width:100%;margin:16px 0 0;border-collapse:separate;border-spacing:0;font-size:14px;background:transparent}
-#mApp .sg-t th{padding:8px 8px;border:0;border-bottom:1px solid var(--px-line);background:transparent;text-align:left;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8A8A8A}
+#mApp .sg-t th{padding:8px 8px;border:0;border-bottom:1px solid var(--px-line);background:transparent;text-align:left;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B6B6B}
 #mApp .sg-t td{padding:11px 8px;border:0;border-bottom:1px solid var(--px-line);background:transparent;font-variant-numeric:tabular-nums}
 #mApp .sg-t tr.on td{background:var(--px-soft);font-weight:700;border-bottom-color:transparent}
 #mApp .sg-t tr.on td:first-child{border-radius:8px 0 0 8px}
