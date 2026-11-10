@@ -126,7 +126,7 @@
     const g = window.DAUR_GIFT ? window.DAUR_GIFT() : null;
     // a giving pair: paid in full, handed over by DAUR in the quarterly giving round, proof sent privately to the buyer
     const giving = A.cart.some((l) => { const p = A.prod(l.pid); return l.mode === 'give' || (p && p.giving); });
-    const gift = { 'Giving pair': giving ? 'Yes, paid in full in advance. Size matched by DAUR. Private proof after handover' : '', 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
+    const gift = { 'Giving pair': giving ? 'Yes, paid in full in advance. Size matched by DAUR. Private proof after handover' : '', 'Gift': g ? 'Yes, paid in full in advance' : '', 'Gift packing': g && g.pack ? 'Requested' : '', 'Gift for': g ? String(g.to || '').slice(0, 40) : '', 'Gift phone': g ? String(g.phone || '').slice(0, 15) : '', 'Gift address': g ? String(g.addr || '').slice(0, 160) : '', 'Gift details': g && !(g.to && g.phone && g.addr) ? 'Not complete: ask the buyer on WhatsApp' : '', 'Gift note': g ? String(g.note || '').slice(0, 240) : '' };
     // how the order is paid, on the same rule as the phone bag
     const pl = window.DAUR_PLAN ? window.DAUR_PLAN() : null;
     const pay = pl ? { 'Payment plan': pl.text, 'Pay now': pl.now, 'Pay at door': pl.door } : {};
