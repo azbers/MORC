@@ -247,6 +247,21 @@
   const follow = () => `<section class="m-follow"><span class="m-kick">${ic('spark')}Find us</span><b>Follow DAUR Supply</b>
     <div class="f-list">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'}><span class="f-i">${ic(k)}</span><span><b>${n}</b><small>${esc(h)}</small></span>${ic('arrow')}</a>`).join('')}</div></section>`;
 
+  // the DAUR way: who carries the risk, in four steps, said in facts only (advance, WhatsApp check, dispatch, size swap)
+  const way = () => { const adv = fmt(1000), xd = C.exchangeDays || 5; const st = [
+      ['Reserve with ' + adv, 'A small advance holds your pair in your size. That is all you put in before it ships.'],
+      ['A person confirms on WhatsApp', 'We check your size and address with you before anything is packed.'],
+      ['Checked by hand, then sent', 'Out of Islamabad within 24 hours of that message. At your door in ' + days() + '.'],
+      ['Pay the rest at your door', 'Wrong size? Swap it within ' + xd + ' days. A defect is covered for 30 days.']];
+    return `<section class="r8-way" aria-labelledby="r8WayH"><span class="r8-dm" aria-hidden="true">${DMARK}</span>
+      <span class="r8-k">${ic('spark')}The DAUR way</span>
+      <h2 id="r8WayH">You risk ${esc(adv)}.<br>We carry the rest.</h2>
+      <p class="r8-s">Your pair leaves our hands before most of your money leaves yours.</p>
+      <ol class="r8-st">${st.map((x, i) => `<li><i aria-hidden="true">0${i + 1}</i><span><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span></li>`).join('')}</ol>
+      <div class="r8-nums"><span><b>${esc(adv)}</b><small>to reserve</small></span><span><b>${xd} days</b><small>to swap size</small></span><span><b>30 days</b><small>defect cover</small></span></div>
+      <a class="r8-go" href="${href.shop()}" data-m>Choose your pair${ic('arrow')}</a>
+      <a class="r8-ln" href="${root}/pages/contract" data-m>Read our promise in full</a></section>`; };
+
   /* ---------- views ---------- */
   const V = {};
   const saving = (p) => Math.max.apply(null, p.variants.map((v) => API.onSale(v) ? v.compareAt - v.price : 0));
@@ -313,16 +328,17 @@
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
     view.innerHTML = `${promo()}
-      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>Men's shoes from workshops in Lahore, Sialkot and Kasur, checked by hand and sent from Islamabad.</p></section>
+      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>The workshops of Lahore, Sialkot and Kasur, without the showroom in between. Every pair checked by hand in Islamabad before it travels to you.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
+      ${way()}
       <section class="r5-for m-pad"><div class="r5-for-h"><h2 class="m-h2">Buying for someone else?</h2><button class="m-link" type="button" data-explain>${ic('help')}Which one?</button></div>
       <div class="r5-duo">${duo('gift')}${duo('give')}</div></section>
       <div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Fresh in</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div>
       <div class="m-rows">${fresh.map(row).join('')}</div>
       <div id="mMore" data-k="0"></div><div id="mMoreSent" class="m-skel" aria-hidden="true"><div class="sk-row"><div class="sk sk-c"></div><div class="sk sk-c"></div></div></div>`;
-    bindPromo(); bindMore();
+    bindPromo(); bindMore(); observeIn();
   };
   /* ---------- shop: search, style, sort and filter ---------- */
   const SORTS = [['feat', 'Featured'], ['new', 'Newest'], ['low', 'Price: low to high'], ['high', 'Price: high to low'], ['save', 'Biggest saving']];
@@ -615,7 +631,7 @@
     }
   }
   function observeIn() {
-    const els = $$('.gv-mosaic img, .gv-step, .pg-sec, .gf-f, .fd-post, .r6-row, .r6-steps li, .r6-rt li, .r6-ch, .r6-mk>div', view);
+    const els = $$('.r8-st li, .gv-mosaic img, .gv-step, .pg-sec, .gf-f, .fd-post, .r6-row, .r6-steps li, .r6-rt li, .r6-ch, .r6-mk>div', view);
     if (!('IntersectionObserver' in window) || reduce) return;
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -30px' });
     els.forEach((e) => { if (e.getBoundingClientRect().top > innerHeight) { e.classList.add('pre'); io.observe(e); } });

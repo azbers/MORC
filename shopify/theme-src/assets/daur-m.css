@@ -1556,3 +1556,32 @@ html[data-mv=giving] #mApp .m-top .m-top-t{color:#F4EDE0!important}
 html[data-mv=giving] #mApp .m-top .m-ib{background:rgba(244,237,224,.12)!important;color:#F4EDE0!important}
 html[data-mv=giving] #mApp .m-top .m-ib svg{color:#F4EDE0!important}
 #mApp .m-top .m-logo small{color:#C8102E!important;font-weight:800!important;opacity:1!important}
+
+/* round 8: the DAUR way, a dark panel that says who carries the risk */
+.r8-way{position:relative;margin:30px 16px 6px;padding:26px 22px 22px;border-radius:30px;overflow:hidden;color:#fff;background:radial-gradient(130% 90% at 100% 0%,#5a3722 0%,#2A1C14 46%,#0f0906 100%);box-shadow:0 26px 50px -28px rgba(28,19,14,.75)}
+.r8-way::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(160deg,rgba(242,193,78,.75),rgba(242,193,78,0) 38%,rgba(242,193,78,0) 70%,rgba(242,193,78,.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.r8-way .r8-dm{position:absolute;right:-46px;top:-18px;width:230px;color:#fff;opacity:.05;pointer-events:none}
+.r8-way .r8-dm .dm{width:100%;height:auto}
+.r8-k{position:relative;display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--m-gold)}
+.r8-k svg{width:15px;height:15px}
+#mApp .r8-way h2{position:relative;margin:10px 0 0;font-size:29px;line-height:1.08;font-weight:700;letter-spacing:-.01em;color:#fff}
+.r8-s{position:relative;margin:10px 0 0;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.74);max-width:30ch}
+.r8-st{position:relative;list-style:none;margin:22px 0 0;padding:0;display:grid;gap:0}
+.r8-st li{position:relative;display:grid;grid-template-columns:46px 1fr;gap:12px;padding:0 0 20px;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.r8-st li:nth-child(2){transition-delay:.06s}.r8-st li:nth-child(3){transition-delay:.12s}.r8-st li:nth-child(4){transition-delay:.18s}
+.r8-st li.pre{opacity:0;transform:translateY(16px)}
+.r8-st li.pre.in{opacity:1;transform:none}
+.r8-st li::before{content:"";position:absolute;left:22px;top:44px;bottom:2px;width:1px;background:linear-gradient(rgba(242,193,78,.55),rgba(242,193,78,.08))}
+.r8-st li:last-child{padding-bottom:0}.r8-st li:last-child::before{display:none}
+.r8-st i{width:46px;height:40px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:19px;font-weight:700;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px var(--m-gold);font-variant-numeric:tabular-nums}
+.r8-st b{display:block;font-size:16px;font-weight:600;line-height:1.25;color:#fff;padding-top:9px}
+.r8-st small{display:block;margin-top:4px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.68)}
+.r8-nums{position:relative;display:grid;grid-template-columns:repeat(3,1fr);margin:22px 0 0;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
+.r8-nums span{padding:14px 4px 13px;text-align:center}
+.r8-nums span+span{border-left:1px solid rgba(255,255,255,.14)}
+.r8-nums b{display:block;font-size:16px;font-weight:700;color:var(--m-gold);white-space:nowrap}
+.r8-nums small{display:block;margin-top:2px;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.r8-go{position:relative;margin-top:20px;min-height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--m-goldsoft),var(--m-gold));color:var(--m-ink)!important;font-size:16px;font-weight:700;box-shadow:0 14px 30px -12px rgba(242,193,78,.6)}
+.r8-go svg{width:18px;height:18px}.r8-go:active{transform:scale(.98)}
+.r8-ln{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:6px;font-size:13px;font-weight:600;color:rgba(255,255,255,.72)!important}
+@media (prefers-reduced-motion:reduce){.r8-st li{transition:none}}
