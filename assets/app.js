@@ -2277,8 +2277,24 @@
         ${votePicker()}</div>` : ''}
     </div></section>`;
   }
+  /* The wallet on desktop, as on the phone: the credits a visitor already holds, shown as money so that not using them feels like a loss. */
+  function walletBlock() {
+    const del = C.advance.delCredit, wel = WAL.on() ? WAL.amt : 0, n = 1 + (wel ? 1 : 0);
+    const tile = (k, amt, line, tag) => `<div class="wl-t rv"><span class="wl-tk">${k}</span><b>${fmt(amt)}</b><p>${line}</p><span class="wl-tag">${tag}</span></div>`;
+    return `<section class="sheet x wl-sec"><div class="wrap"><div class="wl">
+      <div class="wl-card rv" role="img" aria-label="DAUR wallet, credit balance ${fmt(del + wel)}">
+        <span class="wl-brand">DAUR <small>Wallet</small></span><span class="wl-chip" aria-hidden="true"></span>
+        <span class="wl-k">Credit balance</span><b class="wl-bal">${fmt(del + wel)}</b>
+        <span class="wl-row"><span><small>Status</small><b>Ready for your next order</b></span><span><small>Credits</small><b>${n} active</b></span></span>
+      </div>
+      <div class="wl-side"><span class="eyebrow">In your wallet</span><h2>${fmt(del + wel)} is already yours.</h2>
+        <p>It comes off your total by itself in the bag. Credits are not cash and cannot be withdrawn, so the only way to keep them is to use them.</p>
+        <div class="wl-ts">${tile('Delivery credit', del, 'Covers the ' + fmt(del) + ' delivery on every order that ships.', 'Always on')}${wel ? tile('Welcome credit', wel, 'Yours on your first order. One use per customer.', 'Applied in your bag') : ''}</div>
+        <a class="btn volt" href="${link('shop')}">Use my credit <span class="arr">&rarr;</span></a></div>
+    </div></div></section>`;
+  }
   V.offers = function () {
-    setMeta('Offers and Discount Codes | DAUR Supply', 'Live DAUR Supply discount codes, ' + (C.advance.freeAll() ? 'free delivery on every order' : 'free delivery on two pairs') + ' and men\'s shoes on sale in Pakistan, with Cash on Delivery.');
+    setMeta('Offers and Discount Codes | DAUR Supply', 'Your DAUR Supply wallet: a Rs. 200 delivery credit on every order, live discount codes and men\'s shoes on sale in Pakistan.');
     const offers = liveOffers();
     const sale = P.filter((p) => p.variants.some(onSale)).map((p) => [p, p.variants.find(onSale)]);
     const best = sale.length ? Math.max(...sale.map(([, v]) => pct(v))) : 0;
@@ -2297,6 +2313,7 @@
     app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">${count} live</span><h1>Current offers.</h1><p class="aside">Every code and offer live in our store today. A pair you save on keeps the same checks, finish and seal as every other. ${C.advance.required ? (C.advance.freeAll() ? 'Delivery across Pakistan, covered by your Rs. 200 delivery credit.' : '') : 'Cash on Delivery on every order.'}</p></div>
       <div class="of-float" aria-hidden="true">${['%', 'Rs', '%', 'Rs', '%'].map((t, i) => `<span style="--i:${i}">${t}</span>`).join('')}</div></section>
 
+    ${walletBlock()}
     <section class="sheet x"><div class="wrap">
       ${head('Codes and deals', offers.length ? 'Use it at checkout.' : 'No codes right now.', '', offers.length ? (C.advance.freeAll() ? 'One code per order, and your delivery credit stays on every order.' : 'One saving applies per order: codes and free delivery do not stack, so the bigger saving is the one you get.') : 'There is no live code at the moment. Sale pairs below are already reduced, no code needed.')}
       ${offers.length ? `<div class="of-grid">${offers.map(card).join('')}</div>` : ''}
@@ -2309,7 +2326,7 @@
 
     <section class="sheet x"><div class="wrap">
       ${head('How it works', 'Three steps to your saving.')}
-      <div class="steps of-steps">${[['Pick your pairs', C.advance.freeAll() ? 'Add your size to the bag. Your Rs. 200 delivery credit covers delivery on every order.' : 'Add your size to the bag. Two pairs or more and delivery is free.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], C.advance.required ? ['Reserve your pair', 'A small ' + C.advance.care + ' confirms your order. Your pair leaves Islamabad and the rest is paid when it arrives.'] : ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+      <div class="steps of-steps">${[['Pick your pairs', C.advance.freeAll() ? 'Add your size to the bag. Your Rs. 200 delivery credit covers delivery on every order.' : 'Add your size to the bag. Two pairs or more and delivery is free.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], C.advance.required ? ['Reserve your pair', fmt(C.advance.one) + ' reserves your order, whatever its total. Your pair leaves Islamabad and the rest is paid at your door.'] : ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
     <section class="sheet x"><div class="wrap"><div class="signup closer">

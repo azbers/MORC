@@ -3781,3 +3781,27 @@ body[data-page="feed"] .ftr { display: block !important; }
 .pay-card .pc-cp { flex: none; min-width: 64px; min-height: 36px; padding: 0 12px; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; background: transparent; color: #fff; font: 600 12px/1 var(--body); letter-spacing: .04em; cursor: pointer; transition: background-color .18s ease, color .18s ease; }
 .pay-card .pc-cp:hover { background: #fff; color: #1b1a18; }
 .pay-card .pc-cp:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Desktop wallet on the offers page: the credits shown as a card, as on the phone */
+.wl-sec { padding-bottom: 0; }
+.wl { display: grid; grid-template-columns: minmax(300px, 420px) 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.wl-card { position: relative; display: grid; gap: 6px; aspect-ratio: 1.586; padding: 28px 30px; border-radius: 22px; color: #fff; overflow: hidden; font-family: var(--body);
+  background: repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 2px, transparent 2px 9px), radial-gradient(120% 120% at 100% 0%, #4a2e1d 0%, #1b1410 55%, #0c0806 100%); box-shadow: 0 30px 60px -30px rgba(28,19,14,.7); }
+.wl-card small, .wl-card .wl-k { display: block; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.wl-brand { font-family: var(--display, var(--body)); font-size: 26px; font-weight: 700; font-style: italic; letter-spacing: .02em; }
+.wl-brand small { display: inline; margin-left: 8px; font-style: normal; color: #d9b36a; }
+.wl-chip { position: absolute; right: 30px; top: 28px; width: 46px; height: 34px; border-radius: 7px; background: linear-gradient(135deg, #f6dc9a, #c9952f); box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
+.wl-card .wl-k { margin-top: auto; }
+.wl-bal { font-size: clamp(38px, 4vw, 52px); line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wl-row { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; }
+.wl-row b { display: block; margin-top: 3px; font-size: 14px; font-weight: 600; }
+.wl-row span:last-child { text-align: right; }
+.wl-side h2 { margin: 10px 0 12px; }
+.wl-side > p { max-width: 52ch; color: var(--mute, #6b5e55); }
+.wl-ts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 22px 0 24px; max-width: 620px; }
+.wl-t { position: relative; padding: 18px 18px 16px; border: 1px dashed #b0843f; border-radius: 16px; background: #fffaf2; }
+.wl-tk { display: block; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8a6424; }
+.wl-t b { display: block; margin-top: 6px; font-size: 28px; line-height: 1.1; font-weight: 700; color: #2a1c14; }
+.wl-t p { margin: 6px 0 12px; font-size: 13.5px; line-height: 1.5; color: #5b4d43; }
+.wl-tag { display: inline-block; padding: 5px 10px; border-radius: 999px; background: #2a1c14; color: #fff; font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+@media (max-width: 900px) { .wl { grid-template-columns: 1fr; } .wl-card { max-width: 420px; } }
