@@ -145,3 +145,31 @@ html.m-on #mApp .r5-hero.v-crm .m-cta{background:linear-gradient(145deg,var(--lk
 /* ---------- bag: the pay button and the account cards in espresso and brass, not flat black ---------- */
 html.m-on #mApp .xb-go{background:linear-gradient(145deg,var(--lk-esp2),var(--lk-ink))!important;box-shadow:inset 0 0 0 1.5px rgba(227,190,116,.7),0 10px 22px rgba(42,28,20,.22)!important;color:var(--lk-cream)!important;border-radius:14px!important}
 html.m-on #mApp .xb-go-a{color:var(--lk-brass2)}
+
+/* ---------- product page: the same paper, ink and brass, around the box that waits under the pair ---------- */
+html.m-on #mApp .px,html.m-on #mBuy{--px-ink:#1C130E;--px-surf:#FAF3E8}
+html.m-on #mApp .px-stage{background:radial-gradient(90% 55% at 50% 38%,#fff 0%,rgba(255,255,255,0) 72%),linear-gradient(180deg,#FFFDF9 0%,#F7EEDF 60%,#EADBC3 100%)!important;box-shadow:inset 0 0 0 1px var(--lk-line);border-radius:22px!important}
+html.m-on #mApp .px-word{color:rgba(138,90,18,.07)!important}
+html.m-on #mApp .px-sz[aria-checked=true]{background:linear-gradient(145deg,var(--lk-esp2),var(--lk-ink))!important;color:var(--lk-cream)!important;box-shadow:inset 0 0 0 1.5px rgba(227,190,116,.75)!important}
+html.m-on #mApp .px-h{position:relative;padding-top:13px}
+html.m-on #mApp .px-h::before{content:"";position:absolute;left:0;top:0;width:31px;height:2.5px;background:var(--lk-stitch);background-size:12px 2.5px}
+html.m-on #mApp :is(.px-fp,.px-sum,.px-story .st-say){background:var(--lk-paper)!important;box-shadow:inset 0 0 0 1px var(--lk-line)}
+html.m-on #mApp .px-story{box-shadow:inset 0 0 0 1px var(--lk-line)!important}
+html.m-on #mApp .px-spec>*{border-color:var(--lk-line)!important}
+html.m-on #mBuy .px-cta.k-me,html.m-on #mApp .px-cta.k-me{background:linear-gradient(145deg,var(--lk-esp2),var(--lk-ink))!important;color:var(--lk-cream)!important;box-shadow:inset 0 0 0 1.5px rgba(227,190,116,.7),0 10px 22px rgba(42,28,20,.22)!important;border-radius:14px!important}
+html.m-on #mBuy .px-cta.k-me .ct-i{background:linear-gradient(135deg,#F3D592,#C9952F)!important;color:var(--lk-ink)!important}
+html.m-on #mBuy .px-cta.k-me .ct-i svg{color:var(--lk-ink)!important}
+
+/* ---------- bag: one calm sheet of paper, the total under a seam, the accounts as espresso cards ---------- */
+html.m-on #mApp .xb,html.m-on #mBuy{--xb-ink:#1C130E;--xb-surf:#FAF3E8}
+html.m-on #mApp .xb-img{background:linear-gradient(180deg,#FFFDF9,#F0E4D2)!important;box-shadow:inset 0 0 0 1px var(--lk-line)}
+html.m-on #mApp .xb-sum{background:linear-gradient(180deg,#FFFDF9,#FAF3E8)!important;box-shadow:inset 0 0 0 1px var(--lk-line);border-radius:18px!important}
+html.m-on #mApp .xb-tot{border-top:0!important;background:var(--lk-stitch) 0 0/12px 2px repeat-x}
+html.m-on #mApp .xb-po{background:var(--lk-paper)!important;border-color:var(--lk-line)!important;border-radius:16px!important}
+html.m-on #mApp .xb-po[aria-checked=true]{background:#fff!important;border-color:var(--lk-brass)!important;box-shadow:inset 0 0 0 1.5px var(--lk-brass),0 10px 22px rgba(176,132,63,.16)!important}
+html.m-on #mApp .xb-po[aria-checked=true] .xb-rd{border-color:var(--lk-brass)!important}
+html.m-on #mApp .xb-po[aria-checked=true] .xb-rd::after{background:var(--lk-brass)!important}
+html.m-on #mApp .xb-pc.k-bank{background:radial-gradient(90% 60% at 100% 0%,rgba(227,190,116,.22),transparent 60%),linear-gradient(160deg,#3A2518,#150D08)!important;box-shadow:inset 0 0 0 1px rgba(227,190,116,.4)}
+html.m-on #mApp .xb-trust li,html.m-on #mApp .xb-cp.lt{background:var(--lk-paper)!important;box-shadow:inset 0 0 0 1px var(--lk-line)}
+html.m-on #mApp .xb-trust svg{color:var(--lk-brass)!important}
+html.m-on #mApp .xb-wa{border-color:var(--lk-line)!important;border-radius:14px!important}
