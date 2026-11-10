@@ -1557,34 +1557,123 @@ html[data-mv=giving] #mApp .m-top .m-ib{background:rgba(244,237,224,.12)!importa
 html[data-mv=giving] #mApp .m-top .m-ib svg{color:#F4EDE0!important}
 #mApp .m-top .m-logo small{color:#C8102E!important;font-weight:800!important;opacity:1!important}
 
-/* round 8: the DAUR way, a dark panel that says who carries the risk */
-.r8-way{position:relative;margin:30px 16px 6px;padding:26px 22px 22px;border-radius:30px;overflow:hidden;color:#fff;background:radial-gradient(130% 90% at 100% 0%,#5a3722 0%,#2A1C14 46%,#0f0906 100%);box-shadow:0 26px 50px -28px rgba(28,19,14,.75)}
-.r8-way::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(160deg,rgba(242,193,78,.75),rgba(242,193,78,0) 38%,rgba(242,193,78,0) 70%,rgba(242,193,78,.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.r8-way .r8-dm{position:absolute;right:-46px;top:-18px;width:230px;color:#fff;opacity:.05;pointer-events:none}
-.r8-way .r8-dm .dm{width:100%;height:auto}
-.r8-k{position:relative;display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--m-gold)}
-.r8-k svg{width:15px;height:15px}
-#mApp .r8-way h2{position:relative;margin:10px 0 0;font-size:29px;line-height:1.08;font-weight:700;letter-spacing:-.01em;color:#fff}
-.r8-s{position:relative;margin:10px 0 0;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.74);max-width:30ch}
-.r8-st{position:relative;list-style:none;margin:22px 0 0;padding:0;display:grid;gap:0}
-.r8-st li{position:relative;display:grid;grid-template-columns:46px 1fr;gap:12px;padding:0 0 20px;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
-.r8-st li:nth-child(2){transition-delay:.06s}.r8-st li:nth-child(3){transition-delay:.12s}.r8-st li:nth-child(4){transition-delay:.18s}
-.r8-st li.pre{opacity:0;transform:translateY(16px)}
-.r8-st li.pre.in{opacity:1;transform:none}
-.r8-st li::before{content:"";position:absolute;left:22px;top:44px;bottom:2px;width:1px;background:linear-gradient(rgba(242,193,78,.55),rgba(242,193,78,.08))}
-.r8-st li:last-child{padding-bottom:0}.r8-st li:last-child::before{display:none}
-.r8-st i{width:46px;height:40px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:19px;font-weight:700;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px var(--m-gold);font-variant-numeric:tabular-nums}
-.r8-st b{display:block;font-size:16px;font-weight:600;line-height:1.25;color:#fff;padding-top:9px}
-.r8-st small{display:block;margin-top:4px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.68)}
-.r8-nums{position:relative;display:grid;grid-template-columns:repeat(3,1fr);margin:22px 0 0;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
-.r8-nums span{padding:14px 4px 13px;text-align:center}
-.r8-nums span+span{border-left:1px solid rgba(255,255,255,.14)}
-.r8-nums b{display:block;font-size:16px;font-weight:700;color:var(--m-gold);white-space:nowrap}
-.r8-nums small{display:block;margin-top:2px;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-.r8-go{position:relative;margin-top:20px;min-height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--m-goldsoft),var(--m-gold));color:var(--m-ink)!important;font-size:16px;font-weight:700;box-shadow:0 14px 30px -12px rgba(242,193,78,.6)}
-.r8-go svg{width:18px;height:18px}.r8-go:active{transform:scale(.98)}
-.r8-ln{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:6px;font-size:13px;font-weight:600;color:rgba(255,255,255,.72)!important}
-@media (prefers-reduced-motion:reduce){.r8-st li{transition:none}}
-
 /* cookie line on phones: the privacy link is underlined so it does not rely on colour alone */
 html.m-on .ck .ck-t a{text-decoration:underline!important;text-underline-offset:3px;font-weight:600}
+
+/* ================= round 9: the box =================
+   One object carries the brand on the phone: the DAUR box. A pair added anywhere is boxed in front of the buyer,
+   an empty bag is an open box, and every page header gives three facts. */
+html.r9-on,html.r9-on body{overflow:hidden}
+.r9-cer{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;opacity:0;transition:opacity .26s ease;
+  background:radial-gradient(120% 70% at 50% 28%,#4a2d1c 0%,#24160e 48%,#0c0705 100%);overflow:hidden;overscroll-behavior:contain}
+.r9-cer.on{opacity:1}
+.r9-cer.k-give{background:radial-gradient(120% 70% at 50% 28%,#1c5a41 0%,#0f3426 48%,#06140e 100%)}
+.r9-cer.k-gift{background:radial-gradient(120% 70% at 50% 28%,#6a4a1c 0%,#2b1c10 48%,#0c0705 100%)}
+.r9-stage{position:relative;flex:1;min-height:300px;max-height:430px;margin-top:auto}
+.r9-wm{position:absolute;left:-30%;top:6%;width:160%;color:#fff;opacity:.045;pointer-events:none}
+.r9-wm .wm{width:100%;height:auto;display:block}
+.r9-glow{position:absolute;left:50%;bottom:6px;width:340px;height:340px;margin-left:-170px;border-radius:50%;background:radial-gradient(closest-side,rgba(242,193,78,.34),rgba(242,193,78,0));pointer-events:none;animation:r9-glow 2.1s ease both}
+/* the pair, on a disc of light so any photo reads against the dark */
+.r9-shoe{position:absolute;left:50%;bottom:196px;z-index:2;width:204px;height:204px;margin-left:-102px;border-radius:50%;display:grid;place-items:center;overflow:hidden;
+  background:radial-gradient(circle at 50% 38%,#fff 0%,#f6efe2 58%,#e6d9c2 100%);box-shadow:0 26px 50px -18px rgba(0,0,0,.7),0 0 0 1px rgba(242,193,78,.5);animation:r9-drop 1.9s cubic-bezier(.5,0,.3,1) both}
+.r9-shoe img{width:86%;height:86%;object-fit:contain;transform:rotate(-8deg)}
+.r9-shoe img.blend{width:100%;height:100%;object-fit:cover;transform:none;mix-blend-mode:multiply}
+/* the box: back wall, tissue, front, lid and seal */
+.r9-box{position:absolute;left:50%;bottom:34px;width:236px;height:150px;margin-left:-118px;animation:r9-rise .5s cubic-bezier(.2,.8,.2,1) both}
+.r9-sh{position:absolute;left:8px;right:8px;bottom:-16px;height:22px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0))}
+.r9-in{position:absolute;left:10px;right:10px;bottom:100px;height:40px;z-index:1;background:linear-gradient(180deg,#120a06,#2a1a10);clip-path:polygon(5% 0,95% 0,100% 100%,0 100%)}
+.r9-beam{position:absolute;left:18px;right:18px;bottom:104px;height:190px;z-index:0;opacity:0;background:linear-gradient(to top,rgba(255,226,160,.5),rgba(255,226,160,0));clip-path:polygon(18% 100%,82% 100%,100% 0,0 0);pointer-events:none}
+.r9-tis{position:absolute;left:14px;right:14px;bottom:106px;height:26px;z-index:2;background:linear-gradient(180deg,#fff9ec,#eadfc8);transform-origin:50% 100%;
+  clip-path:polygon(0 100%,7% 22%,19% 68%,33% 4%,47% 58%,61% 10%,75% 64%,89% 16%,100% 100%);animation:r9-tis .3s 1.12s cubic-bezier(.2,.9,.3,1.3) both}
+.r9-front{position:absolute;left:0;right:0;bottom:0;height:112px;z-index:3;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#e8cf97;
+  background:linear-gradient(180deg,#4b3120 0%,#2c1c12 100%);box-shadow:inset 0 0 0 1px rgba(232,207,151,.22),inset 0 -8px 0 rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08)}
+.r9-front b{font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif;font-size:27px;letter-spacing:.14em;line-height:1;font-weight:700}
+.r9-front b sup{font-size:8.5px;letter-spacing:.32em;margin-left:5px;vertical-align:top}
+.r9-front small{font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;opacity:.7}
+.r9-dm{position:absolute;left:12px;top:12px;width:26px;color:rgba(232,207,151,.45)}.r9-dm .dm{width:100%;height:auto;display:block}
+.r9-lid{position:absolute;left:-9px;right:-9px;bottom:100px;height:42px;z-index:4;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#e8cf97;
+  background:linear-gradient(180deg,#5c3d28 0%,#38241a 100%);box-shadow:0 12px 22px -8px rgba(0,0,0,.6),inset 0 0 0 1px rgba(232,207,151,.25),inset 0 1px 0 rgba(255,255,255,.1);animation:r9-lid 1.65s cubic-bezier(.3,0,.2,1) both}
+.r9-lid b{font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif;font-size:15px;letter-spacing:.44em;font-weight:700;margin-right:-.44em}
+.r9-seal{position:absolute;left:50%;bottom:92px;z-index:5;width:48px;height:48px;margin-left:-24px;border-radius:50%;display:grid;place-items:center;color:#3a2613;
+  background:radial-gradient(circle at 35% 30%,#fbe7b0,#d9ab4c 55%,#a87a25);box-shadow:0 6px 14px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,255,255,.28);animation:r9-seal .34s 1.62s cubic-bezier(.2,1.5,.4,1) both}
+.r9-seal .dm{width:24px;height:auto;display:block}
+.r9-cer .r9-lid b{display:none}
+.r9-cer .r9-front{padding-top:18px}
+.r9-d{position:absolute;left:50%;bottom:150px;width:5px;height:5px;border-radius:50%;background:#f2c14e;opacity:0;animation:r9-dust 1s 1.66s ease-out both}
+.r9-d.d1{--x:-128px;--y:-70px}.r9-d.d2{--x:122px;--y:-86px}.r9-d.d3{--x:-86px;--y:-150px;width:3px;height:3px}.r9-d.d4{--x:92px;--y:-164px;width:4px;height:4px}.r9-d.d5{--x:-154px;--y:-8px;width:3px;height:3px}.r9-d.d6{--x:150px;--y:-22px}
+/* the words */
+.r9-txt{position:relative;padding:8px 24px calc(22px + var(--m-safe));text-align:center;display:flex;flex-direction:column;align-items:center}
+.r9-txt>*{animation:r9-up .5s 1.42s ease both}.r9-txt>:nth-child(2){animation-delay:1.5s}.r9-txt>:nth-child(3){animation-delay:1.58s}.r9-txt>:nth-child(4){animation-delay:1.68s}.r9-txt>:nth-child(5){animation-delay:1.74s}.r9-txt>:nth-child(6){animation-delay:1.8s}
+.r9-k{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#f2c14e}
+.r9-k svg{width:15px;height:15px}
+#mApp .r9-cer h2,#mApp .r9-empty h2{margin:10px 0 0;font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif!important;text-transform:uppercase!important;font-size:34px;line-height:1.02;font-weight:700;letter-spacing:.01em!important;color:#fff;text-wrap:balance}
+.r9-txt p,#mApp .r9-empty>p{margin:10px 0 0;max-width:33ch;font-size:15px;line-height:1.55;color:rgba(255,255,255,.78)}
+.r9-go{margin-top:18px;width:100%;max-width:340px;min-height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#ffe7a8,#f2c14e);color:#1c130e!important;font-size:16px;font-weight:700;box-shadow:0 16px 32px -14px rgba(242,193,78,.7)}
+.r9-go svg{width:18px;height:18px}.r9-go:active{transform:scale(.98)}
+.r9-no{margin-top:10px;width:100%;max-width:340px;min-height:50px;border-radius:999px;border:1px solid rgba(255,255,255,.34);background:transparent;color:#fff;font-size:15px;font-weight:600}
+.r9-why{margin-top:6px;min-height:44px;padding:0 10px;border:0;background:none;color:rgba(255,255,255,.72);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:4px}
+#mApp .r9-cer :focus-visible,#mApp .r9-empty :focus-visible{outline:2px solid #fff;outline-offset:3px}
+@keyframes r9-rise{from{transform:translateY(70px);opacity:0}to{transform:none;opacity:1}}
+@keyframes r9-drop{0%{opacity:0;transform:translateY(24px) scale(.82)}16%{opacity:1;transform:none}44%{opacity:1;transform:translateY(-8px)}66%{opacity:1;transform:translateY(176px) scale(.4)}72%,100%{opacity:0;transform:translateY(182px) scale(.38)}}
+@keyframes r9-lid{0%{transform:translateY(-178px) rotate(-9deg);opacity:0}22%{opacity:1}74%{transform:translateY(-178px) rotate(-9deg)}93%{transform:translateY(3px) rotate(0)}100%{transform:none;opacity:1}}
+@keyframes r9-tis{from{transform:scaleY(0)}to{transform:none}}
+@keyframes r9-seal{from{transform:scale(2.4) rotate(-24deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes r9-dust{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1)}}
+@keyframes r9-glow{0%{opacity:0;transform:scale(.7)}40%{opacity:.7}82%{opacity:.7;transform:scale(1)}90%{opacity:1;transform:scale(1.12)}100%{opacity:.85;transform:scale(1)}}
+@keyframes r9-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* the empty bag: the same box, open, with light coming out of it */
+#mApp .r9-empty{position:relative;margin:0;padding:34px 24px 26px;border-radius:0 0 30px 30px;overflow:hidden;text-align:center;color:#fff;display:flex;flex-direction:column;align-items:center;
+  background:radial-gradient(120% 62% at 50% 30%,#4a2d1c 0%,#24160e 50%,#0c0705 100%)}
+.r9-empty .r9-wm{top:3%}
+.r9-empty .r9-glow{bottom:auto;top:96px;animation:r9-pulse 4.2s ease-in-out infinite}
+.r9-empty .r9-box{position:relative;left:auto;bottom:auto;margin:126px auto 30px;animation:none}
+.r9-box.open .r9-lid{animation:r9-float 4.2s ease-in-out infinite}
+.r9-box.open .r9-tis{animation:r9-breathe 4.2s ease-in-out infinite}
+.r9-box.open .r9-beam{animation:r9-beam 4.2s ease-in-out infinite}
+.r9-box.open .r9-seal{display:none}
+.r9-empty .r9-d{bottom:auto;top:220px;animation:r9-mote 5s ease-in-out infinite}
+.r9-empty .r9-d.d2{animation-delay:1.2s}.r9-empty .r9-d.d3{animation-delay:2.1s}.r9-empty .r9-d.d4{animation-delay:3.3s}
+.r9-empty .r9-k,.r9-empty h2,.r9-empty>p,.r9-empty .r9-go,.r9-empty .r9-how{position:relative}
+.r9-how{list-style:none;margin:22px 0 0;padding:16px 0 0;width:100%;max-width:340px;border-top:1px solid rgba(255,255,255,.14);display:grid;gap:10px;text-align:left}
+.r9-how li{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,.82)}
+.r9-how b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid #f2c14e;color:#f2c14e;font-size:12px;font-weight:700}
+@keyframes r9-float{0%,100%{transform:translateY(-112px) rotate(-7deg)}50%{transform:translateY(-128px) rotate(-3deg)}}
+@keyframes r9-breathe{0%,100%{transform:none}50%{transform:scaleY(1.12)}}
+@keyframes r9-beam{0%,100%{opacity:.35}50%{opacity:.8}}
+@keyframes r9-pulse{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:.95;transform:scale(1.06)}}
+@keyframes r9-mote{0%{opacity:0;transform:translate(0,0)}25%{opacity:.9}100%{opacity:0;transform:translate(calc(var(--x)*.5),-150px)}}
+/* the product page dims while its own box packs the pair */
+html.px-boxing #mApp::before{content:"";position:fixed;inset:0;z-index:81;background:radial-gradient(90% 60% at 50% 70%,rgba(74,45,28,.72),rgba(12,7,5,.86));-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:r9-fade .3s ease both;pointer-events:none}
+@keyframes r9-fade{from{opacity:0}to{opacity:1}}
+/* why Rs. 1,000: the link beside the payment line, and its sheet */
+#mApp .r9-whyl{display:inline;padding:0;border:0;background:none;color:var(--m-ink);font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;min-height:0}
+.r9-whyb .m-kick svg{width:15px;height:15px}
+.r9-wl{list-style:none;margin:4px 0 18px;padding:0;display:grid;gap:0}
+.r9-wl li{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--m-line)}
+.r9-wl li:last-child{border-bottom:1px solid var(--m-line)}
+.r9-wi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#2a1c14;color:#f2c14e}
+.r9-wi svg{width:21px;height:21px}
+.r9-wl b{display:block;font-size:15.5px;font-weight:700;line-height:1.3;color:var(--m-ink)}
+.r9-wl small{display:block;margin-top:3px;font-size:14px;line-height:1.5;color:#55483f}
+/* page headers: a lit, lined surface and three facts */
+#mApp .pg-hero.r5-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 55% at 100% 0%,rgba(255,255,255,.16),rgba(255,255,255,0) 62%),repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 1px,rgba(255,255,255,0) 1px 9px)}
+#mApp .pg-hero.r5-hero.v-crm::before{background:radial-gradient(90% 55% at 100% 0%,rgba(255,255,255,.7),rgba(255,255,255,0) 62%),repeating-linear-gradient(115deg,rgba(42,28,20,.03) 0 1px,rgba(42,28,20,0) 1px 9px)}
+.r9-facts{display:grid;grid-template-columns:repeat(3,1fr);margin-top:14px;border-top:1px solid rgba(255,255,255,.2)}
+.r9-facts span{padding:14px 8px 2px 0;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.r9-facts span+span{padding-left:12px;border-left:1px solid rgba(255,255,255,.2)}
+.r9-facts span:nth-child(2){transition-delay:.08s}.r9-facts span:nth-child(3){transition-delay:.16s}
+.r9-facts span.pre{opacity:0;transform:translateY(12px)}.r9-facts span.pre.in{opacity:1;transform:none}
+.r9-facts b{display:block;font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif;font-size:22px;line-height:1.05;font-weight:700;letter-spacing:.01em;text-transform:uppercase;color:#f2c14e;white-space:nowrap}
+.r9-facts small{display:block;margin-top:4px;font-size:11.5px;line-height:1.35;color:rgba(255,255,255,.74)}
+@media (prefers-reduced-motion:reduce){.r9-cer *,.r9-empty *,.r9-box,.r9-box *{animation:none!important}.r9-shoe{display:none}.r9-cer{transition:none}.r9-facts span{transition:none}}
+
+/* Philanthropy: why DAUR gives, tied to the brand's own promise */
+#mApp .r9-val{position:relative;margin:26px 16px 6px;padding:26px 22px 8px;border-radius:26px;color:#fff;background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px rgba(242,193,78,.35)}
+#mApp .r9-val h2{margin:10px 0 0;font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif!important;text-transform:uppercase!important;font-size:31px;line-height:1.03;font-weight:700;color:#fff;text-wrap:balance}
+#mApp .r9-val p{margin:12px 0 0;font-size:15px;line-height:1.6;color:rgba(255,255,255,.82)}
+.r9-val ul{list-style:none;margin:20px 0 0;padding:0}
+.r9-val li{display:grid;grid-template-columns:104px 1fr;gap:12px;align-items:baseline;padding:14px 0;border-top:1px solid rgba(255,255,255,.14);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.r9-val li.pre{opacity:0;transform:translateY(12px)}.r9-val li.pre.in{opacity:1;transform:none}
+#mApp .r9-val li b{font-weight:700;font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif;font-size:17px;letter-spacing:.04em;text-transform:uppercase;color:#f2c14e}
+#mApp .r9-val li span{font-size:14px;line-height:1.5;color:rgba(255,255,255,.8)}
+@media (prefers-reduced-motion:reduce){.r9-val li{transition:none}}

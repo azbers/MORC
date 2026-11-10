@@ -247,21 +247,6 @@
   const follow = () => `<section class="m-follow"><span class="m-kick">${ic('spark')}Find us</span><b>Follow DAUR Supply</b>
     <div class="f-list">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'}><span class="f-i">${ic(k)}</span><span><b>${n}</b><small>${esc(h)}</small></span>${ic('arrow')}</a>`).join('')}</div></section>`;
 
-  // the DAUR way: who carries the risk, in four steps, said in facts only (advance, WhatsApp check, dispatch, size swap)
-  const way = () => { const adv = fmt(1000), xd = C.exchangeDays || 5; const st = [
-      ['Reserve with ' + adv, 'A small advance holds your pair in your size. That is all you put in before it ships.'],
-      ['A person confirms on WhatsApp', 'We check your size and address with you before anything is packed.'],
-      ['Checked by hand, then sent', 'Out of Islamabad within 24 hours of that message. At your door in ' + days() + '.'],
-      ['Pay the rest at your door', 'Wrong size? Swap it within ' + xd + ' days. A defect is covered for 30 days.']];
-    return `<section class="r8-way" aria-labelledby="r8WayH"><span class="r8-dm" aria-hidden="true">${DMARK}</span>
-      <span class="r8-k">${ic('spark')}The DAUR way</span>
-      <h2 id="r8WayH">You risk ${esc(adv)}.<br>We carry the rest.</h2>
-      <p class="r8-s">Your pair leaves our hands before most of your money leaves yours.</p>
-      <ol class="r8-st">${st.map((x, i) => `<li><i aria-hidden="true">0${i + 1}</i><span><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span></li>`).join('')}</ol>
-      <div class="r8-nums"><span><b>${esc(adv)}</b><small>to reserve</small></span><span><b>${xd} days</b><small>to swap size</small></span><span><b>30 days</b><small>defect cover</small></span></div>
-      <a class="r8-go" href="${href.shop()}" data-m>Choose your pair${ic('arrow')}</a>
-      <a class="r8-ln" href="${root}/pages/contract" data-m>Read our promise in full</a></section>`; };
-
   /* ---------- views ---------- */
   const V = {};
   const saving = (p) => Math.max.apply(null, p.variants.map((v) => API.onSale(v) ? v.compareAt - v.price : 0));
@@ -328,11 +313,10 @@
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
     view.innerHTML = `${promo()}
-      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>The workshops of Lahore, Sialkot and Kasur, without the showroom in between. Every pair checked by hand in Islamabad before it travels to you.</p></section>
+      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>We go to the workshops of Lahore, Sialkot and Kasur ourselves, choose each pair, check it by hand in Islamabad and send it to your door. No showroom stands in between, so you pay for the shoe and not for the shop.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
-      ${way()}
       <section class="r5-for m-pad"><div class="r5-for-h"><h2 class="m-h2">Buying for someone else?</h2><button class="m-link" type="button" data-explain>${ic('help')}Which one?</button></div>
       <div class="r5-duo">${duo('gift')}${duo('give')}</div></section>
       <div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Fresh in</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div>
@@ -583,15 +567,20 @@
         <div class="gv-t"><span class="m-kick">${ic('hand')}Philanthropy</span><h1>One pair.<br>One person.<br>By hand.</h1><p>Pick any pair. We match the size, hand it over in person and add ${esc(fmt(DAUR_ADD))} of our own.</p><a class="m-cta gold" href="#gvPick" data-jump>Choose a pair</a></div></section>
       <div class="gv-stats">${given ? `<span><b>${NF(given)}</b><small>pairs given</small></span><span><b>${cities.length || 1}</b><small>${cities.length === 1 ? 'city' : 'cities'}</small></span>` : `<span><b>Round 1</b><small>handover after ${esc(quarterEnd())}</small></span>`}<span><b>7 days</b><small>to your private photo</small></span><span><b>+${esc(fmt(DAUR_ADD))}</b><small>from DAUR per pair</small></span></div>
       <section class="gv-card gv-anim">${handover(gp)}<b>From your hands to theirs.</b></section>
+      <section class="r9-val"><span class="r9-k">${ic('spark')}Why a shoe company gives shoes</span>
+        <h2>A new era has to include everyone.</h2>
+        <p>DAUR means an era. We began it so that men here could pay a fair price for shoes made in their own cities. That promise would be a small one if it stopped at the people who can pay.</p>
+        <p>So the pair you would wear yourself goes, new and in the right size, to someone who could not buy it. We hand it over ourselves, quietly, and the photo that follows is for you alone.</p>
+        <ul>${[['Same pair', 'The pair we give is a pair we sell. Nobody receives a lesser shoe.'], ['Same care', 'It is checked by hand before it leaves Islamabad, like every order.'], ['Same honesty', 'You see where it went. A private photo reaches you within 7 days of the handover.']].map((x) => `<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul></section>
       <section class="gv-pick" id="gvPick"><h2 class="m-h2 m-pad">Choose the pair</h2>
         <div class="gv-rail">${all.map((p) => { const v = firstV(p), x = pic(p, v); return `<button class="gv-p" type="button" data-gp="${esc(p.id)}" aria-pressed="${p.id === state.gp}" style="--tn:${TINT[tintOf(p)]}"><img class="${x.cut ? '' : 'blend'}" src="${esc(x.src)}" alt=""><b>${esc(p.name)}</b><small>${esc(fmt(v.price))}</small></button>`; }).join('')}</div>
         ${gp ? `<div class="gv-sel" style="--tn:${TINT[tintOf(gp)]}">${img(gp, gv, 'gv-sel-i')}<div><b>${esc(gp.name)}</b><small>${esc(gv.color)} · size matched by DAUR</small><span>${esc(fmt(gv.price))}</span></div></div>
         <button class="m-hold" type="button" id="mHold" data-pid="${esc(gp.id)}"><span class="hold-r" aria-hidden="true"></span><span class="hold-t">${ic('hand')}Sponsor this pair</span></button><p class="m-mute gv-hint">One tap adds it to your bag. DAUR matches the size.</p>` : ''}</section>
       <section class="gv-steps m-pad"><h2 class="m-h2">How it reaches them</h2>
-        ${[['heart', 'You pick a pair', 'DAUR adds ' + fmt(DAUR_ADD) + ' to every pair sponsored.'], ['user', 'We match the size', 'To the person who receives it.'], ['hand', 'Handed over in person', 'In the round after the quarter closes.'], ['camera', 'A private photo, to you', 'Within 7 days of the handover.']].map(([i, h, p], k) => `<div class="gv-step" style="--tn:${tn(k)}"><span class="gv-n">${ic(i)}</span><span><b>${h}</b><small>${p}</small></span><em>0${k + 1}</em></div>`).join('')}</section>
+        ${[['heart', 'You pick a pair', 'You choose it, and DAUR adds ' + fmt(DAUR_ADD) + ' of its own to every pair sponsored.'], ['user', 'We match the size', 'We find the person first, then match the pair to their feet.'], ['hand', 'Handed over in person', 'It happens by our own hands, in the round after each quarter closes.'], ['camera', 'A private photo, to you', 'It reaches you within 7 days of the handover, and it is yours alone.']].map(([i, h, p], k) => `<div class="gv-step" style="--tn:${tn(k)}"><span class="gv-n">${ic(i)}</span><span><b>${h}</b><small>${p}</small></span><em>0${k + 1}</em></div>`).join('')}</section>
       <section class="gv-faces"><h2 class="m-h2 m-pad">Who a pair can reach</h2>
         <div class="gv-mosaic">${['girl-red', 'boys-corn', 'old-man', 'boy-smile', 'girl-fire', 'boy-pot'].map((n, i) => `<img class="f${i}" src="${PH(n)}" alt="" loading="lazy">`).join('')}</div></section>
-      ${GIVE.on ? `<section class="gv-slice"><span class="m-kick">${ic('spark')}The Slice</span><h2>At least ${GIVE.pct}% of our profit, every quarter.</h2><p>From every order, never added to your price.</p>
+      ${GIVE.on ? `<section class="gv-slice"><span class="m-kick">${ic('spark')}The Slice</span><h2>At least ${GIVE.pct}% of our profit, every quarter.</h2><p>It comes out of what we earn on every order, and it is never added to your price.</p>
         ${GIVE.causes.length > 1 ? `<div class="m-vote-o">${GIVE.causes.map((c) => `<button type="button" data-vote="${esc(c)}" aria-pressed="${vote === c}">${esc(c)}</button>`).join('')}</div><small>Your vote travels with your next order.</small>` : ''}
         <blockquote>“Charity does not decrease wealth.”<cite>Sahih Muslim 2588</cite></blockquote></section>` : ''}
       <a class="gv-out" href="${href.gifts}" data-m><img src="${PH('hands')}" alt=""><span><b>Sending to family instead?</b><small>Gift a pair with your note inside</small></span>${ic('arrow')}</a>
@@ -631,7 +620,7 @@
     }
   }
   function observeIn() {
-    const els = $$('.r8-st li, .gv-mosaic img, .gv-step, .pg-sec, .gf-f, .fd-post, .r6-row, .r6-steps li, .r6-rt li, .r6-ch, .r6-mk>div', view);
+    const els = $$('.r9-facts span, .r9-val li, .gv-mosaic img, .gv-step, .pg-sec, .gf-f, .fd-post, .r6-row, .r6-steps li, .r6-rt li, .r6-ch, .r6-mk>div', view);
     if (!('IntersectionObserver' in window) || reduce) return;
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -30px' });
     els.forEach((e) => { if (e.getBoundingClientRect().top > innerHeight) { e.classList.add('pre'); io.observe(e); } });
@@ -898,7 +887,8 @@
     view.innerHTML = `<div class="m-pg">
       <section class="pg-hero r5-hero v-${art ? 'crm' : vis[1]}" style="--tn:${tn(hi)};--tn2:${tn(hi + 2)}"><span class="r5-hdm" aria-hidden="true">${DMARK}</span><img class="pg-cut" src="${asset(art ? 'm-' + cut + '.webp' : vis[0])}" alt=""><span class="pg-blob" aria-hidden="true"></span>
         ${pg.kick ? `<span class="m-kick">${esc(pg.kick)}</span>` : ''}<h1>${pg.title || esc(state.pageTitle)}</h1>${pg.aside ? `<p>${pg.aside}</p>` : ''}
-        ${pg.ctas.length ? `<div class="pg-ctas">${pg.ctas.slice(0, 2).map((x, i) => `<a class="${i === 0 ? 'm-cta' : 'm-ghost'}" href="${esc(x.h)}"${parse(x.h) ? ' data-m' : ''}>${esc(x.l)}</a>`).join('')}</div>` : ''}</section>
+        ${pg.ctas.length ? `<div class="pg-ctas">${pg.ctas.slice(0, 2).map((x, i) => `<a class="${i === 0 ? 'm-cta' : 'm-ghost'}" href="${esc(x.h)}"${parse(x.h) ? ' data-m' : ''}>${esc(x.l)}</a>`).join('')}</div>` : ''}
+        ${art ? '' : heroFacts(pk)}</section>
       ${pk === 'contact' ? contactBody() : pk === 'about' ? aboutBody() : ''}
       ${pg.chips.length ? `<div class="m-pills pg-chips">${pg.chips.map((c) => `<a class="m-pill alt" href="${esc(c.h)}" data-jump="${esc(c.h.slice(1))}">${esc(c.l)}</a>`).join('')}</div>` : ''}
       ${(pk === 'contact' ? [] : pg.secs).map((s, i) => fold
@@ -1073,6 +1063,17 @@
     sheet.classList.add('r5-full');
   }
   // gift or give, side by side, so no one has to guess
+  // three facts under each page header, so the first screen of every page already gives a reason to stay
+  function heroFacts(pk) {
+    const xd = (C.exchangeDays || 5) + ' days', F = {
+      manifesto: [['3 cities', 'Lahore, Sialkot, Kasur'], ['By hand', 'every pair is checked'], ['Islamabad', 'where your box is packed']],
+      about: [['3 cities', 'Lahore, Sialkot, Kasur'], ['By hand', 'every pair is checked'], ['Islamabad', 'where your box is packed']],
+      contract: [['24 hours', 'from confirmation to courier'], [xd, 'to swap your size'], ['30 days', 'of cover for defects']],
+      policies: [[fmt(1000), 'reserves any order'], [xd, 'to swap your size'], ['3 days', 'for a refund to reach you']],
+      track: [[days().replace(/ days?$/, ''), 'days to your door'], ['24 hours', 'to leave Islamabad'], ['WhatsApp', 'a person keeps you posted']],
+      faq: [[fmt(1000), 'reserves any order'], [days().replace(/ days?$/, ''), 'days to your door'], [xd, 'to swap your size']] }[pk];
+    return F ? `<div class="r9-facts">${F.map((x) => `<span><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span>`).join('')}</div>` : '';
+  }
   function explain() {
     const row = (i, t) => `<li>${ic(i)}<span>${t}</span></li>`;
     openSheet(`<h3 class="sh-h">Gift or Philanthropy?</h3><p class="m-mute sh-p">Two ways to buy a pair for someone else.</p>
@@ -1106,7 +1107,46 @@
   }
   // a pair for someone in need is reserved in the size we hold most of; DAUR swaps it to the right size before the handover
   const giveSize = (v) => { const s = Object.keys(v.stock || {}).sort((a, b) => (v.stock[b] || 0) - (v.stock[a] || 0))[0]; return s && v.stock[s] > 0 ? +s : null; };
-  function add(pid, vid, size, mode) {
+  /* ---------- round 9: the box. Every pair added away from the product page is boxed in front of the buyer:
+     the pair drops into a DAUR box, the lid closes, the seal lands, and one sentence says what happens next. ---------- */
+  const BOXART = (open) => `<span class="r9-box${open ? ' open' : ''}" aria-hidden="true"><span class="r9-beam"></span><span class="r9-in"></span><span class="r9-tis"></span><span class="r9-front"><span class="r9-dm">${DMARK}</span><b>DAUR<sup>SUPPLY</sup></b><small>Made in Pakistan</small></span><span class="r9-lid"><b>DAUR</b></span><span class="r9-seal">${DMARK}</span><span class="r9-sh"></span></span>`;
+  function boxed(p, v, size, mode) {
+    const old = $('.r9-cer', app); if (old) old.remove();
+    const adv = fmt(1000);
+    const t = mode === 'give' ? ['Philanthropy', 'This pair is boxed for someone in need.', 'We match the size and hand it over in person, and DAUR adds ' + fmt(DAUR_ADD) + ' of its own. Thank you for this.']
+      : mode === 'gift' ? ['Boxed as a gift', p.name + ' is boxed for someone you love.', 'Write your note in the bag and we place it inside before the lid closes. A gift is paid in full, so no bill ever reaches him.']
+      : ['Boxed for you', p.name + ' is in your box.', 'We are holding EU ' + size + ' for you. ' + adv + ' reserves it, and you pay the rest only when the pair is at your door.'];
+    const el = document.createElement('div'); el.className = 'r9-cer k-' + mode; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'r9T');
+    el.innerHTML = `<div class="r9-stage" aria-hidden="true"><span class="r9-wm">${WORDMARK}</span><span class="r9-glow"></span><span class="r9-shoe">${img(p, v, 'r9-ph', '')}</span>${BOXART(false)}<i class="r9-d d1"></i><i class="r9-d d2"></i><i class="r9-d d3"></i><i class="r9-d d4"></i><i class="r9-d d5"></i><i class="r9-d d6"></i></div>
+      <div class="r9-txt"><span class="r9-k">${ic(mode === 'give' ? 'hand' : mode === 'gift' ? 'gift' : 'check')}${esc(t[0])}</span><h2 id="r9T">${esc(t[1])}</h2><p>${esc(t[2])}</p>
+        <a class="r9-go" href="${href.bag}" data-m data-r9x>Open my box${ic('arrow')}</a><button type="button" class="r9-no" data-r9x>Keep looking</button>
+        ${mode === 'me' ? `<button type="button" class="r9-why" data-why>Why ${esc(adv)} first?</button>` : ''}</div>`;
+    app.appendChild(el); document.documentElement.classList.add('r9-on');
+    requestAnimationFrame(() => el.classList.add('on'));
+    setTimeout(() => { const g = $('.r9-go', el); if (g && el.isConnected) try { g.focus({ preventScroll: true }); } catch (e) { /* focus is a courtesy */ } }, reduce ? 0 : 1900);
+  }
+  function unbox() { const el = $('.r9-cer', app); document.documentElement.classList.remove('r9-on'); if (!el) return; el.classList.remove('on'); setTimeout(() => el.remove(), 260); }
+  function whyAdv() {
+    const adv = fmt(1000), li = (i, b, t) => `<li><span class="r9-wi">${ic(i)}</span><span><b>${b}</b><small>${t}</small></span></li>`;
+    openSheet(`<div class="r9-whyb"><span class="m-kick">${ic('spark')}A fair question</span><h3 class="sh-h">Why ${esc(adv)} before we ship?</h3>
+      <p class="sh-p">You have not met us yet, so you should know exactly what that money does.</p>
+      <ul class="r9-wl">${li('box', 'It holds your pair.', 'The moment it arrives, your size comes off the shelf and a person confirms the order with you on WhatsApp.')}
+      ${li('tag', 'It keeps the price fair.', 'Orders that are placed and then refused at the door cost a courier fee every time. The advance stops them, so that cost never reaches your price.')}
+      ${li('wallet', 'It is part of the price, never extra.', 'The ' + esc(adv) + ' comes off your total. You pay the rest only when the pair is at your door.')}
+      ${li('swap', 'It comes back if you change your mind.', 'Cancel before we dispatch and it is returned in full to the account you paid from, within 3 working days.')}</ul>
+      <a class="m-cta solo" href="https://wa.me/${esc(WA)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, I have a question before I order')}" target="_blank" rel="noopener">${ic('wa')}Ask us anything first</a></div>`);
+  }
+  app.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-why],[data-r9x],.r9-cer');
+    if (!t) return;
+    if (t.matches('[data-why]')) { e.preventDefault(); unbox(); whyAdv(); return; }
+    if (t.matches('[data-r9x]')) { unbox(); return; }
+    if (e.target === t) unbox();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') unbox(); });
+  window.addEventListener('popstate', unbox);
+
+  function add(pid, vid, size, mode, quiet) {
     mode = mode || 'me';
     const p = API.prod(pid), v = API.variant(p, vid), cart = API.cart;
     if (mode === 'give') size = giveSize(v);
@@ -1119,7 +1159,8 @@
     try { navigator.vibrate && navigator.vibrate(12); } catch (e) { /* no vibration */ }
     paintTab(); paintTop();
     const b = $('.t-bag', tab); if (b) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
-    toast(mode === 'give' ? p.name + ', to give. Thank you.' : p.name + (mode === 'gift' ? ' as a gift' : ', EU ' + size) + ' added', 'View bag', href.bag);
+    if (quiet || cur.v === 'bag') toast(mode === 'give' ? p.name + ', to give. Thank you.' : p.name + (mode === 'gift' ? ' as a gift' : ', EU ' + size) + ' added', 'View bag', href.bag);
+    else boxed(p, v, size, mode);
     return true;
   }
 
@@ -1287,7 +1328,7 @@
   window.DAUR_MX = {
     V, API, C, M, I, ic, esc, fmt, NF, store, asset, txt, sized, pic, img, firstV, price, notesFor, allNotes, wished, minP, delTxt, days, DEL, DAUR_ADD, GIVE,
     WA, waNice, SOC, KIND, MODES, TINT, tn, tintOf, P, CUT, DMARK, WORDMARK, logo, href, root, parse, go, render, paintTop, paintTab, card, row, cats, inCat, hasSale,
-    view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
+    view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, BOXART, whyAdv, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
     W, CODE, credits, coupons, payPlan, giftUnits, GD, gdOf, giftMissing, checkout, lineProps, orderType, orderNote,
     get cur() { return cur; }, get state() { return state; }, reduce,
     tap: (name, fn) => { TAPS[name] = fn; }

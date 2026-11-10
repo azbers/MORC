@@ -126,7 +126,7 @@
     return `<div class="px-fp k-me"><ul>
       <li>${ic('box')}<span><b>Dispatched within 24 hours</b> of your order being confirmed on WhatsApp</span></li>
       <li>${ic('truck')}<span><b>At your door in ${esc(days())}</b>, in any city in Pakistan</span></li>
-      <li>${ic('wallet')}<span><b>Rs. 1,000 now to reserve it</b>, the rest at your door</span></li>
+      <li>${ic('wallet')}<span><b>Rs. 1,000 now to reserve it</b>, and the rest only when it is at your door. <button type="button" class="r9-whyl" data-why>Why Rs. 1,000 first?</button></span></li>
       <li>${isSale(v) ? `${ic('tag')}<span><b>Sale price, so the size is final.</b> Measure first with the size guide, or ask us on WhatsApp</span>` : `${ic('swap')}<span><b>Size swap within ${EX} days</b> if the fit is not right</span>`}</li></ul></div>`;
   }
 
@@ -390,7 +390,7 @@
       } else { const r = hero.getBoundingClientRect(); fb = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: hero.offsetWidth, h: hero.offsetHeight, rot: hero.classList.contains('blend') ? 0 : -11 }; }
     }
     const from = { src: hero ? hero.currentSrc || hero.src : pic(p, v).src, cut: hero ? !hero.classList.contains('blend') : !!pic(p, v).cut, box: fb };
-    if (!add(p.id, v.id, s.size, m)) return;
+    if (!add(p.id, v.id, s.size, m, true)) return;
     const again = () => { if (MX.cur.v === 'product' && prod() === p) bar(p, varOf(p)); };
     if (reduce || !Element.prototype.animate) { bar(p, v, 'done'); setTimeout(again, 1600); return; }
     boxing = true; document.documentElement.classList.add('px-boxing');

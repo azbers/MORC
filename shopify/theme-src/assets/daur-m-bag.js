@@ -248,8 +248,11 @@
   function empty() {
     document.documentElement.classList.remove('xb-typing');
     const pick = P().slice(0, 4);
-    view.innerHTML = `<div class="xb xb-empty"><div class="xb-em"><span class="r6-box" aria-hidden="true"><span class="r6-shadow"></span><span class="r6-lid"><b>DAUR</b></span><span class="r6-tissue"></span><span class="r6-base"><span class="r6-seal">${MX.DMARK}</span><b>DAUR<sup>SUPPLY</sup></b><small>Made in Pakistan</small></span><i class="r6-dust d1"></i><i class="r6-dust d2"></i><i class="r6-dust d3"></i></span><h2 class="xb-h xl">Your box is waiting</h2>
-      <p>${W.code ? esc(fmt(W.amt + DEL)) + ' in credits is waiting for your first pair.' : 'Pick a pair and it waits here for you.'}</p><a class="m-cta solo" href="${href.shop()}" data-m>Shop the pairs</a></div>
+    view.innerHTML = `<div class="xb xb-empty"><section class="r9-empty"><span class="r9-wm" aria-hidden="true">${MX.WORDMARK}</span><span class="r9-glow" aria-hidden="true"></span>${MX.BOXART(true)}<i class="r9-d d1"></i><i class="r9-d d2"></i><i class="r9-d d3"></i><i class="r9-d d4"></i>
+      <span class="r9-k">${ic('spark')}Your DAUR box</span><h2>Your box is open.</h2>
+      <p>${W.code ? 'It is waiting for its first pair, and ' + esc(fmt(W.amt + DEL)) + ' of credit is already inside. The credit only counts once a pair joins it.' : 'It is waiting for its first pair. Choose one and we will hold it here for you.'}</p>
+      <a class="r9-go" href="${href.shop()}" data-m>Find my pair${ic('arrow')}</a>
+      <ol class="r9-how"><li><b>1</b><span>Choose a pair and your size.</span></li><li><b>2</b><span>Reserve it with ${esc(fmt(1000))}.</span></li><li><b>3</b><span>Pay the rest at your door.</span></li></ol></section>
       ${pick.length ? `<div class="m-row m-pad xb-em-h"><h2 class="m-h2">Start with these</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div><div class="m-grid">${pick.map((p) => card(p, false)).join('')}</div>` : ''}
       ${API.wish.length ? `<a class="gv-out" href="${href.liked}" data-m style="margin-top:22px"><span class="f-i">${ic('heart')}</span><span><b>${pl(API.wish.length, 'liked pair', 'liked pairs')}</b><small>Pick up where you left off</small></span>${ic('arrow')}</a>` : ''}</div>`;
     const b = $('#mBuy'); if (b) b.remove();
