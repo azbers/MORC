@@ -284,7 +284,7 @@
     cats().forEach((c) => plan.push([c, all.filter((p) => p.category === c), href.shop(c)]));
     if (k < plan.length) return plan[k];
     const round = k - plan.length;
-    if (round >= 1) return null;
+    if (round >= 0) return null;
     return [['More for you', 'Picked for you', 'Worth a second look', 'Before you go'][round], shuffle(all, round + 3), href.shop()];
   }
   function moreHome() {

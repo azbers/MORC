@@ -24,7 +24,7 @@ for (const f of SHARED) {
   if (esbuild && /\.(js|css)$/.test(f)) fs.writeFileSync(to, esbuild.transformSync(fs.readFileSync(from, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code);
   else fs.copyFileSync(from, to);
 }
-if (esbuild) for (const f of ['daur-shopify.js', 'daur-theme.css', 'daur-m.js', 'daur-m.css', 'daur-m-pdp.js', 'daur-m-pdp.css', 'daur-m-bag.js', 'daur-m-bag.css', 'daur-m-vouchers.js', 'daur-m-vouchers.css']) { const p = path.join(out, 'assets', f); fs.writeFileSync(p, esbuild.transformSync(fs.readFileSync(p, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code); }
+if (esbuild) for (const f of ['daur-shopify.js', 'daur-theme.css', 'daur-m.js', 'daur-m.css', 'daur-m-pdp.js', 'daur-m-pdp.css', 'daur-m-bag.js', 'daur-m-bag.css', 'daur-m-vouchers.js', 'daur-m-vouchers.css', 'daur-m-look.js', 'daur-m-look.css']) { const p = path.join(out, 'assets', f); fs.writeFileSync(p, esbuild.transformSync(fs.readFileSync(p, 'utf8'), { loader: f.endsWith('.css') ? 'css' : 'js', minify: true, target: f.endsWith('.css') ? undefined : 'es2020' }).code); }
 // the Shopify only stylesheet is small, so the layout prints it inline (snippets/daur-theme-css.liquid) instead of loading a second file
 fs.writeFileSync(path.join(out, 'snippets', 'daur-theme-css.liquid'), fs.readFileSync(path.join(out, 'assets', 'daur-theme.css'), 'utf8').trim().replace(/<\/style/gi, '<\\/style'));
 fs.rmSync(zip, { force: true });

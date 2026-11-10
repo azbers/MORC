@@ -263,7 +263,7 @@
     const g = gift(), mixed = m.gifts.length || m.gives.length;
     const grp = (list, title, n) => (list.length ? `${mixed ? `<div class="xb-lbl"><span>${title}</span><small>${pl(n, 'pair', 'pairs')}</small></div>` : ''}<div class="xb-its">${list.map((x) => item(x, g)).join('')}</div>` : '');
     view.innerHTML = `<div class="xb xb-bag m-pad">${grp(m.own, 'For you', m.nOwn)}${grp(m.gifts, 'Gifts', m.nGift)}${grp(m.gives, 'Philanthropy', m.nGive)}
-      ${nudge(m)}${summary(m)}${payment(m)}${bank(m)}${vote()}${trust()}</div>`;
+      ${nudge(m)}${summary(m)}${payment(m)}${bank(m)}${trust()}</div>`;
     bar(m);
   }
 
