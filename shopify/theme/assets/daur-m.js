@@ -102,7 +102,7 @@
           <span class="r7-box"><span class="r7-lid"><i class="r7-rv"></i></span><span class="r7-base"><i class="r7-rv"></i><i class="r7-rh"></i><b>DAUR<sup>SUPPLY</sup></b></span>${s}</span>
           <img class="r7-shoe" src="${ae("m-saddle.webp")}" alt="">
           <span class="r7-tag"><i class="r7-str"></i><span class="r7-card"><em>For you,</em><small>with love</small></span></span></div>
-        <div class="r6-gt"><span class="r6-gk">${p("gift")}Gifts from DAUR</span><h1>To keep you running through my mind.</h1><p>A pair chosen by you, your note inside, sent to his door with nothing to pay.</p>
+        <div class="r6-gt"><span class="r6-gk">${p("gift")}Gifts from DAUR</span><h1>To keep you running through my mind.</h1><p>You choose the pair and write the note. We place it inside the box and send it to his door, and there is nothing left for him to pay.</p>
         <a class="r6-gift" href="#gfPick" data-jump>${p("heart")}Choose his pair</a></div></section>
       <ol class="r6-steps">${[["gift","You choose","The pair and his size"],["note","You write","A note of up to 240 letters"],["box","We wrap","Gift packing on request"],["truck","He opens","At his door, fully paid"]].map(([t,a,n],i)=>`<li style="--i:${i}"><span>${p(t)}</span><b>${a}</b><small>${n}</small></li>`).join("")}</ol>
       <div class="r6-swap">${p("swap")}<span><b>Wrong size? It happens.</b><small>He can swap it within ${I.exchangeDays||5} days.</small></span></div>

@@ -120,14 +120,14 @@
   function forPanel(p, v) {
     const m = st().mode || 'me';
     if (m === 'gift') return `<div class="px-fp k-gift"><div class="fp-note" aria-hidden="true"><span class="fn-d">${DMARK}</span><i>Eid Mubarak, Abbu.</i><i class="fn-from">From Ali</i></div>
-      <div class="fp-t"><b>He opens the box. Your words are the first thing he reads.</b><ul><li>${ic('gift')}Gift packed, with your handwritten note inside</li><li>${ic('truck')}Sent to his door, nothing for him to pay</li><li>${ic('help')}Not sure of his size? It is printed on the tongue of a pair he wears now</li></ul></div></div>`;
+      <div class="fp-t"><b>He opens the box. Your words are the first thing he reads.</b><ul><li>${ic('gift')}We pack it as a gift and place your note inside.</li><li>${ic('truck')}It goes to his door, and there is nothing for him to pay.</li><li>${ic('help')}Not sure of his size? It is printed on the tongue of a pair he wears now.</li></ul></div></div>`;
     if (m === 'give') return `<div class="px-fp k-give"><img class="fp-ph" src="${esc(asset('m-g-boys-corn.webp'))}" alt="Two boys sitting in a field" loading="lazy">
       <div class="fp-t"><b>One pair, one person, handed over in person.</b><p>We match the size to the person who receives it and add ${esc(fmt(DAUR_ADD))} of our own to every pair you sponsor. A private photo of the moment reaches you within 7 days of the handover.</p><a class="fp-a" href="${href.giving}" data-m>How philanthropy works ${ic('arrow')}</a></div></div>`;
     return `<div class="px-fp k-me"><ul>
-      <li>${ic('box')}<span><b>Dispatched within 24 hours</b> of your order being confirmed on WhatsApp</span></li>
-      <li>${ic('truck')}<span><b>At your door in ${esc(days())}</b>, in any city in Pakistan</span></li>
-      <li>${ic('wallet')}<span><b>Rs. 1,000 now to reserve it</b>, and the rest only when it is at your door. <button type="button" class="r9-whyl" data-why>Why Rs. 1,000 first?</button></span></li>
-      <li>${isSale(v) ? `${ic('tag')}<span><b>Sale price, so the size is final.</b> Measure first with the size guide, or ask us on WhatsApp</span>` : `${ic('swap')}<span><b>Size swap within ${EX} days</b> if the fit is not right</span>`}</li></ul></div>`;
+      <li>${ic('box')}<span><b>We dispatch within 24 hours</b> of confirming your order with you on WhatsApp.</span></li>
+      <li>${ic('truck')}<span><b>It reaches your door in ${esc(days())}</b>, in any city in Pakistan.</span></li>
+      <li>${ic('wallet')}<span><b>Rs. 1,000 reserves it today</b>, and you pay the rest only when it is at your door. <button type="button" class="r9-whyl" data-why>Why Rs. 1,000 first?</button></span></li>
+      <li>${isSale(v) ? `${ic('tag')}<span><b>Sale price, so the size is final.</b> Measure first with the size guide, or ask us on WhatsApp.</span>` : `${ic('swap')}<span><b>You can swap the size within ${EX} days</b> if the fit is not right.</span>`}</li></ul></div>`;
   }
 
   /* ---------- fit notes: a person telling you how the pair fits, rated in hearts ---------- */
