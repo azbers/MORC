@@ -103,7 +103,7 @@
   // three numbers a buyer can hold us to, instead of adjectives
   const facts = (v) => [
     [days(), 'to your door'],
-    isSale(v) ? ['Sale price', 'so the size is final'] : [EX + ' days', 'to swap the size'],
+    isSale(v) ? ['Final size', 'at this sale price'] : [EX + ' days', 'to swap the size'],
     [fmt(MX.DEL), 'delivery credit']
   ].map(([b, s]) => `<span><b>${esc(b)}</b><small>${esc(s)}</small></span>`).join('');
 
@@ -126,8 +126,8 @@
     return `<div class="px-fp k-me"><ul>
       <li>${ic('box')}<span><b>We dispatch within 24 hours</b> of confirming your order with you on WhatsApp.</span></li>
       <li>${ic('truck')}<span><b>It reaches your door in ${esc(days())}</b>, in any city in Pakistan.</span></li>
-      <li>${ic('wallet')}<span><b>Rs. 1,000 reserves it today</b>, and you pay the rest only when it is at your door. <button type="button" class="r9-whyl" data-why>Why Rs. 1,000 first?</button></span></li>
-      <li>${isSale(v) ? `${ic('tag')}<span><b>Sale price, so the size is final.</b> Measure first with the size guide, or ask us on WhatsApp.</span>` : `${ic('swap')}<span><b>You can swap the size within ${EX} days</b> if the fit is not right.</span>`}</li></ul></div>`;
+      <li>${ic('wallet')}<span><b>Rs. 1,000 reserves your pair today.</b> We send it to your door, and you pay the rest only when it arrives. <button type="button" class="r9-whyl" data-why>Why Rs. 1,000 first?</button></span></li>
+      <li>${isSale(v) ? `${ic('tag')}<span><b>This is a sale price, so the size is final.</b> Measure your foot with the size guide first, or ask us on WhatsApp and we will help you choose.</span>` : `${ic('swap')}<span><b>You can swap the size within ${EX} days</b> if the fit is not right, so a wrong guess is never a lost pair.</span>`}</li></ul></div>`;
   }
 
   /* ---------- fit notes: a person telling you how the pair fits, rated in hearts ---------- */
@@ -145,7 +145,7 @@
     const s = stats(list), all = !!st().pxAll, shown = all ? list : list.slice(0, 3);
     const ask = waLink('Assalam o Alaikum DAUR, I bought the ' + p.name + '. Here is my fit note: ');
     if (!s.n) return `<section class="px-sec px-notes" id="pxNotes"><h2 class="px-h">Fit notes</h2>
-      <div class="px-empty">${hearts(0, 'lg')}<b>This pair has just landed.</b><p>Its first fit notes are on the way. A real person on our team reads every note before it goes live, good or bad.</p><a class="px-wa" href="${ask}" target="_blank" rel="noopener">${ic('wa')}Wearing it? Send us your fit note</a></div></section>`;
+      <div class="px-empty">${hearts(0, 'lg')}<b>This pair has just landed.</b><p>Nobody has written a fit note for it yet, and we will not write one for them. A real person on our team reads every note before it goes live, whether it is good or bad.</p><a class="px-wa" href="${ask}" target="_blank" rel="noopener">${ic('wa')}Wearing it? Send us your fit note</a></div></section>`;
     const fitN = s.fit.small + s.fit.true + s.fit.large;
     const top = fitN ? [['true', 'true to size'], ['small', 'it runs small'], ['large', 'it runs large']].sort((a, b) => s.fit[b[0]] - s.fit[a[0]])[0] : null;
     const pos = fitN ? 50 + ((s.fit.large - s.fit.small) / fitN) * 42 : 50;
@@ -179,7 +179,7 @@
     const s = st(), m = s.mode || 'me', z = s.size, q = z ? qty(v, z) : 0, done = !!phase;
     let t, sub, icon;
     if (phase === 'pack') { t = m === 'give' ? 'Packing your gift' : 'Packing your pair'; sub = m === 'give' ? 'For someone in need' : 'EU ' + z + (m === 'gift' ? ' · as a gift' : ' · ' + fmt(v.price)); icon = m === 'give' ? 'hand' : m === 'gift' ? 'gift' : 'bag'; }
-    else if (done) { t = m === 'give' ? 'Thank you' : 'In your bag'; sub = m === 'give' ? 'Your pair is on its way to someone' : 'Tap the bag to check out'; icon = 'check'; }
+    else if (done) { t = m === 'give' ? 'Thank you' : 'In your bag'; sub = m === 'give' ? 'Your pair is on its way to someone' : m === 'gift' ? 'Open your bag to write the note' : 'Reserve it with Rs. 1,000 in your bag'; icon = 'check'; }
     else if (m === 'give') { t = 'Sponsor this pair'; sub = fmt(v.price) + ' · we match the size'; icon = 'hand'; }
     else if (!z) { t = m === 'gift' ? 'Choose his size' : 'Choose your size'; sub = fmt(v.price) + (m === 'gift' ? ' · as a gift' : ''); icon = m === 'gift' ? 'gift' : 'bag'; }
     else { t = m === 'gift' ? 'Add as a gift' : 'Add to bag'; sub = 'EU ' + z + ' · ' + fmt(v.price); icon = m === 'gift' ? 'gift' : 'bag'; }

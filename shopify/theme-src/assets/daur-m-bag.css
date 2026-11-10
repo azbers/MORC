@@ -228,3 +228,8 @@ html[data-mv=bag] #mApp .m-sheet:not(.on)~.m-toast{bottom:calc(132px + var(--m-s
 #mApp .xb-pc footer{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
 #mApp .xb-pc footer b{display:block;margin-top:3px;font-size:14px;font-weight:600;color:#fff}
 #mApp .xb-pc-i{font-size:11px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.55)}
+
+/* marketing copy round: the one line that answers the advance, under the pay choice */
+#mApp .xb-whyp{margin:12px 2px 0;font-size:13.5px;line-height:1.5;color:var(--m-mute,#6B6B6B)}
+
+#mApp .xb-go-a small{font-size:12px;font-weight:600;opacity:.72;margin-left:-6px}

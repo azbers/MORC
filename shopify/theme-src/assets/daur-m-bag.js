@@ -160,7 +160,7 @@
   }
 
   /* ---------- giving: what DAUR adds, and that the buyer hears when it is handed over ---------- */
-  const giveNote = (q) => `<div class="xb-gv"><span class="xb-gv-i">${ic('hand')}</span><span class="xb-gv-t"><b>DAUR adds ${esc(fmt(DAUR_ADD * q))} ${q > 1 ? 'to your ' + q + ' pairs' : 'to this pair'}.</b><small>We message you once it is handed over.</small></span></div>`;
+  const giveNote = (q) => `<div class="xb-gv"><span class="xb-gv-i">${ic('hand')}</span><span class="xb-gv-t"><b>DAUR adds ${esc(fmt(DAUR_ADD * q))} ${q > 1 ? 'to your ' + q + ' pairs' : 'to this pair'}.</b><small>We message you as soon as it has been handed over.</small></span></div>`;
 
   /* ---------- a credit that is close: shown in red, as money about to be left behind ---------- */
   function nudge(m) {
@@ -199,7 +199,7 @@
     const advS = p.full ? 'Your own ' + (one ? 'pair' : 'pairs') + ': ' + fmt(door) + ' at your door' : fmt(door) + (one ? ' when it reaches your door' : ' when they reach your door');
     const opt = (k, t, s, amt) => `<button type="button" class="xb-po" role="radio" data-pay="${k}" aria-checked="${p.choice === k}"><i class="xb-rd" aria-hidden="true"></i><span class="xb-po-t"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="xb-po-a"><b>${esc(fmt(amt))}</b><small>today</small></span></button>`;
     return `<section class="xb-pay"><h2 class="xb-h">How you pay</h2><div class="xb-pos" role="radiogroup" aria-label="How you pay">
-      ${opt('adv', advT, advS, p.adv)}${opt('full', 'Done in one go', 'Nothing to pay at the door', m.total)}</div></section>`;
+      ${opt('adv', advT, advS, p.adv)}${opt('full', 'Done in one go', 'Nothing to pay at the door', m.total)}</div>${p.full ? '' : `<p class="xb-whyp">You send ${esc(fmt(p.adv))} and we send the whole pair. <button type="button" class="r9-whyl" data-why>Why ${esc(fmt(p.adv))} first?</button></p>`}</section>`;
   }
 
   /* ---------- where to send it: the account, copy buttons, and the receipt on WhatsApp ---------- */
@@ -242,7 +242,7 @@
   function bar(m) {
     const b = buyBar(); b.classList.add('on-bag', 'xb-buy');
     b.innerHTML = `${m.kept > 0 ? `<p class="xb-bar-k">${ic('seal')}<span>You keep <b>${esc(fmt(m.kept))}</b> on this order</span></p>` : ''}
-      <button class="xb-go" type="button" data-checkout><span class="xb-go-l">Checkout</span><span class="xb-go-a">${esc(fmt(m.total))}</span></button>`;
+      <button class="xb-go" type="button" data-checkout><span class="xb-go-l">Checkout</span><span class="xb-go-a">${m.plan.door > 0 ? `${esc(fmt(m.plan.now))} <small>today</small>` : esc(fmt(m.total))}</span></button>`;
   }
 
   function empty() {
@@ -252,7 +252,7 @@
       <span class="r9-k">${ic('spark')}Your DAUR box</span><h2>Your box is open.</h2>
       <p>${W.code ? 'It is waiting for its first pair, and ' + esc(fmt(W.amt + DEL)) + ' of credit is already inside. The credit only counts once a pair joins it.' : 'It is waiting for its first pair. Choose one and we will hold it here for you.'}</p>
       <a class="r9-go" href="${href.shop()}" data-m>Find my pair${ic('arrow')}</a>
-      <ol class="r9-how"><li><b>1</b><span>Choose a pair and your size.</span></li><li><b>2</b><span>Reserve it with ${esc(fmt(1000))}.</span></li><li><b>3</b><span>Pay the rest at your door.</span></li></ol></section>
+      <ol class="r9-how"><li><b>1</b><span>Choose a pair and your size.</span></li><li><b>2</b><span>Reserve it with ${esc(fmt(1000))}, which comes off the price.</span></li><li><b>3</b><span>Pay the rest only when it is at your door.</span></li></ol></section>
       ${pick.length ? `<div class="m-row m-pad xb-em-h"><h2 class="m-h2">Start with these</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div><div class="m-grid">${pick.map((p) => card(p, false)).join('')}</div>` : ''}
       ${API.wish.length ? `<a class="gv-out" href="${href.liked}" data-m style="margin-top:22px"><span class="f-i">${ic('heart')}</span><span><b>${pl(API.wish.length, 'liked pair', 'liked pairs')}</b><small>Pick up where you left off</small></span>${ic('arrow')}</a>` : ''}</div>`;
     const b = $('#mBuy'); if (b) b.remove();

@@ -240,8 +240,8 @@
   /* ---------- small shared pieces ---------- */
   // gift and give, side by side: gold for someone you know, green for someone in need
   // gift or give: two cards that say plainly who the pair is for and what happens next
-  const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You pick the style and size. Your note goes in the box, sent to his door.' : 'We match the size and hand it over with care, in person. A private photo reaches you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
-  const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot, Kasur'], ['chat', 'Every order confirmed on WhatsApp']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
+  const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You choose the pair and his size. We place your note in the box and send it to his door, fully paid.' : 'We match the size and hand the pair over in person. A private photo of the moment reaches only you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
+  const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person confirms every order on WhatsApp']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
   const socRow = (cls) => `<div class="m-soc ${cls || ''}">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'} aria-label="${n}: ${esc(h)}">${ic(k)}</a>`).join('')}</div>`;
   const follow = () => `<section class="m-follow"><span class="m-kick">${ic('spark')}Find us</span><b>Follow DAUR Supply</b>
@@ -254,10 +254,10 @@
   function offerSlides() {
     const out = [];
     const daysLeft = (e) => { if (!e) return 0; const d = Math.ceil((new Date(e) - new Date()) / 864e5); return d > 0 ? d : 0; };
-    if (W.code && W.on()) out.push({ k: 'Waiting in your wallet', big: fmt(W.amt), l: 'Yours on your first order. It goes to waste if you never use it.', cta: 'Use it now', h: href.offers });
+    if (W.code && W.on()) out.push({ k: 'Waiting in your wallet', big: fmt(W.amt), l: 'It is yours on your first order, and it comes straight off the price.', cta: 'Use it now', h: href.offers });
     coupons().forEach((c) => { const d = daysLeft(c.ends); out.push({ k: d ? (d === 1 ? 'Last day' : 'Ends in ' + d + ' days') : 'Live now', big: fmt(c.amt) + ' off', l: (c.min ? 'On orders of ' + fmt(c.min) + ' or more. ' : '') + 'Code ' + c.code + ', applied for you.', cta: 'See the offer', h: href.offers }); });
     P().filter((p) => p.variants.some(API.onSale)).sort((x, y) => saving(y) - saving(x)).slice(0, 3).forEach((p) => { const v = p.variants.find(API.onSale); out.push({ k: 'Price cut · ' + API.pct(v) + '% off', big: fmt(v.compareAt - v.price) + ' off', l: p.name + ', now ' + fmt(v.price) + ' instead of ' + fmt(v.compareAt) + '.', cta: 'Grab it', h: href.product(p.id), p, v }); });
-    out.push({ k: 'On every order', big: fmt(DEL), l: 'Delivery credit. Your pair travels to any city in Pakistan on us.', cta: 'Shop all', h: href.shop() });
+    out.push({ k: 'On every order', big: fmt(DEL), l: 'This credit covers the delivery of your pair to any city in Pakistan.', cta: 'Shop all', h: href.shop() });
     return out;
   }
   function promo() {
@@ -290,7 +290,7 @@
   function moreHome() {
     const box = $('#mMore'); if (!box) return;
     const k = +(box.dataset.k || 0), b = homeBlock(k);
-    if (!b) { if ($('.m-end', box)) return; box.insertAdjacentHTML('beforeend', `<div class="m-end"><b>You have seen every pair.</b><span class="m-mute">New pairs land here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
+    if (!b) { if (box.dataset.end || $('.m-end', box)) { $('#mMoreSent') && $('#mMoreSent').remove(); return; } box.dataset.end = '1'; box.insertAdjacentHTML('beforeend', `<div class="m-end"><b>That is every pair we stand behind today.</b><span class="m-mute">We add a pair only after we have checked it by hand, and it appears here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
     box.dataset.k = k + 1;
     if (b[1].length) box.insertAdjacentHTML('beforeend', `<div class="m-row m-pad" style="margin-top:28px"><h2 class="m-h2">${esc(b[0])}</h2><a class="m-link" href="${b[2]}" data-m>See all</a></div><div class="m-grid">${b[1].map((p) => card(p, false)).join('')}</div>`);
     else moreHome();
@@ -314,7 +314,7 @@
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
     view.innerHTML = `${promo()}
-      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>We go to the workshops of Lahore, Sialkot and Kasur ourselves, choose each pair, check it by hand in Islamabad and send it to your door. No showroom stands in between, so you pay for the shoe and not for the shop.</p></section>
+      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>The leather shoes of Pakistan are made in the workshops of Lahore, Sialkot and Kasur. We go there ourselves, choose each pair, check it by hand in Islamabad and send it to your door. No showroom stands in between, so you pay for the shoe and not for the shop.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
@@ -391,7 +391,7 @@
   V.liked = function () {
     const list = API.wish.map(API.prod).filter((p) => p && !p.hidden && !p.giving);
     view.innerHTML = `<div class="m-pad"><h1 class="m-h1">Liked</h1></div>` + (list.length ? `<div class="m-grid">${list.map((p) => card(p, false)).join('')}</div>`
-      : `<div class="m-empty"><img src="${asset('m-volt.webp')}" alt=""><b>Nothing liked yet</b><span class="m-mute">Tap the heart on any pair to keep it here.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop now</a></div>
+      : `<div class="m-empty"><img src="${asset('m-volt.webp')}" alt=""><b>No pair has your heart yet.</b><span class="m-mute">Tap the heart on any pair and it will wait for you here, saved on this phone.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop now</a></div>
         <div class="m-row m-pad" style="margin-top:22px"><h2 class="m-h2">Worth a look</h2></div><div class="m-grid">${P().slice(0, 4).map((p) => card(p, false)).join('')}</div>`);
   };
 
@@ -413,7 +413,7 @@
         <p class="p-meta">${ic('truck')}${esc(delTxt())} · ${esc(days())}</p></div>
       <div class="m-sec"><div class="m-row"><h3 style="margin:0">Who is it for?</h3><button class="m-link" type="button" data-explain>${ic('help')}Gift or Philanthropy?</button></div>
         <div class="m-modes" role="group" aria-label="Who is this pair for">${MODES.map(([k, l, i]) => `<button type="button" class="md-${k}" data-pmode="${k}" aria-pressed="${state.mode === k}"><span class="md-i">${ic(i)}</span><b>${l}</b><small>${k === 'me' ? 'Your size' : KIND[k].who}</small></button>`).join('')}</div>
-        ${state.mode === 'gift' ? `<p class="m-modenote">${ic('gift')}<span><b>Gift for someone you know.</b> You pick his size. Gift packing and your note are added in the bag. Paid in full, nothing to pay at his door.</span></p>` : give ? `<p class="m-modenote g">${ic('hand')}<span><b>Sponsor a pair for someone in need.</b> No size needed. DAUR matches the size, hands it over in person, adds ${esc(fmt(DAUR_ADD))} of its own and sends you a private photo.</span></p>` : ''}</div>
+        ${state.mode === 'gift' ? `<p class="m-modenote">${ic('gift')}<span><b>This pair is a gift.</b> You choose his size here, then add your note and gift packing in the bag. A gift is paid in full, so nothing is left for him to pay at his door.</span></p>` : give ? `<p class="m-modenote g">${ic('hand')}<span><b>This pair goes to someone in need.</b> You do not need to choose a size. DAUR matches it to the person, hands it over in person, adds ${esc(fmt(DAUR_ADD))} of its own and sends you a private photo.</span></p>` : ''}</div>
       <div class="m-sec"><div class="m-row"><h3 style="margin:0">About</h3>${notes.length ? `<button class="m-more" type="button" data-notes>${notes.length} fit ${notes.length === 1 ? 'note' : 'notes'}</button>` : ''}</div>
         <p style="margin-top:8px">${esc(state.more ? p.description : first)} ${p.description && p.description !== first || p.specs ? `<button class="m-more" type="button" data-more>${state.more ? 'Less' : 'More'}</button>` : ''}</p>
         ${state.more && p.specs ? `<ul class="m-specs">${Object.keys(p.specs).map((k) => `<li><span>${esc(k)}</span><b>${esc(p.specs[k])}</b></li>`).join('')}</ul>` : ''}</div>
@@ -565,7 +565,7 @@
     const vote = store.get('sliceVote', '');
     view.innerHTML = `<div class="m-gv">
       <section class="gv-hero"><img class="gv-ph" src="${PH('boy-hill')}" alt="A smiling boy on a green hillside" fetchpriority="high"><span class="gv-dots" aria-hidden="true">${'<i></i>'.repeat(14)}</span>
-        <div class="gv-t"><span class="m-kick">${ic('hand')}Philanthropy</span><h1>One pair.<br>One person.<br>By hand.</h1><p>Pick any pair. We match the size, hand it over in person and add ${esc(fmt(DAUR_ADD))} of our own.</p><a class="m-cta gold" href="#gvPick" data-jump>Choose a pair</a></div></section>
+        <div class="gv-t"><span class="m-kick">${ic('hand')}Philanthropy</span><h1>One pair.<br>One person.<br>By hand.</h1><p>You choose a pair. We find the person, match the size, hand it over ourselves and add ${esc(fmt(DAUR_ADD))} of our own.</p><a class="m-cta gold" href="#gvPick" data-jump>Choose a pair</a></div></section>
       <div class="gv-stats">${given ? `<span><b>${NF(given)}</b><small>pairs given</small></span><span><b>${cities.length || 1}</b><small>${cities.length === 1 ? 'city' : 'cities'}</small></span>` : `<span><b>Round 1</b><small>handover after ${esc(quarterEnd())}</small></span>`}<span><b>7 days</b><small>to your private photo</small></span><span><b>+${esc(fmt(DAUR_ADD))}</b><small>from DAUR per pair</small></span></div>
       <section class="gv-card gv-anim">${handover(gp)}<b>From your hands to theirs.</b></section>
       <section class="r9-val"><span class="r9-k">${ic('spark')}Why a shoe company gives shoes</span>
@@ -637,13 +637,13 @@
           <span class="r7-box"><span class="r7-lid"><i class="r7-rv"></i></span><span class="r7-base"><i class="r7-rv"></i><i class="r7-rh"></i><b>DAUR<sup>SUPPLY</sup></b></span>${bow}</span>
           <img class="r7-shoe" src="${asset('m-saddle.webp')}" alt="">
           <span class="r7-tag"><i class="r7-str"></i><span class="r7-card"><em>For you,</em><small>with love</small></span></span></div>
-        <div class="r6-gt"><span class="r6-gk">${ic('gift')}Gifts from DAUR</span><h1>To keep you running through my mind.</h1><p>You choose the pair and write the note. We place it inside the box and send it to his door, and there is nothing left for him to pay.</p>
+        <div class="r6-gt"><span class="r6-gk">${ic('gift')}Gifts from DAUR</span><h1>Say it with a pair he will wear every day.</h1><p>You choose the pair and write the note. We place your words inside the box and send it to his door fully paid, so the only thing left for him to do is open it.</p>
         <a class="r6-gift" href="#gfPick" data-jump>${ic('heart')}Choose his pair</a></div></section>
-      <ol class="r6-steps">${[['gift', 'You choose', 'The pair and his size'], ['note', 'You write', 'A note of up to 240 letters'], ['box', 'We wrap', 'Gift packing on request'], ['truck', 'He opens', 'At his door, fully paid']].map(([i, b, t], k) => `<li style="--i:${k}"><span>${ic(i)}</span><b>${b}</b><small>${t}</small></li>`).join('')}</ol>
-      <div class="r6-swap">${ic('swap')}<span><b>Wrong size? It happens.</b><small>He can swap it within ${C.exchangeDays || 5} days.</small></span></div>
+      <ol class="r6-steps">${[['gift', 'You choose', 'his pair and his size'], ['note', 'You write', 'a note of up to 240 letters'], ['box', 'We pack', 'it as a gift, if you ask'], ['truck', 'He opens', 'it at his door, fully paid']].map(([i, b, t], k) => `<li style="--i:${k}"><span>${ic(i)}</span><b>${b}</b><small>${t}</small></li>`).join('')}</ol>
+      <div class="r6-swap">${ic('swap')}<span><b>Wrong size? It happens.</b><small>He can swap a full price pair for another size within ${C.exchangeDays || 5} days.</small></span></div>
       <div class="m-row m-pad" style="margin-top:26px" id="gfPick"><h2 class="m-h2">Pick the pair</h2><span class="m-mute">${all.length} pairs</span></div>
       <div class="m-grid">${all.map((p) => card(p, false, 'gift')).join('')}</div>
-      <a class="r6-phil" href="${href.giving}" data-m><span class="r6-pi">${ic('hand')}</span><span><b>Philanthropy</b><small>A pair for someone in need, handed over with care</small></span>${ic('arrow')}</a>
+      <a class="r6-phil" href="${href.giving}" data-m><span class="r6-pi">${ic('hand')}</span><span><b>Philanthropy</b><small>Send a pair to someone in need, and we hand it over in person.</small></span>${ic('arrow')}</a>
     </div>`;
     observeIn();
   };
@@ -678,10 +678,10 @@
   /* ---------- the feed: every pair as a post ---------- */
   V.feed = function () {
     const all = P(), notes = allNotes();
-    const facts = [['truck', delTxt() + '.', 'To every city in Pakistan, in ' + days() + '.'], ['swap', (C.exchangeDays || 5) + ' day size swap.', 'Wrong size? We swap it.'], ['pin', 'Lahore. Sialkot. Kasur.', 'Where every pair is made.']];
+    const facts = [['truck', delTxt() + '.', 'To every city in Pakistan, in ' + days() + '.'], ['swap', (C.exchangeDays || 5) + ' day size swap.', 'If a full price pair does not fit, we swap the size.'], ['pin', 'Lahore. Sialkot. Kasur.', 'Where every pair is made.']];
     if (notes) facts.push(['note', notes + ' fit notes.', 'From buyers, shown on every pair.']);
     let k = 0;
-    view.innerHTML = `<div class="m-fd"><div class="m-pad"><h1 class="m-h1">The Feed</h1><p class="m-mute" style="margin:4px 0 0">New pairs and price cuts.</p></div>
+    view.innerHTML = `<div class="m-fd"><div class="m-pad"><h1 class="m-h1">The Feed</h1><p class="m-mute" style="margin:4px 0 0">Every pair we stand behind, and every price we have cut.</p></div>
       ${all.map((p, i) => { const v = firstV(p); const post = `<article class="fd-post"><div class="fd-top"><span class="fd-av">${DMARK}</span><span><b>daursupply</b><small>${esc(p.category)}</small></span>${API.onSale(v) ? `<em>${API.pct(v)}% off</em>` : ''}</div>
         <a class="fd-media" href="${href.product(p.id)}" data-m style="--tn:${TINT[tintOf(p)]}">${img(p, v, 'fd-img')}</a>
         <div class="fd-acts"><button type="button" data-wish="${esc(p.id)}" aria-pressed="${wished(p.id)}" aria-label="Like ${esc(p.name)}">${ic('heart')}</button><button type="button" data-share="${esc(p.id)}" aria-label="Share ${esc(p.name)}">${ic('share')}</button><a class="m-cta sm" href="${href.product(p.id)}" data-m>${price(v)}</a></div>
@@ -826,13 +826,13 @@
     return `<div class="m-pad r6-contact">
       <div class="r6-chs">${row('wa', 'wa', 'WhatsApp', waNice(), 'Quickest for sizing, orders and exchanges', 'https://wa.me/' + WA, 1)}${row('call', 'phone', 'Call', waNice(), 'Same number as WhatsApp', 'tel:+' + WA)}${row('mail', 'mail', 'Email', 'contact@daursupply.com', 'For anything that needs photos or detail', 'mailto:contact@daursupply.com')}${row('ig', 'ig', 'Instagram', '@daursupply', 'New pairs and fit checks', 'https://www.instagram.com/daursupply', 1)}${row('fb', 'fb', 'Facebook', 'facebook.com/daursupply', 'Message us any time', 'https://www.facebook.com/daursupply', 1)}</div>
       <div class="r6-hours"><span class="r6-hi">${ic('clock')}</span><span><b>Monday to Saturday</b><small>10 am to 7 pm, Pakistan time.</small></span></div>
-      <div class="r6-from"><span class="r6-pin">${ic('pin')}</span><span><b>Sent from Islamabad</b><small>An online store. Every pair ships to your door anywhere in Pakistan.</small></span></div></div>`;
+      <div class="r6-from"><span class="r6-pin">${ic('pin')}</span><span><b>Sent from Islamabad</b><small>We are an online store, so every pair travels from Islamabad to your door, anywhere in Pakistan.</small></span></div></div>`;
   }
   // about: where a pair comes from and how you know it is ours
   function aboutBody() {
     const stop = (n, t, s) => `<li><i>${n}</i><b>${t}</b><small>${s}</small></li>`;
     return `<section class="r6-route m-pad"><span class="r5-no">Where a pair comes from</span><h2 class="m-h2">From the workshop to your door.</h2>
-        <ol class="r6-rt">${stop('1', 'Lahore, Sialkot and Kasur', 'Made by workshops we work with directly')}${stop('2', 'Checked by hand', 'Every pair, before it is boxed')}${stop('3', 'Islamabad', 'Packed and sent from here')}${stop('4', 'Your door', '2 to 5 days anywhere in Pakistan')}</ol></section>
+        <ol class="r6-rt">${stop('1', 'Lahore, Sialkot and Kasur', 'The workshops that make every pair')}${stop('2', 'Checked by hand', 'We look over every pair before it is boxed')}${stop('3', 'Islamabad', 'Your box is packed and sent from here')}${stop('4', 'Your door', 'It arrives in 2 to 5 days, anywhere in Pakistan')}</ol></section>
       <section class="r6-marks m-pad"><span class="r5-no">How you know it is ours</span><div class="r6-mk">
         <div><svg viewBox="0 0 80 60" aria-hidden="true"><path d="M6,40 C20,20 40,44 52,26 C60,14 70,18 74,24" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg><b>Thick matte black laces</b><small>Cotton, never shiny</small></div>
         <div><svg viewBox="0 0 80 60" aria-hidden="true"><rect x="22" y="14" width="36" height="34" rx="6" fill="none" stroke="currentColor" stroke-width="5"/><path d="M32,31 h16" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><b>Engraved metal tag</b><small>On the lace</small></div>
@@ -858,7 +858,7 @@
       <a class="r6-lead m-pad" href="${esc(lead.u)}" data-m>${cover(lead, 0, 'big')}<span class="r6-lt"><small>${esc([lead.tag, lead.mins].filter(Boolean).join(' · '))}</small><b>${esc(lead.t)}</b><span>${esc(lead.ex)}</span><em>Read more<i>${ic('arrow')}</i></em></span></a>
       <h2 class="m-h2 m-pad r6-jl">Latest guides</h2>
       <div class="r6-list m-pad">${rest.map((x, i) => `<a class="r6-row" href="${esc(x.u)}" data-m style="--i:${Math.min(i, 8)}">${cover(x, i + 1, 'sm')}<span><small>${esc([x.tag, x.mins].filter(Boolean).join(' · '))}</small><b>${esc(x.t)}</b><em>${esc(x.ex)}</em></span></a>`).join('')}</div>
-      <div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers, usually within working hours.</span>${talk()}</div></div>`;
+      <div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers you, Monday to Saturday, 10 am to 7 pm.</span>${talk()}</div></div>`;
     observeIn();
     return true;
   }
@@ -895,7 +895,7 @@
       ${(pk === 'contact' ? [] : pg.secs).map((s, i) => fold
         ? `<details class="pg-sec pg-acc"${s.id ? ` id="${esc(s.id)}"` : ''}${i === 0 ? ' open' : ''} style="--tn:${tn(i)}"><summary><span>${s.kick ? `<small>${esc(s.kick)}</small>` : ''}<b>${s.title || 'More'}</b></span>${ic('chev')}</summary><div>${blocksHtml(s.blocks, nodes)}</div></details>`
         : `<section class="pg-sec r5-sec${i % 4 === 2 ? ' dark' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${s.title ? `<span class="r5-no">${String(i + 1).padStart(2, '0')}</span>` : ''}${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${blocksHtml(s.blocks, nodes)}</section>`).join('')}
-      ${pk === 'contact' ? '' : `${pk === 'about' ? `<div class="m-pad r6-acta"><a class="m-cta" href="${href.shop()}" data-m>Explore the pairs</a><a class="m-ghost" href="${root}/pages/manifesto" data-m>Read our story</a></div>` : ''}<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers, usually within working hours.</span>${talk()}</div>`}
+      ${pk === 'contact' ? '' : `${pk === 'about' ? `<div class="m-pad r6-acta"><a class="m-cta" href="${href.shop()}" data-m>Explore the pairs</a><a class="m-ghost" href="${root}/pages/manifesto" data-m>Read our story</a></div>` : ''}<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers you, Monday to Saturday, 10 am to 7 pm.</span>${talk()}</div>`}
     </div>`;
     nodes.forEach((n, i) => { const ph = view.querySelector(`[data-node="${i}"]`); if (ph) ph.appendChild(n); });
     $$('img', view).forEach((im) => im.addEventListener('error', () => { im.style.display = 'none'; }, { once: true }));
@@ -1070,9 +1070,9 @@
       manifesto: [['3 cities', 'Lahore, Sialkot, Kasur'], ['By hand', 'every pair is checked'], ['Islamabad', 'where your box is packed']],
       about: [['3 cities', 'Lahore, Sialkot, Kasur'], ['By hand', 'every pair is checked'], ['Islamabad', 'where your box is packed']],
       contract: [['24 hours', 'from confirmation to courier'], [xd, 'to swap your size'], ['30 days', 'of cover for defects']],
-      policies: [[fmt(1000), 'reserves any order'], [xd, 'to swap your size'], ['3 days', 'for a refund to reach you']],
+      policies: [[fmt(1000), 'reserves your own pair'], [xd, 'to swap your size'], ['3 days', 'for a refund to reach you']],
       track: [[days().replace(/ days?$/, ''), 'days to your door'], ['24 hours', 'to leave Islamabad'], ['WhatsApp', 'a person keeps you posted']],
-      faq: [[fmt(1000), 'reserves any order'], [days().replace(/ days?$/, ''), 'days to your door'], [xd, 'to swap your size']] }[pk];
+      faq: [[fmt(1000), 'reserves your own pair'], [days().replace(/ days?$/, ''), 'days to your door'], [xd, 'to swap your size']] }[pk];
     return F ? `<div class="r9-facts">${F.map((x) => `<span><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span>`).join('')}</div>` : '';
   }
   function explain() {
@@ -1116,11 +1116,11 @@
     const adv = fmt(1000);
     const t = mode === 'give' ? ['Philanthropy', 'This pair is boxed for someone in need.', 'We match the size and hand it over in person, and DAUR adds ' + fmt(DAUR_ADD) + ' of its own. Thank you for this.']
       : mode === 'gift' ? ['Boxed as a gift', p.name + ' is boxed for someone you love.', 'Write your note in the bag and we place it inside before the lid closes. A gift is paid in full, so no bill ever reaches him.']
-      : ['Boxed for you', p.name + ' is in your box.', 'We are holding EU ' + size + ' for you. ' + adv + ' reserves it, and you pay the rest only when the pair is at your door.'];
+      : ['Boxed for you', p.name + ' is in your box.', 'We are holding EU ' + size + ' for you. You send ' + adv + ', we send the pair, and the rest waits until it is at your door.'];
     const el = document.createElement('div'); el.className = 'r9-cer k-' + mode; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'r9T');
     el.innerHTML = `<div class="r9-stage" aria-hidden="true"><span class="r9-wm">${WORDMARK}</span><span class="r9-glow"></span><span class="r9-shoe">${img(p, v, 'r9-ph', '')}</span>${BOXART(false)}<i class="r9-d d1"></i><i class="r9-d d2"></i><i class="r9-d d3"></i><i class="r9-d d4"></i><i class="r9-d d5"></i><i class="r9-d d6"></i></div>
       <div class="r9-txt"><span class="r9-k">${ic(mode === 'give' ? 'hand' : mode === 'gift' ? 'gift' : 'check')}${esc(t[0])}</span><h2 id="r9T">${esc(t[1])}</h2><p>${esc(t[2])}</p>
-        <a class="r9-go" href="${href.bag}" data-m data-r9x>Open my box${ic('arrow')}</a><button type="button" class="r9-no" data-r9x>Keep looking</button>
+        <a class="r9-go" href="${href.bag}" data-m data-r9x>${mode === 'me' ? 'Reserve it with ' + esc(adv) : mode === 'gift' ? 'Write the note' : 'Open my box'}${ic('arrow')}</a><button type="button" class="r9-no" data-r9x>Keep looking</button>
         ${mode === 'me' ? `<button type="button" class="r9-why" data-why>Why ${esc(adv)} first?</button>` : ''}</div>`;
     app.appendChild(el); document.documentElement.classList.add('r9-on');
     requestAnimationFrame(() => el.classList.add('on'));
@@ -1130,11 +1130,12 @@
   function whyAdv() {
     const adv = fmt(1000), li = (i, b, t) => `<li><span class="r9-wi">${ic(i)}</span><span><b>${b}</b><small>${t}</small></span></li>`;
     openSheet(`<div class="r9-whyb"><span class="m-kick">${ic('spark')}A fair question</span><h3 class="sh-h">Why ${esc(adv)} before we ship?</h3>
-      <p class="sh-p">You have not met us yet, so you should know exactly what that money does.</p>
-      <ul class="r9-wl">${li('box', 'It holds your pair.', 'The moment it arrives, your size comes off the shelf and a person confirms the order with you on WhatsApp.')}
-      ${li('tag', 'It keeps the price fair.', 'Orders that are placed and then refused at the door cost a courier fee every time. The advance stops them, so that cost never reaches your price.')}
-      ${li('wallet', 'It is part of the price, never extra.', 'The ' + esc(adv) + ' comes off your total. You pay the rest only when the pair is at your door.')}
-      ${li('swap', 'It comes back if you change your mind.', 'Cancel before we dispatch and it is returned in full to the account you paid from, within 3 working days.')}</ul>
+      <p class="sh-p">You have never met us, and we are asking you for money first. You are right to stop and ask. This is exactly what your ${esc(adv)} does, and what protects it.</p>
+      <ul class="r9-wl">${li('box', 'We trust you with more than you trust us.', 'You send ' + esc(adv) + '. We then send the whole pair to your door and wait to be paid the rest. The larger share of the risk stays with us.')}
+      ${li('wallet', 'It is part of the price, never a fee.', 'The ' + esc(adv) + ' comes off your total. You pay the rest only when the pair is at your door.')}
+      ${li('swap', 'It comes back if you change your mind.', 'Cancel before we dispatch and it is returned in full to the account you paid from, within 3 working days.')}
+      ${li('tag', 'It keeps fake orders out of your price.', 'A parcel that is ordered and then refused at the door still has to be packed and sent. The advance tells us you are a real buyer, so nobody pays more to cover fake orders.')}
+      ${li('chat', 'A person answers before you pay.', 'Message us on WhatsApp first. Ask about the size, the leather or the delivery, and pay only when you are satisfied with the answers.')}</ul>
       <a class="m-cta solo" href="https://wa.me/${esc(WA)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, I have a question before I order')}" target="_blank" rel="noopener">${ic('wa')}Ask us anything first</a></div>`);
   }
   app.addEventListener('click', (e) => {

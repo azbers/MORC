@@ -1677,3 +1677,9 @@ html.px-boxing #mApp::before{content:"";position:fixed;inset:0;z-index:81;backgr
 #mApp .r9-val li b{font-weight:700;font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif;font-size:17px;letter-spacing:.04em;text-transform:uppercase;color:#f2c14e}
 #mApp .r9-val li span{font-size:14px;line-height:1.5;color:rgba(255,255,255,.8)}
 @media (prefers-reduced-motion:reduce){.r9-val li{transition:none}}
+
+/* light page headers (policies, FAQ, search): the facts in ink, not white */
+#mApp .r5-hero.v-crm .r9-facts{border-top-color:rgba(42,28,20,.18)}
+#mApp .r5-hero.v-crm .r9-facts span+span{border-left-color:rgba(42,28,20,.18)}
+#mApp .r5-hero.v-crm .r9-facts b{color:#8a6424}
+#mApp .r5-hero.v-crm .r9-facts small{color:#4a3d34}
