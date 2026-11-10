@@ -290,13 +290,14 @@
   function moreHome() {
     const box = $('#mMore'); if (!box) return;
     const k = +(box.dataset.k || 0), b = homeBlock(k);
-    if (!b) { box.insertAdjacentHTML('beforeend', `<div class="m-end"><b>You have seen every pair.</b><span class="m-mute">New pairs land here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
+    if (!b) { if ($('.m-end', box)) return; box.insertAdjacentHTML('beforeend', `<div class="m-end"><b>You have seen every pair.</b><span class="m-mute">New pairs land here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
     box.dataset.k = k + 1;
     if (b[1].length) box.insertAdjacentHTML('beforeend', `<div class="m-row m-pad" style="margin-top:28px"><h2 class="m-h2">${esc(b[0])}</h2><a class="m-link" href="${b[2]}" data-m>See all</a></div><div class="m-grid">${b[1].map((p) => card(p, false)).join('')}</div>`);
     else moreHome();
   }
   function bindMore() {
-    const s = $('#mMoreSent'); if (!s || !('IntersectionObserver' in window)) { for (let i = 0; i < 4; i++) moreHome(); return; }
+    const s = $('#mMoreSent'); if (!s) return;
+    if (!('IntersectionObserver' in window)) { for (let i = 0; i < 4; i++) moreHome(); return; }
     const near = () => { const x = $('#mMoreSent'); return x && x.getBoundingClientRect().top < innerHeight + 600; };
     if (V._moreIO) V._moreIO.disconnect();
     const io = V._moreIO = new IntersectionObserver((es) => { if (!es[0].isIntersecting) return; let n = 0; do { moreHome(); n++; } while (near() && n < 2); if (!$('#mMoreSent')) io.disconnect(); }, { rootMargin: '600px 0px' });

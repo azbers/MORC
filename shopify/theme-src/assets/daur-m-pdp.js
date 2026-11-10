@@ -175,6 +175,7 @@
   // phase: nothing (choose or add), 'pack' (the box is being packed) or 'done' (the box is in the bag)
   function bar(p, v, phase) {
     const b = buyBar(); b.classList.add('px-buy');
+    const dt = $('#pxDockT', view); if (dt) { dt.textContent = phase === 'pack' ? 'Packing your pair' : dockText(); const dd = $('#pxDock', view); if (dd) dd.classList.toggle('ready', (st().mode || 'me') === 'give' || !!st().size); }
     const s = st(), m = s.mode || 'me', z = s.size, q = z ? qty(v, z) : 0, done = !!phase;
     let t, sub, icon;
     if (phase === 'pack') { t = m === 'give' ? 'Packing your gift' : 'Packing your pair'; sub = m === 'give' ? 'For someone in need' : 'EU ' + z + (m === 'gift' ? ' · as a gift' : ' · ' + fmt(v.price)); icon = m === 'give' ? 'hand' : m === 'gift' ? 'gift' : 'bag'; }
@@ -195,6 +196,7 @@
     const v = varOf(p);
     view.innerHTML = `<div class="px" id="px">
       <section class="px-stage${(s.pxi || 0) > 0 ? ' on-ph' : ''}" id="pxStage">${stage(p, v)}</section>
+      ${dock()}
       ${head(p, v)}
       <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who is this pair for?</h2></div>${forCards()}<div id="pxFor">${forPanel(p, v)}</div></section>
       ${notesSec(p)}
@@ -214,6 +216,7 @@
   }
   function paintRail() { const p = prod(), v = varOf(p), r = $('.px-rail.l', view); if (r) r.outerHTML = rail(p, v); }
   function bindStage(first) {
+    bindDock();
     const t = $('#pxTrack', view), el = $('#pxStage', view); if (!t || !el) return;
     const n = t.children.length, s = st();
     // a heavy photo on a slow line: the frame shimmers until the pair is there, never a spinner
@@ -315,6 +318,29 @@
       <span class="bx-bow" style="left:${f(Wf / 2)}px;top:${f(bowY)}px"><i></i><i></i><b></b></span>
       <span class="bx-seal" style="left:${f(Wf / 2)}px;top:${f((lipY + Hb) / 2)}px">${ic('hand')}</span>`;
   }
+  // the open box under the pair: the same DAUR box the pair is packed in, waiting with its lid up
+  function dock() {
+    if (reduce) return '';
+    const g = geo();
+    return `<div class="px-dock" id="pxDock"><span class="dk-t" id="pxDockT" aria-live="polite">${esc(dockText())}</span>
+      <div class="dk-box px-box k-me" aria-hidden="true" style="width:${g.Wf}px;height:${g.Hb.toFixed(1)}px;margin-left:${-g.Wf / 2}px">${boxHtml(g)}</div>
+      <button type="button" class="dk-pill" data-pxbuy aria-label="Put the pair in your DAUR box"><span class="dk-i">${ic('bag')}</span><span class="dk-ch" aria-hidden="true"><i></i><i></i></span></button></div>`;
+  }
+  function dockText() {
+    const s = st(), m = s.mode || 'me';
+    if (m === 'give') return 'Swipe the pair down to sponsor it';
+    if (!s.size) return m === 'gift' ? 'Choose his size, then swipe the pair down' : 'Choose your size, then swipe the pair down';
+    return 'Swipe the pair down into your box';
+  }
+  function bindDock() {
+    const pb = $('.px-slide.px-hero', view); if (!pb || pb._dk) return; pb._dk = 1;
+    let y0 = null, x0 = 0;
+    pb.addEventListener('touchstart', (e) => { const t = e.touches[0]; y0 = window.scrollY < 30 ? t.clientY : null; x0 = t.clientX; }, { passive: true });
+    pb.addEventListener('touchend', (e) => {
+      if (y0 == null) return; const t = e.changedTouches[0], dy = t.clientY - y0, dx = Math.abs(t.clientX - x0); y0 = null;
+      if (dy > 64 && dx < 44) { const c = $('#pxDock .dk-pill', view); buy(c); }
+    }, { passive: true });
+  }
   function boxIt(mode, from) {
     return new Promise((done) => {
       if (reduce || !Element.prototype.animate) { done(false); return; }
@@ -336,7 +362,12 @@
       const sc = Math.min((Wl * 0.84) / fb.w, (Hb * 0.98) / fb.h), ph = fb.h * sc;
       const hx = Wf / 2 - x0, hy = -12 - ph / 2 - y0, dy = Hb - 7 - ph / 2 - y0, r0 = fb.rot || 0;
       const T = (x, y, r, s) => `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${r}deg) scale(${s.toFixed(3)})`;
-      box.animate([{ transform: 'translateY(130%) scale(.9)', opacity: 0 }, { transform: 'translateY(-5%) scale(1.02)', opacity: 1, offset: 0.72 }, { transform: 'none', opacity: 1 }], { duration: 380, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      const dk = $('#pxDock .dk-box', view), dr = dk && dk.getBoundingClientRect();
+      if (dr && dr.top < innerHeight - 40 && dr.bottom > 60) {
+        const dx = dr.left + dr.width / 2 - (br.left + br.width / 2), dy0 = dr.top + dr.height / 2 - (br.top + br.height / 2), k = dr.width / br.width;
+        dk.style.visibility = 'hidden';
+        box.animate([{ transform: `translate(${dx.toFixed(1)}px,${dy0.toFixed(1)}px) scale(${k.toFixed(3)})` }, { transform: 'none' }], { duration: 360, easing: 'cubic-bezier(.3,.7,.2,1)' });
+      } else box.animate([{ transform: 'translateY(130%) scale(.9)', opacity: 0 }, { transform: 'translateY(-5%) scale(1.02)', opacity: 1, offset: 0.72 }, { transform: 'none', opacity: 1 }], { duration: 380, easing: 'cubic-bezier(.2,.8,.2,1)' });
       const fly = im.animate([
         { transform: T(0, 0, r0, seen ? 1 : 0.7), opacity: seen ? 1 : 0, easing: 'cubic-bezier(.25,.7,.35,1)' },
         { transform: T(hx * 0.42, hy * 0.42 - 52, r0 * 0.4 - 7, (1 + sc * 1.06) / 2), opacity: 1, offset: 0.38, easing: 'ease-in-out' },
@@ -370,9 +401,11 @@
         return box.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${tx * 0.32}px,${ty * 0.42 - 34}px) scale(.64) rotate(5deg)`, opacity: 1, offset: 0.45 }, { transform: `translate(${tx}px,${ty}px) scale(.12) rotate(12deg)`, opacity: 0.6 }], { duration: 500, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'forwards' }).finished.then(() => bag);
       }).then((bag) => {
         box.remove();
+        const d2 = $('#pxDock .dk-box', view);
+        if (d2) { d2.style.visibility = ''; d2.animate([{ transform: 'translateY(40px) scale(.62)', opacity: 0 }, { transform: 'scale(.62)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' }); }
         if (bag) bag.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.3)' }, { transform: 'scale(.94)' }, { transform: 'scale(1)' }], { duration: 440, easing: 'ease-out' });
         done(true);
-      }).catch(() => { box.remove(); done(false); });
+      }).catch(() => { box.remove(); const d3 = $('#pxDock .dk-box', view); if (d3) d3.style.visibility = ''; done(false); });
     });
   }
   function buy(btn) {
