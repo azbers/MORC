@@ -36,9 +36,13 @@
   const initials = (n) => String(n || 'DAUR buyer').trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 
   /* ---------- the size chart of the store (the same numbers as the desktop size guide) ---------- */
-  const SIZES = [[39, 5, 6, 24.1, 24.7], [40, 6, 7, 24.8, 25.4], [41, 7, 8, 25.5, 26.0], [42, 8, 9, 26.1, 26.7], [43, 9, 10, 26.8, 27.4], [44, 10, 11, 27.5, 28.0], [45, 11, 12, 28.1, 28.7], [46, 12, 13, 28.8, 29.4]];
-  const rowOf = (eu) => SIZES.find((r) => r[0] === +eu);
-  const euFor = (cm) => { const r = SIZES.find((x) => cm >= x[3] - 0.001 && cm <= x[4] + 0.001); return r ? r[0] : cm < SIZES[0][3] ? SIZES[0][0] : SIZES[SIZES.length - 1][0]; };
+  // men's chart from the owner (2026-11-11): US, EU, UK, foot length in inches and in cm. All lengths are approximate.
+  const CHART = [[6, 38, 5.5, 9.25, 23.5], [6.5, 38.5, 6, 9.5, 24.1], [7, 39, 6.5, 9.625, 24.4], [7.5, 40, 7, 9.75, 24.8], [8, 41, 7.5, 9.9375, 25.4], [8.5, 42, 8, 10.125, 25.7],
+    [9, 43, 8.5, 10.25, 26], [9.5, 43.5, 9, 10.4375, 26.7], [10, 44, 9.5, 10.5625, 27], [10.5, 44.5, 10, 10.75, 27.3], [11, 45, 10.5, 10.9375, 27.9], [12, 46, 11.5, 11.25, 28.6], [13, 47, 12.5, 11.5625, 29.4], [14, 48.5, 13.5, 11.875, 30.2]];
+  const rowOf = (eu) => CHART.find((r) => r[1] === +eu);
+  const ukOf = (eu) => { const r = rowOf(eu); return r ? r[2] : ''; };
+  // the stocked size that fits a foot: the first size whose length is at least the foot's
+  const euFor = (cm, list) => { const rows = CHART.filter((r) => list.includes(r[1])); const r = rows.find((x) => x[4] >= cm - 0.05); return (r || rows[rows.length - 1])[1]; };
 
   /* ---------- the frame: photos of the pair, the wordmark behind it, sizes and colours beside it ---------- */
   // where each cut out pair actually sits inside its picture (natural width, height, then the visible box as fractions),
@@ -66,18 +70,20 @@
   function rail(p, v) {
     const s = st();
     if (s.mode === 'give') return `<div class="px-rail l give"><span class="px-lab">Size</span><span class="px-vt">${ic('hand')}<b>Matched by DAUR</b></span></div>`;
-    return `<div class="px-rail l" role="radiogroup" aria-label="Size, EU"><span class="px-lab">Size <small>EU</small></span>
-      ${p.sizes.map((z) => { const q = qty(v, z), on = String(s.size) === String(z); return `<button class="px-sz" type="button" role="radio" data-pxsize="${esc(z)}" aria-checked="${on}"${q > 0 ? '' : ' disabled'} aria-label="EU ${esc(z)}${q > 0 ? '' : ', sold out'}">${esc(z)}</button>`; }).join('')}
+    return `<div class="px-rail l" role="radiogroup" aria-label="Size, EU and UK"><span class="px-lab">Size <small>EU · UK</small></span>
+      ${p.sizes.map((z) => { const q = qty(v, z), on = String(s.size) === String(z), uk = ukOf(z); return `<button class="px-sz" type="button" role="radio" data-pxsize="${esc(z)}" aria-checked="${on}"${q > 0 ? '' : ' disabled'} aria-label="EU ${esc(z)}${uk ? ', UK ' + uk : ''}${q > 0 ? '' : ', sold out'}"><b>${esc(z)}</b>${uk ? `<small>UK ${uk}</small>` : ''}</button>`; }).join('')}
       <button class="px-sgb" type="button" data-pxsg aria-haspopup="dialog">Size guide</button></div>`;
   }
   function swatches(p, v) {
-    const same = p.variants.every((x) => (x.hex || '').toLowerCase() === (p.variants[0].hex || '').toLowerCase());
-    return `<div class="px-rail r" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour</span>
-      ${p.variants.map((x) => { const y = pic(p, x); return `<button class="px-sw${same ? ' im' : ''}" type="button" role="radio" data-pxcol="${esc(x.id)}" aria-checked="${x.id === v.id}" aria-label="${esc(x.color)}" style="--sw:${esc(x.hex || '#222')}">${same ? `<img src="${esc(y.src)}" alt="" loading="lazy">` : '<i></i>'}</button>`; }).join('')}</div>`;
+    // every colour is a small photo of the pair in that colour with a dot of the colour on it; one colour is still shown, so every page looks the same
+    return `<div class="px-rail r" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour${p.variants.length > 1 ? ` <small>${p.variants.length}</small>` : ''}</span>
+      ${p.variants.map((x) => { const y = pic(p, x); return `<button class="px-sw im" type="button" role="radio" data-pxcol="${esc(x.id)}" aria-checked="${x.id === v.id}" aria-label="${esc(x.color)}" style="--sw:${esc(x.hex || '#222')}"><img src="${esc(y.src)}" alt="" loading="lazy"><i class="sw-dot"></i></button>`; }).join('')}
+      <span class="px-cn">${esc(v.color)}</span></div>`;
   }
   function priceBox(v) {
     const save = isSale(v) ? v.compareAt - v.price : 0;
-    return `<div class="px-price"><b>${esc(fmt(v.price))}</b>${save ? `<span class="pp-was"><s>${esc(fmt(v.compareAt))}</s><em>You keep ${esc(fmt(save))}</em></span>` : `<span class="pp-del">${ic('truck')}${esc(days())}</span>`}</div>`;
+    const pct = save ? Math.round((save / v.compareAt) * 100) : 0;
+    return `<div class="px-price">${save ? `<span class="pp-off">${pct}% off</span>` : ''}<b>${esc(fmt(v.price))}</b>${save ? `<span class="pp-was"><s>${esc(fmt(v.compareAt))}</s><em>You save ${esc(fmt(save))}</em></span>` : `<span class="pp-del">${ic('truck')}At your door in ${esc(days())}</span>`}</div>`;
   }
   function stage(p, v) {
     const { hero, photos } = slides(p, v), n = photos.length + 1, i = Math.min(st().pxi || 0, n - 1);
@@ -87,7 +93,7 @@
         <figure class="px-slide px-hero" aria-label="1 of ${n}"><span class="px-word" aria-hidden="true">${WORDMARK}</span><span class="px-pb${hero.cut ? '' : ' ph'}"><span class="px-floor" aria-hidden="true"></span><span class="px-fl">${heroImg}</span></span></figure>
         ${photos.map((s, k) => `<figure class="px-slide ph" aria-label="${k + 2} of ${n}"><img src="${esc(sized(s, 900))}"${srcset(s)} alt="${esc(p.name + ', ' + v.color + ', photo ' + (k + 2))}" loading="${k === 0 ? 'eager' : 'lazy'}" decoding="async"></figure>`).join('')}
       </div>
-      <div class="px-ui">${rail(p, v)}${p.variants.length > 1 ? swatches(p, v) : ''}${priceBox(v)}</div>
+      <div class="px-ui">${rail(p, v)}${swatches(p, v)}${priceBox(v)}</div>
       <button class="px-save" type="button" data-wish="${esc(p.id)}" aria-pressed="${MX.wished(p.id)}" aria-label="Save ${esc(p.name)} to Liked">${H1}</button>
       ${n > 1 ? `<div class="px-pager" aria-hidden="true"><span class="pg-n"><b>${i + 1}</b>/${n}</span><span class="pg-dots">${Array.from({ length: n }, (_, k) => `<button type="button" tabindex="-1" data-pxdot="${k}" class="${k === i ? 'on' : ''}"></button>`).join('')}</span></div>` : ''}`;
   }
@@ -104,14 +110,14 @@
   const facts = (v) => [
     [days(), 'to your door'],
     isSale(v) ? ['Final size', 'at this sale price'] : [EX + ' days', 'to swap the size'],
-    [fmt(MX.DEL), 'delivery credit']
+    ['30 days', 'cover for any defect']
   ].map(([b, s]) => `<span><b>${esc(b)}</b><small>${esc(s)}</small></span>`).join('');
 
   /* ---------- who the pair is for: three real photographs, one colour each ---------- */
   const FOR = [
     ['me', 'For me', 'Your size, your door', 'm-hero.webp'],
     ['gift', 'A gift', 'For someone you love', 'm-g-hands.webp'],
-    ['give', 'Philanthropy', 'For someone in need', 'm-g-boy-smile.webp']
+    ['give', 'Donate a pair', 'For someone in need', 'm-g-boy-smile.webp']
   ];
   function forCards() {
     const m = st().mode || 'me';
@@ -126,36 +132,93 @@
     return `<div class="px-fp k-me"><ul>
       <li>${ic('box')}<span><b>We dispatch within 24 hours</b> of confirming your order with you on WhatsApp.</span></li>
       <li>${ic('truck')}<span><b>It reaches your door in ${esc(days())}</b>, in any city in Pakistan.</span></li>
-      <li>${ic('wallet')}<span><b>Rs. 1,000 reserves your pair today.</b> We send it to your door, and you pay the rest only when it arrives. <button type="button" class="r9-whyl" data-why>Why Rs. 1,000 first?</button></span></li>
+      <li>${ic('wallet')}<span><b>Rs. 1,000 holds this pair in your name.</b> The rest you pay when the box is in your hands. <button type="button" class="r9-whyl" data-why>How it works</button></span></li>
       <li>${isSale(v) ? `${ic('tag')}<span><b>This is a sale price, so the size is final.</b> Measure your foot with the size guide first, or ask us on WhatsApp and we will help you choose.</span>` : `${ic('swap')}<span><b>You can swap the size within ${EX} days</b> if the fit is not right, so a wrong guess is never a lost pair.</span>`}</li></ul></div>`;
   }
 
-  /* ---------- fit notes: a person telling you how the pair fits, rated in hearts ---------- */
+  /* ---------- fit notes: social style cards that swipe sideways, each with a drawn character avatar ----------
+     The avatar is a drawing chosen from the name, never a photo of a real person. */
+  const AV_BG = ['#172C27', '#6B7550', '#A58A64', '#252625', '#3D5148', '#8C7A5B'];
+  const AV_SKIN = ['#F2C9A0', '#D9A47A', '#B9805A', '#8D5A3B', '#E8B98F'];
+  const AV_HAIR = ['#1B1714', '#3A2A1E', '#5A4030', '#2A2422'];
+  function hashN(t) { let h = 7; String(t || '').split('').forEach((c) => { h = (h * 31 + c.charCodeAt(0)) >>> 0; }); return h; }
+  function avatar(name) {
+    const h = hashN(name), bg = AV_BG[h % AV_BG.length], sk = AV_SKIN[(h >> 3) % AV_SKIN.length], hr = AV_HAIR[(h >> 6) % AV_HAIR.length];
+    const style = (h >> 9) % 4, beard = (h >> 12) % 3 === 0, shirt = ['#F1EBDD', '#A58A64', '#6B7550', '#252625'][(h >> 14) % 4];
+    const hair = [
+      `<path d="M27 37c0-11 6-18 17-18s17 7 17 18c-3-6-9-9-17-9s-14 3-17 9z" fill="${hr}"/>`,
+      `<path d="M26 39c-1-14 7-22 18-22s19 8 18 22l-3-7c-4 2-9 3-15 3s-11-1-15-3z" fill="${hr}"/>`,
+      `<path d="M25 33c2-9 9-14 19-14s17 5 19 14l-38 0z" fill="${shirt === '#F1EBDD' ? '#172C27' : '#F1EBDD'}"/><path d="M61 33h9v3H44z" fill="${shirt === '#F1EBDD' ? '#172C27' : '#F1EBDD'}"/>`,
+      `<path d="M28 36c0-10 7-16 16-16s16 6 16 16c-2-3-4-4-6-4l-2-4c-3 3-10 4-16 4-3 0-6 1-8 4z" fill="${hr}"/>`
+    ][style];
+    return `<svg class="st-avi" viewBox="0 0 88 88" aria-hidden="true"><rect width="88" height="88" fill="${bg}"/>
+      <path d="M14 88c2-16 14-24 30-24s28 8 30 24z" fill="${shirt}"/><rect x="38" y="52" width="12" height="14" rx="5" fill="${sk}"/>
+      <ellipse cx="44" cy="40" rx="16" ry="18" fill="${sk}"/>${beard ? `<path d="M29 43c2 11 8 16 15 16s13-5 15-16c-3 4-8 5-15 5s-12-1-15-5z" fill="${hr}"/>` : ''}
+      ${hair}<circle cx="38" cy="41" r="1.7" fill="#1B1714"/><circle cx="50" cy="41" r="1.7" fill="#1B1714"/>
+      <path d="M40 50c2.5 1.8 5.5 1.8 8 0" stroke="#1B1714" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+  }
+  const ago = (d) => {
+    if (!d) return ''; const t = new Date(d + 'T12:00:00'); if (isNaN(t)) return '';
+    const days = Math.max(0, Math.round((Date.now() - t) / 864e5));
+    return days < 1 ? 'today' : days < 7 ? days + 'd' : days < 35 ? Math.round(days / 7) + 'w' : when(d);
+  };
+  const FITW = (f) => { f = String(f || '').toLowerCase(); return /small/.test(f) ? 'Runs small' : /large|big/.test(f) ? 'Runs large' : /true/.test(f) ? 'True to size' : ''; };
   function story(n) {
     const r = Math.max(1, Math.min(5, Math.round(+n.rating || 5)));
-    const meta = [n.city, n.size ? 'Bought EU ' + n.size : '', n.fit || ''].filter(Boolean).join(' · ');
-    return `<article class="px-story"><header><span class="st-av" aria-hidden="true">${esc(initials(n.name))}</span>
-        <span class="st-who"><b>${esc(n.name || 'DAUR buyer')}</b><small>${esc(meta)}</small></span>${hearts(r, 'sm')}</header>
-      ${n.title || n.body ? `<div class="st-say">${n.title ? `<h3>${esc(n.title)}</h3>` : ''}${n.body ? `<p>${esc(n.body)}</p>` : ''}</div>` : ''}
+    const chips = [n.title, FITW(n.fit), n.size ? 'EU ' + n.size : ''].filter(Boolean);
+    return `<article class="px-story"><header><span class="st-av">${avatar(n.name || n.id)}</span>
+        <span class="st-who"><b>${esc(n.name || 'DAUR buyer')}${n.verified ? `<i class="st-tick" title="Bought from DAUR">${ic('check')}</i>` : ''}</b><small>${esc([n.city, ago(n.date)].filter(Boolean).join(' · '))}</small></span></header>
+      <div class="st-rate">${hearts(r, 'sm')}<em>${r}.0</em></div>
+      ${n.body ? `<p class="st-body">${esc(n.body)}</p>` : ''}
       ${n.photo ? `<img class="st-ph" src="${esc(n.photo)}" alt="Photo from ${esc(n.name || 'a buyer')}" loading="lazy">` : ''}
-      <footer>${n.verified ? `<span class="st-v">${ic('seal')}Verified buyer</span>` : ''}${n.date ? `<time datetime="${esc(n.date)}">${esc(when(n.date))}</time>` : ''}</footer></article>`;
+      ${chips.length ? `<div class="st-chips">${chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : ''}</article>`;
   }
   function notesSec(p) {
     const list = notesFor(p.id).slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || (+b.rating || 0) - (+a.rating || 0));
-    const s = stats(list), all = !!st().pxAll, shown = all ? list : list.slice(0, 3);
-    const ask = waLink('Assalam o Alaikum DAUR, I bought the ' + p.name + '. Here is my fit note: ');
-    if (!s.n) return `<section class="px-sec px-notes" id="pxNotes"><h2 class="px-h">Fit notes</h2>
-      <div class="px-empty">${hearts(0, 'lg')}<b>This pair has just landed.</b><p>Nobody has written a fit note for it yet, and we will not write one for them. A real person on our team reads every note before it goes live, whether it is good or bad.</p><a class="px-wa" href="${ask}" target="_blank" rel="noopener">${ic('wa')}Wearing it? Send us your fit note</a></div></section>`;
+    const s = stats(list);
+    const write = `<button class="px-write" type="button" data-pxwrite>${ic('chat')}<span><b>Wearing this pair?</b><small>Tell the next buyer how it feels. It takes a minute.</small></span>${ic('arrow')}</button>`;
+    if (!s.n) return `<section class="px-sec px-notes" id="pxNotes"><div class="px-nh"><h2 class="px-h">Fit notes</h2></div>
+      <div class="px-empty">${hearts(0, 'lg')}<b>Be the first voice on this pair.</b><p>Every note here comes from a real buyer, and a person on our team reads each one before it goes live.</p></div>${write}</section>`;
     const fitN = s.fit.small + s.fit.true + s.fit.large;
     const top = fitN ? [['true', 'true to size'], ['small', 'it runs small'], ['large', 'it runs large']].sort((a, b) => s.fit[b[0]] - s.fit[a[0]])[0] : null;
-    const pos = fitN ? 50 + ((s.fit.large - s.fit.small) / fitN) * 42 : 50;
-    return `<section class="px-sec px-notes" id="pxNotes"><div class="px-nh"><h2 class="px-h">Fit notes</h2><span class="px-mute">How it fits, in their own words</span></div>
-      <div class="px-sum"><div class="sm-l"><b class="sm-avg">${s.avg.toFixed(1)}</b>${hearts(s.avg, 'md')}<small>from ${s.n} fit ${s.n === 1 ? 'note' : 'notes'}</small></div>
-        <div class="sm-r">${s.dist.map((c, k) => `<span class="sm-b"><i>${5 - k}</i>${H1}<span class="sm-bar"><span style="width:${s.n ? (c / s.n) * 100 : 0}%"></span></span><em>${c}</em></span>`).join('')}</div></div>
-      ${fitN ? `<div class="px-fit"><div class="fm-l"><b>Fit</b><span>${s.fit[top[0]]} of ${fitN} say ${top[1]}</span></div><div class="fm-m" aria-hidden="true"><span class="fm-k" style="left:${pos}%"></span></div><div class="fm-s" aria-hidden="true"><span>Runs small</span><span>True to size</span><span>Runs large</span></div></div>` : ''}
-      <div class="px-stories">${shown.map(story).join('')}</div>
-      ${list.length > 3 ? `<button class="px-all" type="button" data-pxall aria-expanded="${all}">${all ? 'Show fewer' : 'Read all ' + list.length + ' fit notes'}${ic('chev')}</button>` : ''}
-      <a class="px-wa" href="${ask}" target="_blank" rel="noopener">${ic('wa')}Wearing this pair? Send us your fit note</a></section>`;
+    const faces = list.slice(0, 4).map((n) => `<span class="nf-f">${avatar(n.name || n.id)}</span>`).join('');
+    return `<section class="px-sec px-notes" id="pxNotes"><div class="px-nh"><h2 class="px-h">Fit notes</h2><span class="px-mute">${s.n} ${s.n === 1 ? 'buyer' : 'buyers'} talking</span></div>
+      <div class="px-nsum"><span class="nf">${faces}</span><span class="ns-t"><b>${s.avg.toFixed(1)}</b>${hearts(s.avg, 'sm')}<small>${top ? s.fit[top[0]] + ' of ' + fitN + ' say ' + top[1] : 'from ' + s.n + ' fit notes'}</small></span></div>
+      <div class="px-stories" id="pxStories" tabindex="0" aria-label="Fit notes, swipe sideways">${list.map(story).join('')}</div>
+      ${list.length > 1 ? `<div class="px-sdots" aria-hidden="true">${list.slice(0, 12).map((x, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>` : ''}
+      ${write}</section>`;
+  }
+  function bindStories() {
+    const r = $('#pxStories', view), d = $$('.px-sdots i', view); if (!r || !d.length) return;
+    r.addEventListener('scroll', () => { const w = (r.firstElementChild || {}).offsetWidth || 1; const i = Math.min(d.length - 1, Math.round(r.scrollLeft / (w + 12))); d.forEach((x, k) => x.classList.toggle('on', k === i)); }, { passive: true });
+  }
+
+  /* ---------- write a fit note: name, phone, hearts, comfort, a few words. Nothing else. ---------- */
+  const COMFORT = ['Comfortable from day one', 'Soft after a few days', 'Snug, in a good way', 'Firm and supportive', 'Light on the feet'];
+  function noteForm(p) {
+    const f = st().fn || (st().fn = { r: 0, c: '' });
+    openSheet(`<form class="px-nform" id="pxNform" novalidate><h3 class="sh-h">Your fit note</h3><button class="px-sgx" type="button" data-pxsgx aria-label="Close">${ic('x')}</button>
+      <p class="px-mute nf-p">On the ${esc(p.name)}. A person on our team reads it before it goes live.</p>
+      <div class="nf-l">How do you rate it?</div>
+      <div class="nf-hearts" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map((k) => `<button type="button" role="radio" aria-checked="${f.r === k}" aria-label="${k} of 5" data-pxrate="${k}" class="${k <= f.r ? 'on' : ''}">${H1}</button>`).join('')}</div>
+      <div class="nf-l">How does it feel?</div>
+      <div class="nf-chips" role="radiogroup" aria-label="Comfort">${COMFORT.map((c) => `<button type="button" role="radio" aria-checked="${f.c === c}" data-pxcomf="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+      <label class="nf-l" for="nfBody">In your words</label><textarea id="nfBody" maxlength="400" rows="3" placeholder="The first week, the fit, what people said"></textarea>
+      <div class="nf-two"><span><label class="nf-l" for="nfName">Your name</label><input id="nfName" autocomplete="name" maxlength="40"></span>
+      <span><label class="nf-l" for="nfPhone">Phone</label><input id="nfPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="03XX XXXXXXX"></span></div>
+      <small class="nf-priv">Your phone stays with us. Only your first name shows on the note.</small>
+      <p class="nf-err" role="alert"></p>
+      <button class="px-pick" type="submit">Share my fit note</button></form>`);
+  }
+  function sendNote() {
+    const p = prod(), f = st().fn || {}, fm = $('#pxNform'); if (!fm) return;
+    const name = $('#nfName', fm).value.trim(), phone = $('#nfPhone', fm).value.replace(/[^\d+]/g, ''), body = $('#nfBody', fm).value.trim(), err = $('.nf-err', fm);
+    const miss = !f.r ? 'Choose a rating from one to five hearts.' : !f.c ? 'Choose how it feels.' : body.length < 8 ? 'Write a few words about the pair.' : !name ? 'Add your name.' : phone.replace(/\D/g, '').length < 10 ? 'Add a phone number so we can confirm the note is yours.' : '';
+    if (miss) { err.textContent = miss; return; }
+    const v = varOf(p);
+    const item = { id: 'fn' + Date.now().toString(36), status: 'pending', at: new Date().toISOString(), pid: p.id, vid: v.id, pname: p.name, rating: f.r, name: name.split(/\s+/)[0], fullName: name, phone, title: f.c, body, size: st().size || '' };
+    try { if (window.DAUR_SHOPIFY && window.DAUR_SHOPIFY.forward) window.DAUR_SHOPIFY.forward('reviews', [item]); } catch (e) { /* the toast still thanks them */ }
+    st().fn = null; closeSheet(); toast('Thank you, ' + item.name + '. Your fit note reaches our team now and goes live once read.');
   }
 
   /* ---------- the details and more pairs ---------- */
@@ -179,13 +242,31 @@
     const s = st(), m = s.mode || 'me', z = s.size, q = z ? qty(v, z) : 0, done = !!phase;
     let t, sub, icon;
     if (phase === 'pack') { t = m === 'give' ? 'Packing your gift' : 'Packing your pair'; sub = m === 'give' ? 'For someone in need' : 'EU ' + z + (m === 'gift' ? ' · as a gift' : ' · ' + fmt(v.price)); icon = m === 'give' ? 'hand' : m === 'gift' ? 'gift' : 'bag'; }
-    else if (done) { t = m === 'give' ? 'Thank you' : 'In your bag'; sub = m === 'give' ? 'Your pair is on its way to someone' : m === 'gift' ? 'Open your bag to write the note' : 'Reserve it with Rs. 1,000 in your bag'; icon = 'check'; }
-    else if (m === 'give') { t = 'Sponsor this pair'; sub = fmt(v.price) + ' · we match the size'; icon = 'hand'; }
+    else if (done) { t = m === 'give' ? 'Thank you' : 'In your bag'; sub = m === 'give' ? 'Your pair is on its way to someone' : m === 'gift' ? 'Open your bag to write the note' : 'Rs. 1,000 holds it in your name'; icon = 'check'; }
+    else if (m === 'give') { t = 'Donate this pair'; sub = fmt(v.price) + ' · we match the size'; icon = 'hand'; }
     else if (!z) { t = m === 'gift' ? 'Choose his size' : 'Choose your size'; sub = fmt(v.price) + (m === 'gift' ? ' · as a gift' : ''); icon = m === 'gift' ? 'gift' : 'bag'; }
     else { t = m === 'gift' ? 'Add as a gift' : 'Add to bag'; sub = 'EU ' + z + ' · ' + fmt(v.price); icon = m === 'gift' ? 'gift' : 'bag'; }
     const ready = m === 'give' || !!z;
     b.innerHTML = `${!done && z && m !== 'give' && q > 0 && q <= LOW ? `<p class="px-low"><i></i>Only ${q} left in EU ${esc(z)}</p>` : ''}
-      <button class="px-cta k-${m}${ready ? ' ready' : ''}${done ? ' done' : ''}${phase === 'pack' ? ' pack' : ''}" type="button" data-pxbuy><span class="ct-t"><b>${esc(t)}</b><small>${esc(sub)}</small></span><span class="ct-i">${ic(icon)}</span></button>`;
+      <button class="px-cta px-swp k-${m}${ready ? ' ready' : ''}${done ? ' done' : ''}${phase === 'pack' ? ' pack' : ''}" type="button" data-pxbuy aria-label="${esc(t + ', ' + sub)}${ready && !done ? '. Swipe right or tap' : ''}"><span class="sw-k" aria-hidden="true">${done ? ic('check') : MX.DMARK}</span><span class="sw-ch" aria-hidden="true"><i></i><i></i><i></i></span><span class="ct-t"><b>${esc(t)}</b><small>${esc(sub)}</small></span></button>`;
+    bindSwipe($('.px-swp', b));
+  }
+
+  /* ---------- swipe right to add: the D key slides along the bar; past two thirds of the way it adds the pair.
+     A tap on the bar does the same, so nobody has to swipe. ---------- */
+  let swiped = false;
+  function bindSwipe(btn) {
+    if (!btn || !btn.classList.contains('ready') || btn.classList.contains('done') || btn.classList.contains('pack')) return;
+    const k = $('.sw-k', btn); let x0 = null, dx = 0, max = 0;
+    const end = () => {
+      if (x0 === null) return; const ok = dx > max * 0.66; x0 = null;
+      btn.classList.remove('drag'); k.style.transform = ''; btn.style.setProperty('--sw-p', 0);
+      if (ok) { swiped = true; setTimeout(() => { swiped = false; }, 400); buy(btn); }
+    };
+    k.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; max = btn.clientWidth - k.offsetWidth - 12; btn.classList.add('drag'); try { k.setPointerCapture(e.pointerId); } catch (er) {} });
+    k.addEventListener('pointermove', (e) => { if (x0 === null) return; dx = Math.max(0, Math.min(max, e.clientX - x0)); k.style.transform = `translateX(${dx}px)`; btn.style.setProperty('--sw-p', (dx / Math.max(1, max)).toFixed(3)); if (dx > 4) e.preventDefault(); });
+    k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
+    k.addEventListener('click', (e) => { if (swiped) { e.stopPropagation(); e.preventDefault(); } }, true);
   }
 
   /* ---------- the page ---------- */
@@ -204,7 +285,7 @@
       ${morePairs(p)}
     </div>`;
     bar(p, v);
-    bindStage(true);
+    bindStage(true); bindStories();
   };
 
   function paintStage(anim) {
@@ -237,26 +318,28 @@
   /* ---------- the size guide: a card over the page, with a foot length finder ---------- */
   function sizeSheet() {
     const p = prod(), v = varOf(p), s = st();
-    const rows = SIZES.filter((r) => p.sizes.map(Number).includes(r[0]));
+    const have = p.sizes.map(Number), rows = CHART.filter((r) => have.includes(r[1]));
     if (!rows.length) return;
-    const lo = rows[0][3], hi = rows[rows.length - 1][4];
-    const start = rowOf(s.size || (p.sizes.map(Number).includes(42) ? 42 : rows[Math.floor(rows.length / 2)][0])) || rows[0];
-    const cm0 = Math.round(((start[3] + start[4]) / 2) * 10) / 10;
-    openSheet(`<div class="px-sgs"><h3 class="sh-h">Size guide</h3><button class="px-sgx" type="button" data-pxsgx aria-label="Close the size guide">${ic('x')}</button><p class="px-mute sg-p">Men's sizes. Find your EU size by the length of your foot.</p>
+    const lo = Math.round((rows[0][4] - 0.6) * 10) / 10, hi = rows[rows.length - 1][4];
+    const start = rowOf(s.size || (have.includes(42) ? 42 : rows[Math.floor(rows.length / 2)][1])) || rows[0];
+    const cm0 = start[4];
+    openSheet(`<div class="px-sgs"><h3 class="sh-h">Size guide</h3><button class="px-sgx" type="button" data-pxsgx aria-label="Close the size guide">${ic('x')}</button><p class="px-mute sg-p">Men's sizes. Slide to the length of your foot and we show the size that fits.</p>
       <div class="sg-fit"><div class="sg-top"><label for="pxCm">Your foot length</label><output id="pxCmOut" for="pxCm">${cm0.toFixed(1)} cm</output></div>
         <input type="range" id="pxCm" min="${lo}" max="${hi}" step="0.1" value="${cm0}" aria-label="Your foot length in centimetres">
         <div class="sg-res"><span class="sg-k">Your size</span><b id="pxCmEu"></b><small id="pxCmUk"></small></div>
         <button class="px-pick" type="button" data-pxpick=""></button></div>
-      <table class="sg-t"><thead><tr><th>EU</th><th>UK</th><th>US</th><th>Foot (cm)</th></tr></thead><tbody>${rows.map(([eu, uk, us, a, b]) => `<tr data-eu="${eu}"${qty(v, eu) > 0 ? '' : ' class="sold"'}><td><b>${eu}</b></td><td>${uk}</td><td>${us}</td><td>${a.toFixed(1)} to ${b.toFixed(1)}</td></tr>`).join('')}</tbody></table>
+      <h4 class="sh-k">Men's size conversion chart</h4>
+      <div class="sg-tw"><table class="sg-t sg-full"><thead><tr><th>US</th><th>EU</th><th>UK</th><th>Inches</th><th>cm</th></tr></thead><tbody>${CHART.map(([us, eu, uk, inch, cm]) => { const st2 = have.includes(eu); return `<tr data-eu="${eu}" class="${st2 ? 'stk' : 'nst'}${st2 && !(qty(v, eu) > 0) ? ' sold' : ''}"><td>${us}</td><td><b>${eu}</b></td><td>${uk}</td><td>${inch}</td><td>${cm}</td></tr>`; }).join('')}</tbody></table></div>
+      <p class="sg-fine">Highlighted rows are the sizes this pair comes in. All measurements are approximate and are a guide to your size.</p>
       <h4 class="sh-k">How to measure</h4>
       <ol class="sg-steps"><li>Place a sheet of paper on a flat floor and stand on it with your heel against a wall.</li><li>Mark the tip of your longest toe.</li><li>Measure from the heel to the mark in centimetres.</li><li>Choose the closest length in the chart. Between sizes, the larger one is usually more comfortable.</li></ol>
       <p class="sg-note">${ic(isSale(v) ? 'tag' : 'swap')}<span>${isSale(v) ? 'This pair is at a sale price, so its size is final. Measure first, or ask us before you order.' : 'Full price pairs can be swapped for size within ' + EX + ' days of delivery.'}</span></p>
       <a class="px-wa" href="${waLink('Assalam o Alaikum DAUR, which size of ' + p.name + ' should I take? My foot is ')}" target="_blank" rel="noopener">${ic('wa')}Not sure? Ask us on WhatsApp</a></div>`);
     const r = $('#pxCm'), out = $('#pxCmOut'), eu = $('#pxCmEu'), uk = $('#pxCmUk'), pick = $('[data-pxpick]');
     const upd = () => {
-      const cm = +r.value, e = euFor(cm), row = rowOf(e), q = qty(v, e), pct = ((cm - lo) / Math.max(0.1, hi - lo)) * 100;
+      const cm = +r.value, e = euFor(cm, have), row = rowOf(e), q = qty(v, e), pct = ((cm - lo) / Math.max(0.1, hi - lo)) * 100;
       r.style.setProperty('--pc', pct + '%');
-      out.textContent = cm.toFixed(1) + ' cm'; eu.textContent = 'EU ' + e; uk.textContent = row ? 'UK ' + row[1] + ' · US ' + row[2] : '';
+      out.textContent = cm.toFixed(1) + ' cm'; eu.textContent = 'EU ' + e; uk.textContent = row ? 'UK ' + row[2] + ' · US ' + row[0] : '';
       pick.dataset.pxpick = q > 0 ? String(e) : ''; pick.disabled = !(q > 0) || st().mode === 'give';
       pick.textContent = st().mode === 'give' ? 'We match the size for you' : q > 0 ? 'Choose EU ' + e : 'EU ' + e + ' is sold out in ' + v.color;
       $$('.sg-t tr[data-eu]').forEach((tr) => tr.classList.toggle('on', +tr.dataset.eu === e));
@@ -482,7 +565,7 @@
     if (fp) { fp.innerHTML = forPanel(p, v); if (!reduce) fp.firstElementChild.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' }); }
     paintRail(); bar(p, v);
   });
-  MX.tap('pxbuy', (t) => { buy(t); });
+  MX.tap('pxbuy', (t) => { if (swiped) return; buy(t); });
   MX.tap('pxsg', () => { sizeSheet(); const x = $('.px-sgx'); if (x) x.focus({ preventScroll: true }); });
   MX.tap('pxsgx', () => { closeSheet(); const b = $('.px-sgb', view); if (b) b.focus({ preventScroll: true }); });
   // the size guide card also closes with the Escape key on a keyboard
@@ -495,6 +578,10 @@
   });
   MX.tap('pxdot', (t, e, d) => { goSlide(+d.pxdot); });
   MX.tap('pxnotes', () => { const el = $('#pxNotes', view); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); });
+  MX.tap('pxwrite', () => { noteForm(prod()); });
+  MX.tap('pxrate', (t, e, d) => { const f = st().fn || (st().fn = { r: 0, c: '' }); f.r = +d.pxrate; $$('[data-pxrate]').forEach((b) => { const k = +b.dataset.pxrate; b.classList.toggle('on', k <= f.r); b.setAttribute('aria-checked', k === f.r); }); });
+  MX.tap('pxcomf', (t, e, d) => { const f = st().fn || (st().fn = { r: 0, c: '' }); f.c = d.pxcomf; $$('[data-pxcomf]').forEach((b) => b.setAttribute('aria-checked', b.dataset.pxcomf === f.c)); });
+  document.addEventListener('submit', (e) => { if (e.target && e.target.id === 'pxNform') { e.preventDefault(); sendNote(); } });
   MX.tap('pxall', () => {
     const s = st(); s.pxAll = !s.pxAll; const el = $('#pxNotes', view); if (!el) return;
     const y = window.scrollY; el.outerHTML = notesSec(prod());

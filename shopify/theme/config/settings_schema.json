@@ -69,7 +69,7 @@
         "type": "text",
         "id": "delivery_days",
         "label": "Delivery time shown",
-        "default": "2 to 5 days"
+        "default": "2 to 4 days"
       },
       {
         "type": "checkbox",

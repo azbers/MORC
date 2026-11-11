@@ -400,7 +400,7 @@
     return latest.concat(own, sets);
   }
   const KIT = {
-    box: '<div class="box3d"><div class="lid"><b>DAUR</b></div><div class="side"></div><div class="side2"></div></div>',
+    box: '<div class="box3d"><div class="lid"><b><svg class="wm" viewBox="0 0 558.4 222.4" fill="currentColor"><use href="#dl-r"/></svg></b></div><div class="side"></div><div class="side2"></div></div>',
     tissue: '<div class="tissue"></div>',
     card: '<div class="mcard"><b>DAUR</b><p>This pair came from the same benches the big labels use. You paid for leather, labour and a fair margin. Nothing else.</p><i>MANIFEST / DROP 01</i></div>',
     hw: '<div class="hw"><div class="dubrae">DAUR</div><div class="ziptag"><div class="strap"></div><div class="plate">DAUR<br>SUPPLY UNIT</div></div></div>'
@@ -484,7 +484,7 @@
       if (k === 1) reels.push({ text: ['Chosen with care.', 'Checked by hand.', 'Finished with our seal.', 'Delivered free to your door.'] });
       if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Aik naya daur.'] });
     });
-    const D = '<svg viewBox="-55 20 234 160" aria-hidden="true"><g transform="skewX(-14)"><path fill="currentColor" d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></svg>';
+    const D = '<svg viewBox="-4 -4 204 141" fill="currentColor" aria-hidden="true"><use href="#dl-d"/></svg>';
     const head = `<span class="fd-av">${D}</span><span class="fd-who"><b>daursupply</b><small>Pakistan</small></span>`;
     document.getElementById('app').innerHTML = `<div class="fd" id="feed">
       <header class="fd-hd"><h1>The Feed</h1><p>New pairs, price cuts and the craft behind them. Double tap a pair to like it.</p></header>

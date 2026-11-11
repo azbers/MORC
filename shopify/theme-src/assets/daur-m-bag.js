@@ -9,7 +9,7 @@
   'use strict';
   const MX = window.DAUR_MX; if (!MX) return;
   const { V, API, C, M, ic, esc, fmt, store, pic, href, view, $, toast, openSheet, closeSheet, buyBar, card, P, W, credits, payPlan,
-    giftUnits, GD, gdOf, lineProps, orderType, DEL, DAUR_ADD, days, GIVE, WA, DMARK, reduce, paintTab, paintTop, asset, root } = MX;
+    giftUnits, GD, gdOf, lineProps, orderType, DEL, DAUR_ADD, REWARDS, PAYFULL, days, GIVE, WA, DMARK, reduce, paintTab, paintTop, asset, root } = MX;
 
   /* ---------- the account buyers pay into ----------
      DUMMY DETAILS FOR TESTING (owner, 9 Nov 2026: "add dummy details and I will update later"). Replace them before the store
@@ -59,7 +59,7 @@
     const cr = credits(t.subtotal), off = cr.use ? cr.use.amt : 0;
     const total = Math.max(0, t.subtotal - off);
     const plan = payPlan(L, total);
-    const delCredit = ships ? DEL : 0;
+    const delCredit = 0;
     const n = (k) => L.filter((x) => x.mode === k).reduce((a, x) => a + x.qty, 0);
     return { t, L, ships, cr, off, total, plan, delCredit, kept: t.sale + off + delCredit, pairs: L.reduce((a, x) => a + x.qty, 0),
       own: L.filter((x) => x.mode === 'me'), gifts: L.filter((x) => x.mode === 'gift'), gives: L.filter((x) => x.mode === 'give'),
@@ -166,6 +166,7 @@
   function nudge(m) {
     const now = m.cr.use ? m.cr.use.amt : 0;
     const nx = m.cr.list.filter((c) => !c.ok && c.amt > now).sort((a, b) => a.need - b.need)[0];
+    if (nx && nx.need <= 6000) { const pc = Math.max(6, Math.min(100, Math.round(m.t.subtotal / nx.min * 100))); return `<a class="xb-nx" href="${href.shop()}" data-m><span class="xb-nx-t"><b>${esc(fmt(nx.need))} away from ${esc(fmt(nx.amt))} off</b><small>Your bag reward comes off by itself once your bag reaches ${esc(fmt(nx.min))}.</small></span>${ic('arrow')}<span class="xb-nx-bar" aria-hidden="true"><i style="width:${pc}%"></i></span></a>`; }
     if (!nx || nx.need > 6000) return '';
     const pc = Math.max(6, Math.min(100, Math.round(m.t.subtotal / nx.min * 100)));
     return `<a class="xb-nx" href="${href.shop()}" data-m><span class="xb-nx-t"><b>${esc(fmt(nx.need))} away from ${esc(fmt(nx.amt))} off</b><small>${esc(nx.code)} comes off by itself once your bag reaches ${esc(fmt(nx.min))}.</small></span>${ic('arrow')}<span class="xb-nx-bar" aria-hidden="true"><i style="width:${pc}%"></i></span></a>`;
@@ -173,13 +174,12 @@
 
   /* ---------- the total: every line adds up, nothing to work out ---------- */
   function summary(m) {
-    const credit = m.off + m.delCredit;
-    const which = [m.off ? (m.cr.use.code === W.code ? 'Welcome credit' : m.cr.use.code) : '', m.delCredit ? (m.off ? 'delivery credit' : 'Delivery credit') : ''].filter(Boolean).join(' and ');
+    const credit = m.off, which = 'Comes off by itself at checkout', pf = m.plan.payOff || 0;
     return `<section class="xb-sum" aria-label="Your total">
       <div class="xb-r"><span>${pl(m.pairs, 'pair', 'pairs')}</span><span>${m.t.sale ? `<s>${esc(fmt(m.t.before))}</s>` : ''}${esc(fmt(m.t.subtotal))}</span></div>
-      ${m.ships ? `<div class="xb-r"><span>Delivery</span><span>${esc(fmt(DEL))}</span></div>` : ''}
-      ${credit ? `<a class="xb-r xb-cr" href="${href.offers}" data-m><span><em>Your credits</em><small>${esc(which)}</small></span><span class="g">&#8722; ${esc(fmt(credit))}</span></a>` : ''}
-      <div class="xb-r xb-tot"><span>Total</span><span>${esc(fmt(m.total))}</span></div>
+      ${credit ? `<a class="xb-r xb-cr" href="${href.offers}" data-m><span><em>Bag reward</em><small>${esc(which)}</small></span><span class="g">&#8722; ${esc(fmt(credit))}</span></a>` : ''}
+      ${pf ? `<div class="xb-r xb-cr"><span><em>Paid in full</em><small>Taken off your transfer</small></span><span class="g">&#8722; ${esc(fmt(pf))}</span></div>` : ''}
+      <div class="xb-r xb-tot"><span>Total</span><span>${esc(fmt(m.total - pf))}</span></div>
     </section>`;
   }
 
@@ -195,11 +195,11 @@
     }
     const what = m.nGift && m.nGive ? 'gifts and philanthropy' : m.nGift ? (m.nGift > 1 ? 'gifts' : 'gift') : 'philanthropy';
     const one = p.ownPairs === 1;
-    const advT = p.full ? 'Cover the ' + what + ' today' : (one ? 'Reserve it with ' : 'Reserve them with ') + fmt(p.adv);
+    const advT = p.full ? 'Cover the ' + what + ' today' : (one ? 'Hold it with ' : 'Hold them with ') + fmt(p.adv);
     const advS = p.full ? 'Your own ' + (one ? 'pair' : 'pairs') + ': ' + fmt(door) + ' at your door' : fmt(door) + (one ? ' when it reaches your door' : ' when they reach your door');
     const opt = (k, t, s, amt) => `<button type="button" class="xb-po" role="radio" data-pay="${k}" aria-checked="${p.choice === k}"><i class="xb-rd" aria-hidden="true"></i><span class="xb-po-t"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="xb-po-a"><b>${esc(fmt(amt))}</b><small>today</small></span></button>`;
     return `<section class="xb-pay"><h2 class="xb-h">How you pay</h2><div class="xb-pos" role="radiogroup" aria-label="How you pay">
-      ${opt('adv', advT, advS, p.adv)}${opt('full', 'Done in one go', 'Nothing to pay at the door', m.total)}</div>${p.full ? '' : `<p class="xb-whyp">You send ${esc(fmt(p.adv))} and we send the whole pair. <button type="button" class="r9-whyl" data-why>Why ${esc(fmt(p.adv))} first?</button></p>`}</section>`;
+      ${opt('adv', advT, advS, p.adv)}${opt('full', 'Pay in full, keep ' + fmt(PAYFULL), 'Nothing to pay at the door', m.total > PAYFULL ? m.total - PAYFULL : m.total)}</div>${p.full ? '' : `<p class="xb-whyp">${esc(fmt(p.adv))} holds your pair in your name. The rest is paid when it reaches you. <button type="button" class="r9-whyl" data-why>How it works</button></p>`}</section>`;
   }
 
   /* ---------- where to send it: the account, copy buttons, and the receipt on WhatsApp ---------- */
@@ -242,7 +242,7 @@
   function bar(m) {
     const b = buyBar(); b.classList.add('on-bag', 'xb-buy');
     b.innerHTML = `${m.kept > 0 ? `<p class="xb-bar-k">${ic('seal')}<span>You keep <b>${esc(fmt(m.kept))}</b> on this order</span></p>` : ''}
-      <button class="xb-go" type="button" data-checkout><span class="xb-go-l">Checkout</span><span class="xb-go-a">${m.plan.door > 0 ? `${esc(fmt(m.plan.now))} <small>today</small>` : esc(fmt(m.total))}</span></button>`;
+      <button class="xb-go" type="button" data-checkout><span class="xb-go-l">Checkout</span><span class="xb-go-a">${m.plan.door > 0 ? `${esc(fmt(m.plan.now))} <small>today</small>` : esc(fmt(m.plan.now))}</span></button>`;
   }
 
   function empty() {
@@ -252,7 +252,7 @@
       <span class="r9-k">${ic('spark')}Your DAUR box</span><h2>Your box is open.</h2>
       <p>${W.code ? 'It is waiting for its first pair, and ' + esc(fmt(W.amt + DEL)) + ' of credit is already inside. The credit only counts once a pair joins it.' : 'It is waiting for its first pair. Choose one and we will hold it here for you.'}</p>
       <a class="r9-go" href="${href.shop()}" data-m>Find my pair${ic('arrow')}</a>
-      <ol class="r9-how"><li><b>1</b><span>Choose a pair and your size.</span></li><li><b>2</b><span>Reserve it with ${esc(fmt(1000))}, which comes off the price.</span></li><li><b>3</b><span>Pay the rest only when it is at your door.</span></li></ol></section>
+      <ol class="r9-how"><li><b>1</b><span>Choose a pair and your size.</span></li><li><b>2</b><span>Hold it in your name with ${esc(fmt(1000))}, which comes off the price.</span></li><li><b>3</b><span>Pay the rest only when it is at your door.</span></li></ol></section>
       ${pick.length ? `<div class="m-row m-pad xb-em-h"><h2 class="m-h2">Start with these</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div><div class="m-grid">${pick.map((p) => card(p, false)).join('')}</div>` : ''}
       ${API.wish.length ? `<a class="gv-out" href="${href.liked}" data-m style="margin-top:22px"><span class="f-i">${ic('heart')}</span><span><b>${pl(API.wish.length, 'liked pair', 'liked pairs')}</b><small>Pick up where you left off</small></span>${ic('arrow')}</a>` : ''}</div>`;
     const b = $('#mBuy'); if (b) b.remove();
@@ -402,9 +402,10 @@
       const nPack = units.filter((u) => packOf(g, u.key)).length;
       const attributes = {
         'Order type': orderType(cart),
-        'Payment plan': plan.choice === 'full' ? 'Full payment now: ' + fmt(m.total) : (plan.full ? 'Gifts and giving paid now: ' : 'Advance now: ') + fmt(plan.now) + '. At the door: ' + fmt(plan.door),
+        'Payment plan': plan.choice === 'full' ? 'Full payment now: ' + fmt(plan.now) : (plan.full ? 'Gifts and giving paid now: ' : 'Advance now: ') + fmt(plan.now) + '. At the door: ' + fmt(plan.door),
         'Pay now': fmt(plan.now), 'Pay at door': plan.door ? fmt(plan.door) : '',
-        'Credits used': [m.cr.use ? m.cr.use.label + ' ' + fmt(m.cr.use.amt) : '', m.ships ? 'Delivery credit ' + fmt(DEL) : ''].filter(Boolean).join(', '),
+        'Bag reward': m.cr.use ? fmt(m.cr.use.amt) + ' off (automatic)' : '',
+        'Paid in full reward': plan.payOff ? fmt(plan.payOff) + ' off: take it off the transfer, expect ' + fmt(plan.now) : '',
         'Slice cause': window.DAUR_SLICE_VOTE ? window.DAUR_SLICE_VOTE() : '',
         'Giving pair': m.nGive ? 'Yes, ' + m.nGive + ' paid in full in advance. Size matched by DAUR. DAUR adds ' + fmt(DAUR_ADD * m.nGive) + '. Message the buyer after the handover' : '',
         Gift: units.length ? 'Yes, ' + units.length + ' paid in full in advance. Details on each line' : '',

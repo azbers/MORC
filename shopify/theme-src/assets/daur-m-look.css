@@ -186,7 +186,7 @@ html.m-on body{color:#252625}
 .dk .wm .u-s{display:none}.dk .wm .u-r{display:inline}
 /* header: the full shoe logo, still (no swapping with the D) */
 .m-logo{min-width:0!important;height:46px}
-.m-logo .lg-w{opacity:1!important;animation:none!important;transform:none!important}
+.m-logo:not(.lg-car) .lg-w{opacity:1!important;animation:none!important;transform:none!important}
 .m-logo .lg-d{display:none!important}
 .m-logo .wm{height:34px!important;width:auto!important;color:#172C27}
 .m-logo small{display:none!important}
@@ -218,3 +218,50 @@ html.m-on body{color:#252625}
 /* the wallet card and the big watermark logos on dark grounds use the bone reverse */
 .r5-bk-wm .wm{height:26px!important;width:auto!important}
 .r9-wm .wm{width:100%;height:auto}
+
+/* ===== Round 2 (owner 2026-11-11): no dashed stitch decorations anywhere. Lines are solid hairlines or nothing. ===== */
+html.m-on{--lk-stitch:linear-gradient(var(--lk-brass),var(--lk-brass))}
+html.m-on #mApp .lk-seam,html.m-on #mApp .lk-eye i,
+html.m-on #mApp .m-row .m-h2::before,html.m-on #mApp .r5-for-h .m-h2::before,html.m-on #mApp .px-h::before,
+html.m-on #mApp :is(.m-card,.m-tile)::after,html.m-on #mApp .m-tick::before,html.m-on #mApp .m-tick::after{display:none!important}
+html.m-on #mApp .xb-tot{background:none!important;border-top:1px solid var(--lk-line,#EBE2CD)!important}
+html.m-on #mApp .lk-hero::after,html.m-on #mApp .pg-hero.r5-hero::after,html.m-on #mApp .v-liked .m-empty::before{border-style:solid;border-width:1px}
+html.m-on #mApp .lk-ring{border-style:solid;border-width:1px}
+html.m-on #mApp .lk-tag em,html.m-on #mApp .lk-facts{border-top-style:solid;border-top-width:1px}
+html.m-on #mApp .lk-btn::after{display:none}
+html.m-on #mApp .of-r{border-left-style:solid;border-left-width:1px}
+html.m-on #mApp .dv-code,html.m-on #mApp .of-code{border-style:solid}
+html.m-on #mApp .px-h{padding-top:0}
+
+/* ===== Round 2: header logo carousel. The shoe logo and the DAUR SUPPLY name slide in turn. ===== */
+html.m-on #mApp .m-logo.lg-car{display:inline-grid;overflow:hidden;width:132px;height:46px;justify-items:center;align-items:center}
+html.m-on #mApp .m-logo.lg-car>span{grid-area:1/1}
+html.m-on #mApp .m-logo.lg-car .lg-t{display:inline-flex;flex-direction:column;align-items:center;gap:3px;color:#172C27;opacity:0;transform:translateX(100%)}
+html.m-on #mApp .m-logo.lg-car .lg-t b{font-family:"DAUR Cond","Outfit",system-ui,sans-serif;font-weight:700;font-size:23px;letter-spacing:.2em;line-height:1;margin-right:-.2em}
+html.m-on #mApp .m-logo.lg-car .lg-t small{display:block!important;font-size:9px;font-weight:600;letter-spacing:.62em;line-height:1;margin-right:-.62em;color:#A58A64}
+@media (prefers-reduced-motion:no-preference){
+  html.m-on #mApp .m-logo.lg-car:not(.still) .lg-w{animation:lg-a 10s cubic-bezier(.65,0,.35,1) infinite!important}
+  html.m-on #mApp .m-logo.lg-car:not(.still) .lg-t{animation:lg-b 10s cubic-bezier(.65,0,.35,1) infinite}
+}
+@keyframes lg-a{0%,44%{opacity:1;transform:none}50%,94%{opacity:0;transform:translateX(-100%)}94.01%{opacity:0;transform:translateX(100%)}100%{opacity:1;transform:none}}
+@keyframes lg-b{0%,44%{opacity:0;transform:translateX(100%)}50%,94%{opacity:1;transform:none}100%{opacity:0;transform:translateX(-100%)}}
+
+/* ===== Round 2: Shop page search icon, sticky sort and filters ===== */
+html.m-on #mApp .sh-hd{align-items:center}
+html.m-on #mApp .sh-hd>span{display:flex;align-items:baseline;gap:10px}
+html.m-on #mApp .sh-sb{flex-shrink:0}
+html.m-on #mApp .sh-sb[aria-expanded=true]{background:#172C27;color:#F1EBDD}
+html.m-on #mApp .m-search.sh-hide{display:none}
+html.m-on #mApp .sh-sen{display:block;height:1px}
+html.m-on #mApp .sh-stick{position:sticky;top:64px;z-index:30;background:#fff;padding:8px 0 4px;transition:box-shadow .2s}
+html.m-on #mApp .sh-stick.on{box-shadow:0 8px 16px -12px rgba(23,44,39,.45)}
+html.m-on #mApp .sh-stick .m-tools{margin-top:0}
+
+/* ===== Round 2: gift and philanthropy boxes in the brand card look (forest box, bone shoe logo), Philanthropy page in the Gifts style ===== */
+html.m-on #mApp .r7-base{background:linear-gradient(180deg,#1E3832,#172C27)}
+html.m-on #mApp .r7-lid{background:linear-gradient(180deg,#22403A,#172C27)}
+html.m-on #mApp .gv2-wm{position:absolute;left:12px;bottom:9px;width:62px;color:#F1EBDD;line-height:0}
+html.m-on #mApp .gv2-wm .wm{width:100%;height:auto}
+html.m-on #mApp .m-gv2 .r6-gk{color:#6B7550}
+html.m-on #mApp .m-gv2 .r6-gift{background:#172C27;color:#F1EBDD}
+html.m-on #mApp .m-gv2 .r7-card em{font-size:12px}

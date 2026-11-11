@@ -30,7 +30,7 @@
   C.advance.plan = (own, covered, total) => { const now = covered ? Math.min(total, covered) : Math.min(total, own > 1 ? C.advance.more : C.advance.one); return { now: own ? now : total, door: own ? Math.max(0, total - now) : 0, covered: covered > 0, onlyCovered: !own }; };
   // free delivery when every order sends a deposit first: 'all' (every order), 'full' (full advance payment only) or 'none'
   C.advance.free = ['all', 'full', 'none'].includes(C.advance.free) ? C.advance.free : 'all';
-  C.advance.freeText = () => C.advance.free === 'all' ? 'Your Rs. 200 delivery credit covers delivery on every order.' : C.advance.free === 'full' ? 'Delivery is free when you pay the full amount in advance. Otherwise one flat fee of ' + fmt(C.delivery.fee) + ', free on ' + C.freeDeliveryPairs + ' pairs or more.' : 'Delivery is one flat fee of ' + fmt(C.delivery.fee) + ' for any city, free on ' + C.freeDeliveryPairs + ' pairs or more.';
+  C.advance.freeText = () => 'Bag rewards come off by themselves: Rs. 200 off from Rs. 5,500, Rs. 400 off from Rs. 9,000, and Rs. 100 more off when you pay in full.';
   C.advance.deposits = () => C.advance.on && C.advance.required;
   C.advance.freeAll = () => C.advance.deposits() && C.advance.free === 'all';
   C.advance.tierText = () => fmt(C.advance.one) + ' on any order of pairs for yourself, whatever the total. Gifts and Philanthropy pairs are covered in full when you order.';
@@ -44,7 +44,7 @@
     if (st.lowStockAt != null) C.lowStockAt = +st.lowStockAt;
     if (st.freeDeliveryPairs != null) C.freeDeliveryPairs = +st.freeDeliveryPairs;
     if (st.deliveryFee != null) C.delivery.fee = +st.deliveryFee;
-    if (st.deliveryDays) C.delivery.days = st.deliveryDays;
+    if (st.deliveryDays) C.delivery.days = String(st.deliveryDays).replace(/2 to 5/, '2 to 4');
     C.announce = st.announce || '';
     C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, st.followUp || {});
     const cps = JSON.parse(localStorage.getItem('daur.coupons') || 'null');
@@ -208,9 +208,11 @@
       else if (subtotal < (cp.min || 0)) couponErr = 'This code needs a subtotal of ' + fmt(cp.min) + '.';
       else discount = cp.type === 'percent' ? Math.round(base * cp.value / 100) : Math.min(cp.value, base);
     }
+    // bag rewards (owner 2026-11-11): Rs 200 off from Rs 5,500, Rs 400 off from Rs 9,000, taken by Shopify as automatic discounts
+    if (!discount && !couponErr) { const rw = subtotal >= 9000 ? 400 : subtotal >= 5500 ? 200 : 0; if (rw) { discount = rw; cp = { label: 'Bag reward', reward: true }; } }
     const n = pairs();
-    const free = n >= C.freeDeliveryPairs || (C.advance.deposits() && C.advance.free === 'all');
-    const delivery = !n || free ? 0 : C.delivery.fee; // one flat fee for all of Pakistan
+    const free = true;
+    const delivery = 0; // delivery is part of the price; it is never shown as a fee
     const total = subtotal - discount + (delivery || 0);
     const retail = n * C.marketRetail;
     // what the buyer keeps: only money that really stays in their pocket (sale cut, code, delivery we carry)
@@ -269,7 +271,7 @@
       <g class="ba-eye"><circle cx="97" cy="154" r="1.9"/><circle cx="123" cy="154" r="1.9"/><circle cx="97" cy="166" r="1.9"/><circle cx="123" cy="166" r="1.9"/><circle cx="97" cy="178" r="1.9"/><circle cx="123" cy="178" r="1.9"/><circle cx="97" cy="190" r="1.9"/><circle cx="123" cy="190" r="1.9"/></g>
       <path d="M88 224 Q 110 240 132 224"/>
     </g>
-    <g class="ba-d" transform="translate(101 268) scale(.085)"><g transform="skewX(-14)"><path d="M20,20 H104 A80,80 0 0 1 104,180 H-10 V144 H104 A44,44 0 0 0 104,56 H56 V128 H20 Z"/></g></g>
+    <svg class="ba-d" x="100" y="268" width="20" height="14" viewBox="-4 -4 204 141"><use href="#dl-d"/></svg>
   </g><ellipse class="ba-shadow" cx="114" cy="294" rx="78" ry="4"/></svg>`;
   // a loaf seen from the side; the last slice is its own piece so the cut can lift it away
   let loafN = 0;
@@ -338,7 +340,7 @@
     if (!/DAUR Supply/.test(title)) title += ' | DAUR Supply';
     document.title = title;
     // with Cash on Delivery switched off, page descriptions speak of the delivery instead
-    if (C.advance.required && desc) { const fd = C.advance.freeAll() ? 'free delivery' : 'delivery'; desc = String(desc).replace(/Cash on Delivery to every city, free delivery on 2 pairs/g, fd[0].toUpperCase() + fd.slice(1) + ' to every city').replace(/, free delivery on 2 pairs/g, '').replace(/\b(with|and) Cash on Delivery/g, '$1 ' + fd).replace(/Cash on Delivery checkout/g, 'Checkout').replace(/Cash on Delivery/g, fd[0].toUpperCase() + fd.slice(1)); }
+    if (C.advance.required && desc) { const fd = 'delivery'; desc = String(desc).replace(/Cash on Delivery to every city, free delivery on 2 pairs/g, fd[0].toUpperCase() + fd.slice(1) + ' to every city').replace(/, free delivery on 2 pairs/g, '').replace(/\b(with|and) Cash on Delivery/g, '$1 ' + fd).replace(/Cash on Delivery checkout/g, 'Checkout').replace(/Cash on Delivery/g, fd[0].toUpperCase() + fd.slice(1)); }
     let m = $('meta[name="description"]');
     if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
     m.content = desc;
@@ -363,12 +365,12 @@
     const A = C.advance || {}, ex = C.exchangeDays || 5;
     // the founder's name leads the bar, so a visitor knows from the first second who stands behind the store
     const list = [{ t: 'From Azar, the founder of DAUR Supply', d: 'DAUR Supply was founded by Azar. Every order is confirmed by a real person on WhatsApp at 0319 9628735 before it leaves Islamabad.', l: link('manifesto'), c: 'Our story' }].concat(C.announce ? [{ t: C.announce, d: '', l: '' }] : []);
-    if (A.on && A.required) list.push({ t: A.free === 'all' ? 'Rs. 200 delivery credit on every order' : 'Your pair, reserved for you', d: (A.free === 'all' ? 'Your delivery credit covers every order, to any city we deliver to. ' : '') + 'A small ' + A.care + ' confirms your order and counts towards your price: ' + A.tierText() + ' You pay the rest when your pair arrives.', l: link('policies', 'advance'), c: 'How it works' });
-    else if (A.on) list.push({ t: 'Free delivery when you pay in advance', d: 'Pay the full amount in advance, or a ' + A.care + ' of ' + fmt(A.deposit) + ' or more, and delivery is free to any city in Pakistan. The deposit comes off what you pay the rider.' + (A.code ? ' Enter code ' + A.code + ' at checkout and send us your payment receipt on WhatsApp.' : ''), l: link('policies', 'advance'), c: 'How it works' });
+    if (A.on && A.required) list.push({ t: 'Your pair, held in your name', d: 'Rs. 1,000 takes your size off the shelf and puts it in a box with your name on it. It comes off your price, and you pay the rest when the pair is in your hands.', l: link('policies', 'advance'), c: 'How it works' });
+
     if (C.delivery.days) list.push({ t: 'On its way within 24 hours', d: 'Once your order is confirmed, your pair leaves Islamabad within 24 hours on working days. Most cities receive it in ' + C.delivery.days + '; remote areas and public holidays can take a little longer.', l: link('policies', 'shipping'), c: 'Shipping policy' });
     try { liveOffers().filter((o) => o.code).forEach((o) => list.push({ t: 'Code ' + o.code + ': ' + o.title, d: o.details || '', l: link('offers'), c: 'See all offers' })); } catch (e) { /* no offers */ }
     if (!A.required) list.push({ t: 'Cash on Delivery across Pakistan', d: 'Prefer to pay at the door? Pay the rider when the box is in your hands. No card needed.', l: link('contract', 'cod'), c: 'Our promise' });
-    if (!A.freeAll()) list.push({ t: 'Free delivery on ' + C.freeDeliveryPairs + ' pairs or more', d: 'Order ' + C.freeDeliveryPairs + ' pairs or more and delivery is free to any city. Otherwise one flat fee of ' + fmt(C.delivery.fee) + '. One saving applies per order.', l: link('shop'), c: 'Shop all' });
+    list.push({ t: 'Bag rewards, no code needed', d: 'Bag rewards come off by themselves: Rs. 200 off from Rs. 5,500, Rs. 400 off from Rs. 9,000, and Rs. 100 more off when you pay in full.', l: link('shop'), c: 'Shop all' });
     list.push({ t: 'Five days to find the right fit', d: 'If the size is not quite right, message us within ' + ex + ' days of delivery and we will guide you through the exchange. Size exchanges apply to full price pairs that are unworn, boxed and still sealed.', l: link('policies', 'exchange'), c: 'Exchange policy' });
     return list;
   }
@@ -377,7 +379,7 @@
     const NOTES = notices();
     const tbRun = NOTES.map((n, i) => `<span class="tb-msg${i ? '' : ' on'}">${esc(n.t)}</span>`).join('');
     const WORDMARK = '<svg class="wm" viewBox="0 0 558.4 222.4" fill="currentColor" aria-hidden="true"><use class="u-s" href="#dl-s"/><use class="u-r" href="#dl-r"/></svg>';
-    const LOGO = `<a class="logo" href="${link('home')}" aria-label="DAUR Supply home"><span class="lg-w">${WORDMARK}<small>SUPPLY</small></span></a>`;
+    const LOGO = `<a class="logo lg-car" href="${link('home')}" aria-label="DAUR Supply home"><span class="lg-w">${WORDMARK}<small>SUPPLY</small></span><span class="lg-t" aria-hidden="true"><b>DAUR</b><small>SUPPLY</small></span></a>`;
     // the black bar already carries the delivery offers, so the grey strip points to the gift guide instead of repeating them
     const strip = ['Gift guide: shoes for the men in your life', link('gifts')];
     // the page holds the header's room from the first paint (.hdr-ph), so nothing moves when the header arrives
@@ -582,7 +584,7 @@
     }).join('')}</ol></div>`;
   }
   function freeMeter(n) {
-    if (C.advance.freeAll()) return `<div class="free-meter"><span class="mono"><span class="volt">Your Rs. 200 delivery credit covers delivery on every order</span></span></div>`;
+    if (C.advance.freeAll()) return `<div class="free-meter"><span class="mono"><span class="volt">Rs. 200 off from Rs. 5,500 · Rs. 400 off from Rs. 9,000 · Rs. 100 more for paying in full</span></span></div>`;
     const need = Math.max(0, C.freeDeliveryPairs - n);
     const fee = C.delivery.fee || 0;
     return `<div class="free-meter"><span class="mono">${need ? `Add ${need} more pair${need > 1 ? 's' : ''} and delivery is on us${fee ? `: you keep ${fmt(fee)}` : ''}` : `<span class="volt">Delivery is on us${fee ? `. You keep ${fmt(fee)}` : ''}</span>`}</span><div class="minibar"><i class="v" style="width:${Math.min(100, n / C.freeDeliveryPairs * 100)}%"></i></div></div>`;
@@ -641,7 +643,7 @@
     return `<div class="bag-empty${compact ? ' compact' : ''}">
       <div class="be-top"><div class="be-art">${BAG_ART}</div>
         <div class="be-t"><h${compact ? 2 : 1} class="be-h">Your bag is waiting.</h${compact ? 2 : 1}>
-        <p class="be-p">Find a pair you will reach for every day. It arrives in ${esc(C.delivery.days || '2 to 5 days')}${C.advance.freeAll() ? ', with delivery covered by your delivery credit' : ''}.</p>
+        <p class="be-p">Find a pair you will reach for every day. It arrives in ${esc(C.delivery.days || '2 to 4 days')}.</p>
         <div class="be-cta"><a class="btn volt" href="${link('shop')}">Shop all pairs <span class="arr">&rarr;</span></a>${wish.length ? `<a class="btn ghost" href="${link('wishlist')}">Liked pairs (${wish.length})</a>` : `<a class="btn ghost" href="${link('gifts')}">Shop gifts</a>`}</div></div></div>
       <div class="be-picks"><div class="x-hrow"><h2 class="x-h">Our picks for you</h2><a class="u-link" href="${link('shop')}">See all</a></div>
         <div class="grid be-grid">${picks(compact ? 4 : 4).map((p, i) => card(p, i)).join('')}</div></div>
@@ -710,7 +712,7 @@
     all: { e: 'The guide', h: (ONE === 'Men' ? 'Men\'s' : 'Leather') + ' shoes, crafted in Pakistan.', b: [
       ['', 'DAUR Supply is for men who notice the details. The collection brings together leather sneakers and joggers for every day, formal shoes and chelsea boots for the moments that matter, and casual slip ons that move easily between the two. Every pair is checked by hand before it receives the DAUR seal.'],
       ['How to choose', 'For daily wear with jeans or chinos, start with a court low or a trainer. For the office, a wedding or a shalwar kameez, a black derby or a chelsea boot carries the look. For long days on your feet, a moc toe runner gives you leather with a cushioned sole.'],
-      ['Sizes, delivery and payment', () => `Pairs run from ${sizeSpan()}. Measure your foot from heel to toe and match it to the size guide; between sizes, the larger one is usually more comfortable. ${C.advance.freeAll() ? 'Your delivery credit covers delivery to every city in Pakistan' : 'We deliver to every city in Pakistan'}, your pair is dispatched within 24 hours of confirmation, and full price pairs can be exchanged for size within 5 days.`]],
+      ['Sizes, delivery and payment', () => `Pairs run from ${sizeSpan()}. Measure your foot from heel to toe and match it to the size guide; between sizes, the larger one is usually more comfortable. We deliver to every city in Pakistan, your pair is dispatched within 24 hours of confirmation, and full price pairs can be exchanged for size within 5 days.`]],
       faq: [['Which shoes go best with shalwar kameez?', 'A black or dark brown leather pair keeps it sharp: a chelsea boot or a derby for formal days and weddings, a slip on for Fridays and family visits. A shoe darker than the kameez always looks considered.'],
         ['What is the difference between sneakers and joggers?', 'In Pakistan, joggers usually means sporty sneakers. Our sneakers range covers clean leather court lows for everyday style and lighter trainers for walking and travel.']] },
     sneakers: { e: 'Sneaker guide', h: 'Sneakers and joggers for men.', b: [
@@ -731,7 +733,7 @@
     sale: { e: 'About the sale', h: 'Men\'s shoes on sale.', b: [
       ['', 'These are reduced prices on current pairs, with the original price shown beside the new one. Sale pairs carry the same checks, the same DAUR seal and the same 30 day defect cover as the rest of the collection. They are offered at their marked price, so size exchanges are not available; our size guide and WhatsApp team will help you choose with confidence.']],
       faq: [['How long does the sale last?', 'Sale prices hold while sizes last. A sold out size is marked sold out on every page.']] },
-    new: { e: 'New in', h: 'New arrivals for men.', b: [['', 'The newest pairs to receive the DAUR seal, latest first, each delivered to every city in Pakistan on your delivery credit.']] }
+    new: { e: 'New in', h: 'New arrivals for men.', b: [['', 'The newest pairs to receive the DAUR seal, latest first, each at your door in 2 to 4 days, in any city in Pakistan.']] }
   };
   GUIDE.men = GUIDE.all;
   function guide(g) {
@@ -815,7 +817,7 @@
   const V = {};
 
   V.home = function () {
-    setMeta(ONE === 'Men' ? 'Men\'s Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply' : 'Leather Shoes & Sneakers Online in Pakistan | DAUR Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers, chelsea boots and casual shoes' : 'Leather shoes and sneakers') + ' from workshops in Lahore, Sialkot and Kasur, checked pair by pair by DAUR Supply. Cash on Delivery across Pakistan, delivery in ' + (C.delivery.days || '2 to 5 days') + ', 5 day size exchange.', [
+    setMeta(ONE === 'Men' ? 'Men\'s Shoes Online in Pakistan | Leather Shoes & Sneakers | DAUR Supply' : 'Leather Shoes & Sneakers Online in Pakistan | DAUR Supply', (ONE === 'Men' ? 'Men\'s leather shoes, sneakers, chelsea boots and casual shoes' : 'Leather shoes and sneakers') + ' from workshops in Lahore, Sialkot and Kasur, checked pair by pair by DAUR Supply. Cash on Delivery across Pakistan, delivery in ' + (C.delivery.days || '2 to 4 days') + ', 5 day size exchange.', [
       { '@context': 'https://schema.org', '@type': 'OnlineStore', name: 'DAUR Supply', alternateName: 'DAUR', url: C.domain, description: 'Pakistani footwear brand for men: leather shoes, sneakers and chelsea boots, chosen at workshops in Lahore, Sialkot and Kasur, checked by hand and delivered across Pakistan.', areaServed: { '@type': 'Country', name: 'Pakistan' } }]);
     const hero = prod('moc-runner-v1') || P[0], hv = hero.variants[0];
     const drop = P.filter((p) => p.audience === (ONE || 'Men')).slice(0, 8);
@@ -882,7 +884,7 @@
     <section class="x-seo"><div class="wrap">
       <h2>${ONE === 'Men' ? 'Men\'s shoes' : 'Shoes'}, crafted in Pakistan</h2>
       <p>DAUR Supply is a Pakistani footwear brand${ONE === 'Men' ? ' for men' : ''}. We select leather sneakers, formal shoes, chelsea boots and casual slip ons from workshops in Lahore, Sialkot and Kasur, check every pair by hand and finish it with our signature details: matte cotton laces, an engraved metal lace tag and the Supply Unit seal.</p>
-      <p>${C.advance.freeAll() ? 'Your delivery credit covers delivery to' : 'We deliver to'} Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. ${C.advance.required ? 'An advance of ' + fmt(C.advance.one) + ' reserves your pair and the rest is paid on arrival. ' : ''}We dispatch within 24 hours of confirmation, delivery usually takes ${esc(C.delivery.days || '2 to 5 days')}, and full price pairs can be exchanged for size within ${C.exchangeDays || 5} days.</p>
+      <p>We deliver to Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta and every other city our couriers reach. ${C.advance.required ? 'An advance of ' + fmt(C.advance.one) + ' reserves your pair and the rest is paid on arrival. ' : ''}We dispatch within 24 hours of confirmation, delivery usually takes ${esc(C.delivery.days || '2 to 4 days')}, and full price pairs can be exchanged for size within ${C.exchangeDays || 5} days.</p>
     </div></section>`;
     // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -972,7 +974,7 @@
   V.gifts = function () {
     setMeta('Gifts for Men: Leather Shoes and Sneakers | DAUR Supply', 'Gift guide for the men in your life: leather shoes, sneakers and casual pairs from DAUR Supply, gift packing on request, your own note in the box and delivery across Pakistan.');
     app.dataset.full = '1';
-    app.innerHTML = `<section class="phero x-phero"><div class="wrap"><h1>Gifts</h1><p class="aside">For your son, your husband, your father, your brother, your friend. A pair he will wear for years says more than anything wrapped in a shop bag. Choose it, and we bring it to his door in ${esc(C.delivery.days || '2 to 5 days')}.</p></div></section>
+    app.innerHTML = `<section class="phero x-phero"><div class="wrap"><h1>Gifts</h1><p class="aside">For your son, your husband, your father, your brother, your friend. A pair he will wear for years says more than anything wrapped in a shop bag. Choose it, and we bring it to his door in ${esc(C.delivery.days || '2 to 4 days')}.</p></div></section>
       ${giftServe()}
       ${giftBlock(true)}
       ${giveSection()}
@@ -1056,7 +1058,7 @@
     <path d="M106 20C112 26 118 30 132 35" fill="none" stroke="#A2865E" stroke-width="2"/>
     <path d="M100 30l10 4M97 36l12 4M94 42l12 4" stroke="#F1EBDD" stroke-width="2" stroke-linecap="round"/>
     <path d="M22 54C40 48 70 48 92 54" fill="none" stroke="#F1EBDD" stroke-opacity=".35" stroke-dasharray="3 3"/>
-    <text x="30" y="47" fill="#F1EBDD" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" letter-spacing="1">DAUR</text>
+    <svg x="28" y="34" width="40" height="16" viewBox="0 0 558.4 222.4" fill="#F1EBDD"><use href="#dl-r"/></svg>
     <rect x="8" y="64" width="154" height="9" rx="4.5" fill="#F1EBDD" stroke="#172C27" stroke-width="1.4"/>
     <g class="van-wheel" style="transform-origin:42px 76px"><circle cx="42" cy="76" r="10" fill="#101716"/><circle cx="42" cy="76" r="4" fill="#B39873"/><path d="M42 67v18M33 76h18" stroke="#1F332E" stroke-width="2"/></g>
     <g class="van-wheel" style="transform-origin:130px 76px"><circle cx="130" cy="76" r="10" fill="#101716"/><circle cx="130" cy="76" r="4" fill="#B39873"/><path d="M130 67v18M121 76h18" stroke="#1F332E" stroke-width="2"/></g>
@@ -1107,8 +1109,8 @@
   const CONTRACT = [
     ['Dispatch', 'Within 24 hours', 'We call or WhatsApp to confirm every COD order, then hand it to the courier within 24 hours.'],
     ['Delivery', 'All of Pakistan', 'Every city and town the courier reaches, in ' + C.delivery.days + ' after dispatch.'],
-    C.advance.deposits() ? ['Payment', 'Deposit, then delivery', 'An advance by bank transfer reserves your order: ' + C.advance.tierText() + ' The rest is paid to the rider.'] : ['Payment', 'Cash on Delivery', 'Pay the rider when the box arrives. No card needed.' + (C.advance.on ? ' Or pay in advance, in full or as a ' + C.advance.care + ', and delivery is free.' : '')],
-    C.advance.deposits() && C.advance.free === 'all' ? ['Delivery', 'Covered', 'A Rs. 200 delivery credit covers every order, to every city.'] : ['Delivery fee', fmt(C.delivery.fee) + ', or free', 'One flat fee for every city. Free on ' + C.freeDeliveryPairs + ' pairs or more' + (C.advance.on && C.advance.free !== 'none' ? ', or when you pay in full in advance.' : '.')],
+    C.advance.deposits() ? ['Payment', 'Held in your name', 'An advance by bank transfer reserves your order: ' + C.advance.tierText() + ' The rest is paid to the rider.'] : ['Payment', 'Cash on Delivery', 'Pay the rider when the box arrives. No card needed.' + (C.advance.on ? ' Or pay in advance, in full or as a ' + C.advance.care + ', and delivery is free.' : '')],
+    C.advance.deposits() && C.advance.free === 'all' ? ['Delivery', 'Covered', 'At your door in 2 to 4 days, in every city.'] : ['Delivery fee', fmt(C.delivery.fee) + ', or free', 'One flat fee for every city. Free on ' + C.freeDeliveryPairs + ' pairs or more' + (C.advance.on && C.advance.free !== 'none' ? ', or when you pay in full in advance.' : '.')],
     ['Exchange', '5 days, unworn', 'Wrong size? Send it back unworn with the seal attached and we swap it once it reaches us. Sale pairs are final for size.'],
     ['Defects', '30 days', 'Stitching or sole failure in normal wear within 30 days and we replace the pair or refund it. No argument.']
   ];
@@ -1127,14 +1129,14 @@
     const from = isFinite(fromP) ? ' From ' + fmt(fromP) + '.' : '';
     // titles follow how Pakistani shoppers search: product type, "for men", "price in Pakistan"
     const SEO = {
-      Men: ['Shoes for Men in Pakistan | Leather Shoes, Sneakers & Boots', `Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan.${from} Cash on Delivery to every city, free delivery on 2 pairs.`],
-      Women: ["Women's Sneakers & Leather Shoes in Pakistan", `Women's sneakers and leather shoes, crafted in Pakistan.${from} Cash on Delivery to every city, free delivery on 2 pairs.`],
+      Men: ['Shoes for Men in Pakistan | Leather Shoes, Sneakers & Boots', `Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan.${from} At your door in 2 to 4 days, in any city in Pakistan.`],
+      Women: ["Women's Sneakers & Leather Shoes in Pakistan", `Women's sneakers and leather shoes, crafted in Pakistan.${from} At your door in 2 to 4 days, in any city in Pakistan.`],
       Kids: ['Kids Shoes Online in Pakistan', `Kids and baby leather shoes and sneakers, crafted in Pakistan.${from} Cash on Delivery to every city.`],
       Sale: ["Men's Shoes Sale in Pakistan | Leather Shoes & Sneakers", 'Real price cuts on leather shoes and sneakers. Same checks, same DAUR seal, Cash on Delivery to every city in Pakistan.'],
       'New in': [ONE === 'Men' ? "New Arrivals | Men's Shoes in Pakistan" : "New Arrivals | Men's & Women's Shoes in Pakistan", 'The newest leather shoes and sneakers from DAUR Supply, with Cash on Delivery across Pakistan.'],
       'All drops': ['Leather Shoes & Sneakers Online in Pakistan', `Leather shoes and sneakers, crafted in Pakistan.${from} Filter by style, size, colour and price. Cash on Delivery to every city.`],
-      'All men': ['Shoes for Men in Pakistan | Leather Shoes, Sneakers & Boots', `Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan.${from} Cash on Delivery to every city, free delivery on 2 pairs.`],
-      Sneakers: ['Sneakers & Joggers for Men Price in Pakistan', `Men's leather sneakers, trainers and high tops, crafted in Pakistan.${from} Cash on Delivery to every city, free delivery on 2 pairs.`],
+      'All men': ['Shoes for Men in Pakistan | Leather Shoes, Sneakers & Boots', `Men's leather shoes, sneakers, chelsea boots and casual shoes, crafted in Pakistan.${from} At your door in 2 to 4 days, in any city in Pakistan.`],
+      Sneakers: ['Sneakers & Joggers for Men Price in Pakistan', `Men's leather sneakers, trainers and high tops, crafted in Pakistan.${from} At your door in 2 to 4 days, in any city in Pakistan.`],
       'Leather shoes': ['Leather Formal Shoes & Chelsea Boots for Men in Pakistan', `Full grain leather derby shoes and chelsea boots for men, for the office, weddings and shalwar kameez.${from} Cash on Delivery across Pakistan.`],
       Casual: ['Casual Shoes for Men Price in Pakistan | Leather Slip Ons', `Men's casual leather shoes: moc toe runners and slip ons for jeans, chinos and shalwar kameez.${from} Cash on Delivery to every city.`]
     }[title] || [title + ' | Shoes in Pakistan', 'Shoes crafted in Pakistan, with Cash on Delivery to every city.'];
@@ -1145,7 +1147,7 @@
     const set = P.filter((p) => (!pre.aud || p.audience === pre.aud) && (!pre.cat || p.category === pre.cat) && (!pre.sale || anySale(p)));
     const vs = set.flatMap((p) => p.variants.filter((v) => !pre.sale || onSale(v)).map((v) => [p, v]));
     const HERO = {
-      all: [ONE === 'Men' ? 'Drop 01 / every men\'s pair' : 'Drop 01 / every pair', 'Thoughtfully selected men\'s shoes, finished with DAUR details.' + (C.advance.freeAll() ? ' Delivery across Pakistan, covered by your Rs. 200 delivery credit.' : C.advance.required ? '' : ' Pay when it is in your hands.')],
+      all: [ONE === 'Men' ? 'Drop 01 / every men\'s pair' : 'Drop 01 / every pair', 'Thoughtfully selected men\'s shoes, finished with DAUR details.' + (C.advance.freeAll() ? ' Delivery across Pakistan, at your door in 2 to 4 days.' : C.advance.required ? '' : ' Pay when it is in your hands.')],
       sneakers: ['Style 01 / Sneakers', 'For long city days, late chai with friends and everything between.'],
       leather: ['Style 02 / Leather shoes', 'For the day you stand up at a wedding, the first day of a new job, the photo that stays on the wall.'],
       hybrids: ['Style 03 / Casual', 'Jummah, a family lunch, a long drive. One easy pair for all of it.'],
@@ -1174,7 +1176,7 @@
       <section><div class="wrap">
         <div class="toolbar">
           ${ONE ? `<div class="filters" id="fAud">${['All'].concat(CATS).map((c) => `<button class="fbtn" data-cat="${c}" aria-pressed="${F.cat === c}">${c === 'All' ? 'All' : lineName(c)}</button>`).join('')}</div>` : `<div class="filters" id="fAud">${['All'].concat(C.audiences).map((a) => `<button class="fbtn" data-aud="${a}" aria-pressed="${F.aud === a}">${a}</button>`).join('')}</div>`}
-          <div class="tool-r"><button class="fbtn" id="fToggle" aria-expanded="false" aria-controls="fpanel">${ic('sliders')}Filters <span id="fN"></span></button>
+          <div class="tool-r"><button class="fbtn fsrch" id="fSearch" type="button" aria-label="Search pairs">${ic('search')}</button><button class="fbtn" id="fToggle" aria-expanded="false" aria-controls="fpanel">${ic('sliders')}Filters <span id="fN"></span></button>
             <label class="sr" for="sort" style="position:absolute;left:-999px">Sort</label><select class="select" id="sort">
             ${[['featured', 'Featured'], ['new', 'Newest'], ['low', 'Price, low to high'], ['high', 'Price, high to low'], ['saving', 'Biggest saving']].map(([v, t]) => `<option value="${v}" ${F.sort === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
             <button class="fbtn fview" id="fView" type="button" aria-pressed="${gridOne()}" aria-label="One pair per row with sizes"><svg viewBox="0 0 20 20" aria-hidden="true"><g class="v2"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></g><g class="v1"><rect x="2" y="2" width="16" height="9" rx="1.5"/><path d="M2 14.5h16M2 17.5h10"/></g></svg></button></div>
@@ -1286,6 +1288,7 @@
       if (s) { $('#fpanel').scrollTop = 0; $('#fClose').focus({ preventScroll: true }); } else if (!o && sheet()) $('#fToggle').focus({ preventScroll: true });
     };
     $('#fToggle').addEventListener('click', () => setOpen(!$('#fpanel').classList.contains('open')));
+    $('#fSearch').addEventListener('click', () => { if (!$('#fpanel').classList.contains('open')) setOpen(true); setTimeout(() => { const q = $('#fq'); if (q) q.focus(); }, 60); });
     $('#fClose').addEventListener('click', () => setOpen(false));
     $('#fDone').addEventListener('click', () => { setOpen(false); const r = $('#results'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ block: 'start' }); });
     $('#fScrim').addEventListener('click', () => setOpen(false));
@@ -1357,14 +1360,14 @@
           <div class="buy-actions"><div class="qty"><button id="qm" aria-label="Decrease quantity">&minus;</button><output id="qv">${qty}</output><button id="qp" aria-label="Increase quantity">+</button></div>
             <button class="btn volt pill-add" id="add">${ic('bag')}<span>${size ? 'Add to bag, ' + fmt(v.price * qty) : 'Select a size'}</span></button>
             <button class="btn ghost block" id="buyNow">${C.advance.required ? 'Buy now' : 'Buy now, pay on delivery'}</button></div>
-          ${C.advance.deposits() ? `<p class="pdp-pay">${C.advance.freeAll() ? 'Delivery across Pakistan, covered by your Rs. 200 delivery credit. ' : ''}${fmt(C.advance.one)} now reserves this pair, and the rest is paid at your door. It is part of the price, never an extra.</p>` : ''}
+          ${C.advance.deposits() ? `<p class="pdp-pay">${C.advance.freeAll() ? 'Delivery across Pakistan, at your door in 2 to 4 days. ' : ''}${fmt(C.advance.one)} now reserves this pair, and the rest is paid at your door. It is part of the price, never an extra.</p>` : ''}
           <div class="pdp-acts"><button class="act" data-wish="${p.id}" aria-pressed="${wish.includes(p.id)}" id="wishB">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}<span>${wish.includes(p.id) ? 'Liked' : 'Like'}</span></button><button class="act" id="shareB">${ic('send')}<span>Share</span></button></div>
           <div id="ext-rvcard"></div>
-          <ul class="trust one">${C.advance.deposits() ? `<li>${fmt(C.advance.one)} advance, rest on arrival</li>` : '<li>Cash on Delivery</li>'}<li>Dispatched within 24 hours</li><li>${esc(C.delivery.days)} across Pakistan</li>${C.advance.freeAll() ? '<li>Rs. 200 delivery credit</li>' : `<li>Free delivery on ${C.freeDeliveryPairs} pairs</li>${C.advance.on ? '<li>Free delivery with advance payment</li>' : ''}`}<li>${C.exchangeDays || 5} day size exchange</li></ul>
+          <ul class="trust one">${C.advance.deposits() ? `<li>${fmt(C.advance.one)} advance, rest on arrival</li>` : '<li>Cash on Delivery</li>'}<li>Dispatched within 24 hours</li><li>${esc(C.delivery.days)} across Pakistan</li><li>Bag rewards up to Rs. 400 off</li><li>${C.exchangeDays || 5} day size exchange</li></ul>
           <div class="acc">
             <details><summary>What it is made of</summary><div class="in specs"><dl>${Object.entries(p.specs || {}).map(([k, x]) => `<div><dt>${esc(k)}</dt><dd>${esc(x)}</dd></div>`).join('')}<div><dt>Colour</dt><dd>${esc(v.color)}</dd></div><div><dt>Code</dt><dd class="mono">${esc(p.id + '-' + v.id).toUpperCase()}</dd></div></dl></div></details>
             <details><summary>In the box</summary><div class="in"><ul class="inbox"><li>The pair, re-laced in thick matte black cotton</li><li>The engraved DAUR lace tag on the bottom lace row</li><li>The Supply Unit seal on the top eyelet</li><li>A shoe box for delivery</li></ul></div></details>
-            <details><summary>${C.advance.required ? 'Delivery, payment and exchanges' : 'Delivery, COD and exchanges'}</summary><div class="in"><p>${C.advance.deposits() ? `${C.advance.freeAll() ? 'Your Rs. 200 delivery credit covers delivery across Pakistan. ' : ''}An advance of ${fmt(C.advance.one)} reserves your pair and counts towards your price. The rest is paid when your pair arrives.` : 'Cash on Delivery across Pakistan. Free delivery on two pairs or more.'} We confirm every order with you by call or WhatsApp before dispatch. If the size is not right, a full price pair can be exchanged within 5 days, unworn and with the seal attached. Sale pairs are offered at their marked price without size exchange, and every pair is covered for manufacturing defects for 30 days. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
+            <details><summary>${C.advance.required ? 'Delivery, payment and exchanges' : 'Delivery, COD and exchanges'}</summary><div class="in"><p>${C.advance.deposits() ? `${C.advance.freeAll() ? 'At your door in 2 to 4 days across Pakistan. ' : ''}An advance of ${fmt(C.advance.one)} reserves your pair and counts towards your price. The rest is paid when your pair arrives.` : 'At your door in 2 to 4 days across Pakistan.'} We confirm every order with you by call or WhatsApp before dispatch. If the size is not right, a full price pair can be exchanged within 5 days, unworn and with the seal attached. Sale pairs are offered at their marked price without size exchange, and every pair is covered for manufacturing defects for 30 days. <a class="link" href="${link('contract')}">Our full promise</a></p></div></details>
           </div>
           ${ladder(p, v)}
         </div>
@@ -1445,7 +1448,7 @@
 
   /* ---- cart ---- */
   V.cart = function () {
-    setMeta('Your bag | DAUR Supply', 'Review your DAUR Supply bag. Delivery across Pakistan, covered by your Rs. 200 delivery credit.');
+    setMeta('Your bag | DAUR Supply', 'Review your DAUR Supply bag. Delivery across Pakistan, at your door in 2 to 4 days.');
     function paint() {
       const t = totals();
       if (!t.lines.length) {
@@ -1455,7 +1458,7 @@
       app.innerHTML = `<section class="phero"><div class="wrap"><h1>Your bag.</h1><p class="aside">Saved on this device. Your size is reserved once your order is confirmed.</p></div></section>
       <div class="wrap"><div class="two cart-page"><div class="main">${freeMeter(t.n)}${t.lines.map((d) => lineHTML(d, true)).join('')}
         <a class="link" href="${link('shop')}" style="display:inline-block;margin-top:24px">Continue shopping</a></div>
-        <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout${C.advance.required ? '' : ', Cash on Delivery'} <span class="arr">&rarr;</span></a><p class="form-note">One delivery fee for all of Pakistan, confirmed at checkout.</p></aside></div></div>`;
+        <aside class="side">${summary(t, true)}<a class="btn volt block" href="${link('checkout')}">Checkout${C.advance.required ? '' : ', Cash on Delivery'} <span class="arr">&rarr;</span></a><p class="form-note">Bag rewards come off by themselves at checkout. No code needed.</p></aside></div></div>`;
       bindLines(app); bindPromo(paint); bindVote(app); bindGift(paint);
     }
     rerender = () => { paintCounts(); paint(); };
@@ -1466,10 +1469,11 @@
       <div class="sum-row"><span>Subtotal, ${t.n} pair${t.n > 1 ? 's' : ''}</span><span>${fmt(t.subtotal)}</span></div>
       ${t.sale ? `<div class="sum-row mute"><span>Before sale</span><span class="strike">${fmt(t.before)}</span></div>` : ''}
       ${promo ? `<div class="promo"><input id="promo" placeholder="Discount code" value="${esc(coupon)}" aria-label="Discount code" autocomplete="off"><button id="promoBtn">${coupon && !t.couponErr ? 'Remove' : 'Apply'}</button></div>${t.couponErr ? `<span class="code-msg err">${esc(t.couponErr)}</span>` : SHOP && coupon && shopCode.code === coupon && shopCode.note ? `<span class="code-msg ok">${esc(shopCode.note)}</span>` : ''}${!t.couponErr && C.advance && C.advance.on && C.advance.code && coupon === C.advance.code ? `<a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a>` : ''}${SHOP ? '<span class="code-msg">Your code goes to checkout with your bag, already applied. Gift card? Enter it on the payment step at checkout.</span>' : ''}` : ''}
-      ${t.discount ? `<div class="sum-row save"><span>${coupon === store.get('dAuto', '') ? esc(creditName(coupon)) : esc(coupon) + ' / ' + esc(t.cp.label || 'Discount')}</span><span>&minus; ${fmt(t.discount)}</span></div>${t.cp.phone ? '<p class="form-note">This code is linked to one WhatsApp number. It is checked when you place the order.</p>' : ''}` : ''}
-      ${t.free && C.advance.freeAll() ? `<div class="sum-row"><span>Delivery</span><span>${fmt(C.advance.delCredit)}</span></div><div class="sum-row save"><span>Delivery credit</span><span>&minus; ${fmt(C.advance.delCredit)}</span></div>` : `<div class="sum-row"><span>Delivery</span><span>${t.free ? '<span class="volt">Free</span>' : fmt(t.delivery)}</span></div>`}
+      ${t.discount ? `<div class="sum-row save"><span>${t.cp && t.cp.reward ? 'Bag reward' : coupon === store.get('dAuto', '') ? esc(creditName(coupon)) : esc(coupon) + ' / ' + esc(t.cp.label || 'Discount')}</span><span>&minus; ${fmt(t.discount)}</span></div>${t.cp.phone ? '<p class="form-note">This code is linked to one WhatsApp number. It is checked when you place the order.</p>' : ''}` : ''}
+      ${promo && t.n && !t.discount && t.subtotal < 9000 ? `<p class="form-note rw-near">${t.subtotal < 5500 ? 'Add ' + fmt(5500 - t.subtotal) + ' more and Rs. 200 comes off by itself.' : 'Add ' + fmt(9000 - t.subtotal) + ' more and your reward grows to Rs. 400.'}</p>` : ''}
+      ${bagPlan(t).payOff ? `<div class="sum-row save"><span>Paid in full</span><span>&minus; ${fmt(100)}</span></div>` : ''}
       ${C.advance.required ? '' : `<div class="sum-row"><span>Cash on Delivery fee</span><span>${fmt(0)}</span></div>`}
-      <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
+      <div class="sum-row total"><span>Total</span><span>${fmt(t.total - (bagPlan(t).payOff || 0))}</span></div>
       ${promo && t.n ? giftBox() : ''}
       ${(C.advance.on && C.advance.required || gift.on || hasGiving()) && t.n ? careBox(t) : ''}
       ${hasGiving() ? `<p class="form-note gp-note">${ic('gift')} Your giving pair is handed over on your behalf in the giving round after this quarter closes. We send you the proof privately within 7 days of the handover.</p>` : ''}
@@ -1486,7 +1490,9 @@
     const p = Object.assign(C.advance.plan(own.reduce((a, d) => a + d.l.qty, 0), covered, t.total), { ownPairs: own.reduce((a, d) => a + d.l.qty, 0), nGive: give.reduce((a, d) => a + d.l.qty, 0) });
     // the buyer may choose to pay everything today (same choice and same saved answer as the phone bag)
     p.adv = p.now; p.canChoose = !p.onlyCovered && p.door > 0; p.choice = p.canChoose && store.get('mPay', 'adv') === 'full' ? 'full' : 'adv';
-    if (p.choice === 'full') { p.now = t.total; p.door = 0; }
+    // paying everything at once takes Rs 100 more off; the team takes it off the transfer it confirms
+    p.payOff = 0;
+    if (p.choice === 'full') { p.payOff = t.total > 100 ? 100 : 0; p.now = t.total - p.payOff; p.door = 0; }
     return p;
   }
   /* Where the payment goes: the bank account, EasyPaisa and JazzCash as cards (Theme settings > Payment accounts, printed as
@@ -1508,15 +1514,15 @@
   });
   function careBox(t) {
     const p = bagPlan(t), one = p.ownPairs === 1;
-    const head = gift.on ? 'Your gift, covered today' : p.onlyCovered ? 'Philanthropy, covered today' : p.covered ? 'Philanthropy, covered today' : one ? 'Reserve it today' : 'Reserve them today';
+    const head = gift.on ? 'Your gift, covered today' : p.onlyCovered ? 'Philanthropy, covered today' : p.covered ? 'Philanthropy, covered today' : one ? 'Held in your name' : 'Held in your name';
     const note = gift.on ? 'Gift orders are paid in full by bank transfer, so no bill reaches him. Only the pair and your note. If you cancel before dispatch, the payment is refunded in full.'
       : p.onlyCovered ? 'A pair for someone in need is paid in full by bank transfer after you place the order. They receive it with nothing to pay. If you cancel before the handover, our usual cancellation and refund policy applies.'
       : p.covered ? 'The Philanthropy pair is paid today by bank transfer. Your own ' + (one ? 'pair is' : 'pairs are') + ' paid at your door.'
-      : 'Your ' + (one ? 'pair' : 'pairs') + ', reserved for you. Send ' + fmt(p.now) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full.';
+      : fmt(p.now) + ' holds your ' + (one ? 'pair' : 'pairs') + ' in your name. Send it by bank transfer after you place the order. Every rupee comes off your price, and if you cancel before dispatch it comes back to you in full.';
     const opt = (k, title, sub, amt) => `<button type="button" class="pay-ch" role="radio" data-paych="${k}" aria-checked="${p.choice === k}"><i aria-hidden="true"></i><span><b>${title}</b><small>${sub}</small></span><span class="pc-a"><b>${fmt(amt)}</b><small>today</small></span></button>`;
     if (p.canChoose) return `<div class="care-box"><span class="mono mute">How you pay</span><div class="pay-chs" role="radiogroup" aria-label="How you pay">
-      ${opt('adv', p.covered ? 'Cover the Philanthropy today' : (one ? 'Reserve it with ' : 'Reserve them with ') + fmt(p.adv), fmt(t.total - p.adv) + (one ? ' when it reaches your door' : ' when they reach your door'), p.adv)}${opt('full', 'Done in one go', 'Nothing to pay at the door', t.total)}</div>
-      <p class="form-note">${p.choice === 'full' ? 'Send ' + fmt(t.total) + ' by bank transfer after you place the order. If you cancel before dispatch it comes back to you in full.' : 'Send ' + fmt(p.adv) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full.'}</p>
+      ${opt('adv', p.covered ? 'Cover the Philanthropy today' : (one ? 'Hold it with ' : 'Hold them with ') + fmt(p.adv), fmt(t.total - p.adv) + (one ? ' when it reaches your door' : ' when they reach your door'), p.adv)}${opt('full', 'Pay in full, keep ' + fmt(100), 'Nothing to pay at the door', t.total > 100 ? t.total - 100 : t.total)}</div>
+      <p class="form-note">${p.choice === 'full' ? 'Send ' + fmt(p.now) + ' by bank transfer after you place the order. If you cancel before dispatch it comes back to you in full.' : 'Send ' + fmt(p.adv) + ' by bank transfer after you place the order. It is part of your price, and if you cancel before dispatch it comes back to you in full.'}</p>
       ${payCards()}
       <a class="code-msg wa-r" target="_blank" rel="noopener" href="https://wa.me/${esc(C.whatsapp)}?text=${encodeURIComponent('Assalam o Alaikum DAUR, here is my payment receipt for my order')}">${ic('whatsapp')} Send your payment receipt on WhatsApp</a></div>`;
     return `<div class="care-box"><div class="sum-row"><span><b>${head}</b></span><span><b>${fmt(p.now)}</b></span></div>
@@ -1548,7 +1554,7 @@
   }
   /* The wallet, as on the phone: the welcome credit (Theme settings > Mobile app > wallet code) or the biggest live credit
      the bag qualifies for goes on the bag by itself, and Shopify confirms the amount. Removing it switches the wallet off. */
-  const WAL = { code: String((window.DAUR_M || {}).walletCode || '').trim().toUpperCase(), amt: +(window.DAUR_M || {}).walletAmount || 350, on: () => !!WAL.code && store.get('mWallet', 'on') === 'on', tried: '' };
+  const WAL = { code: '', amt: 0, on: () => !!WAL.code && store.get('mWallet', 'on') === 'on', tried: '' };
   function walletPick(sub) {
     const amtOf = (o) => { const m = String((o.title || '') + ' ' + (o.details || '')).match(/Rs\.?\s*([\d,]+)\s*off/i); return m ? +m[1].replace(/,/g, '') : 0; };
     const best = (window.DAUR_OFFERS || []).filter((o) => o.code && String(o.code).toUpperCase() !== WAL.code && amtOf(o) > 0 && (!o.ends || new Date(o.ends) > new Date()) && sub >= (+o.min || 0)).map((o) => ({ code: String(o.code).toUpperCase(), amt: amtOf(o) })).sort((x, y) => y.amt - x.amt)[0];
@@ -1570,7 +1576,7 @@
         const adv = C.advance && C.advance.on && C.advance.code && coupon === C.advance.code;
         shopCode = { code: coupon, sig: cartSig(), err: '', saving: 0, note: '' };
         if (r.error) shopCode.err = r.error;
-        else if (adv) shopCode.note = 'Free delivery code added. Pay in full or send an ' + C.advance.care + ' of ' + fmt(C.advance.deposit) + ' or more, and send us the receipt on WhatsApp.';
+        else if (adv) shopCode.note = 'Code added. It goes to checkout with your bag.';
         else if (r.pending) shopCode.note = 'Code saved. It goes to checkout with your bag.';
         else if (!r.found || !r.applicable) shopCode.err = 'This code does not apply to the pairs in your bag. Check the spelling or the conditions on the Offers page.';
         else { shopCode.saving = r.saving; shopCode.note = r.saving ? (auto ? creditName(coupon) + ' used: you keep ' : coupon + ' applied: you save ') + fmt(r.saving) + '.' : coupon + ' applied. Your saving shows at checkout.'; }
@@ -1786,7 +1792,7 @@
       </div></section>`).join('')}
       <section class="st-close"><div class="wrap"><div class="st-close-c">
         ${urLock('ul-close')}<h2>Welcome to a new era.</h2>
-        <p>Every pair checked by hand, ${C.advance.freeAll() ? 'delivered across Pakistan on your delivery credit' : 'delivered across Pakistan'}, with a ${C.exchangeDays || 5} day size exchange on full price pairs.</p>
+        <p>Every pair checked by hand, ${C.advance.freeAll() ? 'at your door in 2 to 4 days across Pakistan' : 'delivered across Pakistan'}, with a ${C.exchangeDays || 5} day size exchange on full price pairs.</p>
         <div class="hero-cta"><a class="btn volt" href="${link('shop')}">Explore the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${link('contract')}">Our promise</a></div>
       </div></div></section>`;
     cutWhenSeen(app);
@@ -1795,15 +1801,15 @@
   /* ---- about ---- */
   const PHONE = () => { const n = String(C.whatsapp || ''); return n.startsWith('92') ? '0' + n.slice(2, 5) + ' ' + n.slice(5) : n; };
   V.about = function () {
-    setMeta('About DAUR Supply | Pakistani Men\'s Shoe Brand, Dispatched from Islamabad', 'DAUR Supply is a Pakistani footwear brand for men: leather sneakers, formal shoes and chelsea boots from workshops in Lahore, Sialkot and Kasur, dispatched from Islamabad with delivery covered by your Rs. 200 delivery credit.');
+    setMeta('About DAUR Supply | Pakistani Men\'s Shoe Brand, Dispatched from Islamabad', 'DAUR Supply is a Pakistani footwear brand for men: leather sneakers, formal shoes and chelsea boots from workshops in Lahore, Sialkot and Kasur, dispatched from Islamabad and at your door in 2 to 4 days.');
     const hero = prod('moc-runner-v1') || P[0], hv = hero.variants[0];
     const facts = [
       ['The brand', 'DAUR Supply', 'A Pakistani footwear brand for men, sold online at daursupply.com.'],
       ['The name', 'Daur, an era', 'From the Urdu word for an era. Our line is Aik naya daur, a new era.'],
       ['What we sell', 'Men\'s shoes', 'Leather sneakers, formal shoes, chelsea boots and casual slip ons, crafted in Pakistan.'],
       ['Made in', 'Lahore, Sialkot, Kasur', 'Finished pairs chosen from the workshops, then checked by hand, pair by pair.'],
-      ['Dispatch', 'Islamabad', 'Every order leaves Islamabad within 24 hours of confirmation, with delivery covered by your Rs. 200 delivery credit.'],
-      C.advance.deposits() ? ['Payment', 'Deposit, then delivery', 'An advance of ' + fmt(C.advance.one) + ' reserves your pair and the rest is paid on arrival.'] : ['Payment', 'Cash on Delivery', 'To every city in Pakistan our couriers reach. Free delivery on ' + C.freeDeliveryPairs + ' pairs.'],
+      ['Dispatch', 'Islamabad', 'Every order leaves Islamabad within 24 hours of confirmation, and at your door in 2 to 4 days.'],
+      C.advance.deposits() ? ['Payment', 'Held in your name', fmt(C.advance.one) + ' holds your pair in your name, and the rest is paid when it reaches you.'] : ['Payment', 'Cash on Delivery', 'To every city in Pakistan our couriers reach, in 2 to 4 days.'],
       ['After delivery', '5 day exchange', 'Full price pairs can be exchanged for size within 5 days, and manufacturing defects are covered for 30 days.']
     ];
     app.innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">About DAUR Supply</span><h1>Named for<br>an era.</h1><p class="aside">Daur means an era in Urdu. Ours is Aik naya daur, a new era: Pakistani craft, worn with pride.</p></div></section>
@@ -1835,7 +1841,7 @@
 
   /* ---- contact ---- */
   V.contact = function () {
-    setMeta('Contact DAUR Supply | WhatsApp, Phone and Email', 'Contact DAUR Supply on WhatsApp or phone ' + PHONE() + ', or email ' + C.supportEmail + '. Dispatched from Islamabad with delivery covered by your Rs. 200 delivery credit.');
+    setMeta('Contact DAUR Supply | WhatsApp, Phone and Email', 'Contact DAUR Supply on WhatsApp or phone ' + PHONE() + ', or email ' + C.supportEmail + '. Dispatched from Islamabad and at your door in 2 to 4 days.');
     const ch = [
       ['whatsapp', 'WhatsApp', PHONE(), 'The quickest way to reach us for sizing, orders and exchanges.', waChat('Assalam o Alaikum DAUR Supply, I have a question.'), true],
       ['phone', 'Call', PHONE(), 'Same number as WhatsApp.', 'tel:+' + C.whatsapp],
@@ -2037,7 +2043,7 @@
         <details class="rw-dd"${detOpen ? ' open' : ''}><summary><span>What we check on this pair</span><span class="mono">${dets.length} points</span></summary>
           <ol class="rw-dets">${dets.map((o, k) => `<li><button type="button" data-row="${k}" aria-pressed="${k === pin}"><span class="rw-th">${rwThumb(p, v, o)}<i>${k + 1}</i></span><span class="rw-dt"><b>${esc(o.t)}</b><span>${esc(o.d)}</span></span></button></li>`).join('')}</ol></details>
         <div class="rw-more">${p.model ? `<button class="btn ghost" type="button" id="rw3dB">Turn it in 3D</button>` : ''}<a class="link" href="${link('product', p.id + '~' + v.id)}">Full details</a></div>
-        <p class="rw-note">${C.advance.freeAll() ? 'A delivery credit on every order, 5 day size exchange.' : 'Add a second pair and delivery is free anywhere in Pakistan. ' + (C.advance.required ? '' : 'Cash on Delivery, ') + '5 day size exchange.'}</p>`;
+        <p class="rw-note">${C.advance.freeAll() ? 'Bag rewards up to Rs. 400 off, 5 day size exchange.' : 'Add a second pair and delivery is free anywhere in Pakistan. ' + (C.advance.required ? '' : 'Cash on Delivery, ') + '5 day size exchange.'}</p>`;
       $('#rwX', panel).addEventListener('click', () => setMode('browse'));
       $('[data-wish]', panel).addEventListener('click', () => toggleWish(p.id));
       $('.rw-dd', panel).addEventListener('toggle', (e) => {
@@ -2205,8 +2211,9 @@
     let list = Array.isArray(window.DAUR_OFFERS) ? window.DAUR_OFFERS.slice() : null;
     if (!list) {
       list = Object.entries(C.coupons || {}).map(([code, c], i) => ({ id: code.toLowerCase(), title: c.label || code, code, details: (c.type === 'percent' ? c.value + '% off' : fmt(c.value) + ' off') + ' your order' + (c.min ? ' of ' + fmt(c.min) + ' or more' : '') + '.', min: c.min || 0, ends: null, sort: i + 1 }));
-      if (C.advance.freeAll()) list.push({ id: 'free-delivery', title: 'Rs. 200 delivery credit on every order', code: '', details: 'Covers the Rs. 200 delivery on every order, to any city in Pakistan. No code needed.' });
-      else list.push({ id: 'free-delivery', title: 'Free delivery on ' + (C.freeDeliveryPairs === 2 ? 'two' : C.freeDeliveryPairs) + ' pairs', code: '', details: 'Order ' + C.freeDeliveryPairs + ' pairs or more and delivery anywhere in Pakistan is free. No code needed.', min: 0, ends: null, sort: 50 });
+      list.push({ id: 'reward-200', title: 'Rs. 200 off from Rs. 5,500', code: '', details: 'Your bag reward comes off by itself once your bag reaches Rs. 5,500. No code needed.', min: 5500, ends: null, sort: 50 });
+      list.push({ id: 'reward-400', title: 'Rs. 400 off from Rs. 9,000', code: '', details: 'Your bag reward grows to Rs. 400 once your bag reaches Rs. 9,000. No code needed.', min: 9000, ends: null, sort: 51 });
+      list.push({ id: 'reward-full', title: 'Rs. 100 more off when you pay in full', code: '', details: 'Choose to pay everything at once in your bag and Rs. 100 comes off, on top of any bag reward.', min: 0, ends: null, sort: 52 });
     }
     return list.filter((o) => !o.ends || new Date(o.ends).getTime() > now).sort((a, b) => (a.sort || 99) - (b.sort || 99));
   }
@@ -2285,19 +2292,19 @@
     const del = C.advance.delCredit, wel = WAL.on() ? WAL.amt : 0, n = 1 + (wel ? 1 : 0);
     const tile = (k, amt, line, tag) => `<div class="wl-t rv"><span class="wl-tk">${k}</span><b>${fmt(amt)}</b><p>${line}</p><span class="wl-tag">${tag}</span></div>`;
     return `<section class="sheet x wl-sec"><div class="wrap"><div class="wl">
-      <div class="wl-card rv" role="img" aria-label="DAUR wallet, credit balance ${fmt(del + wel)}">
-        <span class="wl-brand">DAUR <small>Wallet</small></span><span class="wl-chip" aria-hidden="true"></span>
-        <span class="wl-k">Credit balance</span><b class="wl-bal">${fmt(del + wel)}</b>
-        <span class="wl-row"><span><small>Status</small><b>Ready for your next order</b></span><span><small>Credits</small><b>${n} active</b></span></span>
+      <div class="wl-card rv" role="img" aria-label="DAUR rewards, up to ${fmt(500)} off">
+        <span class="wl-brand">DAUR <small>Rewards</small></span><span class="wl-chip" aria-hidden="true"></span>
+        <span class="wl-k">Up to</span><b class="wl-bal">${fmt(500)}</b>
+        <span class="wl-row"><span><small>Status</small><b>Ready for your next order</b></span><span><small>Codes</small><b>None needed</b></span></span>
       </div>
-      <div class="wl-side"><span class="eyebrow">In your wallet</span><h2>${fmt(del + wel)} is already yours.</h2>
-        <p>It comes off your total by itself in the bag. Credits are not cash and cannot be withdrawn, so the only way to keep them is to use them.</p>
-        <div class="wl-ts">${tile('Delivery credit', del, 'Covers the ' + fmt(del) + ' delivery on every order that ships.', 'Always on')}${wel ? tile('Welcome credit', wel, 'Yours on your first order. One use per customer.', 'Applied in your bag') : ''}</div>
-        <a class="btn volt" href="${link('shop')}">Use my credit <span class="arr">&rarr;</span></a></div>
+      <div class="wl-side"><span class="eyebrow">In your wallet</span><h2>The fuller your bag, the more stays with you.</h2>
+        <p>Bag rewards come off your total by themselves. Rs. 200 from Rs. 5,500, Rs. 400 from Rs. 9,000, and Rs. 100 more when you pay in full.</p>
+        <div class="wl-ts">${tile('Bag reward', 200, 'Comes off by itself once your bag reaches ' + fmt(5500) + '.', 'Automatic')}${tile('Bag reward', 400, 'Grows to ' + fmt(400) + ' once your bag reaches ' + fmt(9000) + '.', 'Automatic')}${tile('Paid in full', 100, 'More off when you pay everything at once.', 'Your choice')}${wel ? tile('Welcome credit', wel, 'Yours on your first order. One use per customer.', 'Applied in your bag') : ''}</div>
+        <a class="btn volt" href="${link('shop')}">Fill my bag <span class="arr">&rarr;</span></a></div>
     </div></div></section>`;
   }
   V.offers = function () {
-    setMeta('Offers and Discount Codes | DAUR Supply', 'Your DAUR Supply wallet: a Rs. 200 delivery credit on every order, live discount codes and men\'s shoes on sale in Pakistan.');
+    setMeta('Offers and Discount Codes | DAUR Supply', 'DAUR Supply bag rewards: Rs. 200 off from Rs. 5,500, Rs. 400 off from Rs. 9,000, Rs. 100 more for paying in full, and men\'s shoes on sale in Pakistan.');
     const offers = liveOffers();
     const sale = P.filter((p) => p.variants.some(onSale)).map((p) => [p, p.variants.find(onSale)]);
     const best = sale.length ? Math.max(...sale.map(([, v]) => pct(v))) : 0;
@@ -2313,12 +2320,12 @@
         ${o.ends ? `<span class="of-end mono" data-ends="${esc(o.ends)}">${untilText(o.ends)}</span>` : ''}
         <i class="of-notch l" aria-hidden="true"></i><i class="of-notch r" aria-hidden="true"></i>
       </article>`;
-    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">${count} live</span><h1>Current offers.</h1><p class="aside">Every code and offer live in our store today. A pair you save on keeps the same checks, finish and seal as every other. ${C.advance.required ? (C.advance.freeAll() ? 'Delivery across Pakistan, covered by your Rs. 200 delivery credit.' : '') : 'Cash on Delivery on every order.'}</p></div>
+    app.innerHTML = `<section class="phero of-hero"><div class="wrap"><span class="eyebrow">${count} live</span><h1>Current offers.</h1><p class="aside">Every code and offer live in our store today. A pair you save on keeps the same checks, finish and seal as every other. ${C.advance.required ? (C.advance.freeAll() ? 'Delivery across Pakistan, at your door in 2 to 4 days.' : '') : 'Cash on Delivery on every order.'}</p></div>
       <div class="of-float" aria-hidden="true">${['%', 'Rs', '%', 'Rs', '%'].map((t, i) => `<span style="--i:${i}">${t}</span>`).join('')}</div></section>
 
     ${walletBlock()}
     <section class="sheet x"><div class="wrap">
-      ${head('Codes and deals', offers.length ? 'Use it at checkout.' : 'No codes right now.', '', offers.length ? (C.advance.freeAll() ? 'One code per order, and your delivery credit stays on every order.' : 'One saving applies per order: codes and free delivery do not stack, so the bigger saving is the one you get.') : 'There is no live code at the moment. Sale pairs below are already reduced, no code needed.')}
+      ${head('Codes and deals', offers.length ? 'Use it at checkout.' : 'No codes right now.', '', offers.length ? 'Bag rewards need no code. One saving applies per order, and the bigger one is used.' : 'There is no live code at the moment. Sale pairs below are already reduced, no code needed.')}
       ${offers.length ? `<div class="of-grid">${offers.map(card).join('')}</div>` : ''}
     </div></section>
 
@@ -2329,7 +2336,7 @@
 
     <section class="sheet x"><div class="wrap">
       ${head('How it works', 'Three steps to your saving.')}
-      <div class="steps of-steps">${[['Pick your pairs', C.advance.freeAll() ? 'Add your size to the bag. Your Rs. 200 delivery credit covers delivery on every order.' : 'Add your size to the bag. Two pairs or more and delivery is free.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], C.advance.required ? ['Reserve your pair', fmt(C.advance.one) + ' reserves your order, whatever its total. Your pair leaves Islamabad and the rest is paid at your door.'] : ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+      <div class="steps of-steps">${[['Pick your pairs', 'Add your size to the bag. From Rs. 5,500 a bag reward comes off by itself.'], ['Use the code', 'Tap Apply and shop, or type the code at checkout. One saving per order.'], C.advance.required ? ['Reserve your pair', fmt(C.advance.one) + ' holds your pair in your name. It leaves Islamabad within 24 hours and the rest is paid at your door.'] : ['Pay on delivery', 'We confirm your order with you, dispatch from Islamabad, and you pay in cash at your door.']].map(([t, d], i) => `<div class="step rv"><span class="n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
     </div></section>
 
     <section class="sheet x"><div class="wrap"><div class="signup closer">
@@ -2427,14 +2434,14 @@
     const tel = `<a class="link" href="tel:+${esc(C.whatsapp)}">${esc(phone)}</a>`;
     const ex = C.exchangeDays || 5, A = C.advance || {};
     const S = [
-      ['shipping', 'Shipping policy', `<p><b>Your DAUR pair, on its way.</b> ${A.freeAll() ? 'Your Rs. 200 delivery credit covers delivery across Pakistan. ' : ''}Once your order is confirmed${A.required ? ' and the ' + esc(A.care) + ' has arrived' : ''}, we prepare your pair for dispatch from Islamabad.</p><ul>
+      ['shipping', 'Shipping policy', `<p><b>Your DAUR pair, on its way.</b> ${A.freeAll() ? 'At your door in 2 to 4 days across Pakistan. ' : ''}Once your order is confirmed${A.required ? ' and the ' + esc(A.care) + ' has arrived' : ''}, we prepare your pair for dispatch from Islamabad.</p><ul>
         <li><b>Where.</b> We deliver to every city and town in Pakistan that our courier partners reach. Orders are dispatched from Islamabad.</li>
         <li><b>Confirmation.</b> We confirm every order with you by call or WhatsApp.</li>
         <li><b>Dispatch.</b> Your pair is checked, sealed and handed to the courier within 24 hours of confirmation. Orders confirmed on a Sunday or public holiday leave on the next working day.</li>
-        <li><b>Delivery time.</b> Delivery takes ${esc(C.delivery.days || '2 to 5 days')} after dispatch in most cities. Remote areas, weather and public holidays can take a little longer.</li>
-        <li><b>Delivery fee.</b> ${A.freeAll() ? 'Your Rs. 200 delivery credit covers delivery on every order, to any city our courier reaches.' : `One flat fee of ${fmt(C.delivery.fee)} for any city. Delivery is free on ${C.freeDeliveryPairs} pairs or more${A.on ? ', and free on any order you pay for in advance' : ''}.`}</li>
-        ${A.on ? `<li><b>${A.required ? 'Payment before dispatch' : 'Free delivery on advance payment'}.</b> ${A.required ? `An advance of ${fmt(A.one)} by bank transfer reserves your pair, and the remaining balance is paid on arrival.` : `Pay the full amount in advance, or a ${esc(A.care)} of ${fmt(A.deposit)} or more, and delivery is free.`} See <a class="link" href="#advance" data-jump="advance">how it works</a>.</li>` : ''}
-        <li><b>One saving per order.</b> ${A.freeAll() ? 'One discount code per order. Your delivery credit still covers delivery.' : 'Free delivery and a discount code do not combine. The saving that is bigger for you applies.'}</li>
+        <li><b>Delivery time.</b> Delivery takes ${esc(C.delivery.days || '2 to 4 days')} after dispatch in most cities. Remote areas, weather and public holidays can take a little longer.</li>
+        <li><b>Delivery.</b> To any city our courier reaches, at your door in 2 to 4 days.</li>
+        ${A.on ? `<li><b>${A.required ? 'Held in your name' : 'Payment in advance'}.</b> ${A.required ? `${fmt(A.one)} by bank transfer holds your pair in your name, and the rest is paid on arrival.` : `Pay the full amount in advance and Rs. 100 comes off.`} See <a class="link" href="#advance" data-jump="advance">how it works</a>.</li>` : ''}
+        <li><b>One saving per order.</b> Bag rewards come off by themselves: Rs. 200 from Rs. 5,500, Rs. 400 from Rs. 9,000, and Rs. 100 more when you pay in full. One bag reward per order.</li>
         <li><b>Tracking.</b> At dispatch you receive the courier name, tracking number and tracking link on WhatsApp. They also show on the <a class="link" href="${link('track')}">Track order</a> page.</li></ul>`],
       ...(A.on && A.required ? [['advance', 'Advance payment', `<p><b>Your pair, reserved for you.</b> We keep ordering simple. A small ${esc(A.care)} confirms your order and reserves your pair. It counts towards your purchase, and you pay the remaining balance when your order arrives.</p>
         <div class="size-wrap"><table class="size-table care-t"><thead><tr><th>Your order</th><th>Paid today</th></tr></thead><tbody><tr><td>Pairs for you, any order total</td><td><b>${fmt(A.one)}</b></td></tr><tr><td>Gifts and Philanthropy pairs</td><td><b>Their full price</b></td></tr></tbody></table></div><ol>

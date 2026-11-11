@@ -178,14 +178,14 @@
     const pr = A.prod(item.pid); const vr = pr && A.variant(pr, item.vid);
     const lines = key === 'reviews' ? [
       'Status: Pending (change to Approved to show it on the site)',
-      'Product: ' + (pr ? pr.name : item.pid), 'Product link: ' + location.origin + location.pathname,
+      'Product: ' + (pr ? pr.name : item.pname || item.pid), 'Product link: ' + location.origin + location.pathname,
       'Colour: ' + (vr ? vr.color : item.vid || ''), 'Stars: ' + item.rating,
-      'Customer name: ' + (item.name || ''), 'City: ' + (item.city || ''), 'Headline: ' + (item.title || ''), 'Review text: ' + (item.body || ''),
+      'Customer name: ' + (item.name || ''), 'Full name given: ' + (item.fullName || item.name || ''), 'Phone: ' + (item.phone || 'not given'), 'City: ' + (item.city || ''), 'Headline (comfort): ' + (item.title || ''), 'Review text: ' + (item.body || ''),
       'Size worn (EU): ' + (item.size || ''), 'Fit: ' + (FIT[item.fit] || ''), 'Order number given: ' + (item.order || 'none'),
       'Customer email: ' + (item.email || 'not given'),
       'Photo: ' + (item.photo ? 'chosen on the site but not sent by email; ask the customer to send it on WhatsApp' : 'none'), 'Date: ' + String(item.at || '').slice(0, 10)
     ] : Object.keys(item).map((k) => k + ': ' + (typeof item[k] === 'object' ? JSON.stringify(item[k]) : item[k]));
-    const subject = LABEL[key] + (pr ? ': ' + pr.name : '');
+    const subject = LABEL[key] + (pr ? ': ' + pr.name : item.pname ? ': ' + item.pname : '');
     return [
       ['form_type', 'contact'], ['utf8', '\u2713'],
       ['contact[email]', item.email || C.supportEmail],

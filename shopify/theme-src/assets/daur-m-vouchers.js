@@ -38,7 +38,7 @@
     return `<svg class="dv-seal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6DBC1"/><stop offset=".5" stop-color="#B99C74"/><stop offset="1" stop-color="#826844"/></linearGradient><path id="${id}p" d="M100,100m-74,0a74,74 0 1,1 148,0a74,74 0 1,1 -148,0"/></defs>
       <circle cx="100" cy="100" r="98" fill="url(#${id}g)"/><circle class="dv-sl1" cx="100" cy="100" r="92"/><circle class="dv-sin" cx="100" cy="100" r="61"/><circle class="dv-sl2" cx="100" cy="100" r="55"/>
       <text class="dv-stx"><textPath href="#${id}p" xlink:href="#${id}p" textLength="462" lengthAdjust="spacing">${esc(ring)}</textPath></text>
-      <path fill="url(#${id}g)" transform="translate(100 100) scale(.42) translate(-52 -100) skewX(-14)" d="${DM}"/></svg>`;
+      <svg x="62" y="73" width="76" height="54" viewBox="-4 -4 204 141" fill="url(#${id}g)"><use href="#dl-d"/></svg></svg>`;
   }
   // a few pieces of confetti in the margin on the far edge, clear of the words
   function confetti(seed) {
@@ -63,7 +63,7 @@
   window.DAUR_VOUCHER = { card, seal, burst, NF };
 
   const MX = window.DAUR_MX; if (!MX) return;
-  const { V, API, C, W, CODE, DEL, P, href, coupons, credits, fmt, ic, $, $$, view, openSheet } = MX;
+  const { V, API, C, W, CODE, DEL, P, href, coupons, credits, fmt, ic, $, $$, view, openSheet, REWARDS, PAYFULL } = MX;
   const CUR = String(C.currency || 'Rs.').trim();
   const money = (n) => CUR + '\u00A0' + NF(n); // the amount never breaks away from its currency
   const daysLeft = (e) => { if (!e) return 0; const d = Math.ceil((new Date(e) - new Date()) / 864e5); return d > 0 ? d : 0; };
@@ -86,8 +86,10 @@
       const v = p.variants.find(API.onSale);
       out.push({ tone: 'cream', kick: 'Price cut', amt: v.compareAt - v.price, line: short(p.name), price: { now: v.price, was: v.compareAt }, tag: API.pct(v) + '% off', go: true, seed: 21 + i * 5, h: href.product(p.id), ring: 'Price cut', label: p.name + ', ' + money(v.compareAt - v.price) + ' off. Now ' + money(v.price) + ' instead of ' + money(v.compareAt) + '. Grab it.' });
     });
-    out.push({ tone: 'red', kick: 'Delivery credit', amt: DEL, line: 'On every order in Pakistan', go: true, ring: 'Delivery credit', seed: 41, h: href.shop(),
-      label: money(DEL) + ' delivery credit on every order in Pakistan. Shop all.' });
+    REWARDS.slice().reverse().forEach((r, i) => out.push({ tone: i ? 'red' : 'black', kick: 'Bag reward', amt: r.amt, line: 'When your bag reaches ' + money(r.min), go: true, ring: 'Bag reward', seed: 41 + i * 6, h: href.offers,
+      label: money(r.amt) + ' off when your bag reaches ' + money(r.min) + '. It comes off by itself at checkout.' }));
+    out.push({ tone: 'cream', kick: 'Paid in full', amt: PAYFULL, line: 'When you pay everything at once', go: true, ring: 'Bag reward', seed: 53, h: href.offers,
+      label: money(PAYFULL) + ' more off when you pay in full.' });
     return out;
   }
   let timer = 0;
@@ -113,32 +115,24 @@
   V.offers = function () {
     const sale = P().filter((p) => p.variants.some(API.onSale));
     const t = API.totals(), sub = t.subtotal || 0, has = t.lines.length > 0;
-    const cr = credits(sub), wal = W.on(), pick = CODE.get();
-    const inUse = cr.use ? cr.use.code : '';
-    const bal = DEL + (cr.use ? (has ? cr.use.amt : (cr.use.code === W.code ? W.amt : (cr.list.find((c) => c.code === cr.use.code) || {}).amt || 0)) : 0);
+    const cr = credits(sub), now = cr.use ? cr.use.amt : 0;
     const pill = (txt, on) => `<span class="dvw-pill${on ? ' on' : ''}">${on ? ic('check') : ''}${esc(txt)}</span>`;
-    const wState = inUse === W.code ? 'In use on your next order' : inUse && wal ? 'Kept for later while ' + inUse + ' is in use' : wal ? 'Once per customer' : 'Switched off. Tap to switch on';
-    const welcome = W.code ? `<button type="button" class="dvw dv-w${wal ? '' : ' dv-off'}" data-wtoggle aria-pressed="${wal}" aria-label="${esc('Welcome credit ' + money(W.amt) + '. ' + wState)}">${card({ cur: CUR, tone: 'red', cls: 'dv-row', kick: 'Welcome credit', amt: W.amt, line: wState, ring: 'Welcome credit', seed: 3,
-      foot: `<span class="dv-code">${esc(W.code)}</span>${pill(wal ? 'On' : 'Off', wal)}` })}</button>` : '';
-    const delivery = `<div class="dvw dv-w" role="group" aria-label="${esc('Delivery credit ' + money(DEL) + '. Covers the delivery on every order that ships.')}">${card({ cur: CUR, tone: 'black', cls: 'dv-row', kick: 'Delivery credit', amt: DEL, line: 'Covers the ' + money(DEL) + ' delivery on every order that ships', ring: 'Delivery credit', seed: 41,
-      foot: `<span class="dv-note">No code needed</span>${pill('Always on', true)}` })}</div>`;
-    const list = cr.list.map((c, i) => {
-      const on = inUse === c.code, picked = pick === c.code, done = c.min ? Math.min(100, Math.round(sub / c.min * 100)) : 100, tag = endTag(c.ends);
-      const lock = c.ok ? '' : `<span class="dvw-lock"><span class="dvw-bar" aria-hidden="true"><i style="width:${done}%"></i></span><small>${ic('lock')}${has ? 'Add ' + esc(money(c.need)) + ' more to unlock' : 'Unlocks at ' + esc(money(c.min))}</small></span>`;
-      return `<div class="dvw dv-w${c.ok ? '' : ' dv-lock'}${on ? ' dv-on' : ''}" role="group" aria-label="${esc(nameOf(c.code) + ', ' + money(c.amt) + ' off' + (c.min ? ' orders of ' + money(c.min) + ' or more' : '') + ', code ' + c.code)}">${card({ cur: CUR, tone: TONES[i % 2], cls: 'dv-row', kick: nameOf(c.code), amt: c.amt, tag, line: c.min ? 'On orders of ' + money(c.min) + ' or more' : 'On any order', ring: 'Credit code', seed: 7 + i * 4,
-        foot: `<button type="button" class="dv-code dv-copy" data-copy="${esc(c.code)}" aria-label="Copy ${esc(c.code)}">${esc(c.code)}${ic('copy')}</button><button type="button" class="dvw-use" data-code="${esc(c.code)}" aria-pressed="${picked}">${on ? ic('check') + 'In use' : picked ? 'Picked' : W.code && wal ? 'Use instead' : 'Use'}</button>`, more: lock })}</div>`;
+    const tiers = REWARDS.slice().reverse().map((r, i) => {
+      const ok = sub >= r.min, on = ok && now === r.amt, done = Math.min(100, Math.round(sub / r.min * 100));
+      const lock = ok ? '' : `<span class="dvw-lock"><span class="dvw-bar" aria-hidden="true"><i style="width:${done}%"></i></span><small>${ic('lock')}${has ? 'Add ' + esc(money(r.min - sub)) + ' more to unlock' : 'Unlocks at ' + esc(money(r.min))}</small></span>`;
+      return `<div class="dvw dv-w${ok ? '' : ' dv-lock'}${on ? ' dv-on' : ''}" role="group" aria-label="${esc('Bag reward, ' + money(r.amt) + ' off when your bag reaches ' + money(r.min))}">${card({ cur: CUR, tone: i ? 'red' : 'black', cls: 'dv-row', kick: 'Bag reward', amt: r.amt, line: 'When your bag reaches ' + money(r.min), ring: 'Bag reward', seed: 41 + i * 6,
+        foot: `<span class="dv-note">No code needed</span>${pill(on ? 'On this bag' : ok ? 'Unlocked' : 'Automatic', on || ok)}`, more: lock })}</div>`;
     }).join('');
+    const full = `<div class="dvw dv-w" role="group" aria-label="${esc(money(PAYFULL) + ' more off when you pay in full')}">${card({ cur: CUR, tone: 'cream', cls: 'dv-row', kick: 'Paid in full', amt: PAYFULL, line: 'Choose to pay everything at once in your bag', ring: 'Bag reward', seed: 53,
+      foot: `<span class="dv-note">On top of any bag reward</span>${pill('Your choice', true)}` })}</div>`;
     view.innerHTML = `<div class="m-of dvw-page">
-      <div class="m-pad"><section class="r5-bank" aria-label="${esc('DAUR wallet, ' + fmt(bal) + ' in credits')}"><span class="r5-bk-dm" aria-hidden="true">${MX.DMARK}</span>
-        <span class="r5-bk-top"><span class="r5-bk-wm dk">${MX.WORDMARK}<small>WALLET</small></span><span class="r5-bk-chip" aria-hidden="true"><i></i><i></i><i></i></span></span>
-        <span class="r5-bk-mid"><small>Credit balance</small><b>${esc(fmt(bal))}</b></span>
-        <span class="r5-bk-bot"><span><small>Status</small><b>${has ? 'Ready for this bag' : 'Ready for your next order'}</b></span><span><small>Credits</small><b>${1 + (W.code && wal ? 1 : 0)} active</b></span></span></section>
-        <p class="r5-bk-note">${ic('lock')}Credits come off your total at checkout. They are not cash and cannot be withdrawn.</p></div>
-      <div class="m-pad"><h2 class="m-h2" style="margin-top:24px">In your wallet</h2></div>
-      <div class="dvw-list">${delivery}${welcome}</div>
-      <div class="m-row m-pad" style="margin-top:26px"><h2 class="m-h2">More credits</h2><span class="m-mute">One per order</span></div>
-      <div class="dvw-list">${list || `<div class="m-none"><b>No extra credits right now.</b><span class="m-mute">Your delivery credit and welcome credit still apply. Sale prices below need no code.</span></div>`}</div>
-      <p class="m-mute m-pad of-one">One credit per order on top of delivery. A picked credit counts once your bag reaches its amount. Until then, the biggest credit your bag qualifies for is used.</p>
+      <div class="m-pad"><section class="r5-bank" aria-label="${esc('DAUR rewards, ' + fmt(now) + ' off this bag')}"><span class="r5-bk-dm" aria-hidden="true">${MX.DMARK}</span>
+        <span class="r5-bk-top"><span class="r5-bk-wm dk">${MX.WORDMARK}<small>REWARDS</small></span><span class="r5-bk-chip" aria-hidden="true"><i></i><i></i><i></i></span></span>
+        <span class="r5-bk-mid"><small>${has ? 'Off this bag' : 'Up to'}</small><b>${esc(fmt(has ? now : REWARDS[0].amt + PAYFULL))}</b></span>
+        <span class="r5-bk-bot"><span><small>Status</small><b>${now ? 'Applied at checkout' : has ? 'Add a pair to unlock' : 'Ready for your bag'}</b></span><span><small>Codes</small><b>None needed</b></span></span></section>
+        <p class="r5-bk-note">${ic('lock')}Rewards come off your total by themselves. The biggest one your bag reaches is used.</p></div>
+      <div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Bag rewards</h2><span class="m-mute">Automatic</span></div>
+      <div class="dvw-list">${tiers}${full}</div>
       ${sale.length ? `<div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Already reduced</h2><a class="m-link" href="${href.shop('Sale')}" data-m>All sale</a></div><div class="m-grid">${sale.map((p) => MX.card(p, false)).join('')}</div>` : ''}
     </div>`;
   };

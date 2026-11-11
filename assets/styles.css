@@ -3825,3 +3825,37 @@ body[data-page="feed"] .ftr { display: block !important; }
 :root:not([data-theme="dark"]) .hdr { background: #FFFFFF; }
 :root:not([data-theme="dark"]) :is(h1, h2) { color: #172C27; }
 .ur-a { letter-spacing: .42em !important; text-transform: uppercase; color: #A58A64 !important; }
+
+/* ===== Round 2 (owner 2026-11-11): no dashed decorations on desktop either ===== */
+.bars .gap-note,.leadc .lc-last,.courier-f,.sl-vote{border-top-style:solid}
+.note-box,.fit.ph,.adm-note,.tcour,.wl-t,.of-copy{border-style:solid!important}
+.fit.ph{background:rgba(var(--fg-rgb),.02)}
+.stockgrid input + input{border-style:solid}
+.of-card.has-code{border-style:solid}
+.of-code::before{border-top-style:solid!important;border-top-width:1px!important}
+.rw-pair:focus-visible .rw-face{outline-style:solid}
+
+/* ===== Round 2: header logo carousel on desktop, the shoe logo and the DAUR SUPPLY name slide in turn ===== */
+.logo.lg-car { display: inline-grid; overflow: hidden; justify-items: center; align-items: center; min-width: 150px; }
+.logo.lg-car > span { grid-area: 1 / 1; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+.logo.lg-car .lg-t { opacity: 0; transform: translateX(100%); color: #172C27; }
+.logo.lg-car .lg-t b { font: 700 26px/1 var(--display, "DAUR Cond"), sans-serif; letter-spacing: .2em; margin-right: -.2em; }
+.logo.lg-car .lg-t small { color: #A58A64; }
+@media (prefers-reduced-motion: no-preference) {
+  .hdr .logo.lg-car .lg-w, .mnav-h .logo.lg-car .lg-w { animation: lgA 10s cubic-bezier(.65,0,.35,1) infinite; }
+  .hdr .logo.lg-car .lg-t, .mnav-h .logo.lg-car .lg-t { animation: lgB 10s cubic-bezier(.65,0,.35,1) infinite; }
+}
+@keyframes lgA { 0%, 44% { opacity: 1; transform: none; } 50%, 94% { opacity: 0; transform: translateX(-100%); } 94.01% { opacity: 0; transform: translateX(100%); } 100% { opacity: 1; transform: none; } }
+@keyframes lgB { 0%, 44% { opacity: 0; transform: translateX(100%); } 50%, 94% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateX(-100%); } }
+
+/* ===== Round 2: Shop all keeps sort and filters in view while scrolling, with a search icon beside them ===== */
+.toolbar { position: sticky; top: 59px; z-index: 20; background: var(--ink); }
+:root:not([data-theme="dark"]) .toolbar { background: #FFFFFF; }
+.toolbar .fsrch { display: inline-grid; place-items: center; width: 40px; padding: 0; border-radius: 999px; }
+.toolbar .fsrch svg { width: 18px; height: 18px; }
+/* the desktop box in the brand card look: forest lid, bone shoe logo */
+.box3d .lid { background: linear-gradient(135deg, #1E3832, #172C27); }
+.box3d .lid b { color: #F1EBDD; text-shadow: none; width: 46%; line-height: 0; }
+.box3d .lid b .wm { width: 100%; height: auto; display: block; }
+.tissue::after { content: ""; }
+.f2-hero::after { display: none; }
