@@ -241,7 +241,7 @@
   // gift and give, side by side: gold for someone you know, green for someone in need
   // gift or give: two cards that say plainly who the pair is for and what happens next
   const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You choose the pair and his size. We place your note in the box and send it to his door, fully paid.' : 'We match the size and hand the pair over in person. A private photo of the moment reaches only you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
-  const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person confirms every order on WhatsApp']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
+  const ticker = () => { const t = [['user', 'From Azar, the founder of DAUR Supply'], [ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person confirms every order on WhatsApp']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
   const socRow = (cls) => `<div class="m-soc ${cls || ''}">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'} aria-label="${n}: ${esc(h)}">${ic(k)}</a>`).join('')}</div>`;
   const follow = () => `<section class="m-follow"><span class="m-kick">${ic('spark')}Find us</span><b>Follow DAUR Supply</b>
@@ -260,6 +260,8 @@
     out.push({ k: 'On every order', big: fmt(DEL), l: 'This credit covers the delivery of your pair to any city in Pakistan.', cta: 'Shop all', h: href.shop() });
     return out;
   }
+  // the founder's name in a black row at the very top of home, so a visitor sees at once who stands behind the store
+  const founder = () => `<a class="m-fdr" href="${root}/pages/manifesto" data-m>${ic('user')}<span>From Azar, the founder of DAUR Supply</span></a>`;
   function promo() {
     const sl = offerSlides();
     return `<section class="m-promo" aria-roledescription="carousel" aria-label="Offers"><div class="pr-track" id="mPromo">${sl.map((x, i) => `<a class="pr-s" href="${x.h}" data-m aria-label="${esc(x.big + ', ' + x.l)}"><span class="pr-k">${ic(i === 0 && x.cta === 'Use it now' ? 'wallet' : x.p ? 'tag' : 'clock')}${esc(x.k)}</span><b class="pr-big">${esc(x.big)}</b><span class="pr-l">${esc(x.l)}</span><span class="pr-go">${esc(x.cta)}${ic('arrow')}</span>${x.p ? img(x.p, x.v, 'pr-img', '') : `<span class="pr-dm">${DMARK}</span>`}</a>`).join('')}</div>
@@ -313,7 +315,7 @@
     const list = all.filter((p) => inCat(p, c));
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
-    view.innerHTML = `${promo()}
+    view.innerHTML = `${founder()}${promo()}
       <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>The leather shoes of Pakistan are made in the workshops of Lahore, Sialkot and Kasur. We go there ourselves, choose each pair, check it by hand in Islamabad and send it to your door. No showroom stands in between, so you pay for the shoe and not for the shop.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>

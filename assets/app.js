@@ -359,7 +359,8 @@
   // every notice in the black bar, with its full sentence and a link for the card that opens from the bar
   function notices() {
     const A = C.advance || {}, ex = C.exchangeDays || 5;
-    const list = (C.announce ? [{ t: C.announce, d: '', l: '' }] : []);
+    // the founder's name leads the bar, so a visitor knows from the first second who stands behind the store
+    const list = [{ t: 'From Azar, the founder of DAUR Supply', d: 'DAUR Supply was founded by Azar. Every order is confirmed by a real person on WhatsApp at 0319 9628735 before it leaves Islamabad.', l: link('manifesto'), c: 'Our story' }].concat(C.announce ? [{ t: C.announce, d: '', l: '' }] : []);
     if (A.on && A.required) list.push({ t: A.free === 'all' ? 'Rs. 200 delivery credit on every order' : 'Your pair, reserved for you', d: (A.free === 'all' ? 'Your delivery credit covers every order, to any city we deliver to. ' : '') + 'A small ' + A.care + ' confirms your order and counts towards your price: ' + A.tierText() + ' You pay the rest when your pair arrives.', l: link('policies', 'advance'), c: 'How it works' });
     else if (A.on) list.push({ t: 'Free delivery when you pay in advance', d: 'Pay the full amount in advance, or a ' + A.care + ' of ' + fmt(A.deposit) + ' or more, and delivery is free to any city in Pakistan. The deposit comes off what you pay the rider.' + (A.code ? ' Enter code ' + A.code + ' at checkout and send us your payment receipt on WhatsApp.' : ''), l: link('policies', 'advance'), c: 'How it works' });
     if (C.delivery.days) list.push({ t: 'On its way within 24 hours', d: 'Once your order is confirmed, your pair leaves Islamabad within 24 hours on working days. Most cities receive it in ' + C.delivery.days + '; remote areas and public holidays can take a little longer.', l: link('policies', 'shipping'), c: 'Shipping policy' });

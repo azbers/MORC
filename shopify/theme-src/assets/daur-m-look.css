@@ -173,3 +173,7 @@ html.m-on #mApp .xb-pc.k-bank{background:radial-gradient(90% 60% at 100% 0%,rgba
 html.m-on #mApp .xb-trust li,html.m-on #mApp .xb-cp.lt{background:var(--lk-paper)!important;box-shadow:inset 0 0 0 1px var(--lk-line)}
 html.m-on #mApp .xb-trust svg{color:var(--lk-brass)!important}
 html.m-on #mApp .xb-wa{border-color:var(--lk-line)!important;border-radius:14px!important}
+
+/* founder row: black, at the top of home, under the app bar */
+html.m-on #mApp .m-fdr{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:10px 16px;background:linear-gradient(90deg,#1C130E,#2A1C14 50%,#1C130E);color:#F6EBDA;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;text-align:center}
+html.m-on #mApp .m-fdr svg{flex:none;width:15px;height:15px;color:#D9B26A}

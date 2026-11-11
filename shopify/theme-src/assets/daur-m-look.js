@@ -51,7 +51,8 @@
       '<ul class="lk-facts"><li><b>3</b><small>workshop cities we buy from</small></li><li><b>' + esc(C.exchangeDays || 5) + ' days</b><small>to swap your size</small></li><li><b>30 days</b><small>of cover for defects</small></li></ul></div>';
     // one headline on the page: the plain intro keeps its place for readers without this layer
     h1.setAttribute('aria-hidden', 'true');
-    view.insertBefore(el, view.firstChild);
+    const fdr = view.querySelector(':scope > .m-fdr');
+    view.insertBefore(el, fdr ? fdr.nextSibling : view.firstChild);
     show(el, 0);
     clearInterval(turn);
     if (pairs.length > 1 && !reduce) turn = setInterval(function () {
