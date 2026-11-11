@@ -484,7 +484,7 @@
       if (k === 1) reels.push({ text: ['Chosen with care.', 'Checked by hand.', 'Finished with our seal.', 'Delivered free to your door.'] });
       if (k === 4) reels.push({ text: ['No loud logo.', 'Just the craft.', 'Branded, not labeled.', 'Aik naya daur.'] });
     });
-    const D = '<svg viewBox="-4 -4 204 141" fill="currentColor" aria-hidden="true"><use href="#dl-d"/></svg>';
+    const D = '<svg viewBox="-8 -8 686 512" fill="currentColor" aria-hidden="true"><use href="#dl-d"/></svg>';
     const head = `<span class="fd-av">${D}</span><span class="fd-who"><b>daursupply</b><small>Pakistan</small></span>`;
     document.getElementById('app').innerHTML = `<div class="fd" id="feed">
       <header class="fd-hd"><h1>The Feed</h1><p>New pairs, price cuts and the craft behind them. Double tap a pair to like it.</p></header>

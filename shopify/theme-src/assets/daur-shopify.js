@@ -202,7 +202,8 @@
     fields.concat([['return_to', back]]).forEach(([k, v]) => { const i = document.createElement('input'); i.type = 'hidden'; i.name = k; i.value = v; form.appendChild(i); });
     document.body.appendChild(form); form.submit();
   }
-  S.forward = function (key, list) {
+  S.forward = function (key, list, opts) {
+    opts = opts || {};
     if (!LABEL[key] || !Array.isArray(list) || !list.length) return;
     // a new fit note is added to the front of the list
     // each note is sent once, even when the list is saved again later (Helpful votes save it too)
@@ -216,10 +217,11 @@
       .then((r) => {
         const u = r.url || '';
         // Shopify sends a successful contact post on to a page marked contact_posted=true
-        if (r.ok && u.indexOf('contact_posted=true') > -1 && u.indexOf('challenge') === -1) return;
-        postForm(fields);
+        if (r.ok && u.indexOf('contact_posted=true') > -1 && u.indexOf('challenge') === -1) { if (opts.onOk) opts.onOk(); return; }
+        // the phone keeps the buyer on the page: the note goes on WhatsApp instead of a page change
+        if (opts.onFail) opts.onFail(); else postForm(fields);
       })
-      .catch(() => postForm(fields));
+      .catch(() => { if (opts.onFail) opts.onFail(); else postForm(fields); });
   };
   // back from the spam check: confirm the note arrived
   if (/[?&]fitnote=sent/.test(location.search) && /[?&]contact_posted=true/.test(location.search)) {
@@ -235,44 +237,34 @@
   EXT.views.order = function () { location.replace(S.routes.account); };
   EXT.views.track = function (param) {
     const A = window.DAUR_API; const esc = A.esc;
-    A.setMeta('Track your order | DAUR Supply', 'Track your DAUR Supply order by order number, phone number or courier tracking number.');
-    // Shopify shows an order only to the person who placed it: the order page (one time code by email, no password)
-    // carries the live status, the order details and the courier tracking number once the pair is dispatched
-    const steps = [['bag', 'Placed', 'Your order reaches us, and your bag shows the Rs. 1,000 advance that reserves it.'], ['check', 'Confirmed', 'A person on our team confirms it with you by call or WhatsApp.'], ['box', 'Dispatched', 'It usually leaves within 24 hours, and your courier tracking number reaches you on WhatsApp.'], ['truck', 'Out for delivery', "You can follow the parcel on the courier's tracking page."], ['home', 'Delivered', 'You pay the rest to the rider only now, when the pair is in your hands.']];
-    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Your order, at every step.</h1><p class="aside">Check your order status, its details and the courier tracking number in whichever way suits you.</p></div></section>
+    A.setMeta('Track your order | DAUR Supply', 'Track your DAUR Supply order with your order number and phone number, or sign in to see every detail.');
+    // two ways in: the order number and phone (our team replies with the live status and the tracking link),
+    // or sign in (Shopify shows every order with its status, items, total and tracking once dispatched)
+    const steps = [['Placed', 'Your order reaches us and your pair is set aside in your name.'], ['Confirmed', 'A person on our team confirms the details with you by call or WhatsApp.'], ['Packed and dispatched', 'Your pair is checked by hand and leaves Islamabad, usually within 24 hours.'], ['On its way', 'Your tracking link reaches you on WhatsApp, so you can follow every stop.'], ['At your door', 'In 2 to 4 days. You pay the rest only when the box is in your hands.']];
+    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair?</h1><p class="aside">Enter your order number and phone number, or sign in to see everything about your order in one place.</p></div></section>
       <div class="wrap trk" style="padding-block:36px 96px">
-        <ol class="trk-steps" aria-label="What your order page shows">${steps.map(([i, t, d], k) => `<li><span class="trk-n mono">0${k + 1}</span><b>${t}</b><span>${d}</span></li>`).join('')}</ol>
         <div class="trk-g">
-          <div class="tcard trk-c trk-main"><span class="mono mute">1 / Your order page</span><h2>See your order status</h2>
-            <p>Sign in with the email you ordered with. We send a one time code, no password. You see every order with its status, the items, the total and the courier tracking number once the pair is dispatched.</p>
-            <a class="btn volt" href="${esc(S.routes.account)}">Open my orders <span class="arr">&rarr;</span></a>
-            <p class="form-note">The order confirmation email also carries a direct link to your order page.</p></div>
-          <form class="tcard trk-c" id="lcs" novalidate><span class="mono mute">2 / The courier</span><h2>Track with Leopards</h2>
-            <p>Have the tracking number from your dispatch message? Type it here. We copy it and open the Leopards tracking page, where you paste it.</p>
-            <div class="f-ic"><input id="lcsN" inputmode="text" placeholder="Tracking number, for example LE7..." autocomplete="off" aria-label="Leopards tracking number"></div>
-            <button class="btn ghost" type="submit">Open Leopards tracking <span class="arr">&rarr;</span></button></form>
-          <form class="tcard trk-c" id="tf" novalidate><span class="mono mute">3 / Our team</span><h2>Ask us on WhatsApp</h2>
-            <p>Ordered with a phone number, or no email to hand? Send your order number or phone number and a member of our team will reply with the status.</p>
-            <div class="f-ic"><input id="tq" placeholder="#1001 or 03XX XXXXXXX" autocomplete="off" aria-label="Order number, phone number or email"></div>
-            <button class="btn ghost" type="submit">Ask on WhatsApp <span class="arr">&rarr;</span></button></form>
-        </div></div>`;
-    const lcs = document.getElementById('lcs');
-    lcs.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const n = document.getElementById('lcsN').value.trim();
-      const go = () => window.open('https://leopardscourier.com/leopards-tracking', '_blank', 'noopener');
-      if (!n) { go(); return; }
-      const done = () => { A.toast('Tracking number copied. Paste it on the Leopards page.'); go(); };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(n).then(done, go); else go();
-    });
-    const tf = document.getElementById('tf'), tq = document.getElementById('tq');
-    if (param) tq.value = param;
+          <form class="tcard trk-c trk-main" id="tf" novalidate><span class="mono mute">Track your order</span><h2>Your order number and phone</h2>
+            <p>Both are on your order confirmation. We reply on WhatsApp with the live status and your tracking link.</p>
+            <label class="field-label" for="tq">Order number</label><div class="trk-in"><input id="tq" inputmode="numeric" placeholder="#1001" autocomplete="off"></div>
+            <label class="field-label" for="tp">Phone number</label><div class="trk-in"><input id="tp" type="tel" inputmode="tel" placeholder="03XX XXXXXXX" autocomplete="tel"></div>
+            <p class="form-note trk-err" role="alert"></p>
+            <button class="btn volt" type="submit">Track my order <span class="arr">&rarr;</span></button></form>
+          <div class="tcard trk-c"><span class="mono mute">Or sign in</span><h2>See every detail</h2>
+            <p>Sign in with the email you ordered with. We send a one time code, no password. You see every order with its status, items, total and tracking link once it is on its way.</p>
+            <a class="btn ghost" href="${esc(S.routes.account)}">Sign in to my orders <span class="arr">&rarr;</span></a></div>
+        </div>
+        <ol class="trk-steps" aria-label="What happens to your order">${steps.map(([t, d], k) => `<li><span class="trk-n mono">0${k + 1}</span><b>${t}</b><span>${d}</span></li>`).join('')}</ol></div>`;
+    const tf = document.getElementById('tf'), tq = document.getElementById('tq'), tp = document.getElementById('tp'), er = tf.querySelector('.trk-err');
+    if (param) { if (/^\+?\d{10,}$/.test(String(param).replace(/\s/g, ''))) tp.value = param; else tq.value = param; }
     tf.addEventListener('submit', (e) => {
       e.preventDefault();
-      const q = tq.value.trim();
-      if (!q) { tq.focus(); A.toast('Type your order number, phone or email'); return; }
-      const kind = /@/.test(q) ? 'email' : C.normPhone(q) ? 'phone number' : 'order number';
-      window.open('https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent('Assalam o Alaikum DAUR Supply, please share the status of my order. My ' + kind + ': ' + q), '_blank', 'noopener');
+      const q = tq.value.replace(/[^\d]/g, ''), ph = tp.value.trim();
+      if (!q) { er.textContent = 'Add your order number. It starts with # on your confirmation.'; tq.focus(); return; }
+      if (!C.normPhone(ph)) { er.textContent = 'Add the phone number you ordered with.'; tp.focus(); return; }
+      er.textContent = '';
+      window.open('https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent('Assalam o Alaikum DAUR Supply, please share the status of my order #' + q + '. Phone: ' + ph), '_blank', 'noopener');
+      A.toast('Opening WhatsApp. Our team replies with your live status.');
     });
   };
 })();

@@ -76,9 +76,8 @@
   }
   function swatches(p, v) {
     // every colour is a small photo of the pair in that colour with a dot of the colour on it; one colour is still shown, so every page looks the same
-    return `<div class="px-rail r" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour${p.variants.length > 1 ? ` <small>${p.variants.length}</small>` : ''}</span>
-      ${p.variants.map((x) => { const y = pic(p, x); return `<button class="px-sw im" type="button" role="radio" data-pxcol="${esc(x.id)}" aria-checked="${x.id === v.id}" aria-label="${esc(x.color)}" style="--sw:${esc(x.hex || '#222')}"><img src="${esc(y.src)}" alt="" loading="lazy"><i class="sw-dot"></i></button>`; }).join('')}
-      <span class="px-cn">${esc(v.color)}</span></div>`;
+    return `<div class="px-cstrip" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour<b class="px-cn">${esc(v.color)}</b>${p.variants.length > 1 ? `<small>${p.variants.length} colours</small>` : ''}</span><span class="px-cs">
+      ${p.variants.map((x) => { const y = pic(p, x); return `<button class="px-sw im" type="button" role="radio" data-pxcol="${esc(x.id)}" aria-checked="${x.id === v.id}" aria-label="${esc(x.color)}" style="--sw:${esc(x.hex || '#222')}"><img src="${esc(y.src)}" alt="" loading="lazy"><i class="sw-dot"></i></button>`; }).join('')}</span></div>`;
   }
   function priceBox(v) {
     const save = isSale(v) ? v.compareAt - v.price : 0;
@@ -93,7 +92,7 @@
         <figure class="px-slide px-hero" aria-label="1 of ${n}"><span class="px-word" aria-hidden="true">${WORDMARK}</span><span class="px-pb${hero.cut ? '' : ' ph'}"><span class="px-floor" aria-hidden="true"></span><span class="px-fl">${heroImg}</span></span></figure>
         ${photos.map((s, k) => `<figure class="px-slide ph" aria-label="${k + 2} of ${n}"><img src="${esc(sized(s, 900))}"${srcset(s)} alt="${esc(p.name + ', ' + v.color + ', photo ' + (k + 2))}" loading="${k === 0 ? 'eager' : 'lazy'}" decoding="async"></figure>`).join('')}
       </div>
-      <div class="px-ui">${rail(p, v)}${swatches(p, v)}${priceBox(v)}</div>
+      <div class="px-ui">${rail(p, v)}${priceBox(v)}</div>
       <button class="px-save" type="button" data-wish="${esc(p.id)}" aria-pressed="${MX.wished(p.id)}" aria-label="Save ${esc(p.name)} to Liked">${H1}</button>
       ${n > 1 ? `<div class="px-pager" aria-hidden="true"><span class="pg-n"><b>${i + 1}</b>/${n}</span><span class="pg-dots">${Array.from({ length: n }, (_, k) => `<button type="button" tabindex="-1" data-pxdot="${k}" class="${k === i ? 'on' : ''}"></button>`).join('')}</span></div>` : ''}`;
   }
@@ -108,14 +107,14 @@
   }
   // three numbers a buyer can hold us to, instead of adjectives
   const facts = (v) => [
-    [days(), 'to your door'],
-    isSale(v) ? ['Final size', 'at this sale price'] : [EX + ' days', 'to swap the size'],
-    ['30 days', 'cover for any defect']
+    [days(), 'and it is on your feet'],
+    isSale(v) ? ['Final size', 'at this sale price'] : [EX + ' days', 'to swap the size, no stress'],
+    ['30 days', 'we stand behind every stitch']
   ].map(([b, s]) => `<span><b>${esc(b)}</b><small>${esc(s)}</small></span>`).join('');
 
   /* ---------- who the pair is for: three real photographs, one colour each ---------- */
   const FOR = [
-    ['me', 'For me', 'Your size, your door', 'm-hero.webp'],
+    ['me', 'For me', 'Because you deserve it', 'm-hero.webp'],
     ['gift', 'A gift', 'For someone you love', 'm-g-hands.webp'],
     ['give', 'Donate a pair', 'For someone in need', 'm-g-boy-smile.webp']
   ];
@@ -126,47 +125,59 @@
   function forPanel(p, v) {
     const m = st().mode || 'me';
     if (m === 'gift') return `<div class="px-fp k-gift"><div class="fp-note" aria-hidden="true"><span class="fn-d">${DMARK}</span><i>Eid Mubarak, Abbu.</i><i class="fn-from">From Ali</i></div>
-      <div class="fp-t"><b>He opens the box. Your words are the first thing he reads.</b><ul><li>${ic('gift')}We pack it as a gift and place your note inside.</li><li>${ic('truck')}It goes to his door, and there is nothing for him to pay.</li><li>${ic('help')}Not sure of his size? It is printed on the tongue of a pair he wears now.</li></ul></div></div>`;
+      <div class="fp-t"><b>He lifts the lid, and your words are the first thing he sees.</b><ul><li>${ic('gift')}We pack it as a gift and place your note inside.</li><li>${ic('truck')}It goes to his door, and there is nothing for him to pay.</li><li>${ic('help')}Not sure of his size? It is printed on the tongue of a pair he wears now.</li></ul></div></div>`;
     if (m === 'give') return `<div class="px-fp k-give"><img class="fp-ph" src="${esc(asset('m-g-boys-corn.webp'))}" alt="Two boys sitting in a field" loading="lazy">
-      <div class="fp-t"><b>One pair, one person, handed over in person.</b><p>We match the size to the person who receives it and add ${esc(fmt(DAUR_ADD))} of our own to every pair you sponsor. A private photo of the moment reaches you within 7 days of the handover.</p><a class="fp-a" href="${href.giving}" data-m>How philanthropy works ${ic('arrow')}</a></div></div>`;
+      <div class="fp-t"><b>Your pair, on the feet of someone who could not buy it.</b><p>We match the size to the person who receives it and add ${esc(fmt(DAUR_ADD))} of our own to every pair you sponsor. A private photo of the moment reaches you within 7 days of the handover.</p><a class="fp-a" href="${href.giving}" data-m>How philanthropy works ${ic('arrow')}</a></div></div>`;
     return `<div class="px-fp k-me"><ul>
-      <li>${ic('box')}<span><b>We dispatch within 24 hours</b> of confirming your order with you on WhatsApp.</span></li>
-      <li>${ic('truck')}<span><b>It reaches your door in ${esc(days())}</b>, in any city in Pakistan.</span></li>
+      <li>${ic('box')}<span><b>Out of Islamabad within 24 hours</b> of a quick confirmation on WhatsApp.</span></li>
+      <li>${ic('truck')}<span><b>On your feet in ${esc(days())}</b>, in any city in Pakistan.</span></li>
       <li>${ic('wallet')}<span><b>Rs. 1,000 holds this pair in your name.</b> The rest you pay when the box is in your hands. <button type="button" class="r9-whyl" data-why>How it works</button></span></li>
       <li>${isSale(v) ? `${ic('tag')}<span><b>This is a sale price, so the size is final.</b> Measure your foot with the size guide first, or ask us on WhatsApp and we will help you choose.</span>` : `${ic('swap')}<span><b>You can swap the size within ${EX} days</b> if the fit is not right, so a wrong guess is never a lost pair.</span>`}</li></ul></div>`;
   }
 
   /* ---------- fit notes: social style cards that swipe sideways, each with a drawn character avatar ----------
      The avatar is a drawing chosen from the name, never a photo of a real person. */
-  const AV_BG = ['#172C27', '#6B7550', '#A58A64', '#252625', '#3D5148', '#8C7A5B'];
-  const AV_SKIN = ['#F2C9A0', '#D9A47A', '#B9805A', '#8D5A3B', '#E8B98F'];
-  const AV_HAIR = ['#1B1714', '#3A2A1E', '#5A4030', '#2A2422'];
   function hashN(t) { let h = 7; String(t || '').split('').forEach((c) => { h = (h * 31 + c.charCodeAt(0)) >>> 0; }); return h; }
-  function avatar(name) {
-    const h = hashN(name), bg = AV_BG[h % AV_BG.length], sk = AV_SKIN[(h >> 3) % AV_SKIN.length], hr = AV_HAIR[(h >> 6) % AV_HAIR.length];
-    const style = (h >> 9) % 4, beard = (h >> 12) % 3 === 0, shirt = ['#F1EBDD', '#A58A64', '#6B7550', '#252625'][(h >> 14) % 4];
-    const hair = [
-      `<path d="M27 37c0-11 6-18 17-18s17 7 17 18c-3-6-9-9-17-9s-14 3-17 9z" fill="${hr}"/>`,
-      `<path d="M26 39c-1-14 7-22 18-22s19 8 18 22l-3-7c-4 2-9 3-15 3s-11-1-15-3z" fill="${hr}"/>`,
-      `<path d="M25 33c2-9 9-14 19-14s17 5 19 14l-38 0z" fill="${shirt === '#F1EBDD' ? '#172C27' : '#F1EBDD'}"/><path d="M61 33h9v3H44z" fill="${shirt === '#F1EBDD' ? '#172C27' : '#F1EBDD'}"/>`,
-      `<path d="M28 36c0-10 7-16 16-16s16 6 16 16c-2-3-4-4-6-4l-2-4c-3 3-10 4-16 4-3 0-6 1-8 4z" fill="${hr}"/>`
-    ][style];
-    return `<svg class="st-avi" viewBox="0 0 88 88" aria-hidden="true"><rect width="88" height="88" fill="${bg}"/>
-      <path d="M14 88c2-16 14-24 30-24s28 8 30 24z" fill="${shirt}"/><rect x="38" y="52" width="12" height="14" rx="5" fill="${sk}"/>
-      <ellipse cx="44" cy="40" rx="16" ry="18" fill="${sk}"/>${beard ? `<path d="M29 43c2 11 8 16 15 16s13-5 15-16c-3 4-8 5-15 5s-12-1-15-5z" fill="${hr}"/>` : ''}
-      ${hair}<circle cx="38" cy="41" r="1.7" fill="#1B1714"/><circle cx="50" cy="41" r="1.7" fill="#1B1714"/>
-      <path d="M40 50c2.5 1.8 5.5 1.8 8 0" stroke="#1B1714" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
-  }
+  /* ---------- eight drawn characters for fit notes: each note gets a different one, never a photo of a real person ---------- */
+  const AVS = (() => {
+    const S = ['#F3CFA9', '#E2B48A', '#C98F64', '#A86E48', '#7E4E33'];
+    const eyes = (y, g) => `<ellipse cx="50" cy="${y}" rx="3.1" ry="3.6" fill="#1F1A17"/><ellipse cx="70" cy="${y}" rx="3.1" ry="3.6" fill="#1F1A17"/><circle cx="51.1" cy="${y - 1.3}" r="1" fill="#fff"/><circle cx="71.1" cy="${y - 1.3}" r="1" fill="#fff"/>${g ? `<g fill="none" stroke="${g}" stroke-width="2.2"><circle cx="50" cy="${y}" r="8"/><circle cx="70" cy="${y}" r="8"/><path d="M58 ${y}h4"/></g>` : ''}`;
+    const brows = (y, c, t) => `<path d="M43 ${y}q7 ${t || -3} 14 0M63 ${y}q7 ${t || -3} 14 0" stroke="${c}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+    const face = (sk, extra) => `<path d="M30 60c0-19 13-31 30-31s30 12 30 31c0 20-13 36-30 36S30 80 30 60z" fill="${sk}"/><ellipse cx="30.5" cy="62" rx="4.5" ry="7" fill="${sk}"/><ellipse cx="89.5" cy="62" rx="4.5" ry="7" fill="${sk}"/>${extra || ''}<path d="M58 66q2 4 4 0" stroke="rgba(0,0,0,.25)" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="44" cy="71" rx="4.5" ry="2.6" fill="#E88F7A" opacity=".28"/><ellipse cx="76" cy="71" rx="4.5" ry="2.6" fill="#E88F7A" opacity=".28"/>`;
+    const smile = (c) => `<path d="M52 77q8 6 16 0" stroke="${c || '#5A2E22'}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+    const body = (shirt, sk, kind) => `<path d="M53 88h14v12H53z" fill="${sk}"/><path d="M14 120c2-17 18-26 46-26s44 9 46 26z" fill="${shirt}"/>${kind === 'collar' ? '<path d="M48 95l12 10 12-10" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.5" stroke-linejoin="round"/>' : kind === 'hood' ? '<path d="M36 100c6 8 14 11 24 11s18-3 24-11" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="5"/><path d="M54 108v10M66 108v10" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/>' : kind === 'tee' ? '<path d="M50 96q10 7 20 0" fill="none" stroke="rgba(0,0,0,.15)" stroke-width="3"/>' : ''}`;
+    const wrap = (bg1, bg2, inner) => `<svg class="st-avi" viewBox="12 16 96 96" aria-hidden="true"><defs><linearGradient id="AVG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg1}"/><stop offset="1" stop-color="${bg2}"/></linearGradient></defs><rect width="120" height="120" fill="${bg1}"/><circle cx="96" cy="22" r="30" fill="${bg2}" opacity=".55"/>${inner}</svg>`;
+    return [
+      // 1 short fade and a trimmed beard
+      () => wrap('#172C27', '#2E4A42', body('#F1EBDD', S[2], 'collar') + face(S[2], '<path d="M33 66c2 18 13 29 27 29s25-11 27-29c-3 9-12 13-27 13s-24-4-27-13z" fill="#2A1E17"/>') + '<path d="M30 52c0-16 12-26 30-26s30 10 30 26c-4-8-12-12-30-12s-26 4-30 12z" fill="#1E1611"/>' + brows(51, '#1E1611') + eyes(58) + smile('#F1EBDD')),
+      // 2 curly top, round glasses
+      () => wrap('#A58A64', '#C7AE86', body('#172C27', S[0], 'tee') + face(S[0]) + '<g fill="#3A2618"><circle cx="40" cy="38" r="9"/><circle cx="52" cy="31" r="10"/><circle cx="66" cy="30" r="10"/><circle cx="79" cy="36" r="9"/><circle cx="86" cy="46" r="7"/><circle cx="34" cy="47" r="7"/></g>' + brows(50, '#3A2618') + eyes(58, '#172C27') + smile()),
+      // 3 backward cap and stubble
+      () => wrap('#6B7550', '#8C9670', body('#252625', S[3], 'hood') + face(S[3], '<path d="M36 72c3 13 12 21 24 21s21-8 24-21c-5 6-13 9-24 9s-19-3-24-9z" fill="rgba(30,22,17,.35)"/>') + '<path d="M29 50c1-16 14-25 31-25s30 9 31 25z" fill="#F1EBDD"/><path d="M29 50h62" stroke="#A58A64" stroke-width="3"/><path d="M22 52c4-3 8-3 10-2" stroke="#F1EBDD" stroke-width="6" stroke-linecap="round"/>' + brows(53, '#1E1611') + eyes(60) + smile()),
+      // 4 side part and a moustache
+      () => wrap('#E9DFCB', '#D6C7A6', body('#6B7550', S[1], 'collar') + face(S[1], '<path d="M49 73c4-3 8-3 11 0 3-3 7-3 11 0-2 4-6 5-11 3-5 2-9 1-11-3z" fill="#2B1C14"/>') + '<path d="M30 54c-2-17 11-28 30-28 18 0 31 9 30 26-6-9-17-13-28-12l-6-6c-4 7-14 12-26 20z" fill="#2B1C14"/>' + brows(51, '#2B1C14') + eyes(58) + '<path d="M54 80q6 3 12 0" stroke="#5A2E22" stroke-width="2.2" fill="none" stroke-linecap="round"/>'),
+      // 5 wavy hair and a full beard
+      () => wrap('#252625', '#3C3D3B', body('#A58A64', S[2], 'tee') + face(S[2], '<path d="M31 62c0 22 13 36 29 36s29-14 29-36c-3 10-10 14-15 14-4-3-9-4-14-4s-10 1-14 4c-5 0-12-4-15-14z" fill="#3B2A1F"/>') + '<path d="M27 64c-4-24 10-40 33-40s37 16 33 40c-2-9-6-15-10-18-7 4-15 5-23 5s-16-1-23-5c-4 3-8 9-10 18z" fill="#3B2A1F"/>' + brows(52, '#3B2A1F') + eyes(59) + smile('#F1EBDD')),
+      // 6 beanie, clean shaven
+      () => wrap('#C7AE86', '#E3D2B0', body('#F1EBDD', S[4], 'hood') + face(S[4]) + '<path d="M28 54c0-19 14-30 32-30s32 11 32 30z" fill="#172C27"/><rect x="26" y="48" width="68" height="10" rx="5" fill="#2E4A42"/><circle cx="60" cy="22" r="6" fill="#A58A64"/>' + brows(62, '#1E1611', -2) + eyes(68) + '<path d="M52 82q8 5 16 0" stroke="#3A1F15" stroke-width="2.4" fill="none" stroke-linecap="round"/>'),
+      // 7 shaved head, full beard, glasses
+      () => wrap('#2E4A42', '#4E6A60', body('#252625', S[1], 'collar') + face(S[1], '<path d="M31 62c0 22 13 34 29 34s29-12 29-34c-2 8-6 13-11 14-5-3-11-4-18-4s-13 1-18 4c-5-1-9-6-11-14z" fill="#4A3426"/>') + '<path d="M31 50c3-14 14-22 29-22s26 8 29 22c-7-6-17-9-29-9s-22 3-29 9z" fill="rgba(40,28,20,.25)"/>' + brows(52, '#4A3426') + eyes(59, '#A58A64') + smile('#F1EBDD')),
+      // 8 tall quiff and light stubble
+      () => wrap('#D9C7A3', '#BFA77D', body('#2E4A42', S[0], 'hood') + face(S[0], '<path d="M37 74c3 12 11 19 23 19s20-7 23-19c-5 5-13 8-23 8s-18-3-23-8z" fill="rgba(60,40,28,.22)"/>') + '<path d="M30 54c-3-14 4-24 14-28 8-10 26-12 36-4 9 5 12 14 10 30-4-8-11-12-20-13-8 0-14-3-17-8-5 6-13 11-23 23z" fill="#5A3A24"/>' + brows(51, '#5A3A24') + eyes(58) + smile())
+    ];
+  })();
+  let avN = 0;
+  const avatar = (name, k) => { const i = (k != null ? k : hashN(name)) % AVS.length; return AVS[i]().replace(/AVG/g, 'avg' + (++avN)); };
   const ago = (d) => {
     if (!d) return ''; const t = new Date(d + 'T12:00:00'); if (isNaN(t)) return '';
     const days = Math.max(0, Math.round((Date.now() - t) / 864e5));
     return days < 1 ? 'today' : days < 7 ? days + 'd' : days < 35 ? Math.round(days / 7) + 'w' : when(d);
   };
   const FITW = (f) => { f = String(f || '').toLowerCase(); return /small/.test(f) ? 'Runs small' : /large|big/.test(f) ? 'Runs large' : /true/.test(f) ? 'True to size' : ''; };
-  function story(n) {
+  function story(n, k) {
     const r = Math.max(1, Math.min(5, Math.round(+n.rating || 5)));
     const chips = [n.title, FITW(n.fit), n.size ? 'EU ' + n.size : ''].filter(Boolean);
-    return `<article class="px-story"><header><span class="st-av">${avatar(n.name || n.id)}</span>
+    return `<article class="px-story"><header><span class="st-av">${avatar(n.name || n.id, k)}</span>
         <span class="st-who"><b>${esc(n.name || 'DAUR buyer')}${n.verified ? `<i class="st-tick" title="Bought from DAUR">${ic('check')}</i>` : ''}</b><small>${esc([n.city, ago(n.date)].filter(Boolean).join(' · '))}</small></span></header>
       <div class="st-rate">${hearts(r, 'sm')}<em>${r}.0</em></div>
       ${n.body ? `<p class="st-body">${esc(n.body)}</p>` : ''}
@@ -181,10 +192,10 @@
       <div class="px-empty">${hearts(0, 'lg')}<b>Be the first voice on this pair.</b><p>Every note here comes from a real buyer, and a person on our team reads each one before it goes live.</p></div>${write}</section>`;
     const fitN = s.fit.small + s.fit.true + s.fit.large;
     const top = fitN ? [['true', 'true to size'], ['small', 'it runs small'], ['large', 'it runs large']].sort((a, b) => s.fit[b[0]] - s.fit[a[0]])[0] : null;
-    const faces = list.slice(0, 4).map((n) => `<span class="nf-f">${avatar(n.name || n.id)}</span>`).join('');
+    const base = hashN(p.id), faces = list.slice(0, 4).map((n, k) => `<span class="nf-f">${avatar(n.name || n.id, base + k)}</span>`).join('');
     return `<section class="px-sec px-notes" id="pxNotes"><div class="px-nh"><h2 class="px-h">Fit notes</h2><span class="px-mute">${s.n} ${s.n === 1 ? 'buyer' : 'buyers'} talking</span></div>
       <div class="px-nsum"><span class="nf">${faces}</span><span class="ns-t"><b>${s.avg.toFixed(1)}</b>${hearts(s.avg, 'sm')}<small>${top ? s.fit[top[0]] + ' of ' + fitN + ' say ' + top[1] : 'from ' + s.n + ' fit notes'}</small></span></div>
-      <div class="px-stories" id="pxStories" tabindex="0" aria-label="Fit notes, swipe sideways">${list.map(story).join('')}</div>
+      <div class="px-stories" id="pxStories" tabindex="0" aria-label="Fit notes, swipe sideways">${list.map((n, k) => story(n, base + k)).join('')}</div>
       ${list.length > 1 ? `<div class="px-sdots" aria-hidden="true">${list.slice(0, 12).map((x, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>` : ''}
       ${write}</section>`;
   }
@@ -204,7 +215,7 @@
       <div class="nf-l">How does it feel?</div>
       <div class="nf-chips" role="radiogroup" aria-label="Comfort">${COMFORT.map((c) => `<button type="button" role="radio" aria-checked="${f.c === c}" data-pxcomf="${esc(c)}">${esc(c)}</button>`).join('')}</div>
       <label class="nf-l" for="nfBody">In your words</label><textarea id="nfBody" maxlength="400" rows="3" placeholder="The first week, the fit, what people said"></textarea>
-      <div class="nf-two"><span><label class="nf-l" for="nfName">Your name</label><input id="nfName" autocomplete="name" maxlength="40"></span>
+      <div class="nf-two"><span><label class="nf-l" for="nfName">Your name</label><input id="nfName" autocomplete="name" maxlength="40" enterkeyhint="next"></span>
       <span><label class="nf-l" for="nfPhone">Phone</label><input id="nfPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="03XX XXXXXXX"></span></div>
       <small class="nf-priv">Your phone stays with us. Only your first name shows on the note.</small>
       <p class="nf-err" role="alert"></p>
@@ -217,8 +228,13 @@
     if (miss) { err.textContent = miss; return; }
     const v = varOf(p);
     const item = { id: 'fn' + Date.now().toString(36), status: 'pending', at: new Date().toISOString(), pid: p.id, vid: v.id, pname: p.name, rating: f.r, name: name.split(/\s+/)[0], fullName: name, phone, title: f.c, body, size: st().size || '' };
-    try { if (window.DAUR_SHOPIFY && window.DAUR_SHOPIFY.forward) window.DAUR_SHOPIFY.forward('reviews', [item]); } catch (e) { /* the toast still thanks them */ }
-    st().fn = null; closeSheet(); toast('Thank you, ' + item.name + '. Your fit note reaches our team now and goes live once read.');
+    const viaWa = () => { const t = 'Assalam o Alaikum DAUR, my fit note for the ' + p.name + ' (' + v.color + '): ' + f.r + ' of 5 hearts. ' + f.c + '. ' + body + ' From ' + name + ', ' + phone; try { window.open(waLink(t), '_blank', 'noopener'); } catch (e) { location.href = waLink(t); } };
+    const btn = $('[type=submit]', fm); if (btn) { btn.disabled = true; btn.textContent = 'Sending'; }
+    const done = () => { st().fn = null; closeSheet(); toast('Thank you, ' + item.name + '. Your fit note is with our team and goes live once read.'); };
+    try {
+      if (window.DAUR_SHOPIFY && window.DAUR_SHOPIFY.forward) window.DAUR_SHOPIFY.forward('reviews', [item], { onOk: done, onFail: () => { done(); viaWa(); } });
+      else { done(); viaWa(); }
+    } catch (e) { done(); viaWa(); }
   }
 
   /* ---------- the details and more pairs ---------- */
@@ -278,8 +294,9 @@
     view.innerHTML = `<div class="px" id="px">
       <section class="px-stage${(s.pxi || 0) > 0 ? ' on-ph' : ''}" id="pxStage">${stage(p, v)}</section>
       ${dock()}
+      <div class="px-colors" id="pxColors">${swatches(p, v)}</div>
       ${head(p, v)}
-      <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who is this pair for?</h2></div>${forCards()}<div id="pxFor">${forPanel(p, v)}</div></section>
+      <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who will wear it?</h2></div>${forCards()}<div id="pxFor">${forPanel(p, v)}</div></section>
       ${notesSec(p)}
       ${about(p)}
       ${morePairs(p)}
@@ -432,7 +449,7 @@
       Object.assign(box.style, { width: Wf + 'px', height: Hb + 'px', marginLeft: -Wf / 2 + 'px' });
       box.innerHTML = boxHtml(g); app.appendChild(box);
       const lid = box.querySelector('.bx-lid');
-      lid.style.transform = lidT(172);
+      lid.style.transform = lidT(128);
       const br = box.getBoundingClientRect();
       // the pair leaves the frame from where it stands, or rises from the middle of the screen when the frame is out of sight
       const seen = !!from.box && from.box.cy > 70 && from.box.cy < innerHeight - 140 && from.box.w > 20;
@@ -465,7 +482,7 @@
       fly.finished.then(() => {
         flap.animate([{ transform: `translateY(${lift}px)` }, { transform: 'none' }], { duration: 230, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards' });
         // the lid swings from behind the box to straight up at the viewer, then falls onto the box
-        return new Promise((ok) => setTimeout(ok, 110)).then(() => lid.animate([{ transform: lidT(172) }, { transform: lidT(90) }], { duration: 230, easing: 'cubic-bezier(.45,0,.75,.6)', fill: 'forwards' }).finished);
+        return new Promise((ok) => setTimeout(ok, 110)).then(() => lid.animate([{ transform: lidT(128) }, { transform: lidT(90) }], { duration: 230, easing: 'cubic-bezier(.45,0,.75,.6)', fill: 'forwards' }).finished);
       }).then(() => {
         lid.style.zIndex = 6;
         return lid.animate([{ transform: lidT(90) }, { transform: lidT(TH) }], { duration: 120, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }).finished;
@@ -552,6 +569,7 @@
     const p = prod(); s.pv = d.pxcol; const v = varOf(p);
     if (s.size && !(qty(v, s.size) > 0)) s.size = null;
     s.pxi = 0; paintStage(true);
+    const pc = $('#pxColors', view); if (pc) pc.innerHTML = swatches(p, v);
     const n = $('#pxColName', view); if (n) n.textContent = v.color;
     const f = $('#pxFacts', view); if (f) f.innerHTML = facts(v);
     const fp = $('#pxFor', view); if (fp) fp.innerHTML = forPanel(p, v);
@@ -582,6 +600,7 @@
   MX.tap('pxrate', (t, e, d) => { const f = st().fn || (st().fn = { r: 0, c: '' }); f.r = +d.pxrate; $$('[data-pxrate]').forEach((b) => { const k = +b.dataset.pxrate; b.classList.toggle('on', k <= f.r); b.setAttribute('aria-checked', k === f.r); }); });
   MX.tap('pxcomf', (t, e, d) => { const f = st().fn || (st().fn = { r: 0, c: '' }); f.c = d.pxcomf; $$('[data-pxcomf]').forEach((b) => b.setAttribute('aria-checked', b.dataset.pxcomf === f.c)); });
   document.addEventListener('submit', (e) => { if (e.target && e.target.id === 'pxNform') { e.preventDefault(); sendNote(); } });
+  document.addEventListener('focusin', (e) => { const t = e.target; if (t && t.closest && t.closest('#pxNform') && /INPUT|TEXTAREA/.test(t.tagName)) setTimeout(() => { try { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (er) { /* older phones */ } }, 300); });
   MX.tap('pxall', () => {
     const s = st(); s.pxAll = !s.pxAll; const el = $('#pxNotes', view); if (!el) return;
     const y = window.scrollY; el.outerHTML = notesSec(prod());

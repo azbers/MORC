@@ -250,7 +250,7 @@
     const pick = P().slice(0, 4);
     view.innerHTML = `<div class="xb xb-empty"><section class="r9-empty"><span class="r9-wm dk" aria-hidden="true">${MX.WORDMARK}</span><span class="r9-glow" aria-hidden="true"></span>${MX.BOXART(true)}<i class="r9-d d1"></i><i class="r9-d d2"></i><i class="r9-d d3"></i><i class="r9-d d4"></i>
       <span class="r9-k">${ic('spark')}Your DAUR box</span><h2>Your box is open.</h2>
-      <p>${W.code ? 'It is waiting for its first pair, and ' + esc(fmt(W.amt + DEL)) + ' of credit is already inside. The credit only counts once a pair joins it.' : 'It is waiting for its first pair. Choose one and we will hold it here for you.'}</p>
+      <p>${W.code ? 'It is waiting for its first pair, and ' + esc(fmt(W.amt + DEL)) + ' of credit is already inside. The credit only counts once a pair joins it.' : 'Your next favourite pair is one tap away. Choose it and we keep it right here for you.'}</p>
       <a class="r9-go" href="${href.shop()}" data-m>Find my pair${ic('arrow')}</a>
       <ol class="r9-how"><li><b>1</b><span>Choose a pair and your size.</span></li><li><b>2</b><span>Hold it in your name with ${esc(fmt(1000))}, which comes off the price.</span></li><li><b>3</b><span>Pay the rest only when it is at your door.</span></li></ol></section>
       ${pick.length ? `<div class="m-row m-pad xb-em-h"><h2 class="m-h2">Start with these</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div><div class="m-grid">${pick.map((p) => card(p, false)).join('')}</div>` : ''}

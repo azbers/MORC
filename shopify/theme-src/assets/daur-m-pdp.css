@@ -336,7 +336,7 @@ html.m-on.m-pdp-on .m-sheet.on~.m-toast{bottom:auto}
 .px-dock{position:relative;height:168px;margin:-26px 12px 4px;z-index:3;pointer-events:none}
 .px-dock .dk-t{position:absolute;left:0;right:0;bottom:-6px;text-align:center;font-size:12px;font-weight:600;letter-spacing:.02em;color:#5d5243}
 .px-dock .dk-box.px-box{position:absolute;left:50%;top:auto;bottom:20px;z-index:1;transform:scale(.62);transform-origin:50% 100%}
-.px-dock .dk-box .bx-lid{transform:perspective(900px) rotateX(172deg)}
+.px-dock .dk-box .bx-lid{transform:perspective(900px) rotateX(128deg)}
 .px-dock .dk-box .bx-flap{transform:translateY(40%)}
 .px-dock .dk-pill{pointer-events:auto;position:absolute;left:50%;top:30px;z-index:4;width:60px;height:104px;margin-left:-30px;border:0;border-radius:999px;background:#172C27;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:8px 0 0;box-shadow:0 14px 26px -10px rgba(0,0,0,.55)}
 .px-dock .dk-i{width:44px;height:44px;border-radius:50%;background:#2b2b2b;display:grid;place-items:center}
@@ -449,3 +449,23 @@ html.m-on{--px-ink:#172C27}
 .nf-priv{display:block;margin-top:8px;font-size:12px;color:var(--px-mute)}
 .nf-err{min-height:1em;margin:10px 0 0;font-size:13px;font-weight:600;color:#8A5A2B}
 .nf-err:empty{margin:0}
+
+/* ===== Round 3: colours sit under the photos, the price moves to the right so the size guide is always clear ===== */
+.px-ui .px-price{left:auto;right:16px;bottom:16px;align-items:flex-end;text-align:right}
+.px-ui .px-price .pp-was{justify-content:flex-end}
+.px-ui .pp-off{align-self:flex-end}
+.px-colors{padding:14px 20px 4px}
+.px-cstrip{display:flex;flex-direction:column;gap:10px}
+.px-cstrip .px-lab{display:flex;align-items:baseline;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--px-mute)}
+.px-cstrip .px-cn{max-width:none;margin:0;font-size:13px;letter-spacing:.02em;text-transform:none;color:var(--px-ink);font-weight:600}
+.px-cstrip .px-lab small{margin-left:auto;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:none;opacity:1}
+.px-cs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:3px}
+.px-cs::-webkit-scrollbar{display:none}
+.px-cs .px-sw.im{width:64px;height:50px;border-radius:12px;flex:0 0 auto;background:#F4F1EA}
+.px-cs .px-sw.im img{width:56px;height:42px}
+/* the fit note form stays usable with the phone keyboard open */
+@supports (height:100dvh){.m-sheet{max-height:88dvh}}
+.px-nform .nf-two{grid-template-columns:1fr}
+.px-nform{padding-bottom:8px}
+.px-nform .px-pick{position:sticky;bottom:0;box-shadow:0 -10px 14px 4px #fff}
+.st-av .st-avi{box-shadow:0 0 0 2px #fff}

@@ -38,7 +38,7 @@
     return `<svg class="dv-seal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6DBC1"/><stop offset=".5" stop-color="#B99C74"/><stop offset="1" stop-color="#826844"/></linearGradient><path id="${id}p" d="M100,100m-74,0a74,74 0 1,1 148,0a74,74 0 1,1 -148,0"/></defs>
       <circle cx="100" cy="100" r="98" fill="url(#${id}g)"/><circle class="dv-sl1" cx="100" cy="100" r="92"/><circle class="dv-sin" cx="100" cy="100" r="61"/><circle class="dv-sl2" cx="100" cy="100" r="55"/>
       <text class="dv-stx"><textPath href="#${id}p" xlink:href="#${id}p" textLength="462" lengthAdjust="spacing">${esc(ring)}</textPath></text>
-      <svg x="62" y="73" width="76" height="54" viewBox="-4 -4 204 141" fill="url(#${id}g)"><use href="#dl-d"/></svg></svg>`;
+      <svg x="62" y="73" width="76" height="54" viewBox="-8 -8 686 512" fill="url(#${id}g)"><use href="#dl-d"/></svg></svg>`;
   }
   // a few pieces of confetti in the margin on the far edge, clear of the words
   function confetti(seed) {
