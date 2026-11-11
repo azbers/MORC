@@ -248,7 +248,7 @@
   function empty() {
     document.documentElement.classList.remove('xb-typing');
     const pick = P().slice(0, 4);
-    view.innerHTML = `<div class="xb xb-empty"><section class="r9-empty"><span class="r9-wm" aria-hidden="true">${MX.WORDMARK}</span><span class="r9-glow" aria-hidden="true"></span>${MX.BOXART(true)}<i class="r9-d d1"></i><i class="r9-d d2"></i><i class="r9-d d3"></i><i class="r9-d d4"></i>
+    view.innerHTML = `<div class="xb xb-empty"><section class="r9-empty"><span class="r9-wm dk" aria-hidden="true">${MX.WORDMARK}</span><span class="r9-glow" aria-hidden="true"></span>${MX.BOXART(true)}<i class="r9-d d1"></i><i class="r9-d d2"></i><i class="r9-d d3"></i><i class="r9-d d4"></i>
       <span class="r9-k">${ic('spark')}Your DAUR box</span><h2>Your box is open.</h2>
       <p>${W.code ? 'It is waiting for its first pair, and ' + esc(fmt(W.amt + DEL)) + ' of credit is already inside. The credit only counts once a pair joins it.' : 'It is waiting for its first pair. Choose one and we will hold it here for you.'}</p>
       <a class="r9-go" href="${href.shop()}" data-m>Find my pair${ic('arrow')}</a>

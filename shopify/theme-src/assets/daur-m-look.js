@@ -44,7 +44,7 @@
     var head = cut > 0 ? esc(s.slice(0, cut + 1)) + ' <span>' + esc(s.slice(cut + 2)) + '</span>' : esc(s);
     var el = document.createElement('section');
     el.className = 'lk-hero';
-    el.innerHTML = '<div class="lk-hero-in"><span class="lk-eye"><i></i>Naya daur, a new era</span><h1>' + head + '</h1>' +
+    el.innerHTML = '<div class="lk-hero-in"><span class="lk-eye"><i></i>Own your pace.</span><h1>' + head + '</h1>' +
       (pairs.length ? '<div class="lk-stage"><span class="lk-ring"></span>' + pairs.join('') + (pairs.length > 1 ? '<span class="lk-dots" aria-hidden="true">' + pairs.map(function () { return '<i></i>'; }).join('') + '</span>' : '') + '</div>' : '') +
       (p ? '<p>' + esc(p.textContent.trim()) + '</p>' : '') +
       '<div class="lk-cta"><a class="lk-btn" href="' + esc(shop) + '" data-m>See every pair' + ARROW + '</a><button type="button" class="lk-ghost" data-why>Why Rs. 1,000 first?</button></div>' +

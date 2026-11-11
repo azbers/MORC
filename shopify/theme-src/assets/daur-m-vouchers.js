@@ -35,7 +35,7 @@
     const id = 'dvs' + (++uid), one = ('DAUR SUPPLY · ' + (words ? words + ' · ' : '')).toUpperCase();
     // as many rounds of the words as the ring holds; the browser then spaces them evenly all the way round
     const ring = one.repeat(Math.max(1, Math.floor(452 / (one.length * 9.2))));
-    return `<svg class="dv-seal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7E4B0"/><stop offset=".5" stop-color="#D1A85C"/><stop offset="1" stop-color="#97702F"/></linearGradient><path id="${id}p" d="M100,100m-74,0a74,74 0 1,1 148,0a74,74 0 1,1 -148,0"/></defs>
+    return `<svg class="dv-seal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6DBC1"/><stop offset=".5" stop-color="#B99C74"/><stop offset="1" stop-color="#826844"/></linearGradient><path id="${id}p" d="M100,100m-74,0a74,74 0 1,1 148,0a74,74 0 1,1 -148,0"/></defs>
       <circle cx="100" cy="100" r="98" fill="url(#${id}g)"/><circle class="dv-sl1" cx="100" cy="100" r="92"/><circle class="dv-sin" cx="100" cy="100" r="61"/><circle class="dv-sl2" cx="100" cy="100" r="55"/>
       <text class="dv-stx"><textPath href="#${id}p" xlink:href="#${id}p" textLength="462" lengthAdjust="spacing">${esc(ring)}</textPath></text>
       <path fill="url(#${id}g)" transform="translate(100 100) scale(.42) translate(-52 -100) skewX(-14)" d="${DM}"/></svg>`;
@@ -130,7 +130,7 @@
     }).join('');
     view.innerHTML = `<div class="m-of dvw-page">
       <div class="m-pad"><section class="r5-bank" aria-label="${esc('DAUR wallet, ' + fmt(bal) + ' in credits')}"><span class="r5-bk-dm" aria-hidden="true">${MX.DMARK}</span>
-        <span class="r5-bk-top"><span class="r5-bk-wm">${MX.WORDMARK}<small>WALLET</small></span><span class="r5-bk-chip" aria-hidden="true"><i></i><i></i><i></i></span></span>
+        <span class="r5-bk-top"><span class="r5-bk-wm dk">${MX.WORDMARK}<small>WALLET</small></span><span class="r5-bk-chip" aria-hidden="true"><i></i><i></i><i></i></span></span>
         <span class="r5-bk-mid"><small>Credit balance</small><b>${esc(fmt(bal))}</b></span>
         <span class="r5-bk-bot"><span><small>Status</small><b>${has ? 'Ready for this bag' : 'Ready for your next order'}</b></span><span><small>Credits</small><b>${1 + (W.code && wal ? 1 : 0)} active</b></span></span></section>
         <p class="r5-bk-note">${ic('lock')}Credits come off your total at checkout. They are not cash and cannot be withdrawn.</p></div>

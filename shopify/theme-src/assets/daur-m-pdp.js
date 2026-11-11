@@ -292,27 +292,27 @@
     const lineAt = (H) => [pt(-h * 0.93, Hl, H), pt(h * 0.93, Hl, H)];
     const [s1, s2] = lineAt(Hw * 0.84), lipY = pt(0, Hl, Lh)[1];
     const back = `<svg class="bx-back" ${vb}><defs>
-        <radialGradient id="pxbxSh"><stop offset="0" stop-color="#1C130E" stop-opacity=".34"/><stop offset="1" stop-color="#1C130E" stop-opacity="0"/></radialGradient>
-        <linearGradient id="pxbxIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4EBDC"/><stop offset="1" stop-color="#CDBA9B"/></linearGradient>
-        <linearGradient id="pxbxTs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFEFA"/><stop offset="1" stop-color="#ECE3D4"/></linearGradient></defs>
+        <radialGradient id="pxbxSh"><stop offset="0" stop-color="#111917" stop-opacity=".34"/><stop offset="1" stop-color="#111917" stop-opacity="0"/></radialGradient>
+        <linearGradient id="pxbxIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2ECDE"/><stop offset="1" stop-color="#C3B7A5"/></linearGradient>
+        <linearGradient id="pxbxTs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFEFA"/><stop offset="1" stop-color="#ECE5D4"/></linearGradient></defs>
       <ellipse cx="${f(Wf / 2)}" cy="${f(Hb + 2)}" rx="${f(Wf * 0.6)}" ry="12" fill="url(#pxbxSh)"/>
-      <polygon points="${pts([TL, FL, BL, KL])}" fill="#DACBB0"/><polygon points="${pts([TR, FR, BR, KR])}" fill="#DACBB0"/>
+      <polygon points="${pts([TL, FL, BL, KL])}" fill="#D2C7B8"/><polygon points="${pts([TR, FR, BR, KR])}" fill="#D2C7B8"/>
       <polygon points="${pts([TL, TR, KR, KL])}" fill="url(#pxbxIn)"/>
       <path d="${tissue}" fill="url(#pxbxTs)"/>
-      <polyline points="${pts([FL, TL, TR, FR])}" fill="none" stroke="#5E4433" stroke-width="2.6" stroke-linejoin="round"/></svg>`;
+      <polyline points="${pts([FL, TL, TR, FR])}" fill="none" stroke="#3B5650" stroke-width="2.6" stroke-linejoin="round"/></svg>`;
     const front = `<svg class="bx-front" ${vb}><defs>
-        <linearGradient id="pxbxFr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4D3626"/><stop offset=".45" stop-color="#36261B"/><stop offset="1" stop-color="#271A12"/></linearGradient>
+        <linearGradient id="pxbxFr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E4540"/><stop offset=".45" stop-color="#20312D"/><stop offset="1" stop-color="#162320"/></linearGradient>
         <linearGradient id="pxbxEd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".3"/><stop offset=".1" stop-color="#000" stop-opacity="0"/><stop offset=".9" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs>
       <polygon points="${pts([FL, FR, BR, BL])}" fill="url(#pxbxFr)"/><polygon points="${pts([FL, FR, BR, BL])}" fill="url(#pxbxEd)"/>
-      <line x1="${f(FL[0])}" y1="${f(FL[1])}" x2="${f(FR[0])}" y2="${f(FR[1])}" stroke="#71523B" stroke-width="2.6" stroke-linecap="round"/>
-      <line x1="${f(s1[0])}" y1="${f(s1[1])}" x2="${f(s2[0])}" y2="${f(s2[1])}" stroke="#C9952F" stroke-opacity=".75" stroke-width=".9"/></svg>`;
+      <line x1="${f(FL[0])}" y1="${f(FL[1])}" x2="${f(FR[0])}" y2="${f(FR[1])}" stroke="#665946" stroke-width="2.6" stroke-linecap="round"/>
+      <line x1="${f(s1[0])}" y1="${f(s1[1])}" x2="${f(s2[0])}" y2="${f(s2[1])}" stroke="#A58353" stroke-opacity=".75" stroke-width=".9"/></svg>`;
     const lidW = Wl * 1.02, lidH = Hl * 1.012, rw = Wf * 0.1, bowY = pt(0, Hl * 0.5, 0)[1];
     return `${back}
       <span class="bx-lid" style="left:${f((Wf - lidW) / 2)}px;width:${f(lidW)}px;height:${f(lidH)}px">
         <span class="lid-out"><span class="lid-frame"></span><span class="lid-wm">${WORDMARK}<small>SUPPLY</small></span><i class="lid-rb v"></i><i class="lid-rb h"></i><i class="lid-glint"></i></span>
-        <span class="lid-in"><span class="lid-dm">${DMARK}</span></span>
+        <span class="lid-in"><span class="lid-iwm">${WORDMARK}<small>SUPPLY</small><em>OWN YOUR PACE.</em></span></span>
         <span class="lid-lip" style="height:${f(Lh)}px"><i class="lid-rb v"></i></span></span>
-      <svg class="bx-flap" ${vb}><path d="${flap}" fill="url(#pxbxTs)"/><path d="${crease}" fill="none" stroke="#8C6E50" stroke-opacity=".22" stroke-width="1"/></svg>
+      <svg class="bx-flap" ${vb}><path d="${flap}" fill="url(#pxbxTs)"/><path d="${crease}" fill="none" stroke="#80715C" stroke-opacity=".22" stroke-width="1"/></svg>
       ${front}
       <span class="bx-rib" style="left:${f(Wf / 2 - rw / 2)}px;width:${f(rw)}px;top:${f(lipY - 1)}px;height:${f(Hb - lipY + 1)}px"></span>
       <span class="bx-bow" style="left:${f(Wf / 2)}px;top:${f(bowY)}px"><i></i><i></i><b></b></span>

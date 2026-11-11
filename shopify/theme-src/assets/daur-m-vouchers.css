@@ -2,7 +2,7 @@
    Sizes inside a card are in cqw (one hundredth of the card's width), so a card looks the same in the carousel,
    in the wallet and in a 1080 px social media picture. px values come first for browsers without container units. */
 #mApp .dv-w{container-type:inline-size;display:block;position:relative;min-width:0;width:100%}
-#mApp .dv{--dv-stub:36%;--dv-r:16px;--dv-r:3.3cqw;--dv-cream:#F6EEE1;--dv-ink:#141011;--dv-redA:#D7223D;--dv-red:#B3122A;--dv-redB:#7A0A1C;
+#mApp .dv{--dv-stub:36%;--dv-r:16px;--dv-r:3.3cqw;--dv-cream:#F4EFE3;--dv-ink:#15120F;--dv-redA:#8A9A5F;--dv-red:#6D7A4B;--dv-redB:#495133;
   position:relative;display:grid;grid-template-columns:var(--dv-stub) minmax(0,1fr);aspect-ratio:1.8/1;width:100%;overflow:hidden;isolation:isolate;
   border-radius:16px;border-radius:4.2cqw;background:var(--dv-bg);color:var(--dv-tx);font-family:"DAUR Sans","Outfit",system-ui,-apple-system,sans-serif;text-align:left;
   -webkit-mask:radial-gradient(circle var(--dv-r) at var(--dv-stub) 0,transparent 98%,#000 100%) top/100% 51% no-repeat,radial-gradient(circle var(--dv-r) at var(--dv-stub) 100%,transparent 98%,#000 100%) bottom/100% 51% no-repeat;
@@ -10,15 +10,15 @@
 #mApp .dv *{box-sizing:border-box;margin:0;text-transform:none;letter-spacing:normal}
 
 /* the three colourways: deep red with a black stub, cream with a red stub, black with a red stub */
-#mApp .dv.dvt-red{--dv-bg:radial-gradient(120% 140% at 100% 0%,var(--dv-redA) 0%,var(--dv-red) 42%,var(--dv-redB) 100%);--dv-tx:#fff;--dv-k:#F3D79E;--dv-amt:#fff;--dv-l:rgba(255,255,255,.9);
-  --dv-perf:rgba(255,255,255,.42);--dv-chip:#fff;--dv-gob:#fff;--dv-goc:var(--dv-redB);--dv-tagb:var(--dv-ink);--dv-tagc:#F3D79E;--dv-c0:#F0CD88;--dv-c1:#FFF3DE;--dv-ray:rgba(255,255,255,.07);
-  --dv-sb:radial-gradient(90% 70% at 50% 50%,#2A2122 0%,#141011 70%);--dv-ra:#D5AF67;--dv-rb:rgba(245,231,200,.42);--dv-rd:#F2D9A0;--dv-rr:rgba(213,175,103,.55);--dv-sa:#F6E8CB;--dv-sbk:#E0344D;--dv-sd:#141011;--dv-st:#1E1617}
+#mApp .dv.dvt-red{--dv-bg:radial-gradient(120% 140% at 100% 0%,var(--dv-redA) 0%,var(--dv-red) 42%,var(--dv-redB) 100%);--dv-tx:#fff;--dv-k:#DBCCB6;--dv-amt:#fff;--dv-l:rgba(255,255,255,.9);
+  --dv-perf:rgba(255,255,255,.42);--dv-chip:#fff;--dv-gob:#fff;--dv-goc:var(--dv-redB);--dv-tagb:var(--dv-ink);--dv-tagc:#DBCCB6;--dv-c0:#D2C0A6;--dv-c1:#F5F1E8;--dv-ray:rgba(255,255,255,.07);
+  --dv-sb:radial-gradient(90% 70% at 50% 50%,#2B2720 0%,#15120F 70%);--dv-ra:#BEA37E;--dv-rb:rgba(236,228,209,.42);--dv-rd:#DBCCB7;--dv-rr:rgba(190,163,126,.55);--dv-sa:#EDE6D4;--dv-sbk:#97A56F;--dv-sd:#15120F;--dv-st:#1E1B16}
 #mApp .dv.dvt-cream{--dv-bg:var(--dv-cream);--dv-tx:var(--dv-ink);--dv-k:var(--dv-ink);--dv-amt:var(--dv-red);--dv-l:var(--dv-ink);
-  --dv-perf:rgba(20,16,17,.3);--dv-chip:var(--dv-ink);--dv-gob:var(--dv-ink);--dv-goc:#fff;--dv-tagb:var(--dv-red);--dv-tagc:#fff;--dv-c0:var(--dv-red);--dv-c1:#C49A4E;--dv-ray:rgba(179,18,42,.06);
-  --dv-sb:radial-gradient(90% 70% at 50% 45%,var(--dv-redA) 0%,var(--dv-red) 45%,var(--dv-redB) 100%);--dv-ra:#F4D69C;--dv-rb:rgba(255,240,214,.5);--dv-rd:#FFF1D6;--dv-rr:rgba(255,236,200,.5);--dv-sa:#FFF1D6;--dv-sbk:#F4D69C;--dv-sd:#8E0D20;--dv-st:#5E0712}
-#mApp .dv.dvt-black{--dv-bg:radial-gradient(120% 140% at 100% 0%,#2B2324 0%,var(--dv-ink) 60%);--dv-tx:var(--dv-cream);--dv-k:#D8B36B;--dv-amt:var(--dv-cream);--dv-l:rgba(246,238,225,.82);
-  --dv-perf:rgba(246,238,225,.3);--dv-chip:var(--dv-cream);--dv-gob:var(--dv-cream);--dv-goc:var(--dv-ink);--dv-tagb:var(--dv-redA);--dv-tagc:#fff;--dv-c0:var(--dv-redA);--dv-c1:#D8B36B;--dv-ray:rgba(216,179,107,.08);
-  --dv-sb:radial-gradient(90% 70% at 50% 45%,var(--dv-redA) 0%,var(--dv-red) 45%,var(--dv-redB) 100%);--dv-ra:#F4D69C;--dv-rb:rgba(255,240,214,.5);--dv-rd:#FFF1D6;--dv-rr:rgba(255,236,200,.5);--dv-sa:#FFF1D6;--dv-sbk:#F4D69C;--dv-sd:#8E0D20;--dv-st:#5E0712}
+  --dv-perf:rgba(21,18,15,.3);--dv-chip:var(--dv-ink);--dv-gob:var(--dv-ink);--dv-goc:#fff;--dv-tagb:var(--dv-red);--dv-tagc:#fff;--dv-c0:var(--dv-red);--dv-c1:#AC8F66;--dv-ray:rgba(109,122,75,.06);
+  --dv-sb:radial-gradient(90% 70% at 50% 45%,var(--dv-redA) 0%,var(--dv-red) 45%,var(--dv-redB) 100%);--dv-ra:#DACBB6;--dv-rb:rgba(243,238,226,.5);--dv-rd:#F3EEE2;--dv-rr:rgba(239,232,216,.5);--dv-sa:#F3EEE2;--dv-sbk:#DACBB6;--dv-sd:#56603B;--dv-st:#383E27}
+#mApp .dv.dvt-black{--dv-bg:radial-gradient(120% 140% at 100% 0%,#2D2821 0%,var(--dv-ink) 60%);--dv-tx:var(--dv-cream);--dv-k:#C1A782;--dv-amt:var(--dv-cream);--dv-l:rgba(244,239,227,.82);
+  --dv-perf:rgba(244,239,227,.3);--dv-chip:var(--dv-cream);--dv-gob:var(--dv-cream);--dv-goc:var(--dv-ink);--dv-tagb:var(--dv-redA);--dv-tagc:#fff;--dv-c0:var(--dv-redA);--dv-c1:#C1A782;--dv-ray:rgba(193,167,130,.08);
+  --dv-sb:radial-gradient(90% 70% at 50% 45%,var(--dv-redA) 0%,var(--dv-red) 45%,var(--dv-redB) 100%);--dv-ra:#DACBB6;--dv-rb:rgba(243,238,226,.5);--dv-rd:#F3EEE2;--dv-rr:rgba(239,232,216,.5);--dv-sa:#F3EEE2;--dv-sbk:#DACBB6;--dv-sd:#56603B;--dv-st:#383E27}
 
 /* the stub: fireworks around the stamped seal, or the pair itself */
 #mApp .dv-stub{position:relative;display:grid;place-items:center;min-width:0;overflow:hidden;background:var(--dv-sb)}
@@ -32,7 +32,7 @@
 #mApp .dv-seal{position:relative;width:92px;height:92px;width:25cqw;height:25cqw;filter:drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.35))}
 #mApp .dv-seal .dv-sin{fill:var(--dv-sd)}
 #mApp .dv-seal .dv-sl1{fill:none;stroke:var(--dv-st);stroke-opacity:.35;stroke-width:1.2}
-#mApp .dv-seal .dv-sl2{fill:none;stroke:#E9C987;stroke-opacity:.5;stroke-width:1;stroke-dasharray:2 3}
+#mApp .dv-seal .dv-sl2{fill:none;stroke:#D0BCA0;stroke-opacity:.5;stroke-width:1;stroke-dasharray:2 3}
 #mApp .dv-seal .dv-stx{font-family:"DAUR Cond","DAUR Sans",system-ui,sans-serif;font-weight:700;font-size:19px;fill:var(--dv-st)}
 #mApp .dv-shoe{position:relative;display:grid;place-items:center;width:100%;height:100%}
 #mApp .dv-im{display:block;width:100%;max-width:none;height:auto;transform:rotate(-14deg);filter:drop-shadow(0 2.4cqw 1.8cqw rgba(0,0,0,.45))}
@@ -74,8 +74,8 @@
 #mApp .dvp-s .dv,#mApp .dvw .dv{filter:drop-shadow(0 1px 0 rgba(17,17,17,.06))}
 #mApp .dvp-s:active .dv{transform:scale(.985);transition:transform .12s}
 #mApp .dvp-dots{display:flex;justify-content:center;gap:6px;margin-top:2px}
-#mApp .dvp-dots i{width:6px;height:6px;border-radius:6px;background:#D9D4CE;transition:width .25s,background .25s}
-#mApp .dvp-dots i.on{width:20px;background:var(--m-urg,#C8102E)}
+#mApp .dvp-dots i{width:6px;height:6px;border-radius:6px;background:#D9D6CE;transition:width .25s,background .25s}
+#mApp .dvp-dots i.on{width:20px;background:var(--m-urg,#6B7550)}
 
 /* the Wallet page: one voucher per credit, with its own buttons */
 #mApp .dvw-list{display:flex;flex-direction:column;gap:12px;padding:12px 16px 0}
@@ -88,7 +88,7 @@
 #mApp .dv.dv-row .dv-l{text-transform:none;letter-spacing:0;font-weight:600;font-size:12px;font-size:max(11px,3.55cqw);line-height:1.35}
 #mApp .dv.dv-row .dv-cf{display:none}
 #mApp .dvw-pill{display:inline-flex;align-items:center;gap:1cqw;flex-shrink:0;font-weight:700;font-size:11px;font-size:max(10px,3.2cqw);line-height:1;padding:1.5cqw 2.8cqw;border-radius:99px;background:rgba(255,255,255,.14);color:var(--dv-tx);white-space:nowrap}
-#mApp .dvt-cream .dvw-pill{background:rgba(20,16,17,.07)}
+#mApp .dvt-cream .dvw-pill{background:rgba(21,18,15,.07)}
 #mApp .dvw-pill.on{background:var(--dv-gob);color:var(--dv-goc)}
 #mApp .dvw-pill svg,#mApp .dvw-use svg{width:3.6cqw;height:3.6cqw}
 #mApp button.dv-copy{cursor:pointer}
