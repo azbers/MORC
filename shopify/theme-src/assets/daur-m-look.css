@@ -578,3 +578,37 @@ html.m-on[data-mv=giving] #mApp .m-top.dk .m-ib,html.m-on[data-mv=giving] #mApp 
 html.m-on .ck,html.m-on.m-pdp-on .ck{left:24px!important;right:auto!important;bottom:24px!important;width:360px!important;max-width:360px!important;border-radius:14px!important;padding:16px!important}
 html.m-on .ck .btn{min-height:38px!important}
 }
+/* ---------- desktop, round 3 (owner 12 Nov 18:05): calmer sizes, nothing cut off, content laid out for a wide screen ---------- */
+@media (min-width:1024px){
+/* home: the vouchers read as a row of tickets, not posters; every ticket stays reachable */
+#mApp .v-home .dvp{overflow:visible}
+#mApp .v-home .dvp-track{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 0 6px}
+#mApp .v-home .dvp-track::-webkit-scrollbar{display:none}
+#mApp .v-home .dvp-s{flex:0 0 calc((100% - 36px)/3);scroll-snap-align:start}
+#mApp .v-home .dv-amt{font-size:16cqw}
+#mApp .v-home .dvp-dots{display:flex;margin-top:8px}
+#mApp .v-home .m-sts{display:flex;justify-content:center}
+#mApp .v-home .r10-duo>*{min-height:220px}
+/* product: fit notes stack in the right column instead of a cut off carousel */
+#mApp .v-product .px-stories{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0 0;padding:0;overflow:visible}
+#mApp .v-product .px-story{flex:none;width:auto}
+#mApp .v-product .px-story:nth-child(n+4){display:none}
+#mApp .v-product .px-sdots{display:none}
+#mApp .v-product .px-fc{height:168px}
+#mApp .v-product .px-sec{padding-left:0;padding-right:0}
+/* track and any page whose first section has no heading: the form sits centred, not in an empty half */
+#mApp .m-pg .r5-sec:has(>.r5-sh:empty){grid-template-columns:minmax(0,600px);justify-content:center}
+#mApp .m-pg .r5-sec>.r5-sh:empty{display:none}
+#mApp .m-pg .r5-sec:has(>.r5-sh:empty)>.r5-sb{grid-column:1}
+/* feed: a three column wall of posts, like a lookbook, instead of one phone wide strip */
+#mApp .m-view.v-feed>*{max-width:1180px!important}
+#mApp .m-fd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start;padding:0 32px}
+#mApp .m-fd>.m-pad,#mApp .m-fd>:not(article){grid-column:1/-1}
+#mApp .m-fd>.fd-post{margin:0;border-radius:22px}
+#mApp .m-fd>.fd-fact{align-self:stretch;display:flex;flex-direction:column;justify-content:center;padding:32px 28px;background:#F1EBDD;box-shadow:none}
+/* offers: already reduced pairs use the same four across grid as the shop */
+#mApp .dvw-page .m-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (min-width:1024px) and (max-width:1199px){
+#mApp .m-fd{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
