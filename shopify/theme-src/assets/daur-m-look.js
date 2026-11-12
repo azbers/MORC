@@ -27,7 +27,7 @@
   var turn = 0;
   function hero() {
     var intro = view.querySelector('.r7-intro');
-    if (!intro || view.querySelector('.lk-hero')) return;
+    if (!intro || intro.hidden || view.querySelector('.lk-hero')) return;
     var h1 = intro.querySelector('h1'), p = intro.querySelector('p');
     if (!h1) return;
     var cards = [].slice.call(view.querySelectorAll('.m-car .m-card')).slice(0, 4);

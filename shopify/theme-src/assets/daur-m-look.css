@@ -429,3 +429,33 @@ html.m-st-open{overflow:hidden}
 #mApp .m-qa summary svg{flex:0 0 18px;width:18px;height:18px;color:#8B7351;transition:transform .2s}
 #mApp .m-qa details[open] summary svg{transform:rotate(180deg)}
 #mApp .m-qa details p{margin:-4px 0 16px;font-size:14.5px;line-height:1.55;color:#3E4A46}
+/* ---------- desktop: the same app, laid out for a wide screen (owner 12 Nov 2026: desktop must be exactly the phone design, except the runway) ---------- */
+@media (min-width:1024px){
+html.m-on #mApp .m-top{padding-left:max(14px,calc(50% - 600px));padding-right:max(14px,calc(50% - 600px))}
+html.m-on #mApp .m-tab{left:50%;right:auto;width:min(560px,calc(100% - 24px));transform:translateX(-50%)}
+html.m-on #mApp .m-tab.m-off{transform:translate(-50%,140%)}
+.m-view.v-home>*,.m-view.v-shop>*,.m-view.v-liked>*{max-width:1180px}
+.m-view>.m-lbh{max-width:none!important;margin:0 0 8px!important}
+.m-view.v-home>.m-sts{margin-top:14px}
+.m-view.v-home .m-card{flex-basis:23%}
+.m-view .m-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.m-view.v-home .r10-duo{grid-template-columns:repeat(2,minmax(0,1fr))}
+.m-view.v-home .m-rows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.m-view.v-home .m-tick{max-width:none}
+.m-sheet{max-width:560px}
+.m-buy{padding-left:max(20px,calc(50% - 380px));padding-right:max(20px,calc(50% - 380px))}
+.m-lbh .lb{border-bottom:1px solid rgba(23,44,39,.08)}
+.m-lbh .lb h1,.m-lbh .lb h2{font-family:"DAUR Cond","DAUR Cond Fallback","Arial Narrow",Arial,sans-serif!important}
+.m-lbh .lb .lb-intro h1{color:#172C27}
+.m-lbh .lb .lb-buy h2{color:#172C27}
+.m-lbh .lb button{font-family:inherit}
+#mApp .m-lbh :is(.lb-kick,.lb-intro h1,.lb-cats button,.lb-look,.lb-shop,.lb-buy h2,.lb-k,.lb-add,.lb-nk,.lb-cb small,.lb-cb b,.lb-price em,.lb-ring span){text-transform:uppercase!important}
+.m-lbh .lb-cats button,.m-lbh .lb-shop,.m-lbh .lb-add,.m-lbh .lb-k,.m-lbh .lb-nk,.m-lbh .lb-kick,.m-lbh .lb-cb small{font-family:"DAUR Cond","DAUR Cond Fallback","Arial Narrow",Arial,sans-serif!important}
+#mApp .m-lbh .lb-intro h1{letter-spacing:.02em!important;font-size:clamp(26px,calc(40 * var(--u)),48px)!important;line-height:1.04!important}
+#mApp .m-lbh .lb-buy h2{letter-spacing:.06em!important;font-size:clamp(18px,1.6vw,24px)!important}
+.m-view.v-home>.dvp{max-width:760px}
+.m-view>*:not(.m-lbh){margin-left:auto!important;margin-right:auto!important}
+.m-view.v-home>.m-tick{width:100%;max-width:none!important}
+html.m-on .m-buy{padding-left:max(20px,calc(50% - 380px))!important;padding-right:max(20px,calc(50% - 380px))!important}
+.m-view.v-feed>*{max-width:640px}
+}

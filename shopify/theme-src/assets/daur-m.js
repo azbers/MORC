@@ -31,6 +31,8 @@
   // five bright tints, held together by the espresso ink and brass of the brand
   const TINT = ['#DBE0CD', '#E5DAC0', '#C2DCFF', '#EEE7D7', '#DDD1FF'];
   const P = () => API.P.filter((p) => !p.hidden && !p.giving);
+  // a desktop screen: the same app, laid out wider, with the runway as the home hero
+  const WIDE = () => matchMedia('(min-width: 1024px)').matches;
   const tintOf = (p) => { const i = API.P.indexOf(p); return i < 0 ? 0 : i % TINT.length; };
   const tn = (i) => TINT[((i % TINT.length) + TINT.length) % TINT.length];
   function pic(p, v) {
@@ -395,8 +397,9 @@
     const list = all.filter((p) => inCat(p, c));
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
-    view.innerHTML = `${stRow()}${promo()}
-      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in 2 to 4 days. Hold your pair with Rs. 1,000 and pay the rest when the box is in your hands.</p></section>
+    const wide = WIDE() && API.lookbook;
+    view.innerHTML = `${wide ? '<div class="m-lbh" id="mLb"></div>' : ''}${stRow()}${promo()}
+      <section class="r7-intro m-pad"${wide ? ' hidden' : ''}><h1>Same local craft. Zero retail markup.</h1><p>Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in 2 to 4 days. Hold your pair with Rs. 1,000 and pay the rest when the box is in your hands.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
@@ -406,6 +409,7 @@
       <div class="m-rows">${fresh.map(row).join('')}</div>
       <div id="mMore" data-k="0"></div><div id="mMoreSent" class="m-skel" aria-hidden="true"><div class="sk-row"><div class="sk sk-c"></div><div class="sk sk-c"></div></div></div>`;
     bindPromo(); bindMore(); observeIn();
+    if (wide) API.lookbook($('#mLb', view), { app: true, below: 96, add: (pid, vid, size) => add(pid, vid, size, 'me'), toast, go: (u) => go(u), sizeGuide: (x, v) => go(href.product(x.id) + '#size') });
   };
   /* ---------- shop: search, style, sort and filter ---------- */
   const SORTS = [['feat', 'Featured'], ['new', 'Newest'], ['low', 'Price: low to high'], ['high', 'Price: high to low'], ['save', 'Biggest saving']];

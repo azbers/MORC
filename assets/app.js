@@ -890,7 +890,7 @@
     </div></section>`;
     // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!lookbook($('#homeRw'))) runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'}</span>
+    if (!APPV && !lookbook($('#homeRw'))) runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'}</span>
       <h1>A new era of<br>everyday footwear.</h1>
       ${urLock('ul-hero')}
       <p>Thoughtfully selected in Pakistan. Finished with the details that make a pair distinctly DAUR.</p>
@@ -1949,7 +1949,8 @@
     const s = v.images && v.images[0];
     return s ? { src: /cdn\.shopify|\/cdn\/shop\//.test(s) ? cdnW(s, 1000) : s, cut: false } : null;
   }
-  function lookbook(host) {
+  function lookbook(host, opt) {
+    opt = opt || {};
     if (!host || !P.length || matchMedia('(max-width: 900px)').matches) return false;
     const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -2019,7 +2020,7 @@
       m.e.style.width = (base * m.k * m.r).toFixed(1) + 'px'; m.e.style.height = (base * m.k).toFixed(1) + 'px';
     }
     function sizeUp() {
-      const top = lb.getBoundingClientRect().top + scrollY; lb.style.setProperty('--lbh', Math.round(clamp(innerHeight - top, 600, 980)) + 'px');
+      const top = lb.getBoundingClientRect().top + scrollY; lb.style.setProperty('--lbh', Math.round(clamp(innerHeight - top - (opt.below || 0), 560, 980)) + 'px');
       W = stage.clientWidth; H = stage.clientHeight; base = H * 1.2;
       people.forEach(sizeOne);
       cardS = track.clientHeight / 2;
@@ -2068,14 +2069,14 @@
     buy.addEventListener('click', (e) => {
       const t = e.target.closest('button'); if (!t) return;
       const i = shown, x = list[i], v = vs[i];
-      if (t.dataset.wish) { toggleWish(x.id); t.setAttribute('aria-pressed', wish.includes(x.id)); return; }
+      if (t.dataset.wish) { if (!opt.app) { toggleWish(x.id); t.setAttribute('aria-pressed', wish.includes(x.id)); } return; }
       if (t.dataset.lbv) { vs[i] = variant(x, t.dataset.lbv); const fig = $('.lb-fig', people[i].e); fig.innerHTML = figure(i); watch(people[i], i); $('.lb-ct', cards[i]).innerHTML = thumb(i); paintBuy(i); return; }
       if (t.dataset.lbs) { size = +t.dataset.lbs; $$('[data-lbs]', buy).forEach((b) => b.setAttribute('aria-pressed', b === t)); $('#lbAdd span', buy).textContent = `Add EU ${size} to bag, ${fmt(v.price)}`; return; }
-      if (t.id === 'lbSg') { openModal('sizeGuide'); return; }
+      if (t.id === 'lbSg') { if (opt.sizeGuide) opt.sizeGuide(x, v); else openModal('sizeGuide'); return; }
       if (t.id === 'lbAdd') {
         if (!stockOf(v)) return;
-        if (!size) { toast('Pick a size first'); const sz = $('.lb-sizes', buy); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
-        addToCart(x.id, v.id, size, 1);
+        if (!size) { (opt.toast || toast)('Pick a size first'); const sz = $('.lb-sizes', buy); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
+        if (opt.add) opt.add(x.id, v.id, size); else addToCart(x.id, v.id, size, 1);
       }
     });
     track.addEventListener('click', (e) => { const c = e.target.closest('[data-lbj]'); if (!c) return; let d = wrapN(+c.dataset.lbj - Math.round(target), N); if (d > N / 2) d -= N; target = Math.round(target) + d; wake_(); });
@@ -2125,7 +2126,7 @@
         const m = over(e);
         if (m) {
           let d = Math.round(wrapN(+m.dataset.i - target, N)); if (d > N / 2) d -= N;
-          if (!d) { const i = shown; location.href = link('product', list[i].id + '~' + vs[i].id); return; }
+          if (!d) { const i = shown, u = link('product', list[i].id + '~' + vs[i].id); if (opt.go) opt.go(u); else location.href = u; return; }
           target = Math.round(target) + d;
         }
       } else target = Math.round(target);
@@ -2802,7 +2803,7 @@
     reveal();
     if (!(page === 'contract' && param)) window.scrollTo(0, 0);
   }
-  window.DAUR_API = { C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; },
+  window.DAUR_API = { lookbook, C, P, ALL, SPA, SHOP, absLink, totals, get cart() { return cart; }, get coupon() { return coupon; }, $, $$, esc, fmt, store, link, prod, variant, stockOf, onSale, pct, minPrice, visual, setMeta, head, card, bindCards, toast, openModal, addToCart, toggleWish, reveal, current, get wish() { return wish; },
     // draws another storefront view into #app without a page load (the phone app layer uses it to open pages instantly)
     draw(page, param) { if (!V[page] || /^(list|runway)$/.test(page)) return false; document.body.dataset.page = page; delete app.dataset.full; V[page](param || ''); hook('after', { page, param: param || '' }); return true; } };
   const EXT = window.DAUR_EXT || { views: {}, hooks: {} };
