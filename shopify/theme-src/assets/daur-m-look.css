@@ -344,3 +344,88 @@ html.m-on #mApp .m-gv2 .r9-val li b,html.m-on #mApp .m-gv2 .r9-val .r9-k{color:#
 #mApp .r10-q{margin-top:12px}
 /* any other place that still uses the small purpose cards: long titles shrink instead of being cut */
 #mApp .r5-card .r5-t{font-size:clamp(18px,5.6vw,30px);overflow-wrap:anywhere}
+/* round 5: purpose card titles sized so "Philanthropy" always fits on one line */
+#mApp .r10-t b{font-size:clamp(19px,5.6vw,22px);letter-spacing:.01em;white-space:nowrap}
+#mApp .r5-card .r5-t{font-size:clamp(16px,4.6vw,24px);letter-spacing:0}
+/* round 5: the sticky sort and filters bar keeps its own layer, so Safari does not repaint it (the shake) while the address bar slides */
+html.m-on #mApp .sh-stick{transition:none;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;contain:layout paint}
+html.m-on #mApp .sh-stick .m-tools{overscroll-behavior-x:contain}
+html.m-on .m-top{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}
+#mApp .r5-card .r5-t{overflow-wrap:normal;white-space:nowrap}
+/* round 5: Journal search and Read next */
+#mApp .r6-js{position:relative;display:block;margin:6px 0 4px}
+#mApp .r6-js input[type=search]{width:100%;height:48px;border-radius:999px;border:1.5px solid rgba(23,44,39,.14);background:#fff;padding:0 16px 0 44px;font:inherit;font-size:15px;color:#172C27;-webkit-appearance:none;appearance:none}
+#mApp .r6-js input[type=search]:focus{outline:none;border-color:#A58A64}
+#mApp .r6-jsi{position:absolute;left:34px;top:50%;transform:translateY(-50%);display:flex;color:#6B7550;pointer-events:none}
+#mApp .r6-jsi svg{width:18px;height:18px}
+#mApp .r6-jnone{font-size:13.5px;color:#3E4A46;margin:6px 0}
+#mApp .r6-next{margin-top:28px}
+#mApp .r6-next .r6-list{margin-top:12px}
+#mApp .r6-lead[hidden],#mApp .r6-row[hidden],#mApp .r6-jl[hidden]{display:none!important}
+/* round 5: Feed fit notes read like comments: a face, the name, the words, when */
+html.m-on #mApp .fd-cms{gap:12px;padding:4px 16px 2px}
+html.m-on #mApp .fd-cm{display:flex;align-items:flex-start;gap:10px;-webkit-line-clamp:unset;overflow:visible}
+html.m-on #mApp .fd-cav{flex:0 0 30px;width:30px;height:30px;border-radius:50%;overflow:hidden}
+html.m-on #mApp .fd-cav .st-avi{box-shadow:none}
+html.m-on #mApp .fd-cm p{flex:1;margin:0;font-size:14px;line-height:1.42;color:#252625;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+html.m-on #mApp .fd-cm p small{display:block;margin-top:3px;font-size:12px;color:#7A7468}
+html.m-on #mApp .fd-tick{display:inline-flex;width:14px;height:14px;margin:0 2px 0 -2px;vertical-align:-2px;border-radius:50%;background:#6B7550;color:#fff;align-items:center;justify-content:center}
+html.m-on #mApp .fd-tick svg{width:10px;height:10px}
+html.m-on #mApp .fd-ch{flex:0 0 auto;margin-top:4px;color:#9A9286}
+html.m-on #mApp .fd-ch svg{width:14px;height:14px}
+/* round 5: DAUR status, circles on home and a full screen story */
+#mApp .m-sts{padding:10px 0 4px}
+#mApp .m-sts-in{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:2px 16px 6px}
+#mApp .m-sts-in::-webkit-scrollbar{display:none}
+#mApp .m-st{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;width:66px;padding:0;border:0;background:none;color:#172C27}
+#mApp .m-st .st-ring{width:66px;height:66px;border-radius:50%;padding:3px;background:conic-gradient(#A58A64,#D9C29C,#6B7550,#A58A64)}
+#mApp .m-st.seen .st-ring{background:#D8D4CB}
+#mApp .m-st .st-face{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;overflow:hidden;background:#F4F1EA;box-shadow:0 0 0 2.5px #fff;color:#172C27}
+#mApp .m-st .st-face img{width:100%;height:100%;object-fit:contain;padding:6px}
+#mApp .m-st .st-face svg{width:28px;height:28px}
+#mApp .m-st .st-face .dm{width:34px;height:auto}
+#mApp .m-st small{font-size:11.5px;font-weight:600;line-height:1.1;max-width:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.m-st-open{overflow:hidden}
+.m-stv{position:fixed;inset:0;z-index:2147483100;background:#0F1B18;color:#F1EBDD;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 10px) 0 calc(env(safe-area-inset-bottom) + 18px);touch-action:none;user-select:none;-webkit-user-select:none;font-family:"DAUR Sans",system-ui,sans-serif}
+.m-stv .stv-bars{display:flex;gap:4px;padding:0 10px}
+.m-stv .stv-bars i{flex:1;height:2.5px;border-radius:2px;background:rgba(241,235,221,.3);overflow:hidden}
+.m-stv .stv-bars b{display:block;height:100%;background:#F1EBDD}
+.m-stv .stv-top{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 0;position:relative;z-index:3}
+.m-stv .stv-who{display:flex;align-items:center;gap:10px}
+.m-stv .stv-who b{font-size:14.5px;font-weight:700}
+.m-stv .stv-who small{font-size:12px;opacity:.7}
+.m-stv .stv-ring{width:34px;height:34px;border-radius:50%;background:#F1EBDD;color:#172C27;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.m-stv .stv-ring img{width:100%;height:100%;object-fit:contain;padding:3px}
+.m-stv .stv-ring svg{width:18px;height:18px}
+.m-stv .stv-ring .dm{width:22px}
+.m-stv .stv-x{width:40px;height:40px;border:0;border-radius:50%;background:rgba(241,235,221,.12);color:#F1EBDD;display:flex;align-items:center;justify-content:center}
+.m-stv .stv-x svg{width:20px;height:20px}
+.m-stv .stv-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:12px 20px;gap:18px;min-height:0}
+.m-stv .stv-md{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#2E4A42,#172C27 70%)}
+.m-stv .stv-md img{width:100%;height:100%;object-fit:cover}
+.m-stv .stv-md.cut img{object-fit:contain;padding:24px;filter:drop-shadow(0 24px 30px rgba(0,0,0,.45))}
+.m-stv .stv-cap b,.m-stv .stv-tx b,.m-stv .stv-q b{display:block;font-size:24px;line-height:1.18;font-weight:700;letter-spacing:-.01em}
+.m-stv .stv-cap small,.m-stv .stv-tx small,.m-stv .stv-q small{display:block;margin-top:10px;font-size:15px;line-height:1.5;color:rgba(241,235,221,.82)}
+.m-stv .stv-tx,.m-stv .stv-q{margin:auto 0}
+.m-stv .stv-tx b{font-size:30px}
+.m-stv .stv-dm{display:block;margin-bottom:18px;color:#A58A64}
+.m-stv .stv-dm .dm{width:56px;height:auto}
+.m-stv .stv-av{display:block;width:72px;height:72px;border-radius:50%;overflow:hidden;margin-bottom:18px}
+.m-stv .stv-cta{position:relative;z-index:3;padding:0 20px;min-height:54px}
+.m-stv .stv-go{display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:999px;background:#F1EBDD;color:#172C27;font-weight:700;font-size:15.5px;text-decoration:none}
+.m-stv .stv-go svg{width:18px;height:18px}
+.m-stv .stv-tap{position:absolute;top:90px;bottom:96px;width:38%;border:0;background:transparent;z-index:2}
+.m-stv .stv-tap.l{left:0}.m-stv .stv-tap.r{right:0;width:62%}
+/* round 5: questions buyers ask, answered on the Gifts and Philanthropy pages */
+#mApp .m-qa{display:block!important;margin-top:30px;overflow:visible}
+#mApp .m-qa > h2{display:block;font-size:22px;line-height:1.2;letter-spacing:0;text-transform:none;font-weight:600;color:#172C27;max-width:none}
+#mApp .m-qa details{display:block;width:100%}
+#mApp .m-qa h2{margin-bottom:10px}
+#mApp .m-qa details{border-top:1px solid rgba(23,44,39,.1)}
+#mApp .m-qa details:last-child{border-bottom:1px solid rgba(23,44,39,.1)}
+#mApp .m-qa summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;list-style:none;cursor:pointer}
+#mApp .m-qa summary::-webkit-details-marker{display:none}
+#mApp .m-qa summary b{font-size:15.5px;line-height:1.35;font-weight:600;color:#172C27}
+#mApp .m-qa summary svg{flex:0 0 18px;width:18px;height:18px;color:#8B7351;transition:transform .2s}
+#mApp .m-qa details[open] summary svg{transform:rotate(180deg)}
+#mApp .m-qa details p{margin:-4px 0 16px;font-size:14.5px;line-height:1.55;color:#3E4A46}

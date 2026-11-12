@@ -223,6 +223,16 @@
       })
       .catch(() => { if (opts.onFail) opts.onFail(); else postForm(fields); });
   };
+  // a Slice vote: sent once per cause from this phone to the DAUR inbox through the contact form, quietly in the background
+  S.vote = function (cause) {
+    let done = []; try { done = JSON.parse(localStorage.getItem('daur.votesent') || '[]'); } catch (e) { /* storage blocked */ }
+    if (!cause || done.indexOf(cause) > -1) return;
+    try { localStorage.setItem('daur.votesent', JSON.stringify(done.concat(cause).slice(-10))); } catch (e) { /* storage blocked */ }
+    const subject = 'Slice vote: ' + cause;
+    const body = new URLSearchParams([['form_type', 'contact'], ['utf8', '✓'], ['contact[email]', C.supportEmail], ['contact[name]', 'Slice vote'], ['contact[subject]', subject],
+      ['contact[body]', subject + '\n\nCause: ' + cause + '\nPage: ' + location.origin + location.pathname + '\nDate: ' + new Date().toISOString().slice(0, 10)]]);
+    fetch(base + '/contact', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'text/html' }, body: body.toString(), credentials: 'same-origin' }).catch(() => {});
+  };
   // back from the spam check: confirm the note arrived
   if (/[?&]fitnote=sent/.test(location.search) && /[?&]contact_posted=true/.test(location.search)) {
     document.addEventListener('DOMContentLoaded', () => setTimeout(() => {
@@ -237,34 +247,50 @@
   EXT.views.order = function () { location.replace(S.routes.account); };
   EXT.views.track = function (param) {
     const A = window.DAUR_API; const esc = A.esc;
-    A.setMeta('Track your order | DAUR Supply', 'Track your DAUR Supply order with your order number and phone number, or sign in to see every detail.');
-    // two ways in: the order number and phone (our team replies with the live status and the tracking link),
-    // or sign in (Shopify shows every order with its status, items, total and tracking once dispatched)
+    A.setMeta('Track your order | DAUR Supply', 'Track your DAUR Supply order with your order number, phone number or email, or sign in to see every detail.');
+    // one box takes the order number, the phone or the email. When a courier tracking service is connected
+    // (window.DAUR_M.trackApi, returning JSON), the live status is shown right here; until then our team replies on WhatsApp.
+    const API_URL = (window.DAUR_M && window.DAUR_M.trackApi) || '';
     const steps = [['Placed', 'Your order reaches us and your pair is set aside in your name.'], ['Confirmed', 'A person on our team confirms the details with you by call or WhatsApp.'], ['Packed and dispatched', 'Your pair is checked by hand and leaves Islamabad, usually within 24 hours.'], ['On its way', 'Your tracking link reaches you on WhatsApp, so you can follow every stop.'], ['At your door', 'In 2 to 4 days. You pay the rest only when the box is in your hands.']];
-    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair?</h1><p class="aside">Enter your order number and phone number, or sign in to see everything about your order in one place.</p></div></section>
+    document.getElementById('app').innerHTML = `<section class="phero"><div class="wrap"><span class="eyebrow">Track</span><h1>Where is my pair?</h1><p class="aside">Type your order number, the phone number you ordered with, or your email. One of them is enough.</p></div></section>
       <div class="wrap trk" style="padding-block:36px 96px">
         <div class="trk-g">
-          <form class="tcard trk-c trk-main" id="tf" novalidate><span class="mono mute">Track your order</span><h2>Your order number and phone</h2>
-            <p>Both are on your order confirmation. We reply on WhatsApp with the live status and your tracking link.</p>
-            <label class="field-label" for="tq">Order number</label><div class="trk-in"><input id="tq" inputmode="numeric" placeholder="#1001" autocomplete="off"></div>
-            <label class="field-label" for="tp">Phone number</label><div class="trk-in"><input id="tp" type="tel" inputmode="tel" placeholder="03XX XXXXXXX" autocomplete="tel"></div>
+          <form class="tcard trk-c trk-main" id="tf" novalidate><span class="mono mute">Track your order</span><h2>One detail is all we need</h2>
+            <p>Your order number is on your confirmation and starts with #. Your phone or email works just as well.</p>
+            <label class="field-label" for="tq">Order number, phone or email</label><div class="trk-in"><input id="tq" type="text" placeholder="#1001, 03XX XXXXXXX or you@email.com" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
             <p class="form-note trk-err" role="alert"></p>
-            <button class="btn volt" type="submit">Track my order <span class="arr">&rarr;</span></button></form>
+            <button class="btn volt" type="submit">Track my order <span class="arr">&rarr;</span></button>
+            <div class="trk-out" id="tOut" aria-live="polite"></div></form>
           <div class="tcard trk-c"><span class="mono mute">Or sign in</span><h2>See every detail</h2>
             <p>Sign in with the email you ordered with. We send a one time code, no password. You see every order with its status, items, total and tracking link once it is on its way.</p>
             <a class="btn ghost" href="${esc(S.routes.account)}">Sign in to my orders <span class="arr">&rarr;</span></a></div>
         </div>
         <ol class="trk-steps" aria-label="What happens to your order">${steps.map(([t, d], k) => `<li><span class="trk-n mono">0${k + 1}</span><b>${t}</b><span>${d}</span></li>`).join('')}</ol></div>`;
-    const tf = document.getElementById('tf'), tq = document.getElementById('tq'), tp = document.getElementById('tp'), er = tf.querySelector('.trk-err');
-    if (param) { if (/^\+?\d{10,}$/.test(String(param).replace(/\s/g, ''))) tp.value = param; else tq.value = param; }
+    const tf = document.getElementById('tf'), tq = document.getElementById('tq'), er = tf.querySelector('.trk-err'), out = document.getElementById('tOut');
+    if (param) tq.value = param;
+    const kind = (v) => { const t = v.trim(); if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return 'email'; const d = t.replace(/[^\d]/g, ''); if (C.normPhone(t) || d.length >= 10) return 'phone'; if (/^#?\s*\d{3,8}$/.test(t)) return 'order'; return ''; };
+    const label = { order: 'order #', phone: 'phone ', email: 'email ' };
+    const viaWa = (k, v) => {
+      window.open('https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent('Assalam o Alaikum DAUR Supply, please share the status of my order. My ' + label[k] + (k === 'order' ? v.replace(/[^\d]/g, '') : v.trim()) + '.'), '_blank', 'noopener');
+      A.toast('Opening WhatsApp. Our team replies with your live status.');
+    };
+    const show = (d) => {
+      // expected answer from the tracking service: { orders: [{ name, status, placed, items, total, courier_status, tracking_url, eta }] }
+      const list = (d && d.orders) || [];
+      if (!list.length) { out.innerHTML = '<p class="trk-none">We could not find an order with that detail. Check it, or message us and a person will find it for you.</p>'; return; }
+      out.innerHTML = list.map((o) => `<div class="trk-res"><b>${esc(o.name || '')}</b><span class="trk-st">${esc(o.courier_status || o.status || '')}</span>${o.eta ? `<small>Expected ${esc(o.eta)}</small>` : ''}${o.items ? `<small>${esc(o.items)}</small>` : ''}${o.tracking_url ? `<a class="u-link" href="${esc(o.tracking_url)}" target="_blank" rel="noopener">Follow every stop</a>` : ''}</div>`).join('');
+    };
     tf.addEventListener('submit', (e) => {
       e.preventDefault();
-      const q = tq.value.replace(/[^\d]/g, ''), ph = tp.value.trim();
-      if (!q) { er.textContent = 'Add your order number. It starts with # on your confirmation.'; tq.focus(); return; }
-      if (!C.normPhone(ph)) { er.textContent = 'Add the phone number you ordered with.'; tp.focus(); return; }
+      const v = tq.value, k = kind(v);
+      if (!v.trim()) { er.textContent = 'Type your order number, phone or email.'; tq.focus(); return; }
+      if (!k) { er.textContent = 'That does not look like an order number, a phone number or an email. Please check it.'; tq.focus(); return; }
       er.textContent = '';
-      window.open('https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent('Assalam o Alaikum DAUR Supply, please share the status of my order #' + q + '. Phone: ' + ph), '_blank', 'noopener');
-      A.toast('Opening WhatsApp. Our team replies with your live status.');
+      if (!API_URL) { viaWa(k, v); return; }
+      out.innerHTML = '<p class="trk-none">Looking up your order...</p>';
+      fetch(API_URL + (API_URL.indexOf('?') > -1 ? '&' : '?') + encodeURIComponent(k) + '=' + encodeURIComponent(v.trim()), { headers: { Accept: 'application/json' } })
+        .then((r) => r.ok ? r.json() : Promise.reject(r.status)).then(show)
+        .catch(() => { out.innerHTML = ''; viaWa(k, v); });
     });
   };
 })();

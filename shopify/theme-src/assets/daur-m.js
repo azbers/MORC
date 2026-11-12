@@ -315,13 +315,87 @@
     const chk = () => { if (!$('#mMoreSent') || cur.v !== 'home') { window.removeEventListener('scroll', chk); return; } if (near()) moreHome(); };
     V._moreChk = chk; window.addEventListener('scroll', chk, { passive: true });
   }
+
+  /* ---------- DAUR status: a row of circles on home, each a short story that taps through like WhatsApp status ----------
+     DAUR posts come from the blog "Status" (Online Store > Blog posts): title, text, image; tag "link:/collections/sale"
+     adds a button, tag "until:2026-12-31" hides it after that day. New pairs, price cuts, fit notes, the newest Journal
+     guide, bag rewards and Philanthropy fill in on their own from the store. */
+  const ST_SEEN = 'daur.stSeen';
+  const stSeen = () => { try { return JSON.parse(localStorage.getItem(ST_SEEN) || '[]'); } catch (e) { return []; } };
+  const tagv = (tags, k) => { const t = (tags || []).find((x) => String(x).toLowerCase().indexOf(k + ':') === 0); return t ? String(t).slice(k.length + 1).trim() : ''; };
+  function stGroups() {
+    const all = P(), G = [], today = new Date().toISOString().slice(0, 10);
+    const own = (window.DAUR_STATUSES || []).filter((x) => { const u = tagv(x.tags, 'until'); return !u || u >= today; });
+    if (own.length) G.push({ k: 'daur', n: 'DAUR', ic: 'dmark', items: own.map((x) => ({ id: 's' + x.id, kind: 'post', img: x.image, h: x.title, t: x.text, date: x.date, link: tagv(x.tags, 'link'), cta: 'Take a look' })) });
+    const newest = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+    const fresh = newest.filter((x) => (Date.now() - new Date(x.createdAt)) / 864e5 <= 21);
+    const np = (fresh.length ? fresh : newest).slice(0, 4);
+    if (np.length) G.push({ k: 'new', n: 'New in', img: pic(np[0], firstV(np[0])).src, items: np.map((x) => { const v = firstV(x), ph = pic(x, v); return { id: 'n' + x.id + v.price, kind: 'pair', img: ph.src, cut: ph.cut, h: x.name, t: `${fmt(v.price)}. ${x.category}, EU ${x.sizes[0]} to ${x.sizes[x.sizes.length - 1]}. At your door in ${days()}.`, link: href.product(x.id), cta: 'See the pair' }; }) });
+    const sale = all.filter((x) => x.variants.some(API.onSale)).slice(0, 4);
+    if (sale.length) G.push({ k: 'sale', n: 'Price cuts', img: pic(sale[0], firstV(sale[0])).src, items: sale.map((x) => { const v = x.variants.find(API.onSale) || firstV(x), ph = pic(x, v); return { id: 'c' + x.id + v.price, kind: 'pair', img: ph.src, cut: ph.cut, h: `${API.pct(v)}% off ${x.name}`, t: `Now ${fmt(v.price)}, was ${fmt(v.compareAt)}. You keep ${fmt(v.compareAt - v.price)}. Sale pairs are final for size, so check the size guide first.`, link: href.product(x.id), cta: 'Get it at this price' }; }) });
+    const notes = (window.DAUR_FITNOTES || []).filter((x) => x.body || x.title).slice(0, 4);
+    if (notes.length) G.push({ k: 'notes', n: 'Fit notes', ic: 'chat', items: notes.map((x, j) => { const pr = API.prod(x.pid); return { id: 'f' + x.id, kind: 'quote', av: window.DAUR_MX && window.DAUR_MX.avatar ? window.DAUR_MX.avatar(x.name || x.id, j) : '', h: `“${x.title || x.body}”`, t: `${String(x.name || 'A buyer').split(/\s+/)[0]}${x.city ? ', ' + x.city : ''}, on the ${pr ? pr.name : 'pair'}${x.size ? ', EU ' + x.size : ''}`, link: pr ? href.product(pr.id) + '#reviews' : '', cta: 'Read every note' }; }) });
+    const j = (window.DAUR_JOURNAL || [])[0];
+    if (j) G.push({ k: 'journal', n: 'Journal', ic: 'note', items: [{ id: 'j' + j.url, kind: 'post', img: j.image, h: j.title, t: j.text, link: j.url, cta: 'Read the guide' }] });
+    G.push({ k: 'rewards', n: 'Rewards', ic: 'gift', items: [{ id: 'r1', kind: 'text', h: `${fmt(200)} off from ${fmt(5500)}. ${fmt(400)} off from ${fmt(9000)}.`, t: `Taken off by itself at checkout, no code to remember. Pay in full and keep ${fmt(100)} more.`, link: href.shop(), cta: 'Fill my bag' }] });
+    G.push({ k: 'give', n: 'Donate', ic: 'hand', items: [{ id: 'g1', kind: 'post', img: PH('boy-smile'), h: 'One pair, one person, handed over by our team.', t: `You choose the pair, we match the size and add ${fmt(DAUR_ADD)} of our own. A private photo reaches you within 7 days.`, link: href.giving, cta: 'Donate a pair' }] });
+    return G;
+  }
+  function stRow() {
+    const G = stGroups(), seen = stSeen();
+    if (!G.length) return '';
+    return `<section class="m-sts" aria-label="DAUR status"><div class="m-sts-in">${G.map((g, i) => { const done = g.items.every((x) => seen.indexOf(x.id) > -1);
+      return `<button type="button" class="m-st${done ? ' seen' : ''}" data-st="${i}" aria-label="${esc(g.n)} status, ${g.items.length} ${g.items.length === 1 ? 'update' : 'updates'}"><span class="st-ring"><span class="st-face">${g.img ? `<img src="${esc(g.img)}" alt="" loading="lazy">` : g.ic === 'dmark' ? DMARK : ic(g.ic)}</span></span><small>${esc(g.n)}</small></button>`; }).join('')}</div></section>`;
+  }
+  function stOpen(gi) {
+    const G = stGroups(); if (!G[gi]) return;
+    let g = gi, k = 0, t0 = 0, raf = 0, paused = false, el = null, spent = 0;
+    const LEN = 5200;
+    const close = () => { cancelAnimationFrame(raf); if (el) el.remove(); document.documentElement.classList.remove('m-st-open'); const r = $('.m-sts', view); if (r) r.outerHTML = stRow(); };
+    const mark = (id) => { const s = stSeen(); if (s.indexOf(id) < 0) { s.push(id); try { localStorage.setItem(ST_SEEN, JSON.stringify(s.slice(-200))); } catch (e) { /* storage blocked */ } } };
+    const draw = () => {
+      const grp = G[g], it = grp.items[k]; mark(it.id);
+      const body = it.kind === 'quote' ? `<div class="stv-q"><span class="stv-av">${it.av || ''}</span><b>${esc(it.h)}</b><small>${esc(it.t)}</small></div>`
+        : it.kind === 'text' ? `<div class="stv-tx"><span class="stv-dm">${DMARK}</span><b>${esc(it.h)}</b><small>${esc(it.t)}</small></div>`
+        : `<div class="stv-md${it.cut ? ' cut' : ''}">${it.img ? `<img src="${esc(it.img)}" alt="">` : ''}</div><div class="stv-cap"><b>${esc(it.h)}</b>${it.t ? `<small>${esc(it.t)}</small>` : ''}</div>`;
+      el.querySelector('.stv-bars').innerHTML = grp.items.map((x, j) => `<i><b style="width:${j < k ? 100 : 0}%"></b></i>`).join('');
+      el.querySelector('.stv-who').innerHTML = `<span class="stv-ring">${grp.img ? `<img src="${esc(grp.img)}" alt="">` : grp.ic === 'dmark' ? DMARK : ic(grp.ic)}</span><b>${esc(grp.n)}</b><small>daursupply</small>`;
+      el.querySelector('.stv-body').innerHTML = body;
+      el.querySelector('.stv-cta').innerHTML = it.link ? `<a class="stv-go" href="${esc(it.link)}"${parse(it.link) ? ' data-m' : ''}>${esc(it.cta || 'Take a look')}${ic('arrow')}</a>` : '';
+      t0 = performance.now(); spent = 0;
+    };
+    const step = (d) => {
+      const grp = G[g]; k += d;
+      if (k >= grp.items.length) { g++; k = 0; if (g >= G.length) { close(); return; } }
+      else if (k < 0) { if (g > 0) { g--; k = G[g].items.length - 1; } else k = 0; }
+      draw();
+    };
+    const tick = (now) => {
+      if (!el || !el.isConnected) return;
+      if (!paused) { const p = Math.min(1, (spent + now - t0) / LEN); const bar = el.querySelectorAll('.stv-bars b')[k]; if (bar) bar.style.width = (p * 100) + '%'; if (p >= 1) step(1); }
+      raf = requestAnimationFrame(tick);
+    };
+    document.body.insertAdjacentHTML('beforeend', `<div class="m-stv" id="mStv" role="dialog" aria-modal="true" aria-label="DAUR status"><div class="stv-bars"></div><div class="stv-top"><span class="stv-who"></span><button type="button" class="stv-x" aria-label="Close">${ic('x')}</button></div><div class="stv-body"></div><div class="stv-cta"></div><button type="button" class="stv-tap l" aria-label="Previous"></button><button type="button" class="stv-tap r" aria-label="Next"></button></div>`);
+    el = $('#mStv'); document.documentElement.classList.add('m-st-open');
+    el.querySelector('.stv-x').addEventListener('click', close);
+    el.querySelector('.stv-tap.l').addEventListener('click', () => step(-1));
+    el.querySelector('.stv-tap.r').addEventListener('click', () => step(1));
+    el.querySelector('.stv-cta').addEventListener('click', () => setTimeout(close, 0));
+    const hold = (on) => { if (on && !paused) { paused = true; spent += performance.now() - t0; } else if (!on && paused) { paused = false; t0 = performance.now(); } };
+    let y0 = null;
+    el.addEventListener('pointerdown', (e) => { if (e.target.closest('.stv-go,.stv-x')) return; hold(true); y0 = e.clientY; });
+    el.addEventListener('pointerup', (e) => { hold(false); if (y0 != null && e.clientY - y0 > 90) close(); y0 = null; });
+    el.addEventListener('pointercancel', () => { hold(false); y0 = null; });
+    document.addEventListener('keydown', function kd(e) { if (!el.isConnected) { document.removeEventListener('keydown', kd); return; } if (e.key === 'Escape') close(); if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
+    draw(); raf = requestAnimationFrame(tick);
+  }
   V.home = function () {
     const all = P();
     const c = state.homeCat || 'All';
     const list = all.filter((p) => inCat(p, c));
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
-    view.innerHTML = `${promo()}
+    view.innerHTML = `${stRow()}${promo()}
       <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in 2 to 4 days. Hold your pair with Rs. 1,000 and pay the rest when the box is in your hands.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
@@ -548,7 +622,7 @@
       ${own.length ? `${mixed ? head('me') : ''}${own.map(lineHtml).join('')}` : ''}
       ${gifts.length ? `<div class="bg-grp gift">${head('gift')}${gifts.map(lineHtml).join('')}${giftForms}</div>` : ''}
       ${gives.length ? `<div class="bg-grp give">${head('give')}${gives.map(lineHtml).join('')}<div class="m-givebox">${ic('hand')}<span><b>DAUR adds ${esc(fmt(DAUR_ADD * nGive))}.</b> For every pair you sponsor we add ${esc(fmt(DAUR_ADD))}: the ${esc(fmt(DEL))} delivery we do not spend, and ${esc(fmt(DAUR_ADD - DEL))} of our own. You get a private photo after the handover.</span></div></div>` : ''}
-      <a class="m-credits" href="${href.offers}" data-m><span class="w-i">${ic('wallet')}</span><span class="w-t"><b>${cr.use ? esc(fmt(off + delivery)) + ' in credits on this order' : 'Your credits'}</b><small>${cr.chosen && !cr.chosen.ok ? 'Add ' + esc(fmt(cr.chosen.need)) + ' more to use ' + esc(cr.chosen.code) : cr.use ? esc(cr.use.label) + (delivery ? ' + delivery credit' : '') : 'Tap to see them'}</small></span>${ic('arrow')}</a>
+      <a class="m-credits" href="${href.offers}" data-m><span class="w-i">${ic('wallet')}</span><span class="w-t"><b>${cr.use ? esc(fmt(off + delivery)) + ' in credits on this order' : 'Your credits'}</b><small>${cr.chosen && !cr.chosen.ok ? 'Add ' + esc(fmt(cr.chosen.need)) + ' more to use ' + esc(cr.chosen.code) : cr.use ? esc(cr.use.label) + '' : 'Tap to see them'}</small></span>${ic('arrow')}</a>
       <div class="m-sum"><div><span>Pairs</span><span>${esc(fmt(t.subtotal))}</span></div>
         ${t.sale ? `<div><span>Sale saving</span><span class="s-g">${esc(fmt(t.sale))} kept</span></div>` : ''}
         ${ships ? `<div><span>Delivery</span><span>${esc(fmt(DEL))}</span></div><div><span>${ic('truck')}Delivery credit</span><span class="s-g">&#8722; ${esc(fmt(DEL))}</span></div>` : ''}
@@ -575,6 +649,28 @@
     const v = p && firstV(p), x = p ? pic(p, v) : { src: asset('m-sector.webp'), cut: true };
     return `<div class="m-hand" role="img" aria-label="A pair of shoes placed into open hands"><img class="h-ph" src="${PH('hands')}" alt="" loading="lazy"><img class="h-shoe${x.cut ? '' : ' blend'}" src="${esc(x.src)}" alt=""><span class="h-glow"></span><span class="h-heart">${ic('heart')}</span><span class="h-sp a"></span><span class="h-sp b"></span><span class="h-sp c"></span></div>`;
   }
+  // the questions a buyer has before he pays, answered where he is about to decide
+  const qa = (title, list) => `<section class="m-qa m-pad"><h2 class="m-h2">${esc(title)}</h2>${list.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary><b>${esc(q)}</b>${ic('chev')}</summary><p>${esc(a)}</p></details>`).join('')}</section>`;
+  const giftQA = () => qa('Questions people ask before they send a gift', [
+    ['Will he have to pay anything at the door?', 'No. A gift is paid in full when you order, so when the box reaches him there is nothing to pay and nothing to explain.'],
+    ['I do not know his size. What should I do?', 'Look inside a pair he wears now. The EU size is printed on the tongue or under the insole, so choose the same one. If you are still unsure, message us on WhatsApp and we will help you choose.'],
+    ['What if the size is still wrong?', `He can swap a full price pair for another size within ${C.exchangeDays || 5} days of delivery, unworn and with the DAUR seal attached. Sale pairs are final for size.`],
+    ['Can I write him a note?', 'Yes. Write up to 240 letters in your bag and we place your note inside the box, so your words are the first thing he sees when he lifts the lid.'],
+    ['How long does it take to reach him?', `It leaves Islamabad within 24 hours of your order being confirmed and reaches any city in Pakistan in ${days()}.`],
+    ['Can I send it to a different city from mine?', 'Yes. Enter his name, phone number and address in the gift details, and it travels to his door wherever he is in Pakistan.'],
+    ['How will I know it has arrived?', 'The tracking link reaches you on WhatsApp the day it leaves, so you can follow it all the way to his door.'],
+    ['Will it look like a gift?', 'Ask for gift packing in your bag and it goes out in the DAUR box with your note inside.']
+  ]);
+  const giveQA = () => qa('Questions people ask before they give', [
+    ['Who receives the pair?', 'A person in need whom our own team finds and checks. We do not pass pairs through anyone else, so the pair you choose is the pair that is handed over.'],
+    ['How is the size chosen?', 'We match the size to the person who receives it, so you only choose the pair.'],
+    ['How will I know it was really given?', 'A private photo of the handover reaches you within 7 days. It is sent to you alone and is never posted, so the person keeps their dignity.'],
+    ['Is it the same pair you sell?', 'Yes. It is the same pair at the same price, checked by hand in Islamabad like every order. Nobody receives a lesser shoe.'],
+    ['Does DAUR give anything itself?', `Yes. DAUR adds ${fmt(DAUR_ADD)} of its own to every pair you donate, and at least ${GIVE.pct}% of our profit goes to people in need every quarter.`],
+    ['When is it handed over?', `Pairs are handed over in rounds, and the current round closes after ${quarterEnd()}. Your photo follows within 7 days of the handover.`],
+    ['How do I pay?', 'A donated pair is paid in full when you order, so there is nothing left for anyone to pay later.'],
+    ['Can I donate more than one pair?', 'Yes. Add as many as you like to your bag, and each one reaches a different person.']
+  ]);
   V.giving = function () {
     const all = P();
     if (!state.gp || !API.prod(state.gp)) state.gp = (all.find((p) => p.id === 'sector-slip') || all[0] || {}).id;
@@ -588,17 +684,19 @@
         <span class="hx-chip c1">${ic('hand')}Handed over by our own team</span><span class="hx-chip c2">${ic('camera')}A private photo within 7 days</span>
         <div class="hx-t"><span class="hx-k">${ic('hand')}Philanthropy from DAUR</span><h1>Give someone in need the same pair you would wear.</h1><p>You choose the pair. We find the person, match the size and hand it over ourselves, and DAUR adds ${esc(fmt(DAUR_ADD))} of its own to every pair you give.</p>
         <a class="hx-cta" href="#gvPick" data-jump>${ic('hand')}Choose a pair to donate</a></div></section>
+      <div class="m-row m-pad" style="margin-top:18px" id="gvPick"><h2 class="m-h2">Pick the pair to donate</h2><span class="m-mute">${all.length} pairs</span></div>
+      <div class="m-grid">${all.map((p) => card(p, false, 'give')).join('')}</div>
+      <div class="m-pad"><h2 class="m-h2" style="margin-top:30px">How your pair reaches him</h2></div>
       <ol class="r6-steps">${[['heart', 'You choose', 'the pair to donate'], ['user', 'We match', 'the size to the person'], ['hand', 'We hand it', 'over in person'], ['camera', 'You see it', 'in a private photo']].map(([i, b, t], k) => `<li style="--i:${k}"><span>${ic(i)}</span><b>${b}</b><small>${t}</small></li>`).join('')}</ol>
       <div class="r6-swap">${ic('seal')}<span><b>${given ? NF(given) + ' pairs given so far' : 'Round 1 is open now'}</b><small>${given ? 'In ' + (cities.length || 1) + (cities.length === 1 ? ' city' : ' cities') + '. Every handover is done by our own team.' : 'The first handover takes place after ' + esc(quarterEnd()) + '. Every handover is done by our own team.'}</small></span></div>
+      ${GIVE.on ? `<section class="gv-slice"><span class="m-kick">${ic('spark')}The Slice</span><h2>At least ${GIVE.pct}% of our profit, every quarter.</h2><p>It comes out of what we earn on every order, and it is never added to your price.</p>
+        ${GIVE.causes.length > 1 ? `<div class="m-vote-o">${GIVE.causes.map((c) => `<button type="button" data-vote="${esc(c)}" aria-pressed="${vote === c}">${esc(c)}</button>`).join('')}</div><small>Your vote reaches our team the moment you tap it, and the cause with the most votes gets this quarter's slice.</small>` : ''}
+        <blockquote>“Charity does not decrease wealth.”<cite>Sahih Muslim 2588</cite></blockquote></section>` : ''}
       <section class="r9-val"><span class="r9-k">${ic('spark')}Why a shoe company gives shoes</span>
         <h2>A new era has to include everyone.</h2>
         <p>DAUR means an era. We began it so that men here could pay a fair price for shoes made in their own cities. That promise would be a small one if it stopped at the people who can pay.</p>
         <ul>${[['Same pair', 'The pair we give is a pair we sell. Nobody receives a lesser shoe.'], ['Same care', 'It is checked by hand before it leaves Islamabad, like every order.'], ['Same honesty', 'You see where it went. A private photo reaches you within 7 days of the handover.']].map((x) => `<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul></section>
-      <div class="m-row m-pad" style="margin-top:26px" id="gvPick"><h2 class="m-h2">Pick the pair to donate</h2><span class="m-mute">${all.length} pairs</span></div>
-      <div class="m-grid">${all.map((p) => card(p, false, 'give')).join('')}</div>
-      ${GIVE.on ? `<section class="gv-slice"><span class="m-kick">${ic('spark')}The Slice</span><h2>At least ${GIVE.pct}% of our profit, every quarter.</h2><p>It comes out of what we earn on every order, and it is never added to your price.</p>
-        ${GIVE.causes.length > 1 ? `<div class="m-vote-o">${GIVE.causes.map((c) => `<button type="button" data-vote="${esc(c)}" aria-pressed="${vote === c}">${esc(c)}</button>`).join('')}</div><small>Your vote travels with your next order.</small>` : ''}
-        <blockquote>“Charity does not decrease wealth.”<cite>Sahih Muslim 2588</cite></blockquote></section>` : ''}
+      ${giveQA()}
       <a class="r6-phil" href="${href.gifts}" data-m><span class="r6-pi">${ic('gift')}</span><span><b>Sending to family instead?</b><small>Gift a pair with your note inside, fully paid to his door.</small></span>${ic('arrow')}</a>
     </div>`;
     bindHold();
@@ -654,10 +752,12 @@
           <span class="hx-hearts">${'<i></i>'.repeat(6)}</span></div>
         <div class="hx-t"><span class="hx-k">${ic('gift')}Gifts from DAUR</span><h1>The gift he will wear every single day.</h1><p>Choose his pair, write a few words, and we deliver both to his door, fully paid, packed in the DAUR box. All he has to do is open it and smile.</p>
         <a class="hx-cta" href="#gfPick" data-jump>${ic('heart')}Choose his pair</a></div></section>
+      <div class="m-row m-pad" style="margin-top:18px" id="gfPick"><h2 class="m-h2">Pick his pair</h2><span class="m-mute">${all.length} pairs</span></div>
+      <div class="m-grid">${all.map((p) => card(p, false, 'gift')).join('')}</div>
+      <div class="m-pad"><h2 class="m-h2" style="margin-top:30px">How a DAUR gift works</h2></div>
       <ol class="r6-steps">${[['gift', 'You choose', 'his pair and his size'], ['note', 'You write', 'a note of up to 240 letters'], ['box', 'We pack', 'it as a gift, if you ask'], ['truck', 'He opens', 'it at his door, fully paid']].map(([i, b, t], k) => `<li style="--i:${k}"><span>${ic(i)}</span><b>${b}</b><small>${t}</small></li>`).join('')}</ol>
       <div class="r6-swap">${ic('swap')}<span><b>Wrong size? It happens.</b><small>He can swap a full price pair for another size within ${C.exchangeDays || 5} days.</small></span></div>
-      <div class="m-row m-pad" style="margin-top:26px" id="gfPick"><h2 class="m-h2">Pick the pair</h2><span class="m-mute">${all.length} pairs</span></div>
-      <div class="m-grid">${all.map((p) => card(p, false, 'gift')).join('')}</div>
+      ${giftQA()}
       <a class="r6-phil" href="${href.giving}" data-m><span class="r6-pi">${ic('hand')}</span><span><b>Philanthropy</b><small>Send a pair to someone in need, and we hand it over in person.</small></span>${ic('arrow')}</a>
     </div>`;
     observeIn();
@@ -684,7 +784,7 @@
         return `<div class="of-t${c.ok ? '' : ' lock'}${on ? ' on' : ''}" style="--tn:${tn(i + 1)}"><div class="of-l"><b class="of-big">${esc(fmt(c.amt))}</b><span class="of-code">${esc(c.code)}</span><small>${c.min ? 'On orders of ' + esc(fmt(c.min)) + ' or more' : 'On any order'}</small>${left(c.ends) ? `<em>${left(c.ends)}</em>` : ''}
           ${c.ok ? '' : `<span class="of-bar" aria-hidden="true"><i style="width:${pctDone}%"></i></span><small class="of-need">${ic('lock')}${has ? 'Add ' + esc(fmt(c.need)) + ' more to unlock' : 'Unlocks at ' + esc(fmt(c.min))}</small>`}</div>
           <div class="of-r"><button type="button" data-copy="${esc(c.code)}" aria-label="Copy ${esc(c.code)}">${ic('copy')}</button><button type="button" class="use" data-code="${esc(c.code)}" aria-pressed="${picked}">${on ? 'In use' : picked ? 'Picked' : W.code && wal ? 'Use instead' : 'Use'}</button></div></div>`;
-      }).join('') : `<div class="m-none"><b>No extra credits right now.</b><span class="m-mute">Your delivery credit and welcome credit still apply. Sale prices below need no code.</span></div>`}</div>
+      }).join('') : `<div class="m-none"><b>No extra offers right now.</b><span class="m-mute">Your bag rewards still apply. Sale prices below need no code.</span></div>`}</div>
       <p class="m-mute m-pad of-one">One credit per order on top of delivery. A picked credit counts once your bag reaches its amount. Until then, the biggest credit your bag qualifies for is used.</p>
       ${sale.length ? `<div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Already reduced</h2><a class="m-link" href="${href.shop('Sale')}" data-m>All sale</a></div><div class="m-grid">${sale.map((p) => card(p, false)).join('')}</div>` : ''}
     </div>`;
@@ -698,7 +798,9 @@
     let k = 0;
     // every pair is a post: swipe through its photos like a carousel, and its fit notes read as comments under it
     const media = (p, v) => { const x = pic(p, v), im = (v.images || []).filter(Boolean); const list = x.cut ? [x.src].concat(im) : im.length ? im : [x.src]; return list.slice(0, 8); };
-    const cm = (n) => `<p class="fd-cm"><b>${esc(String(n.name || 'DAUR buyer').split(/\s+/)[0].toLowerCase())}</b> ${esc(n.body || n.title || '')}</p>`;
+    // a fit note reads as a comment: face, name, words, when, and the hearts it gave
+    const since = (d) => { if (!d) return ''; const t = (Date.now() - new Date(d + 'T12:00:00')) / 864e5; if (!(t >= 0)) return ''; return t < 1 ? 'today' : t < 7 ? Math.floor(t) + 'd' : t < 60 ? Math.floor(t / 7) + 'w' : Math.floor(t / 30) + 'mo'; };
+    const cm = (n, k, pid) => `<div class="fd-cm"><span class="fd-cav">${window.DAUR_MX && window.DAUR_MX.avatar ? window.DAUR_MX.avatar(n.name || n.id, k) : ''}</span><p><b>${esc(String(n.name || 'DAUR buyer').split(/\s+/)[0])}</b>${n.verified ? `<i class="fd-tick" title="Bought from DAUR">${ic('check')}</i>` : ''} ${esc(n.body || n.title || '')}<small>${esc([since(n.date), n.size ? 'EU ' + n.size : '', n.rating ? n.rating + ' of 5 hearts' : ''].filter(Boolean).join(' · '))}</small></p><span class="fd-ch" aria-hidden="true">${ic('heart')}</span></div>`;
     view.innerHTML = `<div class="m-fd"><div class="m-pad"><h1 class="m-h1">The Feed</h1><p class="m-mute" style="margin:4px 0 0">New pairs, honest price cuts and what buyers say after wearing them.</p></div>
       ${all.map((p, i) => { const v = firstV(p), ph = media(p, v), cut0 = pic(p, v).cut, ns = notesFor(p.id).filter((n) => n.body || n.title);
         const post = `<article class="fd-post"><div class="fd-top"><span class="fd-av">${DMARK}</span><span><b>daursupply</b><small>${esc(p.category)}</small></span>${API.onSale(v) ? `<em>${API.pct(v)}% off</em>` : ''}</div>
@@ -707,7 +809,7 @@
         <div class="fd-acts"><button type="button" data-wish="${esc(p.id)}" aria-pressed="${wished(p.id)}" aria-label="Like ${esc(p.name)}">${ic('heart')}</button><button type="button" class="fd-cb" data-fdnotes aria-label="Fit notes on ${esc(p.name)}">${ic('chat')}</button><button type="button" data-share="${esc(p.id)}" aria-label="Share ${esc(p.name)}">${ic('share')}</button>
           <span class="fd-dots" aria-hidden="true">${ph.length > 1 ? ph.map((x, k) => `<i${k ? '' : ' class="on"'}></i>`).join('') : ''}</span><a class="m-cta sm" href="${href.product(p.id)}" data-m>${price(v)}</a></div>
         <p class="fd-cap"><b>daursupply</b> ${esc((p.description || '').split(/(?<=\.)\s/)[0] || p.name)}</p>
-        ${ns.length ? `<div class="fd-cms">${ns.slice(0, 2).map(cm).join('')}${ns.length > 2 ? `<a class="fd-more" href="${href.product(p.id)}" data-m>View all ${ns.length} fit notes</a>` : ''}</div>` : `<a class="fd-more" href="${href.product(p.id)}" data-m>Be the first to write a fit note</a>`}</article>`;
+        ${ns.length ? `<div class="fd-cms">${ns.slice(0, 2).map((n, j) => cm(n, j + i * 2, p.id)).join('')}${ns.length > 2 ? `<a class="fd-more" href="${href.product(p.id)}" data-m>View all ${ns.length} fit notes</a>` : ''}</div>` : `<a class="fd-more" href="${href.product(p.id)}" data-m>Be the first to write a fit note</a>`}</article>`;
         const f = i % 2 === 1 && facts[k] ? facts[k++] : null;
         return post + (f ? `<article class="fd-post fd-fact" style="--tn:${tn(k + 1)}">${ic(f[0])}<b>${esc(f[1])}</b><small>${esc(f[2])}</small></article>` : '');
       }).join('')}</div>`;
@@ -809,6 +911,8 @@
         if (t === 'DETAILS') { const s = c.querySelector('summary'); const box = document.createElement('div'); [...c.children].forEach((x) => { if (x !== s) box.appendChild(x.cloneNode(true)); }); const sub = harvest(box); push({ t: 'acc', s: txt(s), blocks: sub.secs.reduce((a, x) => a.concat(x.title ? [{ t: 'h3', h: x.title }] : [], x.blocks), []).concat(sub.aside ? [{ t: 'p', h: sub.aside }] : []) }); continue; }
         if (t === 'IMG') { const s = c.currentSrc || c.getAttribute('src') || c.dataset.src; if (s && !/\.svg/.test(s)) push({ t: 'img', src: s, alt: c.alt || '' }); continue; }
         if (t === 'H3' || t === 'H4' || t === 'H5') { push({ t: 'h3', h: inl(c).trim() }); continue; }
+        // a point with its own heading (a bold line over its sentence) stays one point, never two loose lines
+        if (t === 'DIV') { const bs = c.querySelectorAll('b,strong'), ps = c.querySelectorAll('p'); if (bs.length === 1 && ps.length === 1 && !ps[0].contains(bs[0]) && !c.querySelector('h1,h2,h3,img,ul,ol,table,.btn')) { push({ t: 'item', h: esc(txt(bs[0])), p: inl(ps[0]).trim() }); continue; } }
         if (t === 'HR') continue;
         const tile = /^(DIV|LI|ARTICLE|A)$/.test(t) && !c.querySelector('h1,h2:not(:only-of-type)') && tileOf(c);
         if (tile && (c.querySelectorAll('h2').length === 0 || t === 'ARTICLE')) { push(tile); continue; }
@@ -840,6 +944,7 @@
       if (b.t === 'prods') return `<div class="m-grid pg-grid">${b.items.map((x) => card(API.prod(x.id), false)).join('')}</div>`;
       if (b.t === 'ctas') return `<div class="pg-ctas">${b.items.map((x, i) => `<a class="${i === 0 && !x.ghost ? 'm-cta' : 'm-ghost'}" href="${esc(x.h)}"${parse(x.h) ? ' data-m' : ''}>${esc(x.l)}</a>`).join('')}</div>`;
       if (b.t === 'table') return `<div class="pg-table" tabindex="0"><table>${b.rows.map((r) => `<tr>${r.map((c) => `<${c.h ? 'th' : 'td'}>${c.v}</${c.h ? 'th' : 'td'}>`).join('')}</tr>`).join('')}</table></div>`;
+      if (b.t === 'item') return `<div class="pg-item"><b>${b.h}</b><p>${b.p}</p></div>`;
       if (b.t === 'quote') return `<blockquote class="pg-q">${b.h}${b.cite ? `<cite>${esc(b.cite)}</cite>` : ''}</blockquote>`;
       if (b.t === 'acc') return `<details class="pg-acc in"><summary><b>${esc(b.s)}</b>${ic('chev')}</summary><div>${blocksHtml(b.blocks, nodes)}</div></details>`;
       if (b.t === 'img') return `<img class="pg-img" src="${esc(b.src)}" alt="${esc(b.alt)}" loading="lazy">`;
@@ -881,13 +986,34 @@
     state.pageTitle = 'The DAUR Journal';
     view.innerHTML = `<div class="r6-j">
       <header class="r6-jh m-pad"><span class="r6-jk">The DAUR Journal</span><h1>${pg.title || 'Guides for men who wear their shoes'}</h1><p>${pg.aside || ''}</p></header>
+      <form class="r6-js m-pad" role="search" action="${root}/search" method="get"><input type="hidden" name="type" value="article"><input type="hidden" name="options[prefix]" value="last"><span class="r6-jsi">${ic('search')}</span><input id="mJq" type="search" name="q" placeholder="Search guides: size, suede, monsoon" autocomplete="off" aria-label="Search the Journal"></form>
+      <p class="r6-jnone m-pad" id="mJnone" hidden>No guide title has that word yet. Press search to look inside every guide.</p>
       ${tags.length ? `<nav class="r6-tags" aria-label="Topics">${tags.map((t) => `<a href="${esc(t.u)}"${parse(t.u) ? ' data-m' : ''}${t.on ? ' aria-current="page"' : ''}>${esc(t.l)}</a>`).join('')}</nav>` : ''}
       <a class="r6-lead m-pad" href="${esc(lead.u)}" data-m>${cover(lead, 0, 'big')}<span class="r6-lt"><small>${esc([lead.tag, lead.mins].filter(Boolean).join(' · '))}</small><b>${esc(lead.t)}</b><span>${esc(lead.ex)}</span><em>Read more<i>${ic('arrow')}</i></em></span></a>
       <h2 class="m-h2 m-pad r6-jl">Latest guides</h2>
       <div class="r6-list m-pad">${rest.map((x, i) => `<a class="r6-row" href="${esc(x.u)}" data-m style="--i:${Math.min(i, 8)}">${cover(x, i + 1, 'sm')}<span><small>${esc([x.tag, x.mins].filter(Boolean).join(' · '))}</small><b>${esc(x.t)}</b><em>${esc(x.ex)}</em></span></a>`).join('')}</div>
       <div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers you, Monday to Saturday, 10 am to 7 pm.</span>${talk()}</div></div>`;
+    const jq = $('#mJq', view);
+    if (jq) jq.addEventListener('input', () => {
+      const words = jq.value.toLowerCase().split(/\s+/).filter(Boolean); let n = 0;
+      $$('.r6-lead, .r6-row', view).forEach((el) => { const t = (el.querySelector('b') || el).textContent.toLowerCase(); const ok = !words.length || words.every((w) => t.indexOf(w) > -1); el.hidden = !ok; if (ok) n++; });
+      const lh = $('.r6-jl', view); if (lh) lh.hidden = !!words.length;
+      $('#mJnone', view).hidden = n > 0;
+    });
     observeIn();
     return true;
+  }
+  // an article ends with what to read next: the related guides and the next guide, as cards
+  function readNext(src) {
+    if (!/^\/blogs\/[^/]+\/[^/]+/.test(location.pathname)) return '';
+    const seen = new Set([location.pathname]), list = [];
+    $$('.j-rel a[href], .j-nextprev a[href]', src).forEach((a) => {
+      const u = a.getAttribute('href'); const path = u.split('?')[0]; if (seen.has(path) || list.length >= 4) return; seen.add(path);
+      const im = a.querySelector('img'), sm = a.querySelector('small');
+      list.push({ u, t: txt(a.querySelector('span') || a).replace(sm ? txt(sm) : '\u0000', '').trim(), img: im ? (im.currentSrc || im.getAttribute('src')) : '', k: sm ? txt(sm) : 'Keep reading' });
+    });
+    if (!list.length) return '';
+    return `<section class="r6-next m-pad"><h2 class="m-h2">Read next</h2><div class="r6-list">${list.map((x) => `<a class="r6-row in" href="${esc(x.u)}" data-m>${x.img ? `<span class="r6-cv sm"><img src="${esc(x.img)}" alt="" loading="lazy"></span>` : `<span class="r6-cv sm v-crm"><img class="cut" src="${asset('m-saddle.webp')}" alt="" loading="lazy"></span>`}<span><small>${esc(x.k)}</small><b>${esc(x.t)}</b></span></a>`).join('')}</div></section>`;
   }
   V.page = function () {
     let src = document.getElementById('app'); if (!src) return;
@@ -924,6 +1050,7 @@
         : `<section class="pg-sec r5-sec${i % 4 === 2 ? ' dark' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${s.title ? `<span class="r5-no">${String(i + 1).padStart(2, '0')}</span>` : ''}${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${blocksHtml(s.blocks, nodes)}</section>`).join('')}
       ${pk === 'contact' ? '' : `${pk === 'about' ? `<div class="m-pad r6-acta"><a class="m-cta" href="${href.shop()}" data-m>Explore the pairs</a><a class="m-ghost" href="${root}/pages/manifesto" data-m>Read our story</a></div>` : ''}<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers you, Monday to Saturday, 10 am to 7 pm.</span>${talk()}</div>`}
     </div>`;
+    const nx = readNext(src); if (nx) { const help = $('.r5-help', view); if (help) help.insertAdjacentHTML('beforebegin', nx); else view.querySelector('.m-pg').insertAdjacentHTML('beforeend', nx); }
     nodes.forEach((n, i) => { const ph = view.querySelector(`[data-node="${i}"]`); if (ph) ph.appendChild(n); });
     $$('img', view).forEach((im) => im.addEventListener('error', () => { im.style.display = 'none'; }, { once: true }));
     observeIn();
@@ -1044,12 +1171,21 @@
     let n = 0; const go2 = () => { window.scrollTo(0, pl.y); if (Math.abs(window.scrollY - pl.y) > 4 && n++ < 12) requestAnimationFrame(go2); };
     requestAnimationFrame(go2);
   }
-  window.addEventListener('popstate', () => { const r = parse(location.href); if (r) { cur = r; const pl = places()[location.pathname + location.search]; if (pl && pl.cat) state.homeCat = pl.cat; render('back'); backTo(); } else location.reload(); });
+  window.addEventListener('popstate', () => { const r = parse(location.href); if (r) { cur = r; const pl = places()[location.pathname + location.search]; if (pl && pl.cat) state.homeCat = pl.cat; render('back'); backTo(); menuBack(); } else location.reload(); });
   window.addEventListener('pagehide', keepPlace);
 
   /* ---------- sheets and toast ---------- */
   function openSheet(html) { sheet.classList.remove('r5-full'); sheet.innerHTML = '<div class="m-grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); }
   function closeSheet() { sheet.classList.remove('on'); scrim.classList.remove('on'); }
+  // a page opened from the menu: Back brings the menu back, open at the same place
+  const MB = 'daur.menuBack';
+  sheet.addEventListener('click', (e) => { const a = e.target.closest('a[href]'); if (!a || !sheet.querySelector('.r5-menu')) return; try { sessionStorage.setItem(MB, JSON.stringify({ u: location.pathname + location.search, y: sheet.scrollTop, t: Date.now() })); } catch (x) { /* storage blocked */ } }, true);
+  function menuBack() {
+    let m = null; try { m = JSON.parse(sessionStorage.getItem(MB) || 'null'); } catch (x) { return; }
+    if (!m || m.u !== location.pathname + location.search || Date.now() - m.t > 30 * 60 * 1000) return;
+    try { sessionStorage.removeItem(MB); } catch (x) { /* storage blocked */ }
+    menu(); requestAnimationFrame(() => { sheet.scrollTop = m.y || 0; });
+  }
   scrim.addEventListener('click', closeSheet);
   let sy = null;
   sheet.addEventListener('touchstart', (e) => { sy = sheet.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
@@ -1075,7 +1211,7 @@
     const bal = DEL + (W.code && W.on() ? W.amt : 0);
     openSheet(`<div class="r5-menu">
       <div class="r5-mh">${logo(true)}<button class="m-ib m-soft" type="button" data-mclose aria-label="Close menu">${ic('x')}</button></div>
-      <a class="r5-mcard" href="${href.offers}" data-m><span class="r5-mc-dm">${DMARK}</span><small>DAUR wallet</small><b>${esc(fmt(bal))}</b><span class="r5-mc-go">In credits, ready to use${ic('arrow')}</span></a>
+      <a class="r5-mcard" href="${href.offers}" data-m><span class="r5-mc-dm">${DMARK}</span><small>Bag rewards</small><b>Up to ${esc(fmt(400))} off</b><span class="r5-mc-go">${esc(fmt(200))} off from ${esc(fmt(5500))}, ${esc(fmt(400))} off from ${esc(fmt(9000))}${ic('arrow')}</span></a>
       <nav class="r5-navs" aria-label="Shop">${big(href.shop(), 'Shop all', all.length + ' pairs')}${saleN ? big(href.shop('Sale'), 'Sale', saleN + (saleN === 1 ? ' pair' : ' pairs') + ' reduced', 'sale') : ''}${cats().map((c) => { const k = all.filter((p) => p.category === c).length; return big(href.shop(c), c, k + (k === 1 ? ' pair' : ' pairs'), 'cat'); }).join('')}</nav>
       <div class="r5-kh"><h4 class="r5-k">For someone else</h4><button type="button" class="m-link" data-explain>${ic('help')}Which one?</button></div>
       <div class="r5-duo">${duo('gift', true)}${duo('give', true)}</div>
@@ -1278,6 +1414,7 @@
     if (t.tagName === 'A' && d.m !== undefined) { e.preventDefault(); closeSheet(); go(t.getAttribute('href')); return; }
     if (t.tagName === 'A' && d.m === undefined && !t.target && !t.hasAttribute('download') && (view.contains(t) || sheet.contains(t)) && t.origin === location.origin && !/^#/.test(t.getAttribute('href') || '') && parse(t.href)) { e.preventDefault(); closeSheet(); go(t.href); return; }
     if (t.tagName === 'A' && view.contains(t) && /^#./.test(t.getAttribute('href') || '')) { const el = document.getElementById(t.getAttribute('href').slice(1)); if (el) { e.preventDefault(); if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
+    if (d.st !== undefined) return stOpen(+d.st);
     if (d.menu !== undefined) return menu();
     if (d.explain !== undefined) return explain();
     if (d.sortsheet !== undefined) return sortSheet();
@@ -1316,12 +1453,28 @@
     if (d.uncode !== undefined) { CODE.set(''); V.bag(); return; }
     if (d.code) { const on = CODE.get() === d.code; CODE.set(on ? '' : d.code); if (cur.v === 'bag') V.bag(); else V.offers(); toast(on ? 'Back to your welcome credit' : d.code + ' picked. It is used once your bag qualifies.'); return; }
     if (d.copy) { const c = d.copy; const ok = () => toast(c + ' copied'); if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(c).then(ok, ok); else ok(); return; }
-    if (d.vote) { const on = t.getAttribute('aria-pressed') === 'true'; store.set('sliceVote', on ? '' : d.vote); $$('[data-vote]', view).forEach((b) => b.setAttribute('aria-pressed', !on && b.dataset.vote === d.vote)); if (!on) toast('Vote saved: ' + d.vote); return; }
+    if (d.vote) { const on = t.getAttribute('aria-pressed') === 'true'; store.set('sliceVote', on ? '' : d.vote); $$('[data-vote]', view).forEach((b) => b.setAttribute('aria-pressed', !on && b.dataset.vote === d.vote)); if (!on) { toast('Thank you. Your vote for ' + d.vote + ' reached our team.'); if (window.DAUR_SHOPIFY && window.DAUR_SHOPIFY.vote) window.DAUR_SHOPIFY.vote(d.vote); } return; }
     if (d.gpack !== undefined) { const g = GD.get(); g.pack = !g.pack; GD.set(g); t.setAttribute('aria-pressed', g.pack); return; }
     if (d.gsame !== undefined) { const g = GD.get(); g.same = !g.same; if (g.same && !g.all.to) { const f = giftUnits()[0]; if (f && g.each[f.key]) g.all = Object.assign({}, g.each[f.key]); } GD.set(g); V.bag(); return; }
     if (d.pay) { store.set('mPay', d.pay); V.bag(); return; }
     if (d.gp) { state.gp = d.gp; const y = window.scrollY; V.giving(); window.scrollTo(0, y); return; }
-    if (d.share) { const p = API.prod(d.share); const u = location.origin + href.product(p.id); if (navigator.share) navigator.share({ title: p.name, url: u }).catch(() => {}); else if (navigator.clipboard) navigator.clipboard.writeText(u).then(() => toast('Link copied')); return; }
+    if (d.share) {
+      const p = API.prod(d.share), v = firstV(p), u = location.origin + href.product(p.id);
+      const was = API.onSale(v) ? ` (was ${fmt(v.compareAt)}, ${API.pct(v)}% off)` : '';
+      const text = `${p.name} by DAUR Supply\n${fmt(v.price)}${was}\nAt your door in ${days()}, anywhere in Pakistan.\n${u}`;
+      const img = (v.images || []).filter(Boolean)[0] || pic(p, v).src;
+      const wa = () => window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
+      if (navigator.share && navigator.canShare && window.fetch && img) {
+        fetch(sized(img, 1080)).then((r) => r.ok ? r.blob() : Promise.reject(r.status)).then((b) => {
+          const f = new File([b], String(p.id) + (/png/.test(b.type) ? '.png' : /webp/.test(b.type) ? '.webp' : '.jpg'), { type: b.type || 'image/jpeg' });
+          const data = { files: [f], text, title: p.name };
+          if (navigator.canShare(data)) return navigator.share(data);
+          return navigator.share({ title: p.name, text, url: u });
+        }).catch((e) => { if (!e || e.name !== 'AbortError') wa(); });
+      } else if (navigator.share) navigator.share({ title: p.name, text, url: u }).catch(() => {});
+      else wa();
+      return;
+    }
     if (d.checkout !== undefined) { checkout(t); return; }
     if (d.retry !== undefined) { if (navigator.onLine === false) { toast('Still offline'); return; } location.href = state.retry || location.href; return; }
   });
@@ -1409,7 +1562,7 @@
   }
   function boot() {
   netPaint();
-  try { const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0]; if (nav && nav.type === 'back_forward') setTimeout(backTo, 60); } catch (e) { /* only a convenience */ }
+  try { const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0]; if (nav && nav.type === 'back_forward') setTimeout(() => { backTo(); menuBack(); }, 60); } catch (e) { /* only a convenience */ }
   warm();
   // a finger on a link starts fetching its page before the tap ends
   app.addEventListener('touchstart', (e) => { const a = e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });

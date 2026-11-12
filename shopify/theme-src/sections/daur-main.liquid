@@ -104,6 +104,12 @@
           {%- assign shown = shown | plus: 1 -%}
         {%- endif -%}
       {%- endfor -%}
+      {%- for a in blog.articles -%}
+        {%- if shown < 3 and a.id != article.id -%}{%- unless a.tags contains main_tag -%}
+          <li><a href="{{ a.url }}">{% if a.image %}{{ a.image | image_url: width: 480, height: 300, crop: 'center' | image_tag: loading: 'lazy', alt: '', widths: '240, 480', sizes: '(min-width: 700px) 240px, 100vw' }}{% endif %}<span>{{ a.title }}</span></a></li>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endunless -%}{%- endif -%}
+      {%- endfor -%}
     {%- endcapture -%}
     {%- if shown > 0 %}<aside class="j-rel"><h2>Keep reading</h2><ul class="j-cards">{{ related }}</ul></aside>{% endif %}
     {%- if blog.previous_article or blog.next_article -%}

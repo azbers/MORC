@@ -51,7 +51,7 @@
       '<ul class="lk-facts"><li><b>2 to 4</b><small>days to your door, all Pakistan</small></li><li><b>' + esc(C.exchangeDays || 5) + ' days</b><small>to swap the size</small></li><li><b>Rs. 1,000</b><small>holds it, the rest at your door</small></li></ul></div>';
     // one headline on the page: the plain intro keeps its place for readers without this layer
     h1.setAttribute('aria-hidden', 'true');
-    const fdr = view.querySelector(':scope > .m-fdr');
+    const fdr = [].slice.call(view.querySelectorAll(':scope > .m-fdr, :scope > .m-sts')).pop();
     view.insertBefore(el, fdr ? fdr.nextSibling : view.firstChild);
     show(el, 0);
     clearInterval(turn);

@@ -1686,3 +1686,29 @@ html.px-boxing #mApp::before{content:"";position:fixed;inset:0;z-index:81;backgr
 #mApp .pg-node .trk-in{display:block}
 #mApp .pg-node .trk-in input{width:100%!important;min-height:50px;border-radius:14px!important;padding:0 14px!important;font-size:16px!important}
 #mApp .pg-node .trk-steps{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0 0}
+/* round 5: quotes readable on light sections, headings breathe, a point keeps its heading */
+#mApp .r5-sec .pg-q{color:#172C27}
+#mApp .r5-sec.dark .pg-q{color:#F1EBDD}
+#mApp .r5-sec .pg-q cite{color:#8B7351;font-family:inherit;font-size:12.5px;line-height:1.4;letter-spacing:.02em}
+#mApp .r5-sec.dark .pg-q cite{color:#C9B48F}
+#mApp .r5-sec h2+p,#mApp .r5-sec h3+p{margin-top:4px}
+#mApp .r5-sec p+h3,#mApp .r5-sec .pg-list+h3{margin-top:22px}
+#mApp .pg-item{padding:14px 0;border-top:1px solid rgba(23,44,39,.1)}
+#mApp .r5-sec.dark .pg-item{border-color:rgba(241,235,221,.14)}
+#mApp .pg-item b{display:block;margin:0 0 6px;font-size:16px;line-height:1.3;font-weight:700}
+#mApp .pg-item p{margin:0!important}
+#mApp .pg-acc>div{padding-top:4px}
+#mApp .pg-acc>div>*+*{margin-top:12px}
+#mApp .pg-acc>div h3{margin-top:18px}
+/* round 5: a calmer, more elegant menu: sentence case, medium weight, one size for the shop lines */
+#mApp .r5-nav,.m-sheet .r5-nav{min-height:56px}
+.m-sheet .r5-nav b,.m-sheet .r5-nav.cat b{font-family:"DAUR Sans",system-ui,sans-serif!important;font-size:21px!important;font-weight:500!important;text-transform:none!important;letter-spacing:-.01em!important}
+.m-sheet .r5-nav:first-of-type b{font-weight:600!important}
+.m-sheet .r5-nav small{font-size:12.5px;letter-spacing:.01em}
+.m-sheet .r5-tile b{font-size:18px!important;font-weight:600!important;text-transform:none!important;letter-spacing:-.005em!important;line-height:1.15}
+.m-sheet .r5-card .r5-t,.m-sheet .r5-card.sm .r5-t{font-size:16px!important;font-weight:600!important;text-transform:none!important;white-space:nowrap;overflow-wrap:normal;letter-spacing:0!important}
+.m-sheet .r5-mcard b{font-size:26px!important;text-transform:none!important}
+.m-sheet .r5-mcard .r5-mc-go{font-size:12.5px;line-height:1.4}
+#mApp .pg-node .trk-res{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:14px;background:#F4F1EA;margin-top:10px}
+#mApp .pg-node .trk-st{font-weight:700;color:#172C27}
+#mApp .pg-node .trk-none{font-size:13.5px!important;color:#3E4A46!important}
