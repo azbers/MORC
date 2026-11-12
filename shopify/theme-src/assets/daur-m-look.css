@@ -612,3 +612,14 @@ html.m-on .ck .btn{min-height:38px!important}
 @media (min-width:1024px) and (max-width:1199px){
 #mApp .m-fd{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* desktop, round 3: inner pages take the same calm scale as the runway (headings no larger than the runway title) */
+@media (min-width:1024px){
+#mApp .m-pg .pg-hero{min-height:340px;padding:52px 52px 40px}
+#mApp .m-pg .pg-hero h1{font-size:clamp(34px,3.1vw,46px)!important}
+#mApp .m-pg .pg-hero>p{font-size:16px}
+#mApp .m-pg .pg-hero .pg-cut{width:min(34%,400px)}
+#mApp .m-pg .r5-sec{padding:52px 52px;column-gap:64px}
+#mApp .m-pg .r5-sh h2{font-size:clamp(24px,2.1vw,32px)!important}
+#mApp .m-pg .r5-sb>p:first-child,#mApp .m-pg .r5-sb>p.big{font-size:18px}
+#mApp .m-gf .hx-hero{min-height:400px}
+}
