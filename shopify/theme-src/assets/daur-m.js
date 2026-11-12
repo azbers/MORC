@@ -860,8 +860,8 @@
           ${ph.length > 1 ? `<span class="fd-cnt"><b>1</b>/${ph.length}</span>` : ''}</div>
         <div class="fd-acts"><button type="button" data-wish="${esc(p.id)}" aria-pressed="${wished(p.id)}" aria-label="Like ${esc(p.name)}">${ic('heart')}</button><button type="button" class="fd-cb" data-fdnotes aria-label="Fit notes on ${esc(p.name)}">${ic('chat')}</button><button type="button" data-share="${esc(p.id)}" aria-label="Share ${esc(p.name)}">${ic('share')}</button>
           <span class="fd-dots" aria-hidden="true">${ph.length > 1 ? ph.map((x, k) => `<i${k ? '' : ' class="on"'}></i>`).join('') : ''}</span><a class="m-cta sm" href="${href.product(p.id)}" data-m>${price(v)}</a></div>
-        <p class="fd-cap"><b>daursupply</b> ${esc((p.description || '').split(/(?<=\.)\s/)[0] || p.name)}</p>
-        ${ns.length ? `<div class="fd-cms">${ns.slice(0, 2).map((n, j) => cm(n, j + i * 2, p.id)).join('')}${ns.length > 2 ? `<a class="fd-more" href="${href.product(p.id)}" data-m>View all ${ns.length} fit notes</a>` : ''}</div>` : `<a class="fd-more" href="${href.product(p.id)}" data-m>Be the first to write a fit note</a>`}</article>`;
+        <div class="fd-capw"><p class="fd-cap"><b>daursupply</b> ${esc(String(p.description || p.name).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())}</p><button type="button" class="fd-capm" data-fdmore>more</button></div>
+        ${ns.length ? `<div class="fd-cms">${ns.slice(0, 2).map((n, j) => cm(n, j + i * 2, p.id)).join('')}<a class="fd-more" href="${href.product(p.id)}#pxNotes" data-m>${ns.length > 2 ? `View all ${ns.length} fit notes` : 'Read the fit notes'}</a></div>` : `<div class="fd-cms none"><a class="fd-more" href="${href.product(p.id)}" data-m>Be the first to write a fit note</a></div>`}</article>`;
         const f = i % 2 === 1 && facts[k] ? facts[k++] : null;
         return post + (f ? `<article class="fd-post fd-fact" style="--tn:${tn(k + 1)}">${ic(f[0])}<b>${esc(f[1])}</b><small>${esc(f[2])}</small></article>` : '');
       }).join('')}</div>`;
@@ -869,6 +869,9 @@
       const post = t.closest('.fd-post'), dots = $$('.fd-dots i', post), cnt = $('.fd-cnt b', post);
       t.addEventListener('scroll', () => { const k = Math.round(t.scrollLeft / Math.max(1, t.clientWidth)); dots.forEach((d, j) => d.classList.toggle('on', j === k)); if (cnt) cnt.textContent = k + 1; }, { passive: true });
     });
+    // captions show two lines and a "more", the way Instagram does; "more" opens the rest in place
+    $$('.fd-capw', view).forEach((w) => { const c = $('.fd-cap', w); if (c && c.scrollHeight <= c.clientHeight + 2) w.classList.add('fd-fit'); });
+    $$('[data-fdmore]', view).forEach((b) => b.addEventListener('click', () => { const w = b.closest('.fd-capw'); w.classList.add('open'); }));
     $$('[data-fdnotes]', view).forEach((b) => b.addEventListener('click', () => { const c = b.closest('.fd-post').querySelector('.fd-cms, .fd-more'); if (c) c.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' }); }));
     observeIn();
   };

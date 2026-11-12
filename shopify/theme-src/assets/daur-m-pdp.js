@@ -298,8 +298,8 @@
         <div class="px-l"><section class="px-stage${(s.pxi || 0) > 0 ? ' on-ph' : ''}" id="pxStage">${stage(p, v)}</section>${dock()}</div>
         <div class="px-r">${head(p, v)}<div class="px-colors" id="pxColors">${swatches(p, v)}</div><div class="px-dsz" id="pxDkSz"></div><div class="px-bslot" data-buyslot></div>
           <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who will wear it?</h2></div>${forCards()}<div id="pxFor">${forPanel(p, v)}</div></section>
-          ${notesSec(p)}${about(p)}</div>
-      </div><div class="px-after">${morePairs(p)}</div>`;
+          ${about(p)}</div>
+      </div><div class="px-wnotes">${notesSec(p)}</div><div class="px-after">${morePairs(p)}</div>`;
       bar(p, v); bindStage(true); bindStories(); return;
     }
     view.innerHTML = `<div class="px" id="px">

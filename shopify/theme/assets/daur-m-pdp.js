@@ -41,8 +41,8 @@
         <div class="px-l"><section class="px-stage${(e.pxi||0)>0?" on-ph":""}" id="pxStage">${$t(t,s)}</section>${ee()}</div>
         <div class="px-r">${Pt(t,s)}<div class="px-colors" id="pxColors">${yt(t,s)}</div><div class="px-dsz" id="pxDkSz"></div><div class="px-bslot" data-buyslot></div>
           <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who will wear it?</h2></div>${jt()}<div id="pxFor">${ot(t,s)}</div></section>
-          ${wt(t)}${kt(t)}</div>
-      </div><div class="px-after">${Gt(t)}</div>`,U(t,s),Mt(!0),Kt();return}m.innerHTML=`<div class="px" id="px">
+          ${kt(t)}</div>
+      </div><div class="px-wnotes">${wt(t)}</div><div class="px-after">${Gt(t)}</div>`,U(t,s),Mt(!0),Kt();return}m.innerHTML=`<div class="px" id="px">
       <section class="px-stage${(e.pxi||0)>0?" on-ph":""}" id="pxStage">${$t(t,s)}</section>
       ${ee()}
       <div class="px-colors" id="pxColors">${yt(t,s)}</div>

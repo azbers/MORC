@@ -712,3 +712,121 @@ html.m-on:has(#mApp .m-pg>.r5-help:last-child) .dk-foot{margin-top:0}
 #mApp .m-gf .hx-hero{min-height:420px!important;max-height:none}
 html.m-on #mApp .m-gf .hx-give .hx-ph{object-position:50% 40%}
 }
+/* ---------- round 5 (owner 12 Nov 19:06 and the UX laws video), phone and desktop ---------- */
+/* figure and ground: the page behind a panel is dimmed far enough that only the panel is read */
+html.m-on .m-scrim{background:rgba(12,20,18,.62)!important;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+/* closure: every sliding row shows part of the next card, so it reads as a row that keeps going */
+#mApp .v-home .dvp-track{gap:12px;scroll-padding:0 16px}
+#mApp .v-home .dvp-s{flex:0 0 86%}
+/* feed: two lines of caption with "more", two comments, a link to the rest */
+#mApp .fd-capw{position:relative;margin:6px 16px 10px}
+#mApp .fd-capw .fd-cap{margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+#mApp .fd-capw.open .fd-cap{display:block;-webkit-line-clamp:unset}
+#mApp .fd-capm{position:absolute;right:0;bottom:0;padding-left:28px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff 26px);font-size:14px;line-height:1.5;color:#7A7468}
+#mApp .fd-capw.open .fd-capm,#mApp .fd-capw.fd-fit .fd-capm{display:none}
+#mApp .fd-cm p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+#mApp .fd-cms .fd-more{display:block;margin:6px 0 2px;font-size:13.5px;color:#7A7468}
+/* connectedness: numbered steps are joined by one line, so they read as one path */
+#mApp .pg-tiles{position:relative;display:grid;grid-template-columns:1fr;gap:0;padding-left:30px}
+#mApp .pg-tiles::before{content:"";position:absolute;left:13px;top:18px;bottom:18px;width:2px;background:linear-gradient(#A58A64,#6B7550)}
+#mApp .pg-tiles .pg-tile{position:relative;background:none!important;padding:12px 0 18px 16px;border-radius:0;box-shadow:none}
+#mApp .pg-tiles .pg-tile em{position:absolute;left:-30px;top:10px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#172C27;color:#F1EBDD;font:600 11px/1 "DAUR Sans",Arial,sans-serif;font-style:normal;box-shadow:0 0 0 4px #fff}
+#mApp .pg-tiles .pg-tile b{display:block;font-size:16px;color:#172C27}
+#mApp .pg-tiles .pg-tile span{font-size:14px;line-height:1.5;color:#4A5450}
+#mApp .r6-steps{position:relative}
+/* less typing: ready notes for a gift, one tap each */
+.xb-qn{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 0 10px}
+.xb-qn button{height:34px;padding:0 13px;border-radius:999px;background:#F1EBDD;color:#172C27;font-size:13px;font-weight:600;border:1px solid rgba(165,138,100,.3)}
+.xb-qn button:active{background:#E6DCC6}
+/* payment cards: one size for every account, sliding sideways when they do not all fit */
+#mApp .xb-pcs{display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory;gap:12px;align-items:stretch}
+#mApp .xb-pc{flex:0 0 min(86%,340px)!important;max-width:none!important;min-height:300px}
+@media (min-width:1024px){
+/* home and offers tickets: three and a bit on screen, every ticket the same height */
+#mApp .v-home .dvp-s{flex:0 0 calc((100% - 36px) / 3.25)}
+#mApp .v-home .dvp-track{scroll-padding:0}
+#mApp .dvw-page .dvw-list{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:stretch;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 0 8px}
+#mApp .dvw-page .dvw-list::-webkit-scrollbar{display:none}
+#mApp .dvw-page .dvw-list>.dvw{flex:0 0 calc((100% - 40px) / 3);display:flex;scroll-snap-align:start}
+#mApp .dvw-page .dvw-list>.dvw>.dv{width:100%;height:auto}
+#mApp .dvw-page .dvw-list:has(>.dvw:nth-child(4))>.dvw{flex-basis:calc((100% - 60px) / 3.25)}
+/* home runway: no second photo in the side panel, the pairs get the room, a calm list of facts instead */
+.m-lbh .lb{grid-template-columns:1fr clamp(320px,23vw,390px)!important}
+.m-lbh .lb-pic{display:none!important}
+.m-lbh .lb-buy{justify-content:center;gap:2px}
+.m-lbh .lb-buy h2{font-size:clamp(24px,2vw,32px)!important;margin-top:18px}
+.m-lbh .lb-desc{margin:10px 0 4px;font-size:14px;line-height:1.55;color:#4A5450}
+.m-lbh .lb-facts{list-style:none;margin:18px 0 0;padding:16px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid rgba(23,44,39,.1)}
+.m-lbh .lb-facts li{display:grid;gap:2px}
+.m-lbh .lb-facts b{font-size:15px;color:#172C27}
+.m-lbh .lb-facts span{font-size:11.5px;line-height:1.35;color:#7A7468}
+.m-lbh .lb-more{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:13.5px;font-weight:600;color:#172C27;text-decoration:underline;text-underline-offset:3px}
+.m-lbh .lb-more svg{width:15px;height:15px}
+/* product: the pair gets most of the page; fit notes run as a slider below */
+#mApp .v-product .px.dkx{grid-template-columns:minmax(0,1.45fr) minmax(400px,.85fr);column-gap:56px}
+#mApp .v-product .px-l .px-stage{min-height:min(74vh,720px)}
+#mApp .v-product .px-wnotes{padding:40px 32px 0}
+#mApp .v-product .px-wnotes .px-sec{padding:0}
+#mApp .v-product .px-wnotes .px-stories{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;margin:18px 0 0;padding:4px 2px 12px;scrollbar-width:none}
+#mApp .v-product .px-wnotes .px-stories::-webkit-scrollbar{display:none}
+#mApp .v-product .px-wnotes .px-story{display:flex!important;flex:0 0 calc((100% - 54px) / 3.3);scroll-snap-align:start}
+#mApp .v-product .px-wnotes .px-sdots{display:flex!important}
+#mApp .v-product .px-wnotes .px-write{max-width:520px}
+/* payment cards on a wide screen: wider cards, same size, sliding when they do not fit */
+#mApp .xb-pc{flex:0 0 360px!important}
+/* journal: the first guide's picture is shorter */
+#mApp .r6-j .r6-lead .r6-cv{aspect-ratio:auto;height:300px}
+#mApp .r6-j .r6-lead .r6-cv img{height:100%;object-fit:cover}
+/* track: the form sits on a bone band in a white card, the steps run left to right on one line */
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(2){margin:0 calc(50% - 50vw)!important;border-radius:0!important;border:0!important;background:#F1EBDD!important;padding:56px max(48px,calc(50vw - 640px))!important;box-shadow:none!important}
+body[data-page=track] #mApp .trk-main{background:#fff;border-radius:22px;padding:36px;box-shadow:0 24px 60px -30px rgba(23,44,39,.45)}
+body[data-page=track] #mApp .trk-main h2{font-size:26px!important}
+body[data-page=track] #mApp .trk-main input{height:56px;font-size:16px}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3){border:0!important;background:none!important;box-shadow:none!important;grid-template-columns:1fr;padding:64px 0 24px!important}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sh{position:static;text-align:center;margin-bottom:12px}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sb{max-width:none;display:grid;justify-items:center;text-align:center}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sb>p{max-width:640px}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .pg-ctas{width:320px;margin:8px 0 36px}
+#mApp .pg-tiles{grid-template-columns:repeat(5,minmax(0,1fr));padding:46px 0 0;gap:20px;text-align:left;width:100%}
+#mApp .pg-tiles::before{left:14px;right:14px;top:59px;bottom:auto;width:auto;height:2px;background:linear-gradient(90deg,#A58A64,#6B7550)}
+#mApp .pg-tiles .pg-tile{padding:44px 4px 0}
+#mApp .pg-tiles .pg-tile em{left:0;top:0;width:30px;height:30px}
+/* help pages with a list of topics: the topics stay on the left, the answers read on the right */
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg{display:grid;grid-template-columns:260px minmax(0,1fr);column-gap:64px;align-items:start}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>:is(.pg-hero,.r5-help){grid-column:1/-1}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-chips{grid-column:1;grid-row:2/span 30;position:sticky;top:104px;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin:40px 0 0!important;padding:0 0 0 2px;border-left:2px solid rgba(23,44,39,.1);overflow:visible}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-chips>*{justify-content:flex-start;height:auto;padding:10px 16px;margin-left:-4px;border-radius:0 10px 10px 0;background:none!important;border:0!important;border-left:2px solid transparent!important;font-size:14.5px;color:#4A5450;text-align:left}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-chips>*:hover{color:#172C27;border-left-color:#A58A64!important;background:#F7F3EA!important}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-acc{grid-column:2;max-width:none!important;margin:16px 0 0!important;border-radius:18px;border:1px solid rgba(23,44,39,.08);background:#fff;box-shadow:0 10px 30px -24px rgba(23,44,39,.4)}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-acc:first-of-type{margin-top:40px!important}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-acc>summary{padding:22px 26px;font-size:17px}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-acc[open]{border-color:rgba(165,138,100,.45)}
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-acc>:not(summary){padding-left:26px;padding-right:26px}
+/* contact: the ways to reach us as cards, two across */
+body[data-page=contact] #mApp .r6-contact{max-width:1280px;margin:40px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+body[data-page=contact] #mApp .r6-chs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;background:none;border:0;box-shadow:none}
+body[data-page=contact] #mApp .r6-ch{border:1px solid rgba(23,44,39,.08)!important;border-radius:18px!important;padding:22px!important;background:#fff;min-height:120px;box-shadow:0 10px 30px -24px rgba(23,44,39,.4)}
+/* our story: each chapter is a full width band, alternating paper and forest, no boxes */
+body[data-page=manifesto] #mApp .m-pg>.pg-chips{position:sticky;top:76px;z-index:5;margin:0 calc(50% - 50vw)!important;padding:12px 0;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(23,44,39,.08)}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec{margin:0 calc(50% - 50vw)!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:96px max(48px,calc(50vw - 600px))!important;background:#fff}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec:nth-of-type(even):not(.dark){background:#F7F3EA}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec.dark{background:#172C27}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec .r5-no{font-size:64px;line-height:1;font-weight:600;color:#A58A64;opacity:.55;margin-bottom:8px}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec .r5-sh h2{font-size:clamp(30px,2.6vw,40px)!important}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec .r5-sb>p:first-child{font-size:22px;line-height:1.45;color:#172C27}
+body[data-page=manifesto] #mApp .m-pg>.r5-sec.dark .r5-sb>p:first-child{color:#F1EBDD}
+body[data-page=manifesto] #mApp .m-pg>.r5-help{margin-top:0!important}
+}
+@media (min-width:1024px){
+body:is([data-page=contract],[data-page=policies]) #mApp .m-pg>.pg-chips>*{box-shadow:none!important;outline:0}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sb>p{margin-left:auto;margin-right:auto}
+}
+@media (min-width:1024px){
+/* feed: every card in a row is the same size; the room left over sits under the comments, never inside the caption */
+#mApp .m-fd{align-items:stretch}
+#mApp .m-fd>.fd-post{display:flex;flex-direction:column}
+#mApp .m-fd>.fd-post>.fd-capw{flex:0 0 auto}
+#mApp .m-fd>.fd-post>.fd-cms{flex:1 1 auto}
+#mApp .m-fd>.fd-post.fd-fact{aspect-ratio:auto!important;min-height:0!important;height:auto}
+body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sh>*{display:block;text-align:center;margin-left:auto;margin-right:auto}
+}

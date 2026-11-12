@@ -101,12 +101,14 @@
     old.remove();
     const t = $('#mVouch', view), dots = $$('.dvp-dots i', view), n = t.children.length;
     let i = 0, hold = false, raf = 0, rest = 0;
-    const mark = () => { const k = Math.round(t.scrollLeft / Math.max(1, t.clientWidth)); if (k !== i) { i = k; dots.forEach((d, j) => d.classList.toggle('on', j === i)); } };
+    // one step is one ticket plus the gap, so the next ticket can peek in from the edge
+    const step = () => { const c = t.children[1] || t.firstElementChild; return c ? Math.max(1, c.offsetLeft - t.firstElementChild.offsetLeft) : Math.max(1, t.clientWidth); };
+    const mark = () => { const k = Math.round(t.scrollLeft / step()); if (k !== i) { i = k; dots.forEach((d, j) => d.classList.toggle('on', j === i)); } };
     t.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(mark); }, { passive: true });
     ['touchstart', 'pointerdown'].forEach((ev) => t.addEventListener(ev, () => { hold = true; clearTimeout(rest); rest = setTimeout(() => { hold = false; }, 6000); }, { passive: true }));
     clearInterval(timer);
     if (MX.reduce || n < 2) return;
-    timer = setInterval(() => { if (!t.isConnected) return; if (hold || document.hidden) return; i = Math.round(t.scrollLeft / Math.max(1, t.clientWidth)); t.scrollTo({ left: ((i + 1) % n) * t.clientWidth, behavior: 'smooth' }); }, 4200);
+    timer = setInterval(() => { if (!t.isConnected) return; if (hold || document.hidden) return; const w = step(), last = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4; i = Math.round(t.scrollLeft / w); t.scrollTo({ left: last ? 0 : (i + 1) * w, behavior: 'smooth' }); }, 4200);
   }
   const home = V.home;
   if (home) V.home = function () { const r = home.apply(this, arguments); carousel(); return r; };

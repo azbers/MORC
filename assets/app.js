@@ -1955,7 +1955,7 @@
     const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     // depth stops, as fractions of the stage, for d = -1 .. 5
-    const KX = [1.2, .744, .496, .346, .235, .15, .085], KF = [1.12, .9, .79, .72, .67, .635, .61], KH = [1.18, .832, .574, .436, .334, .258, .19],
+    const KX = [1.26, .78, .5, .31, .175, .085, .02], KF = [1.12, .9, .79, .72, .67, .635, .61], KH = [1.18, .832, .574, .436, .334, .258, .19],
       KB = [0, 0, 1.5, 4, 8, 12, 17], KO = [1, 1, 1, 1, .86, .5, 0];
     const wrapN = (x, n) => ((x % n) + n) % n, clamp = (x, a, b) => Math.min(b, Math.max(a, x));
     const CATS_LB = [['all', 'All pairs', () => true]].concat(CATS.map((c) => [c.toLowerCase(), { Sneakers: 'Sneakers', Hybrids: 'Casual', Leather: 'Leather' }[c] || lineName(c), (p) => p.category === c]))
@@ -2056,14 +2056,16 @@
       const x = list[i], v = vs[i], st = v.stock || {}, ph = lbPic(x, v), sale = onSale(v);
       $('#lbShop', lb).href = link('product', x.id + '~' + v.id);
       buy.innerHTML = `<div class="lb-bh"><span class="lb-k">${esc(lineName(x.category))} <i></i> Look ${String(i % U + 1).padStart(2, '0')}</span><button type="button" class="lb-like" data-wish="${x.id}" aria-pressed="${wish.includes(x.id)}" aria-label="Like ${esc(x.name)}">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button></div>
-        <a class="lb-pic" href="${link('product', x.id + '~' + v.id)}" aria-label="See every detail of ${esc(x.name)}">${ph ? `<img src="${esc(ph.src)}" alt="" class="${ph.cut ? 'cut' : 'flat'}">` : visual(x, v, { alt: '' })}</a>
         <h2>${esc(x.name)}</h2><p class="lb-col">${esc(v.color)}${x.variants.length > 1 ? ` <span>${x.variants.length} colours</span>` : ''}</p>
+        ${x.description ? `<p class="lb-desc">${esc(String(x.description).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s/)[0].slice(0, 140))}</p>` : ''}
         <div class="lb-price"><b>${fmt(v.price)}</b>${sale ? `<s>${fmt(v.compareAt)}</s><em>${Math.round((1 - v.price / v.compareAt) * 100)}% off</em>` : ''}</div>
         ${sale ? `<p class="lb-save">You keep ${fmt(v.compareAt - v.price)}. Sale pairs are final for size.</p>` : ''}
         ${x.variants.length > 1 ? `<div class="lb-dots" role="group" aria-label="Colour">${x.variants.map((o) => `<button type="button" data-lbv="${o.id}" style="--c:${esc(o.hex || '#777')}" aria-pressed="${o.id === v.id}" aria-label="${esc(o.color)}"></button>`).join('')}</div>` : ''}
         <div class="lb-sizes" role="group" aria-label="Size, EU">${x.sizes.map((z) => { const q = st[z] || 0; return `<button type="button" data-lbs="${z}" aria-pressed="false"${q ? '' : ' disabled'} aria-label="EU ${z}${q ? '' : ', sold out'}">${z}</button>`; }).join('')}<button type="button" class="lb-sg" id="lbSg">Size guide</button></div>
         <button type="button" class="lb-add" id="lbAdd"${stockOf(v) ? '' : ' disabled'}>${ic('bag')}<span>${stockOf(v) ? 'Choose your size' : 'Sold out in this colour'}</span></button>
-        <p class="lb-trust">${fmt(C.advance.one || 1000)} holds it, the rest at your door. At your door in ${esc(C.delivery.days || '2 to 4 days')}.</p>`;
+        <p class="lb-trust">${fmt(C.advance.one || 1000)} holds it, the rest at your door. At your door in ${esc(C.delivery.days || '2 to 4 days')}.</p>
+        <ul class="lb-facts"><li><b>${esc(String(C.delivery.days || '2 to 4 days').replace(/\s*days?$/, ''))}</b><span>days to your door</span></li><li><b>${sale ? 'Final' : (C.exchangeDays || 5) + ' days'}</b><span>${sale ? 'size, sale price' : 'to swap the size'}</span></li><li><b>30 days</b><span>defect cover</span></li></ul>
+        <a class="lb-more" href="${link('product', x.id + '~' + v.id)}">See every detail${ic('arrow')}</a>`;
       buy.classList.remove('in'); void buy.offsetWidth; buy.classList.add('in');
     }
     buy.addEventListener('click', (e) => {

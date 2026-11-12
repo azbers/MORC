@@ -122,6 +122,7 @@
       <div class="xb-f2">${f('to', 'Name', 'Who receives it', 'text', 40, ' autocomplete="off" autocapitalize="words"')}${f('phone', 'Phone', '03xx xxxxxxx', 'tel', 15, ' inputmode="tel" autocomplete="off"')}</div>
       ${f('addr', 'Address and city', 'House, street, area, city', 'text', 160, ' autocomplete="off"')}
       <label class="xb-in"><span>Your note in the box</span><textarea data-xu="${key}" data-xf="note" maxlength="240" rows="2" placeholder="Eid Mubarak. Wear them well.">${esc(d.note || '')}</textarea></label>
+      <div class="xb-qn" role="group" aria-label="Quick notes">${['Eid Mubarak. Wear them well.', 'Happy birthday. Many happy returns.', 'For every step ahead. With love.', 'Congratulations. You earned these.'].map((q) => `<button type="button" data-xqn="${esc(q)}" data-xqk="${key}">${esc(q.split('.')[0])}</button>`).join('')}</div>
       <button type="button" class="xb-pack" data-xpack="${key}" aria-pressed="${packOf(g, u.key)}"><b>Gift packing</b><i class="xb-sw" aria-hidden="true"></i></button>
     </div>`;
   }
@@ -303,6 +304,8 @@
     toast(all ? 'Gift details saved' : 'Saved. We will ask you the rest on WhatsApp');
     const art = lineEl(d.xdone); if (art) art.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
   });
+  // one tap writes a ready note, so nobody has to type one on a phone keyboard
+  MX.tap('xqn', (t, e, d) => { const el = view.querySelector(`textarea[data-xu="${sel(d.xqk)}"][data-xf="note"]`); if (!el) return; el.value = d.xqn; el.dispatchEvent(new Event('input', { bubbles: true })); el.focus({ preventScroll: true }); });
   MX.tap('xpack', (t, e, d) => { const g = gift(), k = d.xpack, box = (g.each[k] = g.each[k] || {}); box.pack = !packOf(g, k); GD.set(g); t.setAttribute('aria-pressed', String(box.pack)); });
   MX.tap('xsame', (t, e, d) => {
     const g = gift(), src = gdOf(g, d.xfrom), k = d.xsame, box = (g.each[k] = g.each[k] || {});
