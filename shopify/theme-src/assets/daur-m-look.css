@@ -323,3 +323,24 @@ html.m-on #mApp .m-gv2 .r9-val{background:#172C27;border-color:#172C27;color:#F1
 html.m-on #mApp .m-gv2 .r9-val h2{color:#F1EBDD}
 html.m-on #mApp .m-gv2 .r9-val p,html.m-on #mApp .m-gv2 .r9-val li span{color:rgba(241,235,221,.85)}
 html.m-on #mApp .m-gv2 .r9-val li b,html.m-on #mApp .m-gv2 .r9-val .r9-k{color:#C7AE86}
+/* round 4: "Give more than a pair", two photo cards on home */
+#mApp .r10-for{margin-top:30px}
+#mApp .r10-h{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+#mApp .r10-k{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8B7351}
+#mApp .r10-k svg{width:15px;height:15px}
+#mApp .r10-h p{margin:0;font-size:14.5px;line-height:1.5;color:#3E4A46}
+#mApp .r10-duo{display:grid;gap:12px}
+#mApp .r10-card{position:relative;display:block;height:220px;border-radius:22px;overflow:hidden;color:#F1EBDD;text-decoration:none;background:#172C27;isolation:isolate}
+#mApp .r10-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .6s}
+#mApp .r10-card:active img{transform:scale(1.03)}
+#mApp .r10-card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(23,44,39,0) 18%,rgba(23,44,39,.55) 52%,rgba(23,44,39,.94) 100%)}
+#mApp .r10-card.gift::after{background:linear-gradient(180deg,rgba(37,38,37,0) 18%,rgba(37,38,37,.5) 52%,rgba(37,38,37,.92) 100%)}
+#mApp .r10-rib{position:absolute;top:14px;left:14px;padding:6px 11px;border-radius:999px;background:rgba(241,235,221,.92);color:#172C27;font-size:11.5px;font-weight:700;letter-spacing:.02em}
+#mApp .r10-t{position:absolute;left:18px;right:18px;bottom:16px;display:flex;flex-direction:column;gap:5px}
+#mApp .r10-t b{font-size:26px;line-height:1;font-weight:700;letter-spacing:-.01em;text-transform:uppercase;color:#F1EBDD;overflow-wrap:anywhere}
+#mApp .r10-t small{font-size:13.5px;line-height:1.45;color:rgba(241,235,221,.88);max-width:300px}
+#mApp .r10-t em{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-style:normal;font-size:14px;font-weight:700;color:#D9C29C}
+#mApp .r10-t em svg{width:16px;height:16px}
+#mApp .r10-q{margin-top:12px}
+/* any other place that still uses the small purpose cards: long titles shrink instead of being cut */
+#mApp .r5-card .r5-t{font-size:clamp(18px,5.6vw,30px);overflow-wrap:anywhere}

@@ -75,14 +75,15 @@
       <button class="px-sgb" type="button" data-pxsg aria-haspopup="dialog">Size guide</button></div>`;
   }
   function swatches(p, v) {
-    // every colour is a small photo of the pair in that colour with a dot of the colour on it; one colour is still shown, so every page looks the same
-    return `<div class="px-cstrip" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour<b class="px-cn">${esc(v.color)}</b>${p.variants.length > 1 ? `<small>${p.variants.length} colours</small>` : ''}</span><span class="px-cs">
-      ${p.variants.map((x) => { const y = pic(p, x); return `<button class="px-sw im" type="button" role="radio" data-pxcol="${esc(x.id)}" aria-checked="${x.id === v.id}" aria-label="${esc(x.color)}" style="--sw:${esc(x.hex || '#222')}"><img src="${esc(y.src)}" alt="" loading="lazy"><i class="sw-dot"></i></button>`; }).join('')}</span></div>`;
+    // one round dot per colour, filled with the colour itself: small, quiet and always the same on every page
+    return `<div class="px-cstrip" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour <b class="px-cn">${esc(v.color)}</b></span><span class="px-cs">
+      ${p.variants.map((x) => `<button class="px-sw dt" type="button" role="radio" data-pxcol="${esc(x.id)}" aria-checked="${x.id === v.id}" aria-label="${esc(x.color)}" title="${esc(x.color)}" style="--sw:${esc(x.hex || '#222')}"><i></i></button>`).join('')}</span>${p.variants.length > 1 ? `<small class="px-cc">${p.variants.length} colours</small>` : ''}</div>`;
   }
   function priceBox(v) {
     const save = isSale(v) ? v.compareAt - v.price : 0;
     const pct = save ? Math.round((save / v.compareAt) * 100) : 0;
-    return `<div class="px-price">${save ? `<span class="pp-off">${pct}% off</span>` : ''}<b>${esc(fmt(v.price))}</b>${save ? `<span class="pp-was"><s>${esc(fmt(v.compareAt))}</s><em>You save ${esc(fmt(save))}</em></span>` : `<span class="pp-del">${ic('truck')}At your door in ${esc(days())}</span>`}</div>`;
+    if (!save) return `<div class="px-price"><b>${esc(fmt(v.price))}</b><span class="pp-del">${ic('truck')}At your door in ${esc(days())}</span></div>`;
+    return `<div class="px-price sale"><span class="pp-top"><s aria-label="Was ${esc(fmt(v.compareAt))}">${esc(fmt(v.compareAt))}</s><span class="pp-off">${pct}% off</span></span><b>${esc(fmt(v.price))}</b><em class="pp-sv">You save ${esc(fmt(save))}</em></div>`;
   }
   function stage(p, v) {
     const { hero, photos } = slides(p, v), n = photos.length + 1, i = Math.min(st().pxi || 0, n - 1);
@@ -138,36 +139,35 @@
   /* ---------- fit notes: social style cards that swipe sideways, each with a drawn character avatar ----------
      The avatar is a drawing chosen from the name, never a photo of a real person. */
   function hashN(t) { let h = 7; String(t || '').split('').forEach((c) => { h = (h * 31 + c.charCodeAt(0)) >>> 0; }); return h; }
-  /* ---------- eight drawn characters for fit notes: each note gets a different one, never a photo of a real person ---------- */
-  const AVS = (() => {
-    const S = ['#F3CFA9', '#E2B48A', '#C98F64', '#A86E48', '#7E4E33'];
-    const eyes = (y, g) => `<ellipse cx="50" cy="${y}" rx="3.1" ry="3.6" fill="#1F1A17"/><ellipse cx="70" cy="${y}" rx="3.1" ry="3.6" fill="#1F1A17"/><circle cx="51.1" cy="${y - 1.3}" r="1" fill="#fff"/><circle cx="71.1" cy="${y - 1.3}" r="1" fill="#fff"/>${g ? `<g fill="none" stroke="${g}" stroke-width="2.2"><circle cx="50" cy="${y}" r="8"/><circle cx="70" cy="${y}" r="8"/><path d="M58 ${y}h4"/></g>` : ''}`;
-    const brows = (y, c, t) => `<path d="M43 ${y}q7 ${t || -3} 14 0M63 ${y}q7 ${t || -3} 14 0" stroke="${c}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
-    const face = (sk, extra) => `<path d="M30 60c0-19 13-31 30-31s30 12 30 31c0 20-13 36-30 36S30 80 30 60z" fill="${sk}"/><ellipse cx="30.5" cy="62" rx="4.5" ry="7" fill="${sk}"/><ellipse cx="89.5" cy="62" rx="4.5" ry="7" fill="${sk}"/>${extra || ''}<path d="M58 66q2 4 4 0" stroke="rgba(0,0,0,.25)" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="44" cy="71" rx="4.5" ry="2.6" fill="#E88F7A" opacity=".28"/><ellipse cx="76" cy="71" rx="4.5" ry="2.6" fill="#E88F7A" opacity=".28"/>`;
-    const smile = (c) => `<path d="M52 77q8 6 16 0" stroke="${c || '#5A2E22'}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
-    const body = (shirt, sk, kind) => `<path d="M53 88h14v12H53z" fill="${sk}"/><path d="M14 120c2-17 18-26 46-26s44 9 46 26z" fill="${shirt}"/>${kind === 'collar' ? '<path d="M48 95l12 10 12-10" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.5" stroke-linejoin="round"/>' : kind === 'hood' ? '<path d="M36 100c6 8 14 11 24 11s18-3 24-11" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="5"/><path d="M54 108v10M66 108v10" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/>' : kind === 'tee' ? '<path d="M50 96q10 7 20 0" fill="none" stroke="rgba(0,0,0,.15)" stroke-width="3"/>' : ''}`;
-    const wrap = (bg1, bg2, inner) => `<svg class="st-avi" viewBox="12 16 96 96" aria-hidden="true"><defs><linearGradient id="AVG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg1}"/><stop offset="1" stop-color="${bg2}"/></linearGradient></defs><rect width="120" height="120" fill="${bg1}"/><circle cx="96" cy="22" r="30" fill="${bg2}" opacity=".55"/>${inner}</svg>`;
-    return [
-      // 1 short fade and a trimmed beard
-      () => wrap('#172C27', '#2E4A42', body('#F1EBDD', S[2], 'collar') + face(S[2], '<path d="M33 66c2 18 13 29 27 29s25-11 27-29c-3 9-12 13-27 13s-24-4-27-13z" fill="#2A1E17"/>') + '<path d="M30 52c0-16 12-26 30-26s30 10 30 26c-4-8-12-12-30-12s-26 4-30 12z" fill="#1E1611"/>' + brows(51, '#1E1611') + eyes(58) + smile('#F1EBDD')),
-      // 2 curly top, round glasses
-      () => wrap('#A58A64', '#C7AE86', body('#172C27', S[0], 'tee') + face(S[0]) + '<g fill="#3A2618"><circle cx="40" cy="38" r="9"/><circle cx="52" cy="31" r="10"/><circle cx="66" cy="30" r="10"/><circle cx="79" cy="36" r="9"/><circle cx="86" cy="46" r="7"/><circle cx="34" cy="47" r="7"/></g>' + brows(50, '#3A2618') + eyes(58, '#172C27') + smile()),
-      // 3 backward cap and stubble
-      () => wrap('#6B7550', '#8C9670', body('#252625', S[3], 'hood') + face(S[3], '<path d="M36 72c3 13 12 21 24 21s21-8 24-21c-5 6-13 9-24 9s-19-3-24-9z" fill="rgba(30,22,17,.35)"/>') + '<path d="M29 50c1-16 14-25 31-25s30 9 31 25z" fill="#F1EBDD"/><path d="M29 50h62" stroke="#A58A64" stroke-width="3"/><path d="M22 52c4-3 8-3 10-2" stroke="#F1EBDD" stroke-width="6" stroke-linecap="round"/>' + brows(53, '#1E1611') + eyes(60) + smile()),
-      // 4 side part and a moustache
-      () => wrap('#E9DFCB', '#D6C7A6', body('#6B7550', S[1], 'collar') + face(S[1], '<path d="M49 73c4-3 8-3 11 0 3-3 7-3 11 0-2 4-6 5-11 3-5 2-9 1-11-3z" fill="#2B1C14"/>') + '<path d="M30 54c-2-17 11-28 30-28 18 0 31 9 30 26-6-9-17-13-28-12l-6-6c-4 7-14 12-26 20z" fill="#2B1C14"/>' + brows(51, '#2B1C14') + eyes(58) + '<path d="M54 80q6 3 12 0" stroke="#5A2E22" stroke-width="2.2" fill="none" stroke-linecap="round"/>'),
-      // 5 wavy hair and a full beard
-      () => wrap('#252625', '#3C3D3B', body('#A58A64', S[2], 'tee') + face(S[2], '<path d="M31 62c0 22 13 36 29 36s29-14 29-36c-3 10-10 14-15 14-4-3-9-4-14-4s-10 1-14 4c-5 0-12-4-15-14z" fill="#3B2A1F"/>') + '<path d="M27 64c-4-24 10-40 33-40s37 16 33 40c-2-9-6-15-10-18-7 4-15 5-23 5s-16-1-23-5c-4 3-8 9-10 18z" fill="#3B2A1F"/>' + brows(52, '#3B2A1F') + eyes(59) + smile('#F1EBDD')),
-      // 6 beanie, clean shaven
-      () => wrap('#C7AE86', '#E3D2B0', body('#F1EBDD', S[4], 'hood') + face(S[4]) + '<path d="M28 54c0-19 14-30 32-30s32 11 32 30z" fill="#172C27"/><rect x="26" y="48" width="68" height="10" rx="5" fill="#2E4A42"/><circle cx="60" cy="22" r="6" fill="#A58A64"/>' + brows(62, '#1E1611', -2) + eyes(68) + '<path d="M52 82q8 5 16 0" stroke="#3A1F15" stroke-width="2.4" fill="none" stroke-linecap="round"/>'),
-      // 7 shaved head, full beard, glasses
-      () => wrap('#2E4A42', '#4E6A60', body('#252625', S[1], 'collar') + face(S[1], '<path d="M31 62c0 22 13 34 29 34s29-12 29-34c-2 8-6 13-11 14-5-3-11-4-18-4s-13 1-18 4c-5-1-9-6-11-14z" fill="#4A3426"/>') + '<path d="M31 50c3-14 14-22 29-22s26 8 29 22c-7-6-17-9-29-9s-22 3-29 9z" fill="rgba(40,28,20,.25)"/>' + brows(52, '#4A3426') + eyes(59, '#A58A64') + smile('#F1EBDD')),
-      // 8 tall quiff and light stubble
-      () => wrap('#D9C7A3', '#BFA77D', body('#2E4A42', S[0], 'hood') + face(S[0], '<path d="M37 74c3 12 11 19 23 19s20-7 23-19c-5 5-13 8-23 8s-18-3-23-8z" fill="rgba(60,40,28,.22)"/>') + '<path d="M30 54c-3-14 4-24 14-28 8-10 26-12 36-4 9 5 12 14 10 30-4-8-11-12-20-13-8 0-14-3-17-8-5 6-13 11-23 23z" fill="#5A3A24"/>' + brows(51, '#5A3A24') + eyes(58) + smile())
-    ];
-  })();
-  let avN = 0;
-  const avatar = (name, k) => { const i = (k != null ? k : hashN(name)) % AVS.length; return AVS[i]().replace(/AVG/g, 'avg' + (++avN)); };
+  /* ---------- fit note avatars: three young characters drawn once, reused with different skin, shirt and background ----------
+     never a photo of a real person; the drawings live in one hidden sprite and every avatar is a small <use> of it */
+  const AVBG = [['#172C27', '#2E4A42'], ['#A58A64', '#CDB48C'], ['#6B7550', '#909A72'], ['#E9DFCB', '#D3C29F'], ['#252625', '#45463F'], ['#B9C4C0', '#DCE3DF']];
+  const AVSK = ['#F2CDA6', '#DDAE84', '#C48A5F', '#9C6744'];
+  const AVSH = ['#F1EBDD', '#172C27', '#A58A64', '#6B7550', '#252625', '#C9B79A'];
+  function avSprite() {
+    if (document.getElementById('avb-sprite')) return;
+    const face = '<path d="M52 86h16v14H52z" fill="var(--sk)"/><path d="M14 122c3-17 19-25 46-25s43 8 46 25z" fill="var(--sh)"/><path d="M47 98q13 10 26 0" fill="none" stroke="rgba(0,0,0,.14)" stroke-width="3"/>'
+      + '<ellipse cx="33" cy="63" rx="4.5" ry="6.5" fill="var(--sk)"/><ellipse cx="87" cy="63" rx="4.5" ry="6.5" fill="var(--sk)"/><path d="M33 60c0-18 12-29 27-29s27 11 27 29c0 19-11 33-27 33S33 79 33 60z" fill="var(--sk)"/>'
+      + '<ellipse cx="49" cy="64" rx="3.6" ry="4.4" fill="#1C1714"/><ellipse cx="71" cy="64" rx="3.6" ry="4.4" fill="#1C1714"/><circle cx="50.3" cy="62.4" r="1.3" fill="#fff"/><circle cx="72.3" cy="62.4" r="1.3" fill="#fff"/>'
+      + '<path d="M43 55.5q6-3 11-.5M66 55q5-2.5 11 .5" stroke="#2A1E17" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M59 69q1.5 3 3 0" stroke="rgba(0,0,0,.22)" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+      + '<path d="M52 77q8 7 16 0" stroke="#6A3426" stroke-width="2.4" fill="none" stroke-linecap="round"/><ellipse cx="43" cy="73" rx="4" ry="2.3" fill="#E8907A" opacity=".3"/><ellipse cx="77" cy="73" rx="4" ry="2.3" fill="#E8907A" opacity=".3"/>';
+    const sym = (id, back, front) => `<symbol id="${id}" viewBox="12 16 96 96">${back || ''}${face}${front}</symbol>`;
+    const svg = '<svg id="avb-sprite" width="0" height="0" style="position:absolute" aria-hidden="true">'
+      // 1 textured crop with a swept fringe
+      + sym('avb1', '', '<path d="M31 59c-3-19 9-33 29-33 18 0 30 11 29 30-2-5-5-8-8-9-3 4-9 7-16 7 2-3 2-6 1-8-5 5-15 8-27 7-3 1-6 3-8 6z" fill="#1E1611"/><path d="M46 37c6-4 16-5 24-1" stroke="rgba(255,255,255,.14)" stroke-width="2.5" fill="none" stroke-linecap="round"/>')
+      // 2 curls and headphones
+      + sym('avb2', '', '<g fill="#2C1D13"><circle cx="38" cy="47" r="8"/><circle cx="45" cy="37" r="9"/><circle cx="57" cy="32" r="10"/><circle cx="70" cy="33" r="9.5"/><circle cx="80" cy="40" r="8.5"/><circle cx="84" cy="50" r="6.5"/><circle cx="36" cy="55" r="5"/><circle cx="52" cy="42" r="7"/><circle cx="66" cy="42" r="7"/></g><path d="M29 64c0-26 13-41 31-41s31 15 31 41" stroke="#252625" stroke-width="4.5" fill="none" stroke-linecap="round"/><rect x="23" y="56" width="11" height="17" rx="5" fill="#A58A64"/><rect x="86" y="56" width="11" height="17" rx="5" fill="#A58A64"/>')
+      // 3 cap worn backwards
+      + sym('avb3', '', '<path d="M34 57c-4-3-5-9-2-13l6 9zM86 57c4-3 5-9 2-13l-6 9z" fill="#2A1E17"/><path d="M31 53c0-17 13-27 29-27s29 10 29 27c-8-4-18-6-29-6s-21 2-29 6z" fill="var(--cp)"/><path d="M31 53c8-4 18-6 29-6s21 2 29 6" stroke="rgba(0,0,0,.18)" stroke-width="2" fill="none"/><rect x="51" y="46" width="18" height="6" rx="3" fill="rgba(0,0,0,.28)"/><circle cx="60" cy="27" r="2.6" fill="rgba(0,0,0,.25)"/>')
+      + '</svg>';
+    document.body.insertAdjacentHTML('beforeend', svg);
+  }
+  const avatar = (name, k) => {
+    avSprite();
+    const n = k != null ? k : hashN(name), b = n % 3, bg = AVBG[(n + Math.floor(n / 3)) % AVBG.length], sk = AVSK[(n * 3 + 1) % AVSK.length];
+    const sh = AVSH[(n + 2) % AVSH.length], cp = AVSH[(n + 4) % AVSH.length];
+    return `<svg class="st-avi" viewBox="0 0 96 96" aria-hidden="true" style="background:linear-gradient(135deg,${bg[0]},${bg[1]});--sk:${sk};--sh:${sh === bg[0] ? '#F1EBDD' : sh};--cp:${cp}"><use href="#avb${b + 1}"/></svg>`;
+  };
   const ago = (d) => {
     if (!d) return ''; const t = new Date(d + 'T12:00:00'); if (isNaN(t)) return '';
     const days = Math.max(0, Math.round((Date.now() - t) / 864e5));
@@ -244,10 +244,15 @@
     return `<section class="px-sec px-about"><h2 class="px-h">About this pair</h2><p>${esc(more || !long ? d : first)}${long ? ` <button class="px-more" type="button" data-pxmore>${more ? 'Less' : 'Read more'}</button>` : ''}</p>
       ${specs ? `<dl class="px-spec">${specs}</dl>` : ''}</section>`;
   }
+  // a style is the group tag when the store sets one, otherwise the name before " in " (for example "Ward Chelsea in Tan")
+  const styleOf = (x) => String(x.group || String(x.name).split(/\s+in\s+/i)[0]).trim().toLowerCase();
   function morePairs(p) {
-    const rest = P().filter((x) => x.id !== p.id), same = rest.filter((x) => x.category === p.category), list = same.concat(rest.filter((x) => x.category !== p.category)).slice(0, 4);
-    if (!list.length) return '';
-    return `<section class="px-sec px-rel"><div class="m-row"><h2 class="px-h">More from the drop</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div></section><div class="m-grid">${list.map((x) => card(x, false)).join('')}</div>`;
+    const rest = P().filter((x) => x.id !== p.id), k = styleOf(p), sib = rest.filter((x) => styleOf(x) === k);
+    const others = rest.filter((x) => styleOf(x) !== k), same = others.filter((x) => x.category === p.category);
+    const list = same.concat(others.filter((x) => x.category !== p.category)).slice(0, 4);
+    const sibs = sib.length ? `<section class="px-sec px-rel"><div class="m-row"><h2 class="px-h">The same pair in other colours</h2></div></section><div class="m-grid">${sib.map((x) => card(x, false)).join('')}</div>` : '';
+    if (!list.length) return sibs;
+    return sibs + `<section class="px-sec px-rel"><div class="m-row"><h2 class="px-h">More from the drop</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div></section><div class="m-grid">${list.map((x) => card(x, false)).join('')}</div>`;
   }
 
   /* ---------- the button: the app's black primary, with the price on it, and it tells the buyer the next step ---------- */
@@ -369,6 +374,8 @@
      lid meets the box exactly at every width. ---------- */
   let boxing = false;
   const RAD = Math.PI / 180;
+  // the lid angles: 62 is shut; the docked box rests a quarter open, and swings wide only while the pair drops in
+  const AJAR = 92, WIDE = 150;
   function geo() {
     // a shoe box of 33 by 20 by 12 cm, seen from the front and a little above
     const Wf = Math.round(Math.min(236, innerWidth * 0.6)), Pp = 900, TH = 62, sn = Math.sin(TH * RAD), cs = Math.cos(TH * RAD);
@@ -449,7 +456,8 @@
       Object.assign(box.style, { width: Wf + 'px', height: Hb + 'px', marginLeft: -Wf / 2 + 'px' });
       box.innerHTML = boxHtml(g); app.appendChild(box);
       const lid = box.querySelector('.bx-lid');
-      lid.style.transform = lidT(128);
+      lid.style.transform = lidT(AJAR);
+      lid.animate([{ transform: lidT(AJAR) }, { transform: lidT(WIDE) }], { duration: 300, delay: 60, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards' });
       const br = box.getBoundingClientRect();
       // the pair leaves the frame from where it stands, or rises from the middle of the screen when the frame is out of sight
       const seen = !!from.box && from.box.cy > 70 && from.box.cy < innerHeight - 140 && from.box.w > 20;
@@ -482,7 +490,7 @@
       fly.finished.then(() => {
         flap.animate([{ transform: `translateY(${lift}px)` }, { transform: 'none' }], { duration: 230, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards' });
         // the lid swings from behind the box to straight up at the viewer, then falls onto the box
-        return new Promise((ok) => setTimeout(ok, 110)).then(() => lid.animate([{ transform: lidT(128) }, { transform: lidT(90) }], { duration: 230, easing: 'cubic-bezier(.45,0,.75,.6)', fill: 'forwards' }).finished);
+        return new Promise((ok) => setTimeout(ok, 110)).then(() => lid.animate([{ transform: lidT(WIDE) }, { transform: lidT(90) }], { duration: 230, easing: 'cubic-bezier(.45,0,.75,.6)', fill: 'forwards' }).finished);
       }).then(() => {
         lid.style.zIndex = 6;
         return lid.animate([{ transform: lidT(90) }, { transform: lidT(TH) }], { duration: 120, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }).finished;

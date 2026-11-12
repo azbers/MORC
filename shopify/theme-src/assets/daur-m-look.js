@@ -47,8 +47,8 @@
     el.innerHTML = '<div class="lk-hero-in"><span class="lk-eye"><i></i>Own your pace.</span><h1>' + head + '</h1>' +
       (pairs.length ? '<div class="lk-stage"><span class="lk-ring"></span>' + pairs.join('') + (pairs.length > 1 ? '<span class="lk-dots" aria-hidden="true">' + pairs.map(function () { return '<i></i>'; }).join('') + '</span>' : '') + '</div>' : '') +
       (p ? '<p>' + esc(p.textContent.trim()) + '</p>' : '') +
-      '<div class="lk-cta"><a class="lk-btn" href="' + esc(shop) + '" data-m>Find my pair' + ARROW + '</a><button type="button" class="lk-ghost" data-why>How your pair is held</button></div>' +
-      '<ul class="lk-facts"><li><b>3</b><small>workshop cities, no middlemen</small></li><li><b>' + esc(C.exchangeDays || 5) + ' days</b><small>to swap your size</small></li><li><b>30 days</b><small>of cover for defects</small></li></ul></div>';
+      '<div class="lk-cta"><a class="lk-btn" href="' + esc(shop) + '" data-m>Find my pair' + ARROW + '</a><button type="button" class="lk-ghost" data-why>Why only Rs. 1,000 now?</button></div>' +
+      '<ul class="lk-facts"><li><b>2 to 4</b><small>days to your door, all Pakistan</small></li><li><b>' + esc(C.exchangeDays || 5) + ' days</b><small>to swap the size</small></li><li><b>Rs. 1,000</b><small>holds it, the rest at your door</small></li></ul></div>';
     // one headline on the page: the plain intro keeps its place for readers without this layer
     h1.setAttribute('aria-hidden', 'true');
     const fdr = view.querySelector(':scope > .m-fdr');

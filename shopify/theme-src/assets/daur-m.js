@@ -244,6 +244,8 @@
   /* ---------- small shared pieces ---------- */
   // gift and give, side by side: gold for someone you know, green for someone in need
   // gift or give: two cards that say plainly who the pair is for and what happens next
+  // the two purpose cards on home: a real photograph each, the promise over it
+  const duoBig = (k) => { const g = k === 'gift'; return `<a class="r10-card ${k}" href="${g ? href.gifts : href.giving}" data-m><img src="${asset(g ? 'm-g-hands.webp' : 'm-g-boy-smile.webp')}" alt="" loading="lazy" decoding="async"><span class="r10-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r10-t"><b>${g ? 'Gift a pair' : 'Philanthropy'}</b><small>${g ? 'Eid, a birthday or just because. Your words in the box, fully paid to his door.' : 'A new pair for someone in need, handed over by our team, with a private photo for you.'}</small><em>${g ? 'Choose his pair' : 'Donate a pair'}${ic('arrow')}</em></span></a>`; };
   const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You choose the pair and his size. We place your note in the box and send it to his door, fully paid.' : 'We match the size and hand the pair over in person. A private photo of the moment reaches only you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
   const ticker = () => { const t = [['user', 'From Azar, the founder of DAUR Supply'], [ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person answers you on WhatsApp, before and after you buy']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
@@ -320,12 +322,12 @@
     const fresh = all.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 3);
     const pc = ['All'].concat(cats()).concat(hasSale() ? ['Sale'] : []);
     view.innerHTML = `${promo()}
-      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>The same workshops of Lahore, Sialkot and Kasur that supply the big shop windows make every DAUR pair. We buy straight from them, check each pair by hand in Islamabad and bring it to your door in 2 to 4 days. No showroom rent sits in the price, so the money stays in your pocket and the quality stays on your feet.</p></section>
+      <section class="r7-intro m-pad"><h1>Same local craft. Zero retail markup.</h1><p>Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in 2 to 4 days. Hold your pair with Rs. 1,000 and pay the rest when the box is in your hands.</p></section>
       <div class="m-pills" role="group" aria-label="Filter">${pc.map((x) => `<button class="m-pill${x === 'Sale' ? ' sale' : ''}" type="button" data-hcat="${esc(x)}" aria-pressed="${x === c}">${x === 'Sale' ? ic('tag') : ''}${esc(x)}</button>`).join('')}</div>
       <div class="m-car" aria-label="Pairs">${list.map((p) => card(p, true)).join('') || '<p class="m-mute m-pad">Nothing here yet.</p>'}</div>
       ${ticker()}
-      <section class="r5-for m-pad"><div class="r5-for-h"><h2 class="m-h2">Make someone's day</h2><button class="m-link" type="button" data-explain>${ic('help')}Which one?</button></div>
-      <div class="r5-duo">${duo('gift')}${duo('give')}</div></section>
+      <section class="r10-for m-pad"><div class="r10-h"><span class="r10-k">${ic('heart')}Pairs with a purpose</span><h2 class="m-h2">Give more than a pair</h2><p>Put your words in his box, or a new pair on feet that have never had one.</p></div>
+      <div class="r10-duo">${duoBig('gift')}${duoBig('give')}</div><button class="m-link r10-q" type="button" data-explain>${ic('help')}Not sure which one?</button></section>
       <div class="m-row m-pad" style="margin-top:24px"><h2 class="m-h2">Just landed</h2><a class="m-link" href="${href.shop()}" data-m>See all</a></div>
       <div class="m-rows">${fresh.map(row).join('')}</div>
       <div id="mMore" data-k="0"></div><div id="mMoreSent" class="m-skel" aria-hidden="true"><div class="sk-row"><div class="sk sk-c"></div><div class="sk sk-c"></div></div></div>`;
@@ -1372,12 +1374,15 @@
 
   /* ---------- start: after every deferred view file has loaded ---------- */
   // pages the app cannot draw itself are fetched ahead, so they open as if already there
+  // on a slow or data saving connection nothing is fetched ahead: every byte goes to the screen the shopper is looking at
+  const slowNet = () => { try { const c = navigator.connection; return !!c && (!!c.saveData || /2g|3g/.test(c.effectiveType || '')); } catch (e) { return false; } };
   function warm() {
+    if (slowNet()) return;
     try {
       if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
         const sr = document.createElement('script'); sr.type = 'speculationrules';
         sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*' }, { not: { href_matches: ['/cart*', '/checkout*', '/account*', '/discount/*'] } }] }, eagerness: 'moderate' }],
-          prefetch: [{ urls: [root + '/blogs/journal'], eagerness: 'eager' }] });
+          prefetch: [{ urls: [root + '/blogs/journal'], eagerness: 'moderate' }] });
         document.head.appendChild(sr);
       } else {
         const done = new Set();
@@ -1410,7 +1415,7 @@
   app.addEventListener('touchstart', (e) => { const a = e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });
   app.addEventListener('pointerover', (e) => { const a = e.target.closest && e.target.closest('a[href]'); if (a && a.origin === location.origin) warmDoc(a.href); }, { passive: true });
   // fetching ahead waits for the shopper's first touch or scroll, so it never competes with the first screen
-  const later = () => { ['touchstart', 'scroll', 'pointerdown', 'keydown'].forEach((e) => removeEventListener(e, later, true)); idle(() => { warmImages(); [root + '/blogs/journal'].forEach(warmDoc); }); };
+  const later = () => { ['touchstart', 'scroll', 'pointerdown', 'keydown'].forEach((e) => removeEventListener(e, later, true)); if (slowNet()) return; idle(() => { warmImages(); [root + '/blogs/journal'].forEach(warmDoc); }); };
   ['touchstart', 'scroll', 'pointerdown', 'keydown'].forEach((e) => addEventListener(e, later, { capture: true, passive: true }));
   slimCookies();
   render();
@@ -1428,5 +1433,8 @@
   window.addEventListener('scroll', solid, { passive: true }); requestAnimationFrame(solid);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { paintTab(); paintTop(); if (cur.v === 'bag') V.bag(); } });
   }
-  if (document.readyState === 'loading' || document.readyState === 'interactive') document.addEventListener('DOMContentLoaded', boot, { once: true }); else boot();
+  // the phone styles load without blocking the first paint (the shell in theme.liquid shows meanwhile); the app draws once they are in
+  const sheetsIn = () => Array.prototype.every.call(document.querySelectorAll('link[data-mcss]'), (l) => l.rel === 'stylesheet' && !!l.sheet);
+  const mStart = () => { let n = 0; (function chk() { if (sheetsIn() || ++n > 300) { H.classList.add('m-css'); boot(); } else setTimeout(chk, 40); })(); };
+  if (document.readyState === 'loading' || document.readyState === 'interactive') document.addEventListener('DOMContentLoaded', mStart, { once: true }); else mStart();
 })();

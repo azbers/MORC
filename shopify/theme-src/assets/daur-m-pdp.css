@@ -469,3 +469,31 @@ html.m-on{--px-ink:#172C27}
 .px-nform{padding-bottom:8px}
 .px-nform .px-pick{position:sticky;bottom:0;box-shadow:0 -10px 14px 4px #fff}
 .st-av .st-avi{box-shadow:0 0 0 2px #fff}
+/* round 4 (owner 12 Nov): size and price only on the first picture, a fixed pager, one quiet price stack, colour dots, a box that rests a quarter open, a light swipe handle */
+.px-stage.on-ph .px-ui{opacity:0;transform:translateY(8px)}
+.px-stage.on-ph .px-ui button{pointer-events:none}
+.px-slide.ph{padding:52px 20px 24px}
+.px-pager,.px-stage.on-ph .px-pager{top:20px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);transition:none;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 1px 0 rgba(23,44,39,.06)}
+.pg-dots button,.pg-dots button.on{width:6px;height:6px;transition:background .25s,transform .25s}
+.pg-dots button.on{background:#172C27;transform:scale(1.35)}
+.px-ui .px-price{left:auto;right:16px;bottom:16px;align-items:flex-end;text-align:right;gap:0}
+.px-price .pp-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.px-price .pp-top s{font-size:13px;font-weight:500;color:#7A7468;text-decoration-thickness:1.5px}
+.px-price .pp-off{margin:0;align-self:auto;padding:3px 8px;font-size:10.5px}
+.px-price b{font-size:34px}
+.px-price .pp-sv{margin-top:6px;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8B7351}
+@media (max-width:360px){.px-price b{font-size:28px}}
+.px-colors{padding:10px 20px 2px}
+.px-cstrip{flex-direction:row;align-items:center;gap:12px}
+.px-cstrip .px-lab{flex:0 0 auto;gap:6px}
+.px-cs{gap:12px;padding:4px;flex:1 1 auto}
+.px-sw.dt{flex:0 0 auto;width:30px;height:30px;background:#fff;box-shadow:0 0 0 1px rgba(23,44,39,.16)}
+.px-sw.dt i{width:22px;height:22px}
+.px-sw.dt[aria-checked=true]{box-shadow:0 0 0 2px #172C27}
+.px-cstrip .px-cc{flex:0 0 auto;font-size:11.5px;font-weight:600;color:var(--px-mute)}
+.px-dock .dk-box .bx-lid{transform:perspective(900px) rotateX(92deg)}
+.px-dock .dk-box .bx-flap{transform:translateY(18%)}
+.px-dock .dk-pill{background:rgba(255,255,255,.38);color:#172C27;-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.75),0 10px 24px -12px rgba(23,44,39,.35)}
+.px-dock .dk-i{background:rgba(255,255,255,.85);color:#172C27;box-shadow:0 2px 8px rgba(23,44,39,.12)}
+.px-dock .dk-ch i{border-color:#172C27;opacity:.3}
+.px-dock.ready .dk-pill{background:rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.85),0 0 0 3px rgba(165,138,100,.45),0 10px 24px -12px rgba(23,44,39,.35)}
