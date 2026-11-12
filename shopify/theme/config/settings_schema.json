@@ -401,6 +401,12 @@
         "default": "PK00 BANK 0000 0000 0000 0000"
       },
       {
+        "type": "image_picker",
+        "id": "pay_bank_qr",
+        "label": "Bank QR code",
+        "info": "Shown on the bank card in the bag. Leave empty until you have it."
+      },
+      {
         "type": "text",
         "id": "pay_ep_number",
         "label": "EasyPaisa number",
@@ -413,6 +419,11 @@
         "default": "DAUR Supply"
       },
       {
+        "type": "image_picker",
+        "id": "pay_ep_qr",
+        "label": "EasyPaisa QR code"
+      },
+      {
         "type": "text",
         "id": "pay_jc_number",
         "label": "JazzCash number",
@@ -423,6 +434,11 @@
         "id": "pay_jc_title",
         "label": "JazzCash account title",
         "default": "DAUR Supply"
+      },
+      {
+        "type": "image_picker",
+        "id": "pay_jc_qr",
+        "label": "JazzCash QR code"
       }
     ]
   }

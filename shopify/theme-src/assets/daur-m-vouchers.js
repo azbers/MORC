@@ -125,8 +125,11 @@
     }).join('');
     const full = `<div class="dvw dv-w" role="group" aria-label="${esc(money(PAYFULL) + ' more off when you pay in full')}">${card({ cur: CUR, tone: 'cream', cls: 'dv-row', kick: 'Paid in full', amt: PAYFULL, line: 'Choose to pay everything at once in your bag', ring: 'Bag reward', seed: 53,
       foot: `<span class="dv-note">On top of any bag reward</span>${pill('Your choice', true)}` })}</div>`;
+    // desktop only: a short intro beside the rewards card, so the page opens like a page and not a phone screen
+    const steps = REWARDS.slice().reverse().map((r) => `<li><b>${esc(money(r.amt))} off</b><span>when your bag reaches ${esc(money(r.min))}</span></li>`).join('') + `<li><b>${esc(money(PAYFULL))} more off</b><span>when you choose to pay in full</span></li>`;
+    const intro = `<div class="dvw-intro"><span class="m-kick">DAUR rewards</span><h1>Money off, without a single code.</h1><p>The bigger your bag, the more comes off. Nothing to copy, nothing to remember: the best reward your bag reaches is taken off at checkout by itself.</p><ul class="dvw-steps">${steps}</ul><a class="dvw-go" href="${href.shop()}" data-m>Fill my bag${ic('arrow')}</a></div>`;
     view.innerHTML = `<div class="m-of dvw-page">
-      <div class="m-pad"><section class="r5-bank" aria-label="${esc('DAUR rewards, ' + fmt(now) + ' off this bag')}"><span class="r5-bk-dm" aria-hidden="true">${MX.DMARK}</span>
+      <div class="m-pad dvw-top">${intro}<section class="r5-bank" aria-label="${esc('DAUR rewards, ' + fmt(now) + ' off this bag')}"><span class="r5-bk-dm" aria-hidden="true">${MX.DMARK}</span>
         <span class="r5-bk-top"><span class="r5-bk-wm dk">${MX.WORDMARK}<small>REWARDS</small></span><span class="r5-bk-chip" aria-hidden="true"><i></i><i></i><i></i></span></span>
         <span class="r5-bk-mid"><small>${has ? 'Off this bag' : 'Up to'}</small><b>${esc(fmt(has ? now : REWARDS[0].amt + PAYFULL))}</b></span>
         <span class="r5-bk-bot"><span><small>Status</small><b>${now ? 'Applied at checkout' : has ? 'Add a pair to unlock' : 'Ready for your bag'}</b></span><span><small>Codes</small><b>None needed</b></span></span></section>

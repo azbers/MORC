@@ -211,8 +211,8 @@
   const CHIP = '<svg class="xb-chip" viewBox="0 0 44 32" aria-hidden="true"><rect x=".75" y=".75" width="42.5" height="30.5" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 11h13M1 21h13M30 11h13M30 21h13M14 1v30M30 1v30" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
   function payCards() {
     const out = [];
-    if (BANK.number || BANK.iban) out.push({ k: 'bank', kind: 'Bank transfer', name: BANK.bank, title: BANK.title, main: ['Account number', BANK.number], extra: BANK.iban ? ['IBAN', BANK.iban] : null });
-    (BANK.wallets || []).filter((w) => w && w.number).forEach((w) => out.push({ k: String(w.name || 'wallet').toLowerCase().replace(/[^a-z]/g, ''), kind: 'Mobile wallet', name: w.name || 'Mobile wallet', title: w.title || BANK.title, main: ['Mobile account', w.number], extra: null }));
+    if (BANK.number || BANK.iban) out.push({ k: 'bank', kind: 'Bank transfer', name: BANK.bank, title: BANK.title, main: ['Account number', BANK.number], extra: BANK.iban ? ['IBAN', BANK.iban] : null, qr: BANK.qr || '' });
+    (BANK.wallets || []).filter((w) => w && w.number).forEach((w) => out.push({ k: String(w.name || 'wallet').toLowerCase().replace(/[^a-z]/g, ''), kind: 'Mobile wallet', name: w.name || 'Mobile wallet', title: w.title || BANK.title, main: ['Mobile account', w.number], extra: null, qr: w.qr || '' }));
     return out;
   }
   function bank(m) {
@@ -222,12 +222,14 @@
         <header><span class="xb-pc-n"><small>${esc(c.kind)}</small><b>${esc(c.name)}</b></span>${CHIP}</header>
         <div class="xb-pc-m"><span><small>${esc(c.main[0])}</small><b class="mono">${esc(c.main[1])}</b></span>${cp(c.main[0], c.main[1])}</div>
         ${c.extra ? `<div class="xb-pc-m sm"><span><small>${esc(c.extra[0])}</small><b class="mono">${esc(c.extra[1])}</b></span>${cp(c.extra[0], c.extra[1])}</div>` : ''}
+        <div class="xb-qr${c.qr ? '' : ' none'}">${c.qr ? `<img src="${esc(c.qr)}" alt="${esc(c.name)} QR code for ${esc(c.title || 'DAUR Supply')}" width="112" height="112" loading="lazy">` : `<span class="xb-qr-ph" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`}<span><b>${c.qr ? 'Scan to pay' : 'QR code'}</b><small>${c.qr ? 'Open your banking app and scan this code' : 'Coming soon. Use the account details above for now.'}</small></span></div>
         <footer><span><small>Account title</small><b>${esc(c.title || '')}</b></span><span class="xb-pc-i">${i + 1} / ${cards.length}</span></footer></article>`;
     const names = cards.slice(1).map((c) => c.name);
     return `<section class="xb-bank" aria-label="Where to send your payment">
       <div class="xb-bk-h"><h2 class="xb-h">Send ${esc(fmt(amt))}</h2><button type="button" class="xb-cp lt" data-xcopy="${Math.round(amt)}" aria-label="Copy the amount">${ic('copy')}<span>Copy amount</span></button></div>
-      <p class="xb-bk-s">Pay the way you already do, now or right after you place your order.${names.length ? ' Swipe for ' + esc(names.join(' and ')) + '.' : ''}</p>
+      <p class="xb-bk-s">Pay the way you already do, now or right after you place your order.${names.length ? (MX.WIDE && MX.WIDE() ? ' Or use ' : ' Swipe for ') + esc(names.join(' or ')) + '.' : ''}</p>
       <div class="xb-pcs" role="list">${cards.map(one).join('')}</div>
+      <div class="xb-only" role="note">${ic('seal')}<p><b>These accounts belong to DAUR Supply only.</b> Please do not send money to any other account, even if someone asks you to. For any issue or help, message us on <a href="https://wa.me/${esc(WA)}" target="_blank" rel="noopener">WhatsApp</a>, call <a href="tel:+${esc(WA)}">${esc('0' + String(WA).slice(2, 5) + ' ' + String(WA).slice(5))}</a> or email <a href="mailto:${esc(MAIL)}">${esc(MAIL)}</a>.</p></div>
       <a class="xb-wa" href="https://wa.me/${esc(WA)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${ic('wa')}<span>Send the receipt on WhatsApp</span></a>
       <a class="xb-mail" href="mailto:${esc(MAIL)}?subject=${encodeURIComponent('Payment receipt')}&amp;body=${encodeURIComponent(msg)}">Or email it to ${esc(MAIL)}</a>
     </section>`;

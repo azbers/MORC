@@ -226,7 +226,7 @@
     };
     const L = [['shop', 'Shop all', href.shop()]].concat(cats().map((c) => [c, ({ Hybrids: 'Casual', Leather: 'Leather' }[c] || c), href.shop(c)]))
       .concat(hasSale() ? [['Sale', 'Sale', href.shop('Sale')]] : [])
-      .concat([['gifts', 'Gifts', href.gifts], ['giving', 'Philanthropy', href.giving], ['story', 'Our story', root + '/pages/manifesto'], ['journal', 'Journal', root + '/blogs/journal']]);
+      ; // Gifts, Philanthropy, Our story and the Journal live in the footer (owner 12 Nov 18:29)
     top.innerHTML = `<div class="dk-bar">${logo()}
       <nav class="dk-nav" aria-label="Main">${L.map(([k, t, h]) => `<a href="${h}" data-m${on(k) ? ' aria-current="page"' : ''}${k === 'Sale' ? ' class="sale"' : ''}>${esc(t)}</a>`).join('')}</nav>
       <div class="dk-acts">

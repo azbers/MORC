@@ -623,3 +623,92 @@ html.m-on .ck .btn{min-height:38px!important}
 #mApp .m-pg .r5-sb>p:first-child,#mApp .m-pg .r5-sb>p.big{font-size:18px}
 #mApp .m-gf .hx-hero{min-height:400px}
 }
+/* ---------- desktop, round 4 (owner 12 Nov 18:29): use the whole screen, banners edge to edge and short, readable footer and help ---------- */
+@media (min-width:1024px){
+/* the whole page breathes wider: one 1320 px measure for header, content and footer */
+html.m-on #mApp .m-top.dk{padding:0 max(32px,calc(50% - 660px))}
+.m-view>*:not(.m-lbh){max-width:1320px!important}
+.m-view.v-feed>*{max-width:1320px!important}
+.df-in,.df-base{max-width:1384px}
+#mApp .m-view .m-grid,#mApp .v-home .m-car{gap:24px}
+/* footer: the column headings were forest on forest; they now read in brass */
+html.m-on .dk-foot .df-col h3{color:#A58A64!important;font-size:12px!important;margin-bottom:18px}
+html.m-on .dk-foot .df-col a{font-size:14.5px}
+/* inner pages: the banner runs edge to edge, short, with the words and the pair on one line */
+#mApp .m-pg,#mApp .m-gf{padding-top:0!important}
+#mApp .m-pg .pg-hero{margin:0 calc(50% - 50vw) 8px!important;width:auto;border-radius:0!important;min-height:0!important;padding:48px max(48px,calc(50vw - 640px)) 40px!important}
+#mApp .m-pg .pg-hero::before,#mApp .m-pg .pg-hero::after{border-radius:0!important}
+#mApp .m-pg .pg-hero h1{max-width:20ch;font-size:clamp(32px,2.8vw,44px)!important}
+#mApp .m-pg .pg-hero>p{max-width:60ch}
+#mApp .m-pg .pg-hero .pg-cut{right:max(48px,calc(50vw - 640px));width:auto;height:min(78%,250px);max-width:34%;object-fit:contain}
+#mApp .m-pg .pg-hero .r9-facts{max-width:720px;margin-top:22px}
+#mApp .m-gf .hx-hero{margin:0 calc(50% - 50vw) 8px!important;border-radius:0!important;min-height:360px!important;max-height:420px}
+/* still a question: a full width band with three large, readable ways to reach a person */
+#mApp .m-pg .r5-help,#mApp .r5-help{max-width:none!important;margin:56px calc(50% - 50vw) 0!important;padding:56px max(48px,calc(50vw - 640px))!important;background:#F1EBDD;display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);column-gap:56px;row-gap:6px;align-items:center}
+#mApp .r5-help>b{grid-column:1;font-size:30px!important;line-height:1.1;color:#172C27}
+#mApp .r5-help>.m-mute{grid-column:1;font-size:15px;color:#4A5450}
+#mApp .r5-help>.r5-talk{grid-column:2;grid-row:1/span 2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+#mApp .r5-talk>a{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:132px;padding:22px 22px 20px;border-radius:18px;background:#fff;color:#172C27;box-shadow:0 1px 0 rgba(23,44,39,.06),0 14px 30px -18px rgba(23,44,39,.35);transition:transform .2s,box-shadow .2s}
+#mApp .r5-talk>a:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(23,44,39,.06),0 20px 36px -18px rgba(23,44,39,.45)}
+#mApp .r5-talk>a.wa{background:#172C27;color:#F1EBDD}
+#mApp .r5-talk>a svg{width:26px;height:26px;margin-bottom:auto;color:#A58A64}
+#mApp .r5-talk>a b{font-size:17px!important;color:inherit}
+#mApp .r5-talk>a small{font-size:13.5px!important;line-height:1.4;color:#4A5450!important;opacity:1!important}
+#mApp .r5-talk>a.wa small{color:rgba(241,235,221,.78)!important}
+html.m-on #mApp .m-view>.m-pg>.r5-help:last-child,html.m-on #mApp .m-view .r5-help:last-child{margin-bottom:0!important}
+/* product: sizes sit right above the buy button; the photo stays clean */
+#mApp .v-product .px-l .px-rail.l{display:none!important}
+#mApp .v-product .px-dsz{display:block;margin:4px 0 12px}
+#mApp .px-dsz .dz-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#mApp .px-dsz .px-lab{font:600 12px/1 "DAUR Sans",Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#6B7550}
+#mApp .px-dsz .px-lab small{color:#9A9384;letter-spacing:.1em;margin-left:4px}
+#mApp .px-dsz .dz-sg{font-size:13px;font-weight:600;color:#172C27;text-decoration:underline;text-underline-offset:3px}
+#mApp .px-dsz .dz-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+#mApp .px-dsz .px-sz{position:static;width:auto;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:12px;background:#fff;border:1.5px solid rgba(23,44,39,.16);color:#172C27;transition:border-color .15s,background .15s,transform .15s}
+#mApp .px-dsz .px-sz b{font-size:17px;font-weight:600;line-height:1}
+#mApp .px-dsz .px-sz small{font-size:10.5px;color:#7A7468}
+#mApp .px-dsz .px-sz:hover:not(:disabled){border-color:#172C27}
+#mApp .px-dsz .px-sz[aria-checked=true]{background:#172C27;border-color:#172C27;color:#F1EBDD}
+#mApp .px-dsz .px-sz[aria-checked=true] small{color:rgba(241,235,221,.75)}
+#mApp .px-dsz .px-sz:disabled{opacity:.38;text-decoration:line-through;cursor:not-allowed}
+#mApp .px-dsz.ask .dz-row{outline:2px solid #A58A64;outline-offset:6px;border-radius:14px}
+#mApp .px-dsz .dz-give{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;background:#F1EBDD;font-size:14px;color:#3A403D}
+#mApp .px-dsz .dz-give svg{width:20px;height:20px;color:#A58A64}
+#mApp .px-dsz .dz-give b{color:#172C27}
+/* offers: a full width forest band with the reasons on the left and the rewards card on the right */
+#mApp .dvw-page>.dvw-top{max-width:none!important;margin:0 calc(50% - 50vw) 8px!important;padding:56px max(48px,calc(50vw - 640px))!important;background:radial-gradient(120% 140% at 85% 20%,#24413A 0%,#172C27 55%,#12231F 100%);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:64px;align-items:center}
+#mApp .dvw-intro{display:block;color:#F1EBDD}
+#mApp .dvw-intro .m-kick{color:#A58A64}
+#mApp .dvw-intro h1{margin:12px 0 14px;color:#F1EBDD!important;font-size:clamp(32px,2.9vw,46px)!important;line-height:1.04!important;max-width:16ch}
+#mApp .dvw-intro p{max-width:52ch;font-size:16px;line-height:1.6;color:rgba(241,235,221,.8)}
+#mApp .dvw-steps{list-style:none;margin:26px 0 28px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:640px}
+#mApp .dvw-steps li{display:grid;gap:4px;padding:16px;border-radius:14px;background:rgba(241,235,221,.07);border:1px solid rgba(241,235,221,.14)}
+#mApp .dvw-steps b{font-size:18px;color:#F1EBDD}
+#mApp .dvw-steps span{font-size:13px;line-height:1.4;color:rgba(241,235,221,.7)}
+#mApp .dvw-go{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 24px;border-radius:999px;background:#F1EBDD;color:#172C27;font-weight:600}
+#mApp .dvw-go svg{width:18px;height:18px}
+#mApp .dvw-top .r5-bank{width:100%;max-width:460px;justify-self:end;margin:0}
+#mApp .dvw-top .r5-bk-note{grid-column:2;justify-self:end;max-width:460px;color:rgba(241,235,221,.7);margin-top:-48px}
+#mApp .dvw-page>.m-row{margin-top:48px!important}
+#mApp .dvw-page .dvw-list{gap:24px}
+/* payment cards in the bag sit side by side on a wide screen */
+#mApp .xb-pcs{overflow:visible;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:0;padding:0}
+#mApp .xb-pc{max-width:none}
+}
+/* desktop, round 4: the edge to edge banners keep their words and frame on the same 1280 px line as the page */
+@media (min-width:1024px){
+#mApp .m-pg .pg-hero>.m-kick{left:max(48px,calc(50vw - 640px))!important;top:22px}
+#mApp .m-pg .pg-hero::after{inset:12px max(24px,calc(50vw - 664px))!important;border-radius:18px!important}
+#mApp .m-pg .pg-hero .r5-hdm{display:none}
+#mApp .m-gf .hx-hero .hx-t{padding:0 max(48px,calc(50vw - 640px)) 36px!important}
+#mApp .m-gf .hx-hero .hx-t h1,#mApp .m-gf .hx-hero .hx-t h2{max-width:24ch}
+/* a page that ends with the help band runs straight into the footer */
+html.m-on #mApp .m-view>.m-pg:has(>.r5-help:last-child){margin-bottom:0!important}
+html.m-on:has(#mApp .m-pg>.r5-help:last-child) .dk-foot{margin-top:0}
+/* contact: the ways to reach us sit two across */
+#mApp .v-page .ct-list,#mApp .m-pg .ct-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+}
+@media (min-width:1024px){
+#mApp .m-gf .hx-hero{min-height:420px!important;max-height:none}
+html.m-on #mApp .m-gf .hx-give .hx-ph{object-position:50% 40%}
+}

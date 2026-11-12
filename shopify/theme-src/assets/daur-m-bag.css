@@ -233,3 +233,18 @@ html[data-mv=bag] #mApp .m-sheet:not(.on)~.m-toast{bottom:calc(132px + var(--m-s
 #mApp .xb-whyp{margin:12px 2px 0;font-size:13.5px;line-height:1.5;color:var(--m-mute,#6B6B6B)}
 
 #mApp .xb-go-a small{font-size:12px;font-weight:600;opacity:.72;margin-left:-6px}
+/* payment cards: a QR code slot on every account, and the notice that these accounts are DAUR Supply's only (owner 12 Nov 18:29) */
+.xb-qr{position:relative;display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.xb-qr img,.xb-qr-ph{flex:0 0 64px;width:64px;height:64px;border-radius:8px;background:#fff;object-fit:contain}
+.xb-qr-ph{position:relative;display:block;background:rgba(255,255,255,.1);border:1.5px dashed rgba(241,235,221,.45)}
+.xb-qr-ph i{position:absolute;width:16px;height:16px;border:3px solid rgba(241,235,221,.6);border-radius:3px}
+.xb-qr-ph i:nth-child(1){left:7px;top:7px}.xb-qr-ph i:nth-child(2){right:7px;top:7px}.xb-qr-ph i:nth-child(3){left:7px;bottom:7px}.xb-qr-ph i:nth-child(4){right:9px;bottom:9px;width:8px;height:8px;border-width:2px}
+.xb-qr>span:last-child{display:grid;gap:3px;min-width:0}
+.xb-qr>span:last-child b{font-size:13.5px;line-height:1.2;color:#fff}
+.xb-qr>span:last-child small{font-size:11.5px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;line-height:1.4;color:rgba(255,255,255,.72)!important}
+.xb-qr:not(.none) img{flex-basis:96px;width:96px;height:96px;padding:4px}
+.xb-only{display:flex;gap:12px;align-items:flex-start;margin:14px 0 4px;padding:14px 16px;border-radius:14px;background:#F1EBDD;border:1px solid rgba(165,138,100,.35);color:#252625}
+.xb-only svg{flex:0 0 22px;width:22px;height:22px;color:#A58A64;margin-top:1px}
+.xb-only p{margin:0;font-size:13.5px;line-height:1.55;color:#3A403D}
+.xb-only b{color:#172C27}
+.xb-only a{color:#172C27;font-weight:600;text-decoration:underline;text-underline-offset:2px}

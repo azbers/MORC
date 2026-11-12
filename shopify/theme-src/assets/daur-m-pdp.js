@@ -74,6 +74,12 @@
       ${p.sizes.map((z) => { const q = qty(v, z), on = String(s.size) === String(z), uk = ukOf(z); return `<button class="px-sz" type="button" role="radio" data-pxsize="${esc(z)}" aria-checked="${on}"${q > 0 ? '' : ' disabled'} aria-label="EU ${esc(z)}${uk ? ', UK ' + uk : ''}${q > 0 ? '' : ', sold out'}"><b>${esc(z)}</b>${uk ? `<small>UK ${uk}</small>` : ''}</button>`; }).join('')}
       <button class="px-sgb" type="button" data-pxsg aria-haspopup="dialog">Size guide</button></div>`;
   }
+  // desktop: the sizes sit in a row right above the buy button, so choosing and adding happen in one place
+  function dkSizes(p, v) {
+    const s = st();
+    if (s.mode === 'give') return `<div class="dz-h"><span class="px-lab">Size</span></div><p class="dz-give">${ic('hand')}<b>Matched by DAUR</b><span>We match the size to the person who receives it.</span></p>`;
+    return `<div class="dz-h"><span class="px-lab">Size <small>EU</small></span><button class="dz-sg" type="button" data-pxsg aria-haspopup="dialog">Size guide</button></div><div class="dz-row" role="radiogroup" aria-label="Size, EU">${p.sizes.map((z) => { const q = qty(v, z), on = String(s.size) === String(z), uk = ukOf(z); return `<button class="px-sz dz" type="button" role="radio" data-pxsize="${esc(z)}" aria-checked="${on}"${q > 0 ? '' : ' disabled'} aria-label="EU ${esc(z)}${uk ? ', UK ' + uk : ''}${q > 0 ? '' : ', sold out'}"><b>${esc(z)}</b>${uk ? `<small>UK ${uk}</small>` : ''}</button>`; }).join('')}</div>`;
+  }
   function swatches(p, v) {
     // one round dot per colour, filled with the colour itself: small, quiet and always the same on every page
     return `<div class="px-cstrip" role="radiogroup" aria-label="Colour"><span class="px-lab">Colour <b class="px-cn">${esc(v.color)}</b></span><span class="px-cs">
@@ -248,6 +254,7 @@
   // phase: nothing (choose or add), 'pack' (the box is being packed) or 'done' (the box is in the bag)
   function bar(p, v, phase) {
     const b = buyBar(); b.classList.add('px-buy');
+    const dz = $('#pxDkSz', view); if (dz) dz.innerHTML = dkSizes(p, v);
     const dt = $('#pxDockT', view); if (dt) { dt.textContent = phase === 'pack' ? 'Packing your pair' : dockText(); const dd = $('#pxDock', view); if (dd) dd.classList.toggle('ready', (st().mode || 'me') === 'give' || !!st().size); }
     const s = st(), m = s.mode || 'me', z = s.size, q = z ? qty(v, z) : 0, done = !!phase;
     let t, sub, icon;
@@ -289,7 +296,7 @@
       // desktop: the pair stays in view on the left while the buyer reads and chooses on the right
       view.innerHTML = `<div class="px dkx" id="px">
         <div class="px-l"><section class="px-stage${(s.pxi || 0) > 0 ? ' on-ph' : ''}" id="pxStage">${stage(p, v)}</section>${dock()}</div>
-        <div class="px-r">${head(p, v)}<div class="px-colors" id="pxColors">${swatches(p, v)}</div><div class="px-bslot" data-buyslot></div>
+        <div class="px-r">${head(p, v)}<div class="px-colors" id="pxColors">${swatches(p, v)}</div><div class="px-dsz" id="pxDkSz"></div><div class="px-bslot" data-buyslot></div>
           <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who will wear it?</h2></div>${forCards()}<div id="pxFor">${forPanel(p, v)}</div></section>
           ${notesSec(p)}${about(p)}</div>
       </div><div class="px-after">${morePairs(p)}</div>`;
@@ -551,6 +558,14 @@
   }
   // no size yet: bring the sizes into view, back to the pair, and show where to tap
   function askSize() {
+    const dz = $('#pxDkSz', view);
+    if (dz && MX.WIDE()) {
+      const r0 = dz.getBoundingClientRect();
+      if (r0.top < 90 || r0.bottom > innerHeight - 40) window.scrollTo({ top: Math.max(0, window.scrollY + r0.top - 140), behavior: reduce ? 'auto' : 'smooth' });
+      dz.classList.remove('ask'); void dz.offsetWidth; dz.classList.add('ask');
+      if (!reduce) $$('.px-sz:not(:disabled)', dz).forEach((b, k) => b.animate([{ transform: 'none' }, { transform: 'translateY(-4px)' }, { transform: 'none' }], { duration: 260, delay: 80 + k * 40, easing: 'ease-out' }));
+      clearTimeout(askT); askT = setTimeout(() => dz.classList.remove('ask'), 2200); return;
+    }
     const el = $('#pxStage', view); if (!el) return;
     const r = el.getBoundingClientRect();
     if (r.top < 60 || r.bottom > innerHeight - 90) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 72), behavior: reduce ? 'auto' : 'smooth' });

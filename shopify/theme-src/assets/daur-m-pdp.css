@@ -497,3 +497,4 @@ html.m-on{--px-ink:#172C27}
 .px-dock .dk-i{background:rgba(255,255,255,.85);color:#172C27;box-shadow:0 2px 8px rgba(23,44,39,.12)}
 .px-dock .dk-ch i{border-color:#172C27;opacity:.3}
 .px-dock.ready .dk-pill{background:rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.85),0 0 0 3px rgba(165,138,100,.45),0 10px 24px -12px rgba(23,44,39,.35)}
+.px-dsz{display:none}
