@@ -285,6 +285,16 @@
     const s = st();
     if (!s.pv || s.pid !== p.id) { s.pid = p.id; s.pv = firstV(p).id; s.size = null; s.mode = 'me'; s.pxi = 0; s.pxAll = false; s.pxMore = false; }
     const v = varOf(p);
+    if (MX.WIDE()) {
+      // desktop: the pair stays in view on the left while the buyer reads and chooses on the right
+      view.innerHTML = `<div class="px dkx" id="px">
+        <div class="px-l"><section class="px-stage${(s.pxi || 0) > 0 ? ' on-ph' : ''}" id="pxStage">${stage(p, v)}</section>${dock()}</div>
+        <div class="px-r">${head(p, v)}<div class="px-colors" id="pxColors">${swatches(p, v)}</div><div class="px-bslot" data-buyslot></div>
+          <section class="px-sec px-for"><div class="px-nh"><h2 class="px-h">Who will wear it?</h2></div>${forCards()}<div id="pxFor">${forPanel(p, v)}</div></section>
+          ${notesSec(p)}${about(p)}</div>
+      </div><div class="px-after">${morePairs(p)}</div>`;
+      bar(p, v); bindStage(true); bindStories(); return;
+    }
     view.innerHTML = `<div class="px" id="px">
       <section class="px-stage${(s.pxi || 0) > 0 ? ' on-ph' : ''}" id="pxStage">${stage(p, v)}</section>
       ${dock()}
@@ -424,6 +434,8 @@
   }
   function dockText() {
     const s = st(), m = s.mode || 'me';
+    // a mouse cannot swipe: on a desktop screen the box is clicked
+    if (MX.WIDE()) { if (m === 'give') return 'Click the box to sponsor this pair'; if (!s.size) return m === 'gift' ? 'Choose his size, then click the box' : 'Choose your size, then click the box'; return 'Click the box to pack your pair'; }
     if (m === 'give') return 'Swipe the pair down to sponsor it';
     if (!s.size) return m === 'gift' ? 'Choose his size, then swipe the pair down' : 'Choose your size, then swipe the pair down';
     return 'Swipe the pair down into your box';

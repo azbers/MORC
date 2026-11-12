@@ -459,3 +459,122 @@ html.m-on #mApp .m-tab.m-off{transform:translate(-50%,140%)}
 html.m-on .m-buy{padding-left:max(20px,calc(50% - 380px))!important;padding-right:max(20px,calc(50% - 380px))!important}
 .m-view.v-feed>*{max-width:640px}
 }
+/* ---------- desktop, round 2 (owner 12 Nov 17:46): one open desktop menu, calm sizes, a real footer ---------- */
+.dk-foot{display:none}
+@media (min-width:1024px){
+html.m-on #mApp .m-tab{display:none!important}
+html.m-on #mApp .m-top.dk{height:76px;padding:0 max(32px,calc(50% - 640px));background:rgba(255,255,255,.96);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);box-shadow:0 1px 0 rgba(23,44,39,.08);display:block}
+.m-top.dk .dk-bar{height:100%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px}
+.m-top.dk .m-logo{position:static;transform:none;height:46px}
+.m-top.dk .m-logo svg,.m-top.dk .m-logo img{height:40px;width:auto}
+.dk-nav{display:flex;justify-content:center;gap:clamp(16px,2.1vw,34px)}
+.dk-nav a{position:relative;padding:8px 0;font:500 14px/1 "DAUR Sans","DAUR Body Fallback",Arial,sans-serif;letter-spacing:.02em;color:#2B3532;white-space:nowrap;transition:color .2s}
+.dk-nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:#A58A64;transform:scaleX(0);transform-origin:left;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.dk-nav a:hover{color:#172C27}
+.dk-nav a:hover::after,.dk-nav a[aria-current]::after{transform:scaleX(1)}
+.dk-nav a[aria-current]{color:#172C27;font-weight:600}
+.dk-nav a.sale{color:#6B7550}
+.dk-acts{display:flex;align-items:center;gap:6px}
+.dk-chip{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;margin-right:8px;border-radius:999px;background:#F1EBDD;color:#172C27;font:600 12.5px/1 "DAUR Sans","DAUR Body Fallback",Arial,sans-serif;white-space:nowrap}
+.dk-chip svg{width:16px;height:16px;color:#A58A64}
+.dk-ib{position:relative;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;color:#172C27;transition:background .2s}
+.dk-ib:hover,.dk-ib[aria-current]{background:#F4F0E6}
+.dk-ib svg{width:21px;height:21px}
+.dk-ib i{position:absolute;top:4px;right:3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#172C27;color:#F1EBDD;font:600 10px/17px "DAUR Sans",Arial,sans-serif;font-style:normal;text-align:center}
+@media (max-width:1240px){.dk-nav a:nth-last-child(-n+2){display:none}.dk-chip span{display:none}.dk-chip{padding:0 10px}}
+html.m-on #mApp .m-view{padding-top:0;padding-bottom:0}
+html.m-on #mApp .m-view>*:last-child{margin-bottom:56px}
+.dk-foot{display:block;background:#172C27;color:#D9D3C4;margin-top:24px}
+.df-in{max-width:1280px;margin:0 auto;padding:64px 32px 40px;display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:40px}
+.df-brand .m-logo{display:inline-flex;height:44px;filter:invert(93%) sepia(10%) saturate(300%) hue-rotate(5deg)}
+.df-brand .m-logo .lg-t{display:none}
+.df-brand p{margin-top:16px;max-width:38ch;font-size:14px;line-height:1.65;color:#BFB8A8}
+.df-wa{display:inline-flex;align-items:center;gap:12px;margin-top:22px;padding:12px 18px 12px 14px;border-radius:16px;background:rgba(241,235,221,.08);color:#F1EBDD}
+.df-wa svg{width:22px;height:22px;color:#A58A64}
+.df-wa span{display:grid;gap:3px}.df-wa b{font-size:15px}.df-wa small{font-size:12px;color:#BFB8A8}
+.df-col h3{margin:0 0 16px;font:600 11.5px/1 "DAUR Cond",Arial,sans-serif!important;letter-spacing:.22em!important;text-transform:uppercase;color:#A58A64}
+.df-col a{display:block;padding:6px 0;font-size:14px;color:#E7E1D3;transition:color .2s}
+.df-col a:hover{color:#fff}
+.df-base{max-width:1280px;margin:0 auto;padding:18px 32px 26px;display:flex;justify-content:space-between;border-top:1px solid rgba(241,235,221,.12);font-size:12.5px;color:#9E9787}
+.df-base span:last-child{letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:#A58A64}
+/* the runway sits right under the header */
+.m-lbh .lb{--lbh:calc(100vh - 76px)}
+}
+/* ---------- desktop, round 2: wide, calm layouts for every page ---------- */
+@media (min-width:1024px){
+.m-view>*:not(.m-lbh){max-width:1180px!important}
+.m-view.v-feed>*{max-width:620px!important}
+/* home */
+.m-view.v-home>.dvp{max-width:1180px!important}
+#mApp .v-home .dvp{overflow:hidden}
+#mApp .v-home .dvp-track{gap:18px;margin:0}
+#mApp .v-home .dvp-s{flex:0 0 calc((100% - 36px)/3)}
+#mApp .v-home .dvp-dots{display:none}
+#mApp .v-home .m-sts{padding-top:6px}
+#mApp .v-home .r10-for{margin-top:48px}
+#mApp .v-home .r10-duo>*{min-height:260px}
+/* text pages: a wide banner, then each section as heading left and words right */
+#mApp .m-pg{padding:28px 32px 0}
+#mApp .m-pg .pg-hero{border-radius:28px;padding:64px 56px 48px;min-height:420px;margin:0}
+#mApp .m-pg .pg-hero h1{font-size:clamp(40px,4vw,58px)!important;line-height:1!important;max-width:16ch}
+#mApp .m-pg .pg-hero>p{max-width:54ch;font-size:17px;line-height:1.6}
+#mApp .m-pg .pg-hero .pg-cut{width:min(40%,460px);height:auto;right:48px;top:50%;transform:translateY(-50%)}
+#mApp .m-pg .pg-hero .pg-ctas{max-width:520px}
+#mApp .m-pg .pg-hero .r9-facts{max-width:640px}
+#mApp .m-pg .pg-chips{justify-content:center;flex-wrap:wrap;overflow:visible;margin:26px 0 8px}
+#mApp .m-pg .r5-sec{display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr);column-gap:72px;padding:64px 56px;border-radius:28px;margin:18px 0}
+#mApp .m-pg .r5-sh{align-self:start;position:sticky;top:104px}
+#mApp .m-pg .r5-sh h2{font-size:clamp(28px,2.6vw,38px)!important;line-height:1.08!important}
+#mApp .m-pg .r5-sb{min-width:0;max-width:680px}
+#mApp .m-pg .r5-sb>p:first-child,#mApp .m-pg .r5-sb>p.big{margin-top:0;font-size:20px;line-height:1.5}
+#mApp .m-pg .r5-sb .pg-item{padding:18px 0}
+#mApp .m-pg .r5-help{max-width:760px;margin:40px auto 0}
+#mApp .m-pg .pg-acc{max-width:860px;margin-left:auto;margin-right:auto}
+/* gifts and philanthropy */
+#mApp .m-gf{padding:28px 32px 0}
+#mApp .m-gf .hx-hero{margin:0;min-height:460px;border-radius:28px}
+#mApp .m-gf .m-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+#mApp .m-gf .r6-steps{grid-template-columns:repeat(4,minmax(0,1fr))!important;margin-left:0;margin-right:0}
+#mApp .m-gf .r6-swap,#mApp .m-gf .gv-slice,#mApp .m-gf .r9-val,#mApp .m-gf .r6-phil{margin-left:0;margin-right:0}
+#mApp .m-qa{max-width:860px;margin-left:auto!important;margin-right:auto!important}
+/* journal */
+#mApp .r6-j .r6-lead{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+#mApp .r6-j .r6-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+#mApp .r6-j .r6-js{max-width:560px}
+/* offers */
+#mApp .dvw-page .dvw-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+#mApp .dvw-page>.m-pad:first-child{max-width:560px;margin:0 auto}
+/* product: the pair on the left, everything to buy it on the right */
+#mApp .v-product .px.dkx{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(400px,.9fr);column-gap:64px;padding:32px 32px 0;align-items:start}
+#mApp .v-product .px-l{position:sticky;top:100px;min-width:0}
+#mApp .v-product .px-l .px-stage{margin:0}
+#mApp .v-product .px-l .px-dock{margin:-26px 0 0;pointer-events:auto}
+#mApp .v-product .px-l .px-dock .dk-pill{cursor:pointer}
+#mApp .v-product .px-r{min-width:0;display:flex;flex-direction:column}
+#mApp .v-product .px-r>*{margin-left:0!important;margin-right:0!important}
+#mApp .v-product .px-r .px-head{padding-top:4px}
+#mApp .v-product .px-after{padding:24px 32px 8px}
+#mApp .v-product .px-after .m-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+#mApp .px-bslot{margin:6px 0 10px}
+#mApp .px-bslot .m-buy{position:static!important;inset:auto!important;transform:none!important;width:auto!important;padding:0!important;margin:0!important;background:none!important;box-shadow:none!important;border:0!important;opacity:1!important;pointer-events:auto!important;z-index:auto!important}
+/* bag */
+#mApp .xb:not(.xb-empty){padding:28px 32px 0}
+html.dk-foot-on .m-buy:not(.px-bslot .m-buy){opacity:0;pointer-events:none;transition:opacity .2s}
+html.m-on .m-buy.px-buy .px-cta{box-shadow:0 14px 34px rgba(17,25,23,.22)}
+}
+/* desktop: the Philanthropy page sits on one calm page colour from edge to edge, and the header stays the same white bar as every page */
+@media (min-width:1024px){
+html.m-on[data-mv=giving],html.m-on[data-mv=giving] body,html.m-on[data-mv=giving] #mApp .m-view.v-giving{background:#FAF7F2!important}
+html.m-on[data-mv=giving] #mApp .m-top.dk{background:rgba(255,255,255,.94)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+html.m-on[data-mv=giving] #mApp .m-top.dk .m-ib,html.m-on[data-mv=giving] #mApp .m-top.dk .m-ib svg{background:none!important;color:inherit!important}
+}
+/* desktop: the pairs on the home page show as a full grid, four across, nothing cut off at the edge */
+@media (min-width:1024px){
+#mApp .v-home .m-car{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;overflow:visible;scroll-snap-type:none;padding:14px 20px 34px}
+#mApp .v-home .m-car>.m-card{width:auto!important;min-width:0;flex:none}
+}
+/* desktop: the cookie note is a small card in the corner, not a band across the whole screen */
+@media (min-width:1024px){
+html.m-on .ck,html.m-on.m-pdp-on .ck{left:24px!important;right:auto!important;bottom:24px!important;width:360px!important;max-width:360px!important;border-radius:14px!important;padding:16px!important}
+html.m-on .ck .btn{min-height:38px!important}
+}

@@ -192,12 +192,56 @@
     <div class="m-scrim" id="mScrim"></div>
     <div class="m-sheet" id="mSheet" role="dialog" aria-modal="true" aria-label="Panel"></div>
     <div class="m-toast" id="mToast" role="status" aria-live="polite"></div>
+    <footer class="dk-foot" id="mFoot"></footer>
   </div>`);
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
   const app = $('#mApp'), view = $('#mView'), top = $('#mTop'), tab = $('#mTab'), sheet = $('#mSheet'), scrim = $('#mScrim'), toastEl = $('#mToast');
   let cur = start, state = {};
+  function deskFoot() {
+    const f = $('#mFoot'); if (!f || f.dataset.done) return; f.dataset.done = '1';
+    // the floating buy bar steps aside while the footer is on screen
+    if ('IntersectionObserver' in window) new IntersectionObserver((es) => H.classList.toggle('dk-foot-on', es[0].isIntersecting)).observe(f);
+    const col = (h, items) => `<div class="df-col"><h3>${esc(h)}</h3>${items.map(([t, u, ext]) => `<a href="${u}"${ext ? ' target="_blank" rel="noopener"' : ' data-m'}>${esc(t)}</a>`).join('')}</div>`;
+    f.innerHTML = `<div class="df-in">
+      <div class="df-brand">${logo(true)}<p>Same local craft. Zero retail markup. Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand in Islamabad and at your door in ${esc(days())}.</p>
+        <a class="df-wa" href="https://wa.me/${esc(WA)}" target="_blank" rel="noopener">${ic('wa')}<span><b>${esc(waNice())}</b><small>A real person answers you on WhatsApp</small></span></a></div>
+      ${col('Shop', [['Shop all', href.shop()]].concat(cats().map((c) => [({ Hybrids: 'Casual shoes', Leather: 'Leather shoes' }[c] || c), href.shop(c)])).concat([['Gifts', href.gifts], ['Philanthropy', href.giving], ['Rewards', href.offers]]))}
+      ${col('Help', [['Track order', root + '/pages/track'], ['Our promise', root + '/pages/contract'], ['Policies', root + '/pages/policies'], ['Contact', root + '/pages/contact']])}
+      ${col('DAUR', [['Our story', root + '/pages/manifesto'], ['About us', root + '/pages/about'], ['The Journal', root + '/blogs/journal'], ['The Feed', href.feed]])}
+      ${col('Follow', SOC.filter((x) => /^https/.test(x[3]) && /instagram|facebook/.test(x[3])).map((x) => [x[1], x[3], 1]))}
+    </div>
+    <div class="df-base"><span>&copy; ${new Date().getFullYear()} DAUR Supply. Islamabad, Pakistan.</span><span>Own your pace.</span></div>`;
+  }
 
+  function deskTop() {
+    const v = cur.v, n = API.cart.reduce((a, l) => a + l.qty, 0);
+    const lk = API.wish.map(API.prod).filter((p) => p && !p.hidden && !p.giving).length;
+    const path = location.pathname;
+    const on = (k) => {
+      if (k === 'shop') return v === 'shop' && (!state.shopCat || state.shopCat === 'All');
+      if (['Sneakers', 'Hybrids', 'Leather', 'Sale'].includes(k)) return v === 'shop' && state.shopCat === k;
+      if (k === 'story') return /\/pages\/(manifesto|about)/.test(path);
+      if (k === 'journal') return /\/blogs\//.test(path);
+      return v === k;
+    };
+    const L = [['shop', 'Shop all', href.shop()]].concat(cats().map((c) => [c, ({ Hybrids: 'Casual', Leather: 'Leather' }[c] || c), href.shop(c)]))
+      .concat(hasSale() ? [['Sale', 'Sale', href.shop('Sale')]] : [])
+      .concat([['gifts', 'Gifts', href.gifts], ['giving', 'Philanthropy', href.giving], ['story', 'Our story', root + '/pages/manifesto'], ['journal', 'Journal', root + '/blogs/journal']]);
+    top.innerHTML = `<div class="dk-bar">${logo()}
+      <nav class="dk-nav" aria-label="Main">${L.map(([k, t, h]) => `<a href="${h}" data-m${on(k) ? ' aria-current="page"' : ''}${k === 'Sale' ? ' class="sale"' : ''}>${esc(t)}</a>`).join('')}</nav>
+      <div class="dk-acts">
+        <a class="dk-chip" href="${href.offers}" data-m aria-label="Bag rewards, up to ${esc(fmt(REWARDS[0].amt))} off">${ic('gift')}<span>Up to ${esc(fmt(REWARDS[0].amt))} off</span></a>
+        <a class="dk-ib" href="${root}/search" data-m aria-label="Search">${ic('search')}</a>
+        <a class="dk-ib" href="${href.feed}" data-m aria-label="The Feed"${v === 'feed' ? ' aria-current="page"' : ''}>${ic('feed')}</a>
+        <a class="dk-ib" href="${href.liked}" data-m aria-label="Liked, ${lk}"${v === 'liked' ? ' aria-current="page"' : ''}>${ic('heart')}${lk ? `<i>${lk}</i>` : ''}</a>
+        <a class="dk-ib dk-bag" href="${href.bag}" data-m aria-label="Bag, ${n} ${n === 1 ? 'pair' : 'pairs'}"${v === 'bag' ? ' aria-current="page"' : ''}>${ic('bag')}${n ? `<i>${n}</i>` : ''}</a>
+      </div></div>`;
+    top.classList.add('dk');
+    top.classList.remove('clear');
+  }
   function paintTop() {
+    if (WIDE()) return deskTop();
+    top.classList.remove('dk');
     const v = cur.v;
     const brand = v === 'home' || v === 'shop' || v === 'liked' || v === 'product';
     const left = v === 'home' || v === 'shop'
@@ -214,6 +258,7 @@
     top.classList.toggle('clear', v === 'giving');
   }
   function paintTab() {
+    if (WIDE() && top.classList.contains('dk')) deskTop();
     const n = API.cart.reduce((a, l) => a + l.qty, 0);
     const lk = API.wish.map(API.prod).filter((p) => p && !p.hidden && !p.giving).length;
     const a = (v, h, icon, label, cnt) => `<a href="${h}" data-m aria-label="${label}${cnt ? ', ' + cnt : ''}"${cur.v === v ? ' aria-current="page"' : ''}>${ic(icon)}${cnt != null ? `<span class="t-n t-lk">${cnt || ''}</span>` : ''}<i></i></a>`;
@@ -249,7 +294,7 @@
   // the two purpose cards on home: a real photograph each, the promise over it
   const duoBig = (k) => { const g = k === 'gift'; return `<a class="r10-card ${k}" href="${g ? href.gifts : href.giving}" data-m><img src="${asset(g ? 'm-g-hands.webp' : 'm-g-boy-smile.webp')}" alt="" loading="lazy" decoding="async"><span class="r10-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r10-t"><b>${g ? 'Gift a pair' : 'Philanthropy'}</b><small>${g ? 'Eid, a birthday or just because. Your words in the box, fully paid to his door.' : 'A new pair for someone in need, handed over by our team, with a private photo for you.'}</small><em>${g ? 'Choose his pair' : 'Donate a pair'}${ic('arrow')}</em></span></a>`; };
   const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You choose the pair and his size. We place your note in the box and send it to his door, fully paid.' : 'We match the size and hand the pair over in person. A private photo of the moment reaches only you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
-  const ticker = () => { const t = [['user', 'From Azar, the founder of DAUR Supply'], [ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person answers you on WhatsApp, before and after you buy']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
+  const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person answers you on WhatsApp, before and after you buy']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
   const socRow = (cls) => `<div class="m-soc ${cls || ''}">${SOC.map(([k, n, h, u]) => `<a class="s-${k}" href="${u}"${k === 'mail' ? '' : ' target="_blank" rel="noopener me"'} aria-label="${n}: ${esc(h)}">${ic(k)}</a>`).join('')}</div>`;
   const follow = () => `<section class="m-follow"><span class="m-kick">${ic('spark')}Find us</span><b>Follow DAUR Supply</b>
@@ -409,7 +454,7 @@
       <div class="m-rows">${fresh.map(row).join('')}</div>
       <div id="mMore" data-k="0"></div><div id="mMoreSent" class="m-skel" aria-hidden="true"><div class="sk-row"><div class="sk sk-c"></div><div class="sk sk-c"></div></div></div>`;
     bindPromo(); bindMore(); observeIn();
-    if (wide) API.lookbook($('#mLb', view), { app: true, below: 96, add: (pid, vid, size) => add(pid, vid, size, 'me'), toast, go: (u) => go(u), sizeGuide: (x, v) => go(href.product(x.id) + '#size') });
+    if (wide) API.lookbook($('#mLb', view), { app: true, below: 0, add: (pid, vid, size) => add(pid, vid, size, 'me'), toast, go: (u) => go(u), sizeGuide: (x, v) => go(href.product(x.id) + '#size') });
   };
   /* ---------- shop: search, style, sort and filter ---------- */
   const SORTS = [['feat', 'Featured'], ['new', 'Newest'], ['low', 'Price: low to high'], ['high', 'Price: high to low'], ['save', 'Biggest saving']];
@@ -517,7 +562,10 @@
   };
   function buyBar() {
     let b = $('#mBuy');
-    if (!b) { app.insertAdjacentHTML('beforeend', '<div class="m-buy" id="mBuy"></div>'); b = $('#mBuy'); }
+    // on a desktop screen the button sits in the page beside the pair, not floating over the text
+    const slot = WIDE() ? view.querySelector('[data-buyslot]') : null;
+    if (!b) { (slot || app).insertAdjacentHTML('beforeend', '<div class="m-buy" id="mBuy"></div>'); b = $('#mBuy'); }
+    else if (slot && b.parentNode !== slot) slot.appendChild(b);
     return b;
   }
   function paintBuy(p, v) {
@@ -1042,6 +1090,8 @@
     const hi = [...location.pathname].reduce((a, ch) => a + ch.charCodeAt(0), 0);
     const pk = /\/blogs\//.test(location.pathname) ? 'journal' : /\/pages\/faq/.test(location.pathname) ? 'faq' : /\/search/.test(location.pathname) ? 'search' : VIS[page] ? page : 'page';
     const vis = VIS[pk], art = /\/blogs\/[^/]+\/[^/]+/.test(location.pathname);
+    // on a wide screen a section reads as two columns: its heading on the left, its words on the right
+    const dk = WIDE() && !art;
     view.innerHTML = `<div class="m-pg">
       <section class="pg-hero r5-hero v-${art ? 'crm' : vis[1]}" style="--tn:${tn(hi)};--tn2:${tn(hi + 2)}"><span class="r5-hdm" aria-hidden="true">${DMARK}</span><img class="pg-cut" src="${asset(art ? 'm-' + cut + '.webp' : vis[0])}" alt=""><span class="pg-blob" aria-hidden="true"></span>
         ${pg.kick ? `<span class="m-kick">${esc(pg.kick)}</span>` : ''}<h1>${pg.title || esc(state.pageTitle)}</h1>${pg.aside ? `<p>${pg.aside}</p>` : ''}
@@ -1051,7 +1101,7 @@
       ${pg.chips.length ? `<div class="m-pills pg-chips">${pg.chips.map((c) => `<a class="m-pill alt" href="${esc(c.h)}" data-jump="${esc(c.h.slice(1))}">${esc(c.l)}</a>`).join('')}</div>` : ''}
       ${(pk === 'contact' ? [] : pg.secs).map((s, i) => fold
         ? `<details class="pg-sec pg-acc"${s.id ? ` id="${esc(s.id)}"` : ''}${i === 0 ? ' open' : ''} style="--tn:${tn(i)}"><summary><span>${s.kick ? `<small>${esc(s.kick)}</small>` : ''}<b>${s.title || 'More'}</b></span>${ic('chev')}</summary><div>${blocksHtml(s.blocks, nodes)}</div></details>`
-        : `<section class="pg-sec r5-sec${i % 4 === 2 ? ' dark' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${s.title ? `<span class="r5-no">${String(i + 1).padStart(2, '0')}</span>` : ''}${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${blocksHtml(s.blocks, nodes)}</section>`).join('')}
+        : `<section class="pg-sec r5-sec${i % 4 === 2 ? ' dark' : ''}"${s.id ? ` id="${esc(s.id)}"` : ''} style="--tn:${tn(i)}">${dk ? '<div class="r5-sh">' : ''}${s.title ? `<span class="r5-no">${String(i + 1).padStart(2, '0')}</span>` : ''}${s.kick ? `<span class="m-kick">${esc(s.kick)}</span>` : ''}${s.title ? `<h2>${s.title}</h2>` : ''}${dk ? '</div><div class="r5-sb">' : ''}${blocksHtml(s.blocks, nodes)}${dk ? '</div>' : ''}</section>`).join('')}
       ${pk === 'contact' ? '' : `${pk === 'about' ? `<div class="m-pad r6-acta"><a class="m-cta" href="${href.shop()}" data-m>Explore the pairs</a><a class="m-ghost" href="${root}/pages/manifesto" data-m>Read our story</a></div>` : ''}<div class="m-pad r5-help"><b>Still a question?</b><span class="m-mute">A real person answers you, Monday to Saturday, 10 am to 7 pm.</span>${talk()}</div>`}
     </div>`;
     const nx = readNext(src); if (nx) { const help = $('.r5-help', view); if (help) help.insertAdjacentHTML('beforebegin', nx); else view.querySelector('.m-pg').insertAdjacentHTML('beforeend', nx); }
@@ -1102,6 +1152,7 @@
     if (cur.v === 'home') bindMore();
   }
   function render(dir) {
+    if (WIDE()) deskFoot();
     const k = vkey(cur);
     EAGER = 2;
     if (k !== shown) {
@@ -1517,7 +1568,7 @@
   window.DAUR_MX = {
     V, API, C, M, I, ic, esc, fmt, NF, store, asset, txt, sized, pic, img, firstV, price, notesFor, allNotes, wished, minP, delTxt, days, DEL, DAUR_ADD, GIVE,
     WA, waNice, SOC, KIND, MODES, TINT, tn, tintOf, P, CUT, DMARK, WORDMARK, logo, href, root, parse, go, render, paintTop, paintTab, card, row, cats, inCat, hasSale,
-    view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, BOXART, whyAdv, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
+    WIDE, view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, BOXART, whyAdv, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
     W, CODE, credits, coupons, payPlan, REWARDS, PAYFULL, rewardOf, giftUnits, GD, gdOf, giftMissing, checkout, lineProps, orderType, orderNote,
     get cur() { return cur; }, get state() { return state; }, reduce,
     tap: (name, fn) => { TAPS[name] = fn; }
@@ -1560,7 +1611,7 @@
     // the choice is saved the moment the finger lifts, before anything else can swallow the tap
     document.addEventListener('pointerup', (e) => { const b = e.target.closest && e.target.closest('#ck [data-ck]'); if (!b) return; const v = b.dataset.ck === 'all' ? 'all' : 'essential'; saveCk(v); try { localStorage.setItem('daur.consent', JSON.stringify(v)); } catch (x) { /* private mode */ } }, true);
     if (had) { const kill = () => { const b = document.getElementById('ck'); if (b) b.remove(); }; kill(); if ('MutationObserver' in window) { const mo = new MutationObserver(kill); mo.observe(document.body, { childList: true }); setTimeout(() => mo.disconnect(), 15000); } return; }
-    const fix = (box) => { if (!box || box.dataset.slim) return; box.dataset.slim = '1'; const t = box.querySelector('.ck-t'); if (t) t.innerHTML = 'Cookies keep your bag and likes saved on this phone. <a href="' + root + '/pages/policies#privacy">Privacy</a>'; const a = box.querySelector('[data-ck=all]'), e = box.querySelector('[data-ck=ess]'); if (a) a.textContent = 'Accept'; if (e) e.textContent = 'Only essential'; };
+    const fix = (box) => { if (!box || box.dataset.slim) return; box.dataset.slim = '1'; const t = box.querySelector('.ck-t'); if (t) t.innerHTML = 'Cookies keep your bag and likes saved on this ' + (WIDE() ? 'computer' : 'phone') + '. <a href="' + root + '/pages/policies#privacy">Privacy</a>'; const a = box.querySelector('[data-ck=all]'), e = box.querySelector('[data-ck=ess]'); if (a) a.textContent = 'Accept'; if (e) e.textContent = 'Only essential'; };
     fix(document.getElementById('ck'));
     if ('MutationObserver' in window) { const mo = new MutationObserver(() => { const b = document.getElementById('ck'); if (b) { fix(b); mo.disconnect(); } }); mo.observe(document.body, { childList: true }); setTimeout(() => mo.disconnect(), 15000); }
   }
