@@ -36,6 +36,8 @@
   C.advance.tierText = () => fmt(C.advance.one) + ' on any order of pairs for yourself, whatever the total. Gifts and Philanthropy pairs are covered in full when you order.';
   // the polite name for the token payment that also earns free delivery
   C.advance.care = 'advance';
+  // delivery takes 2 to 4 days (owner, 11 Nov 2026), whatever an older store setting still says
+  C.delivery = C.delivery || {}; C.delivery.days = String(C.delivery.days || '2 to 4 days').replace(/2 to 5/, '2 to 4');
   if (SHOP) C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, C.followUp || {});
   else try {
     const st = JSON.parse(localStorage.getItem('daur.settings') || 'null') || {};
@@ -45,7 +47,6 @@
     if (st.freeDeliveryPairs != null) C.freeDeliveryPairs = +st.freeDeliveryPairs;
     if (st.deliveryFee != null) C.delivery.fee = +st.deliveryFee;
     if (st.deliveryDays) C.delivery.days = String(st.deliveryDays).replace(/2 to 5/, '2 to 4');
-    C.delivery.days = String(C.delivery.days || '2 to 4 days').replace(/2 to 5/, '2 to 4');
     C.announce = st.announce || '';
     C.followUp = Object.assign({ maxDiscount: 15, minProfit: 500, codeDays: 7, remindAfter: 2, priceDrop: true, askWhatsapp: true }, st.followUp || {});
     const cps = JSON.parse(localStorage.getItem('daur.coupons') || 'null');
@@ -889,7 +890,7 @@
     </div></section>`;
     // the hero is the line of pairs itself: it never ends, and one click on a pair opens its size, colour and bag
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-    runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'}</span>
+    if (!lookbook($('#homeRw'))) runway($('#homeRw'), { head: `<span class="f-kicker">${ONE === 'Men' ? 'Men\'s leather shoes and sneakers' : 'Leather shoes and sneakers'}</span>
       <h1>A new era of<br>everyday footwear.</h1>
       ${urLock('ul-hero')}
       <p>Thoughtfully selected in Pakistan. Finished with the details that make a pair distinctly DAUR.</p>
@@ -1926,6 +1927,229 @@
   // the line of pairs, drawn into any host. It never ends: after the last pair comes the first again.
   // One click on a pair opens what you need to buy it (colour, size, add to bag, like); the checked details
   // and the numbered points on the pair only appear when asked for.
+
+  /* ---------------- the desktop runway: a line of pairs standing into the distance ----------------
+     One number, p (the look in front, as a float), places every pair, the shop rail and the look number.
+     Each pair's depth d = wrap(i - p) runs from -1 (leaving past the rail) to n - 2 (arriving out of the haze);
+     its place, size, blur and fade are read from a table of stops and blended in between.
+     Pictures: a model photo (product image whose alt text starts "Model:") when the pair has one, else the
+     transparent cut out that ships with the theme (m-<name>.webp), else the Runway photo, else the first photo. */
+  const LB_CUT = {
+    'moc-runner-v1': { 'triple-black': 'moc-runner', oxblood: 'moc-oxblood' },
+    'phantom-trainer': { '*': 'phantom' }, 'grid-court-low': { '*': 'grid' }, 'unit-derby-02': { '*': 'derby' },
+    'concrete-mid': { '*': 'concrete' }, 'volt-signal': { '*': 'volt' },
+    'ward-chelsea': { 'black-waxed': 'ward-black', 'dark-brown': 'ward-brown' },
+    'sector-slip': { '*': 'sector' }, 'saddle-tassel': { sand: 'saddle', black: 'saddle-black' }
+  };
+  function lbPic(p, v) {
+    if (v.model) return { src: v.model, cut: true, tall: true };
+    const M = window.DAUR_M || {}, m = LB_CUT[p.id];
+    if (M.assets != null && M.cutouts !== false && m) { const f = m[v.id] || m['*'] || Object.values(m)[0]; if (f) return { src: M.assets + 'm-' + f + '.webp', cut: true }; }
+    if (v.runway) return { src: v.runway, cut: true };
+    const s = v.images && v.images[0];
+    return s ? { src: /cdn\.shopify|\/cdn\/shop\//.test(s) ? cdnW(s, 1000) : s, cut: false } : null;
+  }
+  function lookbook(host) {
+    if (!host || !P.length || matchMedia('(max-width: 900px)').matches) return false;
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    // depth stops, as fractions of the stage, for d = -1 .. 5
+    const KX = [1.2, .744, .496, .346, .235, .15, .085], KF = [1.12, .9, .79, .72, .67, .635, .61], KH = [1.18, .832, .574, .436, .334, .258, .19],
+      KB = [0, 0, 1.5, 4, 8, 12, 17], KO = [1, 1, 1, 1, .86, .5, 0];
+    const wrapN = (x, n) => ((x % n) + n) % n, clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+    const CATS_LB = [['all', 'All pairs', () => true]].concat(CATS.map((c) => [c.toLowerCase(), { Sneakers: 'Sneakers', Hybrids: 'Casual', Leather: 'Leather' }[c] || lineName(c), (p) => p.category === c]))
+      .concat([['sale', 'Sale', (p) => p.variants.some(onSale)]]).filter(([, , f]) => P.some(f));
+    let cat = 'all', list = [], vs = [], N = 0, U = 0, people = [], cards = [], size = null, shown = -1;
+    host.innerHTML = `<section class="lb" id="lb" aria-label="The DAUR runway">
+      <div class="lb-stage" id="lbStage" tabindex="0" aria-label="Every DAUR pair in one line. Drag, use the arrow keys or the buttons to bring the next pair to the front.">
+        <div class="lb-line" id="lbLine"></div>
+        <div class="lb-intro">
+          <span class="lb-kick">Own your pace.</span>
+          <h1>Same local craft.<br>Zero retail markup.</h1>
+          <p>Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in ${esc(C.delivery.days || '2 to 4 days')}. Hold your pair with ${fmt(C.advance.one || 1000)} and pay the rest when the box is in your hands.</p>
+          <div class="lb-cats" role="tablist" aria-label="Show on the runway">${CATS_LB.map(([k, t, f]) => `<button type="button" role="tab" data-lbc="${k}" aria-selected="${k === cat}">${esc(t)}<sup>${P.filter(f).length}</sup></button>`).join('')}</div>
+        </div>
+        <div class="lb-tag">
+          <div class="lb-look" aria-live="polite"><span>Look</span><span class="lb-win"><span class="lb-roll" id="lbRoll"></span></span><small id="lbOf"></small></div>
+          <div class="lb-nav"><button type="button" class="lb-arr" data-lbgo="-1" aria-label="Previous pair">${ic('arrow')}</button><button type="button" class="lb-arr r" data-lbgo="1" aria-label="Next pair">${ic('arrow')}</button><a class="lb-shop" id="lbShop" href="#">See every detail</a></div>
+          <small class="lb-hint">${fine ? 'Drag the line, or use the arrow keys' : 'Swipe the line to see the next pair'}</small>
+        </div>
+        <div class="lb-ring" id="lbRing" aria-hidden="true"><span id="lbRingT"></span></div>
+      </div>
+      <aside class="lb-rail" aria-label="The pair in front">
+        <div class="lb-buy" id="lbBuy" aria-live="polite"></div>
+        <div class="lb-next"><span class="lb-nk">Next on the runway</span><div class="lb-track" id="lbTrack"></div></div>
+      </aside>
+    </section>`;
+    const lb = $('#lb', host), stage = $('#lbStage', lb), line = $('#lbLine', lb), roll = $('#lbRoll', lb), ring = $('#lbRing', lb), ringT = $('#lbRingT', lb), buy = $('#lbBuy', lb), track = $('#lbTrack', lb);
+    let W = 0, H = 0, base = 0, cardS = 0, dirty = true, p = 0, target = 0, last = 0, live = true, raf = 0;
+
+    function build() {
+      const f = (CATS_LB.find(([k]) => k === cat) || CATS_LB[0])[2];
+      list = P.filter(f); if (!list.length) list = P.slice(); U = list.length;
+      // the line needs at least six places to look endless; a short list walks round twice
+      while (list.length < 6) list = list.concat(list);
+      list = list.slice(0, 12); N = list.length;
+      vs = list.map((x) => (cat === 'sale' ? x.variants.find(onSale) : null) || x.variants.find(stockOf) || x.variants[0]);
+      line.innerHTML = list.map((x, i) => `<div class="lb-m" data-i="${i}"><span class="lb-fig">${figure(i)}</span></div>`).join('');
+      people = $$('.lb-m', line).map((e, i) => ({ e, r: 1.6, k: 1, tall: false, f: '', o: '' }));
+      people.forEach((m, i) => watch(m, i));
+      track.innerHTML = list.map((x, i) => `<button type="button" class="lb-card" data-lbj="${i}"><span class="lb-ct">${thumb(i)}</span><span class="lb-cb"><small>${esc(lineName(x.category))}</small><b>${esc(x.name)}</b><span>${fmt(vs[i].price)}${onSale(vs[i]) ? ` <s>${fmt(vs[i].compareAt)}</s>` : ''}</span></span>${ic('arrow')}</button>`).join('');
+      cards = $$('.lb-card', track);
+      roll.innerHTML = Array.from({ length: N + 1 }, (_, i) => `<b>${String((i % N) % U + 1).padStart(2, '0')}</b>`).join('');
+      $('#lbOf', lb).textContent = '/ ' + String(U).padStart(2, '0');
+      p = target = 0; shown = -1; size = null; sizeUp(); dirty = true; paintBuy(0);
+    }
+    function figure(i) {
+      const ph = lbPic(list[i], vs[i]);
+      if (!ph) return `<span class="lb-draw">${visual(list[i], vs[i], { alt: '' })}</span>`;
+      return `<img src="${esc(ph.src)}" alt="${esc(list[i].name + ' in ' + vs[i].color)}" draggable="false" decoding="async"${i < 3 ? ' fetchpriority="high"' : ''} class="${ph.cut ? 'cut' : 'flat'}">`;
+    }
+    function thumb(i) { const ph = lbPic(list[i], vs[i]); return ph ? `<img src="${esc(ph.src)}" alt="" loading="lazy" class="${ph.cut ? 'cut' : 'flat'}">` : visual(list[i], vs[i], { alt: '' }); }
+    // the shape of each picture decides how it stands: a model by height, a pair by width
+    function watch(m, i) {
+      const im = $('img', m.e);
+      const fit = () => { if (im && im.naturalWidth) { m.r = im.naturalWidth / im.naturalHeight; m.tall = m.r < .9; } sizeOne(m); dirty = true; wake_(); };
+      if (!im) { m.r = 1.6; fit(); return; }
+      m.e.classList.toggle('flat', im.classList.contains('flat'));
+      if (im.complete) fit(); else im.addEventListener('load', fit, { once: true });
+    }
+    function sizeOne(m) {
+      m.k = m.tall ? 1 : Math.min(1, (W * .4) / (KH[1] * H * m.r));
+      m.e.style.width = (base * m.k * m.r).toFixed(1) + 'px'; m.e.style.height = (base * m.k).toFixed(1) + 'px';
+    }
+    function sizeUp() {
+      const top = lb.getBoundingClientRect().top + scrollY; lb.style.setProperty('--lbh', Math.round(clamp(innerHeight - top, 600, 980)) + 'px');
+      W = stage.clientWidth; H = stage.clientHeight; base = H * 1.2;
+      people.forEach(sizeOne);
+      cardS = track.clientHeight / 2;
+      cards.forEach((c) => { c.style.height = cardS + 'px'; });
+      dirty = true;
+    }
+    function paint() {
+      people.forEach((m, i) => {
+        let d = wrapN(i - p, N); if (d > N - 1) d -= N;
+        const k = clamp(d + 1, 0, 6), a = Math.floor(k), b = Math.min(6, a + 1), t = k - a, mix = (A) => A[a] + (A[b] - A[a]) * t;
+        const h = mix(KH) * H * m.k, s = h / (base * m.k), w = h * m.r, x = mix(KX) * W - w / 2, y = mix(KF) * H - h;
+        m.e.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${s.toFixed(4)})`;
+        const bl = mix(KB) / s, fs = bl < .2 ? 'none' : `blur(${bl.toFixed(1)}px)`, o = (d > 5 ? 0 : mix(KO)).toFixed(3);
+        if (fs !== m.f) { m.f = fs; m.e.style.filter = fs; }
+        if (o !== m.o) { m.o = o; m.e.style.opacity = o; m.e.style.visibility = +o ? '' : 'hidden'; }
+        m.e.style.zIndex = 100 - Math.round(d * 10);
+        m.e.classList.toggle('front', Math.abs(d) < .5);
+      });
+      // the next pairs wait in the rail, moving with the line
+      const all = cardS * N;
+      cards.forEach((c, i) => {
+        let y = wrapN((i - 1) * cardS - p * cardS, all); if (y > all - cardS) y -= all;
+        c.style.transform = `translate3d(0,${y.toFixed(1)}px,0)`;
+      });
+      const lh = roll.firstChild ? roll.firstChild.offsetHeight : 0;
+      roll.style.transform = `translate3d(0,${(-wrapN(p, N) * lh).toFixed(1)}px,0)`;
+      const now = wrapN(Math.round(p), N);
+      if (now !== shown && Math.abs(p - Math.round(p)) < .3) paintBuy(now);
+    }
+    // everything needed to buy the pair in front, without leaving the runway
+    function paintBuy(i) {
+      shown = i; size = null;
+      const x = list[i], v = vs[i], st = v.stock || {}, ph = lbPic(x, v), sale = onSale(v);
+      $('#lbShop', lb).href = link('product', x.id + '~' + v.id);
+      buy.innerHTML = `<div class="lb-bh"><span class="lb-k">${esc(lineName(x.category))} <i></i> Look ${String(i % U + 1).padStart(2, '0')}</span><button type="button" class="lb-like" data-wish="${x.id}" aria-pressed="${wish.includes(x.id)}" aria-label="Like ${esc(x.name)}">${ic('heart', 'h-o')}${ic('heartFill', 'h-f')}</button></div>
+        <a class="lb-pic" href="${link('product', x.id + '~' + v.id)}" aria-label="See every detail of ${esc(x.name)}">${ph ? `<img src="${esc(ph.src)}" alt="" class="${ph.cut ? 'cut' : 'flat'}">` : visual(x, v, { alt: '' })}</a>
+        <h2>${esc(x.name)}</h2><p class="lb-col">${esc(v.color)}${x.variants.length > 1 ? ` <span>${x.variants.length} colours</span>` : ''}</p>
+        <div class="lb-price"><b>${fmt(v.price)}</b>${sale ? `<s>${fmt(v.compareAt)}</s><em>${Math.round((1 - v.price / v.compareAt) * 100)}% off</em>` : ''}</div>
+        ${sale ? `<p class="lb-save">You keep ${fmt(v.compareAt - v.price)}. Sale pairs are final for size.</p>` : ''}
+        ${x.variants.length > 1 ? `<div class="lb-dots" role="group" aria-label="Colour">${x.variants.map((o) => `<button type="button" data-lbv="${o.id}" style="--c:${esc(o.hex || '#777')}" aria-pressed="${o.id === v.id}" aria-label="${esc(o.color)}"></button>`).join('')}</div>` : ''}
+        <div class="lb-sizes" role="group" aria-label="Size, EU">${x.sizes.map((z) => { const q = st[z] || 0; return `<button type="button" data-lbs="${z}" aria-pressed="false"${q ? '' : ' disabled'} aria-label="EU ${z}${q ? '' : ', sold out'}">${z}</button>`; }).join('')}<button type="button" class="lb-sg" id="lbSg">Size guide</button></div>
+        <button type="button" class="lb-add" id="lbAdd"${stockOf(v) ? '' : ' disabled'}>${ic('bag')}<span>${stockOf(v) ? 'Choose your size' : 'Sold out in this colour'}</span></button>
+        <p class="lb-trust">${fmt(C.advance.one || 1000)} holds it, the rest at your door. At your door in ${esc(C.delivery.days || '2 to 4 days')}.</p>`;
+      buy.classList.remove('in'); void buy.offsetWidth; buy.classList.add('in');
+    }
+    buy.addEventListener('click', (e) => {
+      const t = e.target.closest('button'); if (!t) return;
+      const i = shown, x = list[i], v = vs[i];
+      if (t.dataset.wish) { toggleWish(x.id); t.setAttribute('aria-pressed', wish.includes(x.id)); return; }
+      if (t.dataset.lbv) { vs[i] = variant(x, t.dataset.lbv); const fig = $('.lb-fig', people[i].e); fig.innerHTML = figure(i); watch(people[i], i); $('.lb-ct', cards[i]).innerHTML = thumb(i); paintBuy(i); return; }
+      if (t.dataset.lbs) { size = +t.dataset.lbs; $$('[data-lbs]', buy).forEach((b) => b.setAttribute('aria-pressed', b === t)); $('#lbAdd span', buy).textContent = `Add EU ${size} to bag, ${fmt(v.price)}`; return; }
+      if (t.id === 'lbSg') { openModal('sizeGuide'); return; }
+      if (t.id === 'lbAdd') {
+        if (!stockOf(v)) return;
+        if (!size) { toast('Pick a size first'); const sz = $('.lb-sizes', buy); if (sz.animate) sz.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], 300); return; }
+        addToCart(x.id, v.id, size, 1);
+      }
+    });
+    track.addEventListener('click', (e) => { const c = e.target.closest('[data-lbj]'); if (!c) return; let d = wrapN(+c.dataset.lbj - Math.round(target), N); if (d > N / 2) d -= N; target = Math.round(target) + d; wake_(); });
+    $$('[data-lbc]', lb).forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.lbc === cat) return; cat = b.dataset.lbc;
+      $$('[data-lbc]', lb).forEach((x) => x.setAttribute('aria-selected', x === b));
+      line.classList.add('swap'); setTimeout(() => { build(); requestAnimationFrame(() => line.classList.remove('swap')); }, calm ? 0 : 260);
+    }));
+    $$('[data-lbgo]', lb).forEach((b) => b.addEventListener('click', () => { target = Math.round(target) + +b.dataset.lbgo; wake_(); }));
+
+    // moving: p chases target, and the page only repaints while something moves
+    let mx = 0, my = 0, cx = 0, cy = 0, down = false, sx = 0, st0 = 0, moved = 0, wheelT = 0, hover = '';
+    function frame(now) {
+      raf = 0; if (!live || !document.body.contains(lb)) return;
+      const dt = Math.min(50, now - last) || 16; last = now;
+      const was = p;
+      if (calm) p = target; else p += (target - p) * (1 - Math.exp(-dt * .0072));
+      if (Math.abs(target - p) < .0004) p = target;
+      if (p !== was || dirty) { dirty = false; paint(); }
+      cx += (mx - cx) * .32; cy += (my - cy) * .32;
+      ring.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0)`;
+      if (p !== target || Math.abs(mx - cx) > .3 || Math.abs(my - cy) > .3 || dirty) raf = requestAnimationFrame(frame);
+    }
+    function wake_() { if (!raf && live) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+    const PULL = () => Math.max(150, W * .2);
+    const over = (e) => { const el = document.elementsFromPoint(e.clientX, e.clientY).find((x) => x.classList && x.classList.contains('lb-m')); return el || null; };
+    const setRing = (t) => { if (t === hover) return; hover = t; ringT.textContent = t; ring.classList.toggle('word', !!t); };
+    if (fine) {
+      stage.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') ring.classList.add('show'); });
+      stage.addEventListener('pointerleave', () => { ring.classList.remove('show'); setRing(''); });
+    }
+    stage.addEventListener('pointermove', (e) => {
+      const r = stage.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top;
+      if (down) { const dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx)); target = st0 + dx / PULL(); }
+      else if (fine && !e.target.closest('a,button')) { const m = over(e); setRing(m ? (m.classList.contains('front') ? 'View' : 'Bring') : ''); }
+      else setRing('');
+      ring.classList.toggle('off', !!e.target.closest('a,button'));
+      wake_();
+    });
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.button || e.target.closest('a,button')) return;
+      down = true; sx = e.clientX; st0 = target; moved = 0; stage.setPointerCapture(e.pointerId); ring.classList.add('drag'); setRing('Drag');
+    });
+    function release(e) {
+      if (!down) return; down = false; ring.classList.remove('drag'); setRing('');
+      if (moved < 6) {
+        const m = over(e);
+        if (m) {
+          let d = Math.round(wrapN(+m.dataset.i - target, N)); if (d > N / 2) d -= N;
+          if (!d) { const i = shown; location.href = link('product', list[i].id + '~' + vs[i].id); return; }
+          target = Math.round(target) + d;
+        }
+      } else target = Math.round(target);
+      wake_();
+    }
+    stage.addEventListener('pointerup', release); stage.addEventListener('pointercancel', release);
+    // a sideways swipe on a trackpad walks the line; scrolling up and down still moves the page
+    stage.addEventListener('wheel', (e) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+      if (!dx) return;
+      e.preventDefault(); target += clamp(dx, -120, 120) / 420;
+      clearTimeout(wheelT); wheelT = setTimeout(() => { target = Math.round(target); wake_(); }, 150); wake_();
+    }, { passive: false });
+    const inView = () => { const r = lb.getBoundingClientRect(); return r.top < innerHeight * .5 && r.bottom > innerHeight * .5; };
+    addEventListener('keydown', (e) => {
+      if (!document.body.contains(lb) || e.target.closest && e.target.closest('input,textarea,select,[contenteditable]') || document.querySelector('.modal.open') || !inView()) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); target = Math.round(target) + 1; wake_(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); target = Math.round(target) - 1; wake_(); }
+    });
+    addEventListener('resize', () => { sizeUp(); wake_(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver((es) => { live = es[0].isIntersecting; if (live) { dirty = true; wake_(); } }).observe(lb);
+    build(); sizeUp(); wake_();
+    return true;
+  }
   function runway(host, opt) {
     opt = opt || {};
     const list = P.slice();

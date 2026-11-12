@@ -38,7 +38,8 @@
     // images whose alt text starts with "Drawing:" exist only so cart and checkout show a picture; the storefront draws those pairs live
     // images whose alt text starts with "Runway:" are cut out photos for the Runway page only (transparent PNG, side profile, toe right)
     const runway = (r.images || []).filter((im) => /^runway:/i.test(im.alt || ''));
-    r = Object.assign({}, r, { images: (r.images || []).filter((im) => !/^(drawing|runway):/i.test(im.alt || '')) });
+    const models = (r.images || []).filter((im) => /^model:/i.test(im.alt || ''));
+    r = Object.assign({}, r, { images: (r.images || []).filter((im) => !/^(drawing|runway|model):/i.test(im.alt || '')) });
     const oi = (re) => r.options.findIndex((o) => re.test(o.name));
     const ci = oi(/colou?r/i), si = oi(/size/i);
     const opt = (v, i) => (i < 0 ? '' : v.options[i]);
@@ -68,7 +69,8 @@
       const first = vs[0] || {};
       const hex = swatch[colour.toLowerCase()] || '#222222';
       const rw = runway.find((im) => im.v.some((id) => ids.includes(id)) || im.alt.toLowerCase().includes(colour.toLowerCase())) || (runway.length === 1 ? runway[0] : null);
-      return { id: handleize(colour), color: colour, hex, runway: rw ? rw.src : null, price: first.price / 100, compareAt: first.cap && first.cap > first.price ? first.cap / 100 : null, stock, sid, palette: palette(hex, soles[colour.toLowerCase()]), images: imgs.map((im) => im.src) };
+      const md = models.find((im) => im.v.some((id) => ids.includes(id)) || im.alt.toLowerCase().includes(colour.toLowerCase())) || (models.length === 1 ? models[0] : null);
+      return { id: handleize(colour), color: colour, hex, runway: rw ? rw.src : null, model: md ? md.src : null, price: first.price / 100, compareAt: first.cap && first.cap > first.price ? first.cap / 100 : null, stock, sid, palette: palette(hex, soles[colour.toLowerCase()]), images: imgs.map((im) => im.src) };
     });
     // photos tied to no colour go to every colour that has none of its own
     const loose = r.images.filter((im) => !claimed.has(im.src)).map((im) => im.src);
