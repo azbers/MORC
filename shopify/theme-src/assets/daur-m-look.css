@@ -830,3 +830,25 @@ body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sb>p{margin-left:au
 #mApp .m-fd>.fd-post.fd-fact{aspect-ratio:auto!important;min-height:0!important;height:auto}
 body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sh>*{display:block;text-align:center;margin-left:auto;margin-right:auto}
 }
+/* round 6: "Give more than a pair" cards carry the owner's illustrations, recoloured to forest, brass and olive; words sit below the picture on bone */
+#mApp .r10-card.ill{height:auto;min-height:0!important;display:flex;flex-direction:column;background:#F1EBDD;color:#172C27;border:1px solid rgba(23,44,39,.1);box-shadow:0 1px 0 rgba(23,44,39,.04)}
+#mApp .r10-card.ill.gift{background:#EAE0CB}
+#mApp .r10-card.ill::after{display:none}
+#mApp .r10-card.ill .r10-ill{position:relative;display:block;height:176px;overflow:hidden}
+#mApp .r10-card.ill .r10-ill img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 60%;z-index:0}
+#mApp .r10-card.ill.give .r10-ill img{object-fit:cover;object-position:50% 50%}
+#mApp .r10-card.ill.gift .r10-ill img{inset:8px 0 0;height:calc(100% - 8px)}
+#mApp .r10-card.ill .r10-rib{z-index:1;background:#172C27;color:#F1EBDD}
+#mApp .r10-card.ill .r10-t{position:static;padding:14px 18px 18px;border-top:1px solid rgba(23,44,39,.08);background:inherit}
+#mApp .r10-card.ill .r10-t b{color:#172C27}
+#mApp .r10-card.ill .r10-t small{color:#3E4A46}
+#mApp .r10-card.ill .r10-t em{color:#7A6443}
+#mApp .r10-card.ill:active .r10-ill img{transform:scale(1.03)}
+@media (min-width:1024px){
+#mApp .v-home .r10-card.ill{min-height:0!important}
+#mApp .r10-card.ill .r10-ill{height:250px}
+#mApp .r10-card.ill .r10-t{padding:18px 24px 22px}
+#mApp .r10-card.ill .r10-t b{font-size:24px}
+#mApp .r10-card.ill .r10-t small{font-size:14.5px;max-width:46ch}
+#mApp .r10-card.ill:hover .r10-ill img{transform:scale(1.03)}
+}
