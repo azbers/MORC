@@ -65,6 +65,8 @@
   assign daur_noindex = false
   if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers'
     assign daur_noindex = true
+  elsif template.name == 'blog' and blog.articles_count == 0
+    assign daur_noindex = true
   elsif template.name == 'page'
     if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts'
       assign daur_noindex = true
@@ -170,6 +172,8 @@
 {% render 'daur-data', product: product, daur_param: daur_param %}
 {%- if settings.test_photos and theme.role != 'main' %}{% render 'daur-test-photos' %}{% endif %}
 <script>window.DAUR_PAY={bank:{{ settings.pay_bank_name | default: 'Bank name' | json }},title:{{ settings.pay_bank_title | default: 'DAUR Supply' | json }},number:{{ settings.pay_bank_number | default: '' | json }},iban:{{ settings.pay_bank_iban | default: '' | json }},qr:{% if settings.pay_bank_qr %}{{ settings.pay_bank_qr | image_url: width: 480 | json }}{% else %}""{% endif %},wallets:[{name:"EasyPaisa",number:{{ settings.pay_ep_number | default: '' | json }},title:{{ settings.pay_ep_title | default: '' | json }},qr:{% if settings.pay_ep_qr %}{{ settings.pay_ep_qr | image_url: width: 480 | json }}{% else %}""{% endif %}},{name:"JazzCash",number:{{ settings.pay_jc_number | default: '' | json }},title:{{ settings.pay_jc_title | default: '' | json }},qr:{% if settings.pay_jc_qr %}{{ settings.pay_jc_qr | image_url: width: 480 | json }}{% else %}""{% endif %}}]};</script>
+{%- comment -%} placeholder account numbers are never shown to a shopper: the payment panel waits for real details {%- endcomment -%}
+<script>(function(p){if(!p)return;var z=function(v){return /^(PK00 BANK|0000 |0300 0000000)/.test(String(v||''))?'':v};p.number=z(p.number);p.iban=z(p.iban);(p.wallets||[]).forEach(function(w){w.number=z(w.number)})})(window.DAUR_PAY);</script>
 <script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
 <script src="{{ 'shoe.js' | asset_url }}" defer></script>
 <script src="{{ 'icons.js' | asset_url }}" defer></script>
