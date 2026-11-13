@@ -57,7 +57,7 @@
     {{ style_links }}
   {%- when 'page' -%}
     <section class="phero"><span class="eyebrow">{{ shop.name }}</span><h1>{{ page.title }}</h1></section>
-    <div class="rte">{{ page.content }}</div>
+    <div class="rte">{{ page.content | replace: '2 to 5 days', '2 to 4 days' }}</div>
   {%- when 'blog' -%}
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {% if current_tags %}<a href="{{ blog.url }}">{{ blog.title }}</a> / {{ current_tags | join: ', ' }}{% else %}{{ blog.title }}{% endif %}</nav>
     <section class="phero"><span class="eyebrow">Journal</span><h1>{% if current_tags %}{{ current_tags | first }}{% else %}{{ blog.title }}{% endif %}</h1><p class="aside">Guides on leather, fit, care and style for men in Pakistan, and plain answers on how DAUR works.</p></section>
