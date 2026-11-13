@@ -883,3 +883,31 @@ body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sh>*{display:block;
 #mApp .v-home .m-rows .m-li .l-p{font-size:18px}
 #mApp .v-home .m-rows .m-li .l-add{width:50px;height:50px}
 }
+/* round 8: a main button on a dark band is bone, so it can be seen (it was forest on forest) */
+#mApp .r5-sec.dark .m-cta{background:#F1EBDD!important;background-image:none!important;color:#172C27!important;box-shadow:none!important}
+#mApp .r5-sec.dark .m-cta svg{color:#172C27!important}
+/* round 8: "Donate a pair" on the product page wraps onto two lines instead of being cut at the card edge */
+#mApp .px-fc.k-give .fc-t b{white-space:normal!important;font-size:clamp(15px,4.9vw,19px)!important;line-height:1!important}
+@media (min-width:1024px){
+/* pair tiles everywhere on desktop: taller, with a larger photo and larger words */
+#mApp .m-view .m-tile{min-height:304px;padding:14px 18px 18px;border-radius:26px}
+#mApp .m-view .m-tile .c-img{height:164px;margin:6px 0 8px}
+#mApp .m-view .m-tile .c-img.blend{height:156px;margin:0 0 10px}
+#mApp .m-view .m-tile .c-n{font-size:17px}
+#mApp .m-view .m-tile .c-t{font-size:13px}
+#mApp .m-view .m-tile .c-p{font-size:17px}
+#mApp .m-view .m-tile:has(.m-act){min-height:352px}
+/* shop and liked: the page title no longer touches the menu bar */
+#mApp .m-view.v-shop>.sh-hd{margin-top:30px;margin-bottom:6px}
+#mApp .m-view.v-liked>.m-pad:first-child{margin-top:30px}
+/* home: two short rows share one line */
+#mApp .v-home #mMore{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;grid-auto-flow:row dense;align-items:start}
+#mApp .v-home #mMore>.hm-blk{grid-column:1 / -1;min-width:0}
+#mApp .v-home #mMore>.hm-blk.half{grid-column:span 1}
+#mApp .v-home #mMore>.hm-blk.half .m-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#mApp .v-home #mMore>.m-end{grid-column:1 / -1}
+#mApp .v-home #mMore>.m-end.half{grid-column:span 1;align-self:center;padding-top:60px}
+/* Philanthropy banner: the two notes line up with the page instead of the screen edge */
+html.m-on #mApp .hx-chip.c1{left:max(48px,calc(50vw - 640px));top:24px}
+html.m-on #mApp .hx-chip.c2{right:max(48px,calc(50vw - 640px));top:24px}
+}

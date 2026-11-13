@@ -345,9 +345,10 @@
   function moreHome() {
     const box = $('#mMore'); if (!box) return;
     const k = +(box.dataset.k || 0), b = homeBlock(k);
-    if (!b) { if (box.dataset.end || $('.m-end', box)) { $('#mMoreSent') && $('#mMoreSent').remove(); return; } box.dataset.end = '1'; box.insertAdjacentHTML('beforeend', `<div class="m-end"><b>That is every pair we stand behind today.</b><span class="m-mute">We add a pair only after we have checked it by hand, and it appears here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
+    if (!b) { if (box.dataset.end || $('.m-end', box)) { $('#mMoreSent') && $('#mMoreSent').remove(); return; } box.dataset.end = '1'; box.insertAdjacentHTML('beforeend', `<div class="m-end${box.querySelectorAll('.hm-blk.half').length % 2 ? ' half' : ''}"><b>That is every pair we stand behind today.</b><span class="m-mute">We add a pair only after we have checked it by hand, and it appears here first.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop all</a></div>`); $('#mMoreSent') && $('#mMoreSent').remove(); return; }
     box.dataset.k = k + 1;
-    if (b[1].length) box.insertAdjacentHTML('beforeend', `<div class="m-row m-pad" style="margin-top:28px"><h2 class="m-h2">${esc(b[0])}</h2><a class="m-link" href="${b[2]}" data-m>See all</a></div><div class="m-grid">${b[1].map((p) => card(p, false)).join('')}</div>`);
+    // each block is one unit, so on a wide screen two short rows (one or two pairs) can sit side by side instead of leaving half the row empty
+    if (b[1].length) box.insertAdjacentHTML('beforeend', `<div class="hm-blk${b[1].length <= 2 ? ' half' : ''}"><div class="m-row m-pad" style="margin-top:28px"><h2 class="m-h2">${esc(b[0])}</h2><a class="m-link" href="${b[2]}" data-m>See all</a></div><div class="m-grid">${b[1].map((p) => card(p, false)).join('')}</div></div>`);
     else moreHome();
   }
   function bindMore() {
@@ -524,7 +525,7 @@
   V.liked = function () {
     const list = API.wish.map(API.prod).filter((p) => p && !p.hidden && !p.giving);
     view.innerHTML = `<div class="m-pad"><h1 class="m-h1">Liked</h1></div>` + (list.length ? `<div class="m-grid">${list.map((p) => card(p, false)).join('')}</div>`
-      : `<div class="m-empty"><img src="${asset('m-volt.webp')}" alt=""><b>No pair has your heart yet.</b><span class="m-mute">Tap the heart on any pair and it will wait for you here, saved on this phone.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop now</a></div>
+      : `<div class="m-empty"><img src="${asset('m-volt.webp')}" alt=""><b>No pair has your heart yet.</b><span class="m-mute">Tap the heart on any pair and it will wait for you here, saved on this ${WIDE() ? 'computer' : 'phone'}.</span><a class="m-cta solo" href="${href.shop()}" data-m>Shop now</a></div>
         <div class="m-row m-pad" style="margin-top:22px"><h2 class="m-h2">Worth a look</h2></div><div class="m-grid">${P().slice(0, 4).map((p) => card(p, false)).join('')}</div>`);
   };
 
