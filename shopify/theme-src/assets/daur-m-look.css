@@ -911,3 +911,37 @@ body[data-page=track] #mApp .m-pg>.r5-sec:nth-of-type(3) .r5-sh>*{display:block;
 html.m-on #mApp .hx-chip.c1{left:max(48px,calc(50vw - 640px));top:24px}
 html.m-on #mApp .hx-chip.c2{right:max(48px,calc(50vw - 640px));top:24px}
 }
+/* round 9: listing cards slide through a pair's photos (phone grids and every desktop listing) */
+#mApp .m-card{--gp:18px}
+#mApp .m-tile{--gp:12px}
+#mApp .c-gw{position:relative;display:block;z-index:2;margin:-10px calc(var(--gp) * -1) -18px}
+#mApp .c-gal{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding:10px 0 18px}
+#mApp .c-gal::-webkit-scrollbar{display:none}
+#mApp .c-sl{flex:0 0 100%;min-width:0;display:block;padding:0 var(--gp);scroll-snap-align:center;scroll-snap-stop:always;text-decoration:none}
+#mApp .c-sl .c-img{pointer-events:none}
+#mApp .c-sl .c-ph:not([src]){visibility:hidden}
+#mApp .c-dots{position:absolute;left:0;right:0;bottom:18px;display:flex;justify-content:center;gap:4px;pointer-events:none}
+#mApp .c-dots i{width:5px;height:5px;border-radius:50%;background:rgba(23,44,39,.22);transition:width .2s,background .2s}
+#mApp .c-dots i.on{width:14px;border-radius:3px;background:#172C27}
+#mApp .c-ar{display:none}
+/* on a photo (not the cutout) the heart gets a light disc behind it so it stays visible */
+#mApp .c-gw:not([data-at=s])~.m-heart{background:radial-gradient(circle,rgba(255,255,255,.92) 0 15px,transparent 16px)}
+/* the home row on a phone already slides sideways from pair to pair, so its pictures stay still */
+@media (max-width:1023px){
+#mApp .m-car .c-gal{overflow:hidden}
+#mApp .m-car .c-dots{display:none}
+}
+@media (min-width:1024px){
+#mApp .m-view .m-tile{--gp:18px}
+#mApp .c-dots{bottom:20px}
+}
+@media (min-width:1024px) and (hover:hover){
+#mApp .c-ar{position:absolute;top:calc(50% - 20px);display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.94);color:#172C27;box-shadow:0 4px 12px rgba(23,44,39,.22);opacity:0;transition:opacity .18s,transform .18s;cursor:pointer}
+#mApp .c-ar svg{width:16px;height:16px}
+#mApp .c-ar.n{right:10px}
+#mApp .c-ar.p{left:10px}
+#mApp .c-ar.p svg{transform:rotate(180deg)}
+#mApp .m-card:hover .c-ar,#mApp .m-tile:hover .c-ar,#mApp .c-ar:focus-visible{opacity:1}
+#mApp .c-ar:hover{transform:scale(1.08)}
+#mApp .c-gw[data-at=s] .c-ar.p,#mApp .c-gw[data-at=e] .c-ar.n{display:none}
+}

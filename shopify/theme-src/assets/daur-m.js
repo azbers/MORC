@@ -267,12 +267,17 @@
   }
 
   /* ---------- cards ---------- */
+  // the photos a listing card can slide through: the cutout first, then the pair's own photos
+  const gal = (p, v) => { const x = pic(p, v), im = (v.images || []).filter(Boolean); return (x.cut ? [x.src].concat(im) : im.length ? im : [x.src]).slice(0, 6); };
   function card(p, big, mode) {
     const v = firstV(p), t = tintOf(p);
     const badge = API.onSale(v) ? `<span class="m-badge">${API.pct(v)}% off</span>` : '';
     const fn = notesFor(p.id), fr = fn.length ? (fn.reduce((a, n) => a + (+n.rating || 0), 0) / fn.length) : 0;
     const rate = fn.length ? `<span class="c-r" aria-label="${fr.toFixed(1)} out of 5 hearts from ${fn.length} fit notes">${ic('heart')}${fr.toFixed(1)}<small>(${fn.length})</small></span>` : '';
-    const inner = `${img(p, v, 'c-img')}${big ? '' : badge}${rate}<span class="c-n">${esc(p.name)}</span><span class="c-t">${esc(p.category)}</span><span class="c-p">${price(v)}</span>`;
+    // more than one photo: the picture becomes a strip the shopper can slide, with dots; the other photos load only when needed
+    const ph = gal(p, v), plink = `href="${href.product(p.id)}" data-m tabindex="-1" aria-hidden="true"`;
+    const media = ph.length > 1 ? `<span class="c-gw" data-at="s"><span class="c-gal" data-gal><a class="c-sl" ${plink}>${img(p, v, 'c-img')}</a>${ph.slice(1).map((x, k) => `<a class="c-sl" ${plink}><img class="c-img blend c-ph" data-src="${esc(sized(x, WIDE() ? 640 : 480))}" alt="${esc(p.name + ', photo ' + (k + 2))}" decoding="async"></a>`).join('')}</span><span class="c-dots" aria-hidden="true">${ph.map((x, k) => `<i${k ? '' : ' class="on"'}></i>`).join('')}</span><button type="button" class="c-ar p" data-galp aria-label="Previous photo of ${esc(p.name)}">${ic('arrow')}</button><button type="button" class="c-ar n" data-galn aria-label="Next photo of ${esc(p.name)}">${ic('arrow')}</button></span>` : img(p, v, 'c-img');
+    const inner = `${media}${big ? '' : badge}${rate}<span class="c-n">${esc(p.name)}</span><span class="c-t">${esc(p.category)}</span><span class="c-p">${price(v)}</span>`;
     const act = mode === 'gift' ? `<button class="m-act" type="button" data-quick="${esc(p.id)}" data-mode="gift">${ic('gift')}<span>Gift</span></button>`
       : mode === 'give' ? `<button class="m-act g" type="button" data-quick="${esc(p.id)}" data-mode="give">${ic('hand')}<span>Donate</span></button>`
         : `<button class="m-plus" type="button" data-quick="${esc(p.id)}" aria-label="Quick add ${esc(p.name)}"><i>${ic('plus', 2.6)}</i></button>`;
@@ -792,6 +797,38 @@
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -30px' });
     els.forEach((e) => { if (e.getBoundingClientRect().top > innerHeight) { e.classList.add('pre'); io.observe(e); } });
   }
+
+  /* ---------- listing cards: slide through a pair's photos without opening it ----------
+     The second photo is fetched when the card is on screen. Once it has arrived the strip slides a little and
+     returns by itself, once, so the shopper sees there is more to see. Each later photo is fetched one ahead. */
+  (function () {
+    const need = (g, k) => { const im = g.children[k] && g.children[k].querySelector('img'); if (im && im.dataset.src) { im.src = im.dataset.src; im.removeAttribute('data-src'); } return im; };
+    const at = (g) => Math.round(g.scrollLeft / Math.max(1, g.clientWidth));
+    const paint = (g) => { const k = at(g), w = g.parentNode; $$('.c-dots i', w).forEach((d, j) => d.classList.toggle('on', j === k)); w.dataset.at = k <= 0 ? 's' : k >= g.children.length - 1 ? 'e' : 'm'; need(g, k + 1); };
+    document.addEventListener('scroll', (e) => { const g = e.target; if (g && g.classList && g.classList.contains('c-gal')) paint(g); }, true);
+    const touched = (e) => { const g = e.target.closest && e.target.closest('.c-gal'); if (g) { g._t = 1; g.style.scrollSnapType = ''; } };
+    document.addEventListener('touchstart', touched, { passive: true, capture: true }); document.addEventListener('wheel', touched, { passive: true, capture: true });
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-galn],[data-galp]'); if (!b) return; e.preventDefault(); e.stopPropagation(); const g = b.parentNode.querySelector('.c-gal'); g._t = 1; g.style.scrollSnapType = ''; const k = at(g) + (b.hasAttribute('data-galn') ? 1 : -1); need(g, k); g.scrollTo({ left: k * g.clientWidth, behavior: reduce ? 'auto' : 'smooth' }); }, true);
+    let slot = 0;
+    const hint = (g) => {
+      if (g._h || g._t || reduce) return; g._h = 1;
+      const now = performance.now(); slot = Math.max(now, slot) + 160;
+      setTimeout(() => {
+        const r = g.getBoundingClientRect(); if (g._t || g.scrollLeft > 2 || r.bottom < 0 || r.top > innerHeight) return;
+        g.style.scrollSnapType = 'none'; g.scrollTo({ left: g.clientWidth * .46, behavior: 'smooth' });
+        setTimeout(() => { if (g._t) return; g.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(() => { g.style.scrollSnapType = ''; }, 520); }, 760);
+      }, slot - now);
+    };
+    const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return; const g = e.target; io.unobserve(g);
+      const im = need(g, 1); if (!im) return;
+      if (im.complete && im.naturalWidth) hint(g); else im.addEventListener('load', () => hint(g), { once: true });
+    }), { threshold: .6 }) : null;
+    const scan = () => $$('.c-gal:not([data-gi])', app).forEach((g) => { g.dataset.gi = '1'; if (getComputedStyle(g).overflowX === 'hidden') return; if (io) io.observe(g); else need(g, 1); });
+    let raf = 0; const later = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; scan(); }); };
+    if ('MutationObserver' in window) new MutationObserver(later).observe(app, { childList: true, subtree: true });
+    later();
+  })();
 
   /* ---------- gifts ---------- */
   V.gifts = function () {
