@@ -1,0 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "whatsapp": "923199628735",
+    "support_email": "contact@daursupply.com",
+    "lines": "Men",
+    "delivery_fee": 0,
+    "delivery_days": "2 to 4 days",
+    "free_delivery_pairs": 2,
+    "advance_on": true,
+    "advance_code": "",
+    "advance_deposit": 500,
+    "market_retail": 12000,
+    "low_stock_at": 2,
+    "currency_label": "Rs.",
+    "img_workshop": "shopify://shop_images/photo-1787005241178-c9006ea9610b.jpg",
+    "img_checked": "shopify://shop_images/photo-1573832959141-4f798a677b7d.jpg",
+    "img_door": "shopify://shop_images/photo-1653868249587-284b275a1c67_33d0a27d-995e-40e2-a8c7-4cc5c175009a.jpg",
+    "img_guide": "shopify://shop_images/sneakers-and-leggings.jpg",
+    "test_photos": true,
+    "m_wallet_code": "",
+    "m_wallet_amount": 350,
+    "content_for_index": [],
+    "img_hero": "shopify://shop_images/photo-1614252235316-8c857d38b5f4_52e62529-ba57-4704-aa0c-02aacf357eb0.jpg",
+    "img_sneakers": "shopify://shop_images/photo-1608231387042-66d1773070a5.jpg",
+    "img_casual": "shopify://shop_images/photo-1616406432452-07bc5938759d.jpg",
+    "img_leather": "shopify://shop_images/photo-1603191659812-ee978eeeef76.jpg",
+    "img_bench": "shopify://shop_images/photo-1768550996860-2d8666f4c0bb.jpg",
+    "img_tools": "shopify://shop_images/photo-1758812820631-ce2d8dc3e5ac.jpg"
+  },
+  "presets": {},
+  "platform_customizations": {
+    "custom_css": []
+  }
+}

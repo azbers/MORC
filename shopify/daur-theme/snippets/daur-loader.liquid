@@ -1,0 +1,9 @@
+{%- comment -%}
+  The first moment of every page: the DAUR shoe logo, running in place, while the storefront draws.
+  It covers the plain server copy, so the shopper never sees text jump about behind it.
+  It fades as soon as the page is drawn (html.drawn) and gives way on its own after a few seconds.
+{%- endcomment -%}
+<div class="daur-load" aria-hidden="true">
+  <img class="dl-logo" src="{{ 'daur-logo.svg' | asset_url }}" width="220" height="88" alt="">
+  <span class="dl-word">OWN YOUR PACE.</span>
+</div>

@@ -1,0 +1,193 @@
+<!doctype html>
+{%- liquid
+  # which storefront view draws this address
+  assign daur_page = 'page'
+  assign daur_param = ''
+  case template.name
+    when 'index'
+      assign daur_page = 'home'
+    when 'product'
+      assign daur_page = 'product'
+      assign daur_param = product.handle
+    when 'collection'
+      assign daur_page = 'shop'
+      # collection handle : storefront view, so each style has an address of its own
+      assign known = 'men:men,women:women,kids:kids,sale:sale,new:new,sneakers:sneakers,leather-shoes:leather,casual:hybrids' | split: ','
+      for pair in known
+        assign kv = pair | split: ':'
+        if collection.handle == kv[0]
+          assign daur_param = kv[1]
+        endif
+      endfor
+    when 'list-collections'
+      assign daur_page = 'shop'
+    when 'cart'
+      assign daur_page = 'cart'
+    when 'search'
+      assign daur_page = 'search'
+    when '404'
+      assign daur_page = 'notfound'
+    when 'page'
+      assign views = 'manifesto:manifesto,contract:contract,track:track,liked:wishlist,alerts:list,feed:feed,policies:policies,about:about,contact:contact,offers:offers,runway:runway,giving:giving,gifts:gifts' | split: ','
+      for pair in views
+        assign kv = pair | split: ':'
+        if page.handle == kv[0]
+          assign daur_page = kv[1]
+        endif
+      endfor
+  endcase
+  # the home page title and description are theme settings (Theme settings > Search)
+  assign daur_title = page_title
+  assign daur_desc = page_description
+  if template.name == 'index'
+    # a fixed fallback, so the home page never goes out with only the shop name and no description
+    assign daur_title = settings.seo_home_title | default: "DAUR Supply | Men's Shoes & Leather Sneakers Online in Pakistan"
+    assign daur_desc = settings.seo_home_description | default: "Shop men's leather sneakers, formal shoes, chelsea boots and casual slip ons from DAUR Supply, crafted in Pakistan. Delivered to every city in Pakistan, with a 5 day size exchange."
+  endif
+  if daur_desc == blank
+    assign daur_desc = shop.description | default: settings.seo_home_description | default: "DAUR Supply: men's leather shoes and sneakers crafted in Pakistan, delivered to every city in Pakistan." 
+  endif
+-%}
+<html lang="{{ request.locale.iso_code }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ daur_title }}{% unless daur_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
+{%- if daur_desc %}<meta name="description" content="{{ daur_desc | escape }}">{% endif %}
+<link rel="canonical" href="{{ canonical_url }}">
+{%- if settings.clarity_id != blank %}
+{%- comment -%} Clarity loads after the page has finished loading, so it never competes with the first screen; calls made before then are queued {%- endcomment -%}
+<script>(function(c,l,a,r,i){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};function go(){var t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";l.head.appendChild(t)}function later(){(c.requestIdleCallback||function(f){setTimeout(f,1500)})(go,{timeout:4000})}if(l.readyState==='complete')later();else c.addEventListener('load',later)})(window,document,"clarity","script",{{ settings.clarity_id | strip | json }});</script>
+{%- endif %}
+{%- if settings.google_verification != blank %}<meta name="google-site-verification" content="{{ settings.google_verification | escape }}">{% endif %}
+{%- comment -%} utility pages carry no search value: the bag, liked pairs, order tracking and the retired alert list {%- endcomment -%}
+{%- liquid
+  assign daur_noindex = false
+  if template.name == '404' or template.name == 'search' or template.name == 'cart' or template.directory == 'customers'
+    assign daur_noindex = true
+  elsif template.name == 'page'
+    if page.handle == 'liked' or page.handle == 'track' or page.handle == 'alerts'
+      assign daur_noindex = true
+    endif
+  endif
+-%}
+{%- if daur_noindex %}<meta name="robots" content="noindex">{% endif %}
+<meta name="theme-color" content="#F1EBDD">
+<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
+{%- comment -%} Link previews (WhatsApp, Facebook, Instagram DMs, X): every page gets a title, a description and a 1200 x 630 image. Image order: product photo, article photo, the page's own social image, the Social sharing image in Online Store > Preferences, the theme share image setting, then assets/daur-share.jpg. {%- endcomment -%}
+{%- liquid
+  assign og_desc = daur_desc | default: shop.description | default: settings.seo_home_description | strip_html | strip_newlines | truncate: 200
+  assign og_has = false
+  if template.name == 'product' and product.featured_image
+    assign og_img = product.featured_image
+    assign og_has = true
+  elsif template.name == 'article' and article.image
+    assign og_img = article.image
+    assign og_has = true
+  elsif page_image
+    assign og_img = page_image
+    assign og_has = true
+  elsif settings.share_image != blank
+    assign og_img = settings.share_image
+    assign og_has = true
+  endif
+  if og_has
+    assign og_img_url = og_img | image_url: width: 1200, height: 630, crop: 'center', format: 'pjpg' | prepend: 'https:'
+    assign og_img_alt = og_img.alt | default: daur_title
+  else
+    assign og_img_url = 'daur-share.jpg' | asset_url | prepend: 'https:'
+    assign og_img_alt = shop.name | append: " men's leather shoes, delivered across Pakistan"
+  endif
+-%}
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:title" content="{{ daur_title | escape }}">
+<meta property="og:description" content="{{ og_desc | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+{%- if template.name == 'product' %}
+<meta property="og:type" content="product">
+<meta property="product:price:amount" content="{{ product.price | money_without_currency | remove: ',' }}">
+<meta property="product:price:currency" content="{{ cart.currency.iso_code }}">
+{%- elsif template.name == 'article' %}
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' }}">
+{%- for t in article.tags %}<meta property="article:tag" content="{{ t | escape }}">{%- endfor %}
+{%- else %}
+<meta property="og:type" content="website">
+{%- endif %}
+<meta property="og:image" content="{{ og_img_url }}">
+<meta property="og:image:secure_url" content="{{ og_img_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ og_img_alt | escape }}">
+<meta property="og:locale" content="en_PK">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ daur_title | escape }}">
+<meta name="twitter:description" content="{{ og_desc | escape }}">
+<meta name="twitter:image" content="{{ og_img_url }}">
+{%- comment -%} Google shows a site icon only from a real, crawlable file whose size is a multiple of 48 px; an inline data: icon is ignored {%- endcomment -%}
+{%- if settings.favicon %}
+<link rel="icon" type="image/png" sizes="192x192" href="{{ settings.favicon | image_url: width: 192, height: 192, crop: 'center' }}">
+<link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180, crop: 'center' }}">
+{%- else %}
+<link rel="icon" type="image/png" sizes="192x192" href="{{ 'daur-favicon-192.png' | asset_url }}">
+<link rel="icon" type="image/svg+xml" href="{{ 'daur-favicon.svg' | asset_url }}">
+<link rel="apple-touch-icon" href="{{ 'daur-favicon-180.png' | asset_url }}">
+{%- endif %}
+{%- comment -%} the three brand fonts are served from the theme itself (no Google Fonts round trips); the heading font is fetched first {%- endcomment -%}
+<link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-600.woff2' | asset_url }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-400.woff2' | asset_url }}" crossorigin>
+{%- comment -%} the desktop stylesheet blocks the first paint only on desktop; phones draw from daur-m.css first and take it in once it has arrived {%- endcomment -%}
+<link rel="stylesheet" href="{{ 'styles.css' | asset_url }}" media="(min-width: 901px)" onload="this.media='all'"><noscript><link rel="stylesheet" href="{{ 'styles.css' | asset_url }}"></noscript>
+{%- if settings.m_app != false %}
+{%- comment -%} Phones and tablets open the store as an app (assets/daur-m.js). Desktop never loads it. ?view=classic shows the full website. {%- endcomment -%}
+<script>try{if(!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}catch(e){}</script>
+{%- comment -%} the few base rules phones need before the desktop stylesheet arrives, so nothing moves when it does {%- endcomment -%}
+<style>@font-face{font-family:'DAUR Cond';src:url("{{ 'm-outfit-600.woff2' | asset_url }}") format('woff2');font-weight:500 900;font-display:swap}@font-face{font-family:'DAUR Sans';src:url("{{ 'm-outfit-400.woff2' | asset_url }}") format('woff2');font-weight:300 500;font-display:swap}@font-face{font-family:'DAUR Sans';src:url("{{ 'm-outfit-600.woff2' | asset_url }}") format('woff2');font-weight:600 900;font-display:swap}@font-face{font-family:'DAUR Cond Fallback';src:local('Arial Narrow'),local('Arial'),local('Liberation Sans Narrow'),local('Liberation Sans');size-adjust:104%}@font-face{font-family:'DAUR Body Fallback';src:local('Arial'),local('ArialMT'),local('Liberation Sans');size-adjust:105.5%}:where(html.m-on) *{box-sizing:border-box}:where(html.m-on){-webkit-text-size-adjust:100%}:where(html.m-on) body{margin:0;font-size:16px;line-height:1.6;letter-spacing:.01em;-webkit-font-smoothing:antialiased;overflow-x:hidden}:where(html.m-on) :is(img,svg){max-width:100%;display:block}:where(html.m-on) [hidden]{display:none!important}:where(html.m-on) a{color:inherit;text-decoration:none}:where(html.m-on) :is(button,input,select,textarea){font:inherit;color:inherit}:where(html.m-on) button{cursor:pointer;background:none;border:0;padding:0}:where(html.m-on) :is(h1,h2,h3,h4){margin:0;line-height:1.05;text-wrap:balance}:where(html.m-on) p{margin:0;letter-spacing:.01em}:where(html.m-on) .modal{position:fixed;inset:0;z-index:85;opacity:0;pointer-events:none}:where(html.m-on) :is(h1,h2,h3,h4){color:#252625}:where(html.m-on) :is(h1,h2){font-family:"DAUR Cond","DAUR Cond Fallback","Arial Narrow",Arial,sans-serif!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.06em!important}:where(html.m-on) :is(h3,h4){font-family:"DAUR Sans","DAUR Body Fallback",Arial,sans-serif;font-weight:500;letter-spacing:.01em}:where(html.m-on) :is(input,select,textarea){font-family:"DAUR Sans","DAUR Body Fallback",Arial,sans-serif!important;letter-spacing:.01em!important}:where(html.m-on) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){min-height:48px}</style>
+{%- comment -%} phone styles load at full priority without holding up the first paint: the shell below shows at once, and the app draws once these have arrived {%- endcomment -%}
+<style>#mBoot{display:none}html.m-on:not(.m-css) body>*:not(#mBoot){visibility:hidden!important}html.m-on:not(.m-css) #mBoot{display:block;position:fixed;inset:0;z-index:2147483000;background:#fff;overflow:hidden}#mBoot .mb-h{height:64px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ECEAE4}#mBoot .mb-h img{height:38px;width:auto}#mBoot .mb-hero{margin:12px;height:56vh;border-radius:26px;background:linear-gradient(160deg,#172C27,#2E4A42);animation:mbp 1.4s ease-in-out infinite}body[data-page=product] #mBoot .mb-hero{background:linear-gradient(180deg,#FAF7F0,#ECE4D2)}#mBoot .mb-row{display:flex;gap:10px;margin:0 12px}#mBoot .mb-row i{flex:1;height:84px;border-radius:18px;background:#F1EBDD;animation:mbp 1.4s ease-in-out infinite}#mBoot .mb-tab{position:fixed;left:12px;right:12px;bottom:12px;height:62px;border-radius:22px;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.08)}@keyframes mbp{50%{opacity:.72}}@media (prefers-reduced-motion:reduce){#mBoot *{animation:none!important}}</style><script>setTimeout(function(){document.documentElement.classList.add('m-css')},20000)</script>
+<link rel="preload" as="style" data-mcss href="{{ 'daur-m.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">
+{%- comment -%} the product page and bag styles hold up the first paint only on the page that opens with them; elsewhere they load alongside and are ready long before a tap opens a pair or the bag {%- endcomment -%}
+{%- if template.name == 'product' %}<link rel="preload" as="style" data-mcss href="{{ 'daur-m-pdp.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">{% else %}<link rel="stylesheet" href="{{ 'daur-m-pdp.css' | asset_url }}" media="print" onload="this.media='all'">{% endif %}
+{%- if template.name == 'cart' %}<link rel="preload" as="style" data-mcss href="{{ 'daur-m-bag.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">{% else %}<link rel="stylesheet" href="{{ 'daur-m-bag.css' | asset_url }}" media="print" onload="this.media='all'">{% endif %}
+<link rel="preload" as="style" data-mcss href="{{ 'daur-m-vouchers.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" as="style" data-mcss href="{{ 'daur-m-look.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DAUR">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+{%- endif %}
+{%- comment -%} the small Shopify only stylesheet is printed inline, so it is not a second file holding up the first paint {%- endcomment -%}
+<style>{% render 'daur-theme-css' %}</style>
+<noscript><style>.daur-plain{visibility:visible!important;animation:none!important}#app::after{display:none!important}</style></noscript>
+{% render 'daur-ld', product: product, collection: collection, blog: blog, article: article, page: page %}
+{{ content_for_header }}
+</head>
+<body data-page="{{ daur_page }}">
+{%- if settings.m_app != false %}<div id="mBoot" aria-hidden="true"><div class="mb-h"><img src="{{ 'daur-logo.svg' | asset_url }}" alt="" width="120" height="48"></div><div class="mb-hero"></div><div class="mb-row"><i></i><i></i><i></i></div><div class="mb-tab"></div></div>{% endif %}
+{% render 'daur-loader' %}
+<div class="hdr-ph" aria-hidden="true"></div>
+<main id="app" tabindex="-1">{{ content_for_layout }}</main>
+{% render 'daur-data', product: product, daur_param: daur_param %}
+{%- if settings.test_photos and theme.role != 'main' %}{% render 'daur-test-photos' %}{% endif %}
+<script>window.DAUR_PAY={bank:{{ settings.pay_bank_name | default: 'Bank name' | json }},title:{{ settings.pay_bank_title | default: 'DAUR Supply' | json }},number:{{ settings.pay_bank_number | default: '' | json }},iban:{{ settings.pay_bank_iban | default: '' | json }},qr:{% if settings.pay_bank_qr %}{{ settings.pay_bank_qr | image_url: width: 480 | json }}{% else %}""{% endif %},wallets:[{name:"EasyPaisa",number:{{ settings.pay_ep_number | default: '' | json }},title:{{ settings.pay_ep_title | default: '' | json }},qr:{% if settings.pay_ep_qr %}{{ settings.pay_ep_qr | image_url: width: 480 | json }}{% else %}""{% endif %}},{name:"JazzCash",number:{{ settings.pay_jc_number | default: '' | json }},title:{{ settings.pay_jc_title | default: '' | json }},qr:{% if settings.pay_jc_qr %}{{ settings.pay_jc_qr | image_url: width: 480 | json }}{% else %}""{% endif %}}]};</script>
+<script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
+<script src="{{ 'shoe.js' | asset_url }}" defer></script>
+<script src="{{ 'icons.js' | asset_url }}" defer></script>
+<script src="{{ 'kicks.js' | asset_url }}" defer></script>
+<script src="{{ 'pile.js' | asset_url }}" defer></script>
+{%- if daur_page == 'policies' or daur_page == 'contact' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
+<script src="{{ 'social.js' | asset_url }}" defer></script>
+<script src="{{ 'alive.js' | asset_url }}" defer></script>
+<script src="{{ 'app.js' | asset_url }}" defer></script>
+{%- if settings.m_app != false %}
+<script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %},bank:window.DAUR_PAY};</script>
+<script src="{{ 'daur-m.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-m-pdp.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-m-bag.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-m-vouchers.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-m-look.js' | asset_url }}" defer></script>
+{%- endif %}
+{%- comment -%} pages the shopper is about to open are fetched while the finger is still on the link (Chrome, Edge, Samsung Internet) {%- endcomment -%}
+<script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/cart*","/checkout*","/checkouts/*","/account*","/*?*add*"]}}]},"eagerness":"moderate"}]}</script>
+</body>
+</html>

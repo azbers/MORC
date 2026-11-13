@@ -1,0 +1,102 @@
+{%- comment -%}
+  Prints the store settings and every active product for the storefront script.
+  assets/daur-shopify.js turns this into the catalog. Product tags carry what
+  Shopify has no field for: Men | Women | Kids, group:, badge:, silhouette:,
+  swatch:<colour>=<hex> and sole:<colour>=<hex>. A cost: tag is never printed,
+  so what a pair costs stays out of the page source.
+  Posts in the blog with the handle "status" become the statuses on the home page.
+{%- endcomment -%}
+<script>
+window.DAUR_CONFIG = {
+  brand: {{ shop.name | json }},
+  domain: {{ request.origin | json }},
+  currency: {{ settings.currency_label | default: 'Rs.' | json }},
+  whatsapp: {{ settings.whatsapp | remove: '+' | remove: ' ' | remove: '-' | json }},
+  supportEmail: {{ settings.support_email | default: shop.email | json }},
+  marketRetail: {{ settings.market_retail | default: 12000 }},
+  freeDeliveryPairs: {{ settings.free_delivery_pairs | default: 2 }},
+  delivery: { fee: {{ settings.delivery_fee | default: 0 }}, days: {{ settings.delivery_days | default: '' | json }} },
+  advance: { on: {% if settings.advance_on == false %}false{% else %}true{% endif %}, code: {{ settings.advance_code | default: '' | strip | upcase | json }}, deposit: {{ settings.advance_deposit | default: 500 }}, required: {% if settings.advance_required == false %}false{% else %}true{% endif %}, tiers: {{ settings.advance_tiers | default: '3000:500, 8000:1000, 15000:1500' | json }}, free: {{ settings.advance_free | default: 'all' | json }} },
+  coupons: {},
+  audiences: {{ settings.lines | default: 'Men' | remove: ' ' | split: ',' | json }},
+  lowStockAt: {{ settings.low_stock_at | default: 2 }},
+  sell: { retailAnchor: {% if settings.retail_anchor %}true{% else %}false{% endif %}, ladder: {% if settings.price_ladder == false %}false{% else %}true{% endif %}, perWear: {% if settings.per_wear_days == blank %}3{% else %}{{ settings.per_wear_days }}{% endif %} },
+  img: { hero: {% if settings.img_hero != blank %}{{ settings.img_hero | image_url: width: 2400 | json }}{% else %}""{% endif %}, sneakers: {% if settings.img_sneakers != blank %}{{ settings.img_sneakers | image_url: width: 2400 | json }}{% else %}""{% endif %}, casual: {% if settings.img_casual != blank %}{{ settings.img_casual | image_url: width: 2400 | json }}{% else %}""{% endif %}, leather: {% if settings.img_leather != blank %}{{ settings.img_leather | image_url: width: 2400 | json }}{% else %}""{% endif %}, workshop: {% if settings.img_workshop != blank %}{{ settings.img_workshop | image_url: width: 2400 | json }}{% else %}""{% endif %}, checked: {% if settings.img_checked != blank %}{{ settings.img_checked | image_url: width: 2400 | json }}{% else %}""{% endif %}, door: {% if settings.img_door != blank %}{{ settings.img_door | image_url: width: 2400 | json }}{% else %}""{% endif %}, bench: {% if settings.img_bench != blank %}{{ settings.img_bench | image_url: width: 2400 | json }}{% else %}""{% endif %}, tools: {% if settings.img_tools != blank %}{{ settings.img_tools | image_url: width: 2400 | json }}{% else %}""{% endif %}, guide: {% if settings.img_guide != blank %}{{ settings.img_guide | image_url: width: 2400 | json }}{% else %}""{% endif %} },
+  announce: {{ settings.announcement | default: '' | json }},
+  give: { on: {% if settings.give_on == false %}false{% else %}true{% endif %}, pct: {{ settings.give_pct | default: 5 }}, causes: {{ settings.give_causes | default: 'School fees, Medical bills, Food rations' | split: ',' | json }},
+    quarter: {% if shop.metafields.daur.slice_quarter.value %}{ "key": {{ shop.metafields.daur.slice_quarter.value | json }}, "pairs": {{ shop.metafields.daur.slice_pairs.value | default: 0 }}, "votes": {% if shop.metafields.daur.slice_votes.value %}{{ shop.metafields.daur.slice_votes.value | json }}{% else %}{}{% endif %} }{% else %}null{% endif %} }
+};
+window.DAUR_STATUSES = [
+{%- for a in blogs['status'].articles limit: 12 -%}
+  { "id": {{ a.id | json }}, "title": {{ a.title | json }}, "text": {{ a.excerpt_or_content | strip_html | strip | truncate: 160 | json }}, "image": {% if a.image %}{{ a.image | image_url: width: 1080 | json }}{% else %}null{% endif %}, "date": {{ a.published_at | date: '%Y-%m-%d' | json }}, "tags": {{ a.tags | json }} }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+];
+{%- comment -%} Fit notes: only entries whose Status is Approved reach the page {%- endcomment -%}
+{%- capture fitnotes -%}
+{%- for n in shop.metaobjects.fit_note.values limit: 50 -%}
+{%- if n.status.value == 'Approved' and n.product.value -%}
+{ "id": {{ n.system.handle | json }}, "pid": {{ n.product.value.handle | json }}, "rating": {{ n.rating.value | default: 5 }}, "name": {{ n.name.value | json }}, "city": {{ n.city.value | default: '' | json }}, "title": {{ n.title.value | default: '' | json }}, "body": {{ n.body.value | default: '' | json }}, "colour": {{ n.colour.value | default: '' | json }}, "size": {{ n.size.value | default: '' | json }}, "fit": {{ n.fit.value | default: '' | json }}, "photo": {% if n.photo.value %}{{ n.photo.value | image_url: width: 900 | json }}{% else %}null{% endif %}, "verified": {% if n.verified.value %}true{% else %}false{% endif %}, "date": {{ n.date.value | date: '%Y-%m-%d' | default: '' | json }} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
+{%- comment -%} Related reading on the home and gifts pages: the newest Journal guides {%- endcomment -%}
+window.DAUR_JOURNAL = [
+{%- for a in blogs['journal'].articles limit: 6 -%}
+  { "title": {{ a.title | json }}, "url": {{ a.url | json }}, "text": {{ a.excerpt_or_content | strip_html | strip_newlines | truncate: 150 | json }}, "image": {% if a.image %}{{ a.image | image_url: width: 900 | json }}{% else %}""{% endif %} }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+];
+{%- comment -%} Offers (Content > Metaobjects > Offer): the Offers page lists the ones switched on; anything past its end time is left out here and again in the browser {%- endcomment -%}
+{%- capture offers -%}
+{%- assign now_s = 'now' | date: '%s' | plus: 0 -%}
+{%- for o in shop.metaobjects.offer.values limit: 20 -%}
+{%- assign live = true -%}
+{%- if o.show.value == false -%}{%- assign live = false -%}{%- endif -%}
+{%- if o.ends_at.value -%}{%- assign end_s = o.ends_at.value | date: '%s' | plus: 0 -%}{%- if end_s < now_s -%}{%- assign live = false -%}{%- endif -%}{%- endif -%}
+{%- if live -%}
+{ "id": {{ o.system.handle | json }}, "title": {{ o.title.value | default: '' | json }}, "code": {{ o.code.value | default: '' | strip | upcase | json }}, "details": {{ o.details.value | default: '' | json }}, "min": {{ o.min_spend.value | default: 0 }}, "sort": {{ o.sort.value | default: 99 }}, "ends": {% if o.ends_at.value %}{{ o.ends_at.value | date: '%Y-%m-%dT%H:%M:%S%z' | json }}{% else %}null{% endif %} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_OFFERS = [{{ offers | strip | remove_last: ',' }}];
+{%- comment -%} Giving records (Content > Metaobjects > Giving record): the Our giving page lists every one with an amount {%- endcomment -%}
+{%- capture giving -%}
+{%- for g in shop.metaobjects.giving_record.values limit: 100 -%}
+{%- if g.amount.value -%}
+{ "date": {{ g.date.value | date: '%Y-%m-%d' | default: '' | json }}, "amount": {{ g.amount.value | default: 0 }}, "where": {{ g.where.value | default: '' | json }}, "note": {{ g.note.value | default: '' | json }}, "photo": {% if g.proof.value %}{{ g.proof.value | image_url: width: 900 | json }}{% else %}null{% endif %} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_GIVING = [{{ giving | strip | remove_last: ',' }}];
+{%- comment -%} Giving rounds (Content > Metaobjects > Giving round): pairs handed over on behalf of buyers, totals and cities only {%- endcomment -%}
+{%- capture rounds -%}
+{%- for g in shop.metaobjects.giving_round.values limit: 60 -%}
+{%- if g.pairs_given.value -%}
+{ "round": {{ g.round.value | default: '' | json }}, "pairs": {{ g.pairs_given.value | default: 0 }}, "cities": {{ g.cities.value | default: '' | json }}, "note": {{ g.note.value | default: '' | json }} },
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+window.DAUR_GIVING_ROUNDS = [{{ rounds | strip | remove_last: ',' }}];
+window.DAUR_SHOPIFY = {
+  param: {{ daur_param | json }},
+  routes: { root: {{ routes.root_url | json }}, account: {{ routes.account_url | json }} },
+  collections: [{%- for c in collections -%}{{ c.handle | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}],
+  raw: [
+{%- paginate collections.all.products by 250 -%}
+{%- for p in collections.all.products -%}
+  {
+    {%- capture tg -%}{%- for t in p.tags -%}{%- unless t contains 'cost:' -%}{{ t | json }},{%- endunless -%}{%- endfor -%}{%- endcapture %}
+    "handle": {{ p.handle | json }}, "title": {{ p.title | json }}, "type": {{ p.type | json }}, "tags": [{{ tg | remove_last: ',' }}],
+    "created": {{ p.published_at | default: p.created_at | date: '%Y-%m-%d' | json }}, "body": {{ p.description | json }},
+    {%- if product and product.id == p.id %} "seo": { "title": {{ page_title | json }}, "description": {{ page_description | default: '' | json }} },{% endif %}
+    "options": [{%- for o in p.options_with_values -%}{ "name": {{ o.name | json }}, "values": {{ o.values | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
+    "variants": [{%- for v in p.variants -%}{ "id": {{ v.id }}, "options": {{ v.options | json }}, "price": {{ v.price }}, "cap": {{ v.compare_at_price | default: 0 }}, "qty": {{ v.inventory_quantity | default: 0 }}, "managed": {% if v.inventory_management == 'shopify' %}true{% else %}false{% endif %}, "policy": {{ v.inventory_policy | json }}, "available": {{ v.available }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
+    {%- capture glbs -%}{%- for m in p.media -%}{%- if m.media_type == 'model' -%}{%- assign glb = m.sources | where: 'format', 'glb' | first -%}{%- if glb -%}{{ glb.url | json }},{%- endif -%}{%- endif -%}{%- endfor -%}{%- endcapture %}
+    "models": [{{ glbs | remove_last: ',' }}],
+    "images": [{%- for im in p.images -%}{ "src": {{ im | image_url: width: 1400 | json }}, "alt": {{ im.alt | default: '' | json }}, "v": {{ im.variants | map: 'id' | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}]
+  }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+{%- endpaginate -%}
+  ]
+};
+</script>
