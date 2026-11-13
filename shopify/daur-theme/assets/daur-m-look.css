@@ -22,3 +22,4 @@ html.m-on .dz-sg,html.m-on .lb-sg,html.m-on .r9-whyl,html.m-on .lb-shop,html.m-o
 .dj .dj-er{margin-top:8px;color:#9b2c1f;font-size:14px}
 @media(min-width:820px){.dj{padding:44px 40px}.dj .dj-in{grid-template-columns:1fr 1fr;gap:48px}}
 html.m-on body>.dj{display:none}
+.dj.dj-last{padding-bottom:calc(132px + env(safe-area-inset-bottom,0px))}
