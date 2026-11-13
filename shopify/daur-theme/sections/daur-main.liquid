@@ -36,7 +36,23 @@
     <p>Rs 1,000 holds your pair in your name; the rest is paid when it reaches you, in any city in Pakistan. Dispatch within 24 hours of confirmation, at your door in 2 to 4 days. 5 day size exchange{% if product.compare_at_price > product.price %} does not apply to sale pairs; defects are covered for 30 days{% endif %}.</p>
   {%- when 'collection' -%}
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ home_url }}">Home</a> / {{ collection.title }}</nav>
-    <h1>{{ collection.title }}</h1>
+    {%- liquid
+      # the same main heading the drawn page shows, so crawlers and visitors read one heading
+      assign daur_h1 = collection.title
+      case collection.handle
+        when 'men'
+          assign daur_h1 = 'Shoes for men'
+        when 'sneakers'
+          assign daur_h1 = 'Sneakers for men'
+        when 'casual'
+          assign daur_h1 = 'Casual shoes for men'
+        when 'leather-shoes'
+          assign daur_h1 = 'Leather shoes for men'
+        when 'sale'
+          assign daur_h1 = 'Shoes on sale'
+      endcase
+    -%}
+    <h1>{{ daur_h1 }}</h1>
     {%- if collection.description != blank %}<div class="rte">{{ collection.description }}</div>{% endif %}
     {%- paginate collection.products by 48 -%}
     <ul class="daur-results">{% for p in collection.products %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}{% unless p.available %} Sold out{% endunless %}</li>{% endfor %}</ul>
