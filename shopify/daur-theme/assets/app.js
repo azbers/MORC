@@ -481,7 +481,7 @@ ${e.customer.name}, ${e.address.address}, ${e.address.area}, ${e.address.city}`}
         <div class="lb-intro">
           <span class="lb-kick">Own your pace.</span>
           <h1>Same local craft.<br>Zero retail markup.</h1>
-          <p>Leather and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in ${o(l.delivery.days||"2 to 4 days")}. Hold your pair with ${f(l.advance.one||1e3)} and pay the rest when the box is in your hands.</p>
+          <p>Men's leather shoes and sneakers from the workshops of Lahore, Sialkot and Kasur, checked by hand and at your door in ${o(l.delivery.days||"2 to 4 days")}. Hold your pair with ${f(l.advance.one||1e3)} and pay the rest when the box is in your hands.</p>
           <div class="lb-cats" role="tablist" aria-label="Show on the runway">${L.map(([h,v,w])=>`<button type="button" role="tab" data-lbc="${h}" aria-selected="${h===y}">${o(v)}<sup>${P.filter(w).length}</sup></button>`).join("")}</div>
         </div>
         <div class="lb-tag">
