@@ -6,3 +6,19 @@ html.m-on .c-r,html.m-on .c-r small,html.m-on .m-badge,html.m-on .m-st small,htm
 html.m-on .pg-dots button{position:relative}
 html.m-on .pg-dots button:after{content:"";position:absolute;inset:-9px}
 html.m-on .dz-sg,html.m-on .lb-sg,html.m-on .r9-whyl,html.m-on .lb-shop,html.m-on .lb-more{min-height:24px!important;display:inline-flex!important;align-items:center}
+
+/* Email sign up band (audit M7) */
+.dj[hidden]{display:none!important}
+.dj{background:#f4efe4;color:#172c27;border-top:1px solid #e4dccb;padding:36px 20px;font-family:'DAUR Sans',system-ui,sans-serif}
+.dj .dj-in{max-width:1080px;margin:0 auto;display:grid;gap:18px;align-items:center}
+.dj h2{font-family:'DAUR Cond','DAUR Sans',system-ui,sans-serif;font-size:24px;line-height:1.15;font-weight:600;margin:0 0 6px;letter-spacing:0;text-transform:none;color:#172c27}
+.dj p{margin:0;font-size:15px;line-height:1.5;color:#3f4f4a}
+.dj label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#172c27}
+.dj .dj-r{display:flex;gap:8px;flex-wrap:wrap}
+.dj input[type=email]{flex:1 1 220px;min-width:0;min-height:48px;padding:0 14px;border:1px solid #b9b09c;border-radius:12px;background:#fff;color:#172c27;font:inherit;font-size:16px}
+.dj input[type=email]:focus-visible,.dj button:focus-visible{outline:2px solid #172c27;outline-offset:2px}
+.dj button{min-height:48px;padding:0 22px;border:0;border-radius:12px;background:#172c27;color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.dj .dj-ok{font-weight:600;color:#172c27}
+.dj .dj-er{margin-top:8px;color:#9b2c1f;font-size:14px}
+@media(min-width:820px){.dj{padding:44px 40px}.dj .dj-in{grid-template-columns:1fr 1fr;gap:48px}}
+html.m-on body>.dj{display:none}

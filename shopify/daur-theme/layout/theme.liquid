@@ -169,6 +169,21 @@
 {% render 'daur-loader' %}
 <div class="hdr-ph" aria-hidden="true"></div>
 <main id="app" tabindex="-1">{{ content_for_layout }}</main>
+{%- comment -%} Email sign up. A standard Shopify customer form: it adds the address as a customer who accepts email marketing, with the tag newsletter. No app is needed. daur-join.js moves it above the footer. {%- endcomment -%}
+{%- unless template.name == 'cart' or template.name == '404' or template.directory == 'customers' -%}
+<section id="daurJoin" class="dj" hidden aria-labelledby="daurJoinH">
+  {%- form 'customer', id: 'daurJoinForm', class: 'dj-in' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <div class="dj-t"><h2 id="daurJoinH">Hear about new pairs first</h2><p>New pairs, restocks and price cuts from DAUR Supply, sent by email. You can unsubscribe at any time.</p></div>
+    {%- if form.posted_successfully? -%}
+      <p class="dj-ok" role="status" data-ok>Thank you. Your email address is on the list.</p>
+    {%- else -%}
+      <div class="dj-f"><label for="daurJoinE">Email address</label><div class="dj-r"><input id="daurJoinE" type="email" name="contact[email]" required autocomplete="email" inputmode="email" placeholder="you@example.com" value="{{ form.email | escape }}"><button type="submit">Join the list</button></div>
+      {%- if form.errors -%}<p class="dj-er" role="alert">{{ form.errors.messages | first | last | default: 'Please check the email address and try again.' | escape }}</p>{%- endif -%}</div>
+    {%- endif -%}
+  {%- endform -%}
+</section>
+{%- endunless %}
 {% render 'daur-data', product: product, daur_param: daur_param %}
 {%- if settings.test_photos and theme.role != 'main' %}{% render 'daur-test-photos' %}{% endif %}
 <script>window.DAUR_PAY={bank:{{ settings.pay_bank_name | default: 'Bank name' | json }},title:{{ settings.pay_bank_title | default: 'DAUR Supply' | json }},number:{{ settings.pay_bank_number | default: '' | json }},iban:{{ settings.pay_bank_iban | default: '' | json }},qr:{% if settings.pay_bank_qr %}{{ settings.pay_bank_qr | image_url: width: 480 | json }}{% else %}""{% endif %},wallets:[{name:"EasyPaisa",number:{{ settings.pay_ep_number | default: '' | json }},title:{{ settings.pay_ep_title | default: '' | json }},qr:{% if settings.pay_ep_qr %}{{ settings.pay_ep_qr | image_url: width: 480 | json }}{% else %}""{% endif %}},{name:"JazzCash",number:{{ settings.pay_jc_number | default: '' | json }},title:{{ settings.pay_jc_title | default: '' | json }},qr:{% if settings.pay_jc_qr %}{{ settings.pay_jc_qr | image_url: width: 480 | json }}{% else %}""{% endif %}}]};</script>
@@ -190,6 +205,7 @@
 <script src="{{ 'daur-m-bag.js' | asset_url }}" defer></script>
 <script src="{{ 'daur-m-vouchers.js' | asset_url }}" defer></script>
 <script src="{{ 'daur-m-look.js' | asset_url }}" defer></script>
+<script src="{{ 'daur-join.js' | asset_url }}" defer></script>
 {%- endif %}
 {%- comment -%} pages the shopper is about to open are fetched while the finger is still on the link (Chrome, Edge, Samsung Internet) {%- endcomment -%}
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/cart*","/checkout*","/checkouts/*","/account*","/*?*add*"]}}]},"eagerness":"moderate"}]}</script>
