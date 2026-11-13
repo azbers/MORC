@@ -275,7 +275,7 @@
     const fn = notesFor(p.id), fr = fn.length ? (fn.reduce((a, n) => a + (+n.rating || 0), 0) / fn.length) : 0;
     const rate = fn.length ? `<span class="c-r" aria-label="${fr.toFixed(1)} out of 5 hearts from ${fn.length} fit notes">${ic('heart')}${fr.toFixed(1)}<small>(${fn.length})</small></span>` : '';
     // more than one photo: the picture becomes a strip the shopper can slide, with dots; the other photos load only when needed
-    const ph = gal(p, v), plink = `href="${href.product(p.id)}" data-m tabindex="-1" aria-hidden="true"`;
+    const ph = WIDE() ? gal(p, v) : gal(p, v).slice(0, 2), plink = `href="${href.product(p.id)}" data-m tabindex="-1" aria-hidden="true"`;
     const media = ph.length > 1 ? `<span class="c-gw" data-at="s"><span class="c-gal" data-gal><a class="c-sl" ${plink}>${img(p, v, 'c-img')}</a>${ph.slice(1).map((x, k) => `<a class="c-sl" ${plink}><img class="c-img blend c-ph" data-src="${esc(sized(x, WIDE() ? 640 : 480))}" alt="${esc(p.name + ', photo ' + (k + 2))}" decoding="async"></a>`).join('')}</span><span class="c-dots" aria-hidden="true">${ph.map((x, k) => `<i${k ? '' : ' class="on"'}></i>`).join('')}</span><button type="button" class="c-ar p" data-galp aria-label="Previous photo of ${esc(p.name)}">${ic('arrow')}</button><button type="button" class="c-ar n" data-galn aria-label="Next photo of ${esc(p.name)}">${ic('arrow')}</button></span>` : img(p, v, 'c-img');
     const inner = `${media}${big ? '' : badge}${rate}<span class="c-n">${esc(p.name)}</span><span class="c-t">${esc(p.category)}</span><span class="c-p">${price(v)}</span>`;
     const act = mode === 'gift' ? `<button class="m-act" type="button" data-quick="${esc(p.id)}" data-mode="gift">${ic('gift')}<span>Gift</span></button>`
@@ -297,7 +297,10 @@
   // gift and give, side by side: gold for someone you know, green for someone in need
   // gift or give: two cards that say plainly who the pair is for and what happens next
   // the two purpose cards on home: an illustration each (supplied by the owner, recoloured to the brand palette), the promise below it
-  const duoBig = (k) => { const g = k === 'gift'; return `<a class="r10-card ill ${k}" href="${g ? href.gifts : href.giving}" data-m><span class="r10-ill"><img src="${asset(g ? 'm-ill-gift.webp' : 'm-ill-give.svg')}" alt="" loading="lazy" decoding="async"></span><span class="r10-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r10-t"><b>${g ? 'Gift a pair' : 'Philanthropy'}</b><small>${g ? 'Eid, a birthday or just because. Your words in the box, fully paid to his door.' : 'A new pair for someone in need, handed over by our team, with a private photo for you.'}</small><em>${g ? 'Choose his pair' : 'Donate a pair'}${ic('arrow')}</em></span></a>`; };
+  // the Gift and Philanthropy illustrations, alive: the group sways together, the giving hands move (inside the SVG file), small hearts rise
+  const HRT = '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+  const ill = (k, first) => `<img class="il-img" src="${asset(k === 'gift' ? 'm-ill-gift.webp' : 'm-ill-give.svg')}" alt=""${first ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async"><span class="il-h" aria-hidden="true">${HRT.repeat(5)}</span>`;
+  const duoBig = (k) => { const g = k === 'gift'; return `<a class="r10-card ill ${k}" href="${g ? href.gifts : href.giving}" data-m><span class="r10-ill il il-${k}">${ill(k)}</span><span class="r10-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r10-t"><b>${g ? 'Gift a pair' : 'Philanthropy'}</b><small>${g ? 'Eid, a birthday or just because. Your words in the box, fully paid to his door.' : 'A new pair for someone in need, handed over by our team, with a private photo for you.'}</small><em>${g ? 'Choose his pair' : 'Donate a pair'}${ic('arrow')}</em></span></a>`; };
   const duo = (k, sm) => { const g = k === 'gift'; return `<a class="r5-card ${k}${sm ? ' sm' : ''}" href="${g ? href.gifts : href.giving}" data-m><span class="r5-rib">${g ? 'Your note inside' : 'DAUR adds ' + esc(fmt(DAUR_ADD))}</span><span class="r5-ic">${ic(g ? 'gift' : 'hand')}</span><b class="r5-t">${g ? 'Gift a pair' : 'Philanthropy'}</b><small class="r5-who">${g ? 'For someone you know' : 'A pair for someone in need'}</small>${sm ? '' : `<span class="r5-p">${g ? 'You choose the pair and his size. We place your note in the box and send it to his door, fully paid.' : 'We match the size and hand the pair over in person. A private photo of the moment reaches only you.'}</span>`}<span class="r5-go">${g ? 'Choose a gift' : 'Sponsor a pair'}${ic('arrow')}</span></a>`; };
   const ticker = () => { const t = [[ 'truck', delTxt() ], ['swap', (C.exchangeDays || 5) + ' day size swap'], ['pin', 'Made in Lahore, Sialkot and Kasur'], ['chat', 'A real person answers you on WhatsApp, before and after you buy']].map(([i, x]) => `<span>${ic(i)}${esc(x)}</span>`).join('');
     return `<div class="m-tick" aria-label="What you get"><div class="tk-in">${t}<span aria-hidden="true" class="tk-dup">${t}</span></div></div>`; };
@@ -738,9 +741,8 @@
     const vote = store.get('sliceVote', '');
     // the same calm stage as the Gifts page: one pair resting on an open DAUR box, a tag that says who it is for
     view.innerHTML = `<div class="m-gf r6-gf m-gv2">
-      <section class="hx-hero hx-give"><img class="hx-ph" src="${PH('boy-hill')}" alt="A smiling boy on a green hillside" fetchpriority="high">
-        <span class="hx-chip c1">${ic('hand')}Handed over by our own team</span><span class="hx-chip c2">${ic('camera')}A private photo within 7 days</span>
-        <div class="hx-t"><span class="hx-k">${ic('hand')}Philanthropy from DAUR</span><h1>Give someone in need the same pair you would wear.</h1><p>You choose the pair. We find the person, match the size and hand it over ourselves, and DAUR adds ${esc(fmt(DAUR_ADD))} of its own to every pair you give.</p>
+      <section class="hx-hero hx-il give"><div class="hx-art il il-give" aria-hidden="true">${ill('give', 1)}</div>
+        <div class="hx-t"><span class="hx-chips"><span class="hx-chip">${ic('hand')}Handed over by our own team</span><span class="hx-chip">${ic('camera')}A private photo within 7 days</span></span><span class="hx-k">${ic('hand')}Philanthropy from DAUR</span><h1>Give someone in need the same pair you would wear.</h1><p>You choose the pair. We find the person, match the size and hand it over ourselves, and DAUR adds ${esc(fmt(DAUR_ADD))} of its own to every pair you give.</p>
         <a class="hx-cta" href="#gvPick" data-jump>${ic('hand')}Choose a pair to donate</a></div></section>
       <div class="m-row m-pad" style="margin-top:18px" id="gvPick"><h2 class="m-h2">Pick the pair to donate</h2><span class="m-mute">${all.length} pairs</span></div>
       <div class="m-grid">${all.map((p) => card(p, false, 'give')).join('')}</div>
@@ -824,7 +826,24 @@
       const im = need(g, 1); if (!im) return;
       if (im.complete && im.naturalWidth) hint(g); else im.addEventListener('load', () => hint(g), { once: true });
     }), { threshold: .6 }) : null;
-    const scan = () => $$('.c-gal:not([data-gi])', app).forEach((g) => { g.dataset.gi = '1'; if (getComputedStyle(g).overflowX === 'hidden') return; if (io) io.observe(g); else need(g, 1); });
+    /* phone: no dots and no hint. Each card on screen shows its second photo and then its first again, by itself, one card
+       at a time so the page never moves all at once. A touch on a card leaves that card to the shopper for a while. */
+    const vis = new Set();
+    const auto = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver((es) => es.forEach((e) => {
+      const g = e.target; if (!e.isIntersecting) { vis.delete(g); return; }
+      vis.add(g); if (g._ok) return;
+      const im = need(g, 1) || (g.children[1] && g.children[1].querySelector('img')); if (!im) return;
+      const ok = () => { g._ok = 1; g._last = performance.now() - 2000; };
+      if (im.complete && im.naturalWidth) ok(); else im.addEventListener('load', ok, { once: true });
+    }), { threshold: .6 }) : null;
+    if (auto) setInterval(() => {
+      if (document.hidden || !vis.size) return; const now = performance.now(); let g = null;
+      vis.forEach((x) => { if (!x.isConnected) { vis.delete(x); return; } if (x._ok && now - x._last > 3600 && now > (x._hold || 0) && (!g || x._last < g._last)) g = x; });
+      if (!g) return; g._last = now; g.scrollTo({ left: (at(g) ? 0 : 1) * g.clientWidth, behavior: 'smooth' });
+    }, 900);
+    const hold = (e) => { const g = e.target.closest && e.target.closest('.c-gal'); if (g) g._hold = performance.now() + 9000; };
+    document.addEventListener('touchstart', hold, { passive: true, capture: true });
+    const scan = () => $$('.c-gal:not([data-gi])', app).forEach((g) => { g.dataset.gi = '1'; if (!WIDE()) { if (auto) auto.observe(g); else need(g, 1); return; } if (getComputedStyle(g).overflowX === 'hidden') return; if (io) io.observe(g); else need(g, 1); });
     let raf = 0; const later = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; scan(); }); };
     if ('MutationObserver' in window) new MutationObserver(later).observe(app, { childList: true, subtree: true });
     later();
@@ -836,10 +855,8 @@
     // one pair resting on an open DAUR gift box, a satin ribbon and a handwritten tag: calm, not busy
     const bow = '<svg class="r7-bow" viewBox="0 0 120 64" aria-hidden="true"><path d="M60 34C44 10 12 4 10 22c-1 14 26 16 50 12z"/><path d="M60 34c16-24 48-30 50-12 1 14-26 16-50 12z"/><path class="r7-bt" d="M56 36 40 62M64 36l16 26" fill="none" stroke-width="7" stroke-linecap="round"/><ellipse cx="60" cy="34" rx="9" ry="8"/></svg>';
     view.innerHTML = `<div class="m-gf r6-gf">
-      <section class="hx-hero hx-gift"><div class="hx-stage" aria-hidden="true"><span class="hx-glow"></span><span class="hx-rib"></span><span class="hx-rib b"></span>
-          <img class="hx-shoe" src="${asset('m-saddle.webp')}" alt="">
-          <span class="hx-tag"><i class="hx-str"></i><span class="hx-card"><em>Eid Mubarak, Abbu.</em><small>With love, Ali</small></span></span>
-          <span class="hx-hearts">${'<i></i>'.repeat(6)}</span></div>
+      <section class="hx-hero hx-il gift"><div class="hx-art il il-gift" aria-hidden="true">${ill('gift', 1)}
+          <span class="hx-tag"><i class="hx-str"></i><span class="hx-card"><em>Eid Mubarak, Abbu.</em><small>With love, Ali</small></span></span></div>
         <div class="hx-t"><span class="hx-k">${ic('gift')}Gifts from DAUR</span><h1>The gift he will wear every single day.</h1><p>Choose his pair, write a few words, and we deliver both to his door, fully paid, packed in the DAUR box. All he has to do is open it and smile.</p>
         <a class="hx-cta" href="#gfPick" data-jump>${ic('heart')}Choose his pair</a></div></section>
       <div class="m-row m-pad" style="margin-top:18px" id="gfPick"><h2 class="m-h2">Pick his pair</h2><span class="m-mute">${all.length} pairs</span></div>
@@ -1609,7 +1626,7 @@
   window.DAUR_MX = {
     V, API, C, M, I, ic, esc, fmt, NF, store, asset, txt, sized, pic, img, firstV, price, notesFor, allNotes, wished, minP, delTxt, days, DEL, DAUR_ADD, GIVE,
     WA, waNice, SOC, KIND, MODES, TINT, tn, tintOf, P, CUT, DMARK, WORDMARK, logo, href, root, parse, go, render, paintTop, paintTab, card, row, cats, inCat, hasSale,
-    WIDE, view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, BOXART, whyAdv, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
+    WIDE, ill, view, app, sheet, $, $$, toast, openSheet, closeSheet, burst, observeIn, BOXART, whyAdv, buyBar, paintBuy, add, giveSize, quick, explain, skeleton,
     W, CODE, credits, coupons, payPlan, REWARDS, PAYFULL, rewardOf, giftUnits, GD, gdOf, giftMissing, checkout, lineProps, orderType, orderNote,
     get cur() { return cur; }, get state() { return state; }, reduce,
     tap: (name, fn) => { TAPS[name] = fn; }

@@ -119,15 +119,15 @@
     ['30 days', 'we stand behind every stitch']
   ].map(([b, s]) => `<span><b>${esc(b)}</b><small>${esc(s)}</small></span>`).join('');
 
-  /* ---------- who the pair is for: three real photographs, one colour each ---------- */
+  /* ---------- who the pair is for: the pair itself, then the Gift and Philanthropy illustrations ---------- */
   const FOR = [
     ['me', 'For me', 'Because you deserve it', 'm-hero.webp'],
-    ['gift', 'A gift', 'For someone you love', 'm-g-hands.webp'],
-    ['give', 'Donate a pair', 'For someone in need', 'm-g-boy-smile.webp']
+    ['gift', 'A gift', 'For someone you love', 'm-ill-gift.webp'],
+    ['give', 'Donate a pair', 'For someone in need', 'm-ill-give.svg']
   ];
   function forCards() {
     const m = st().mode || 'me';
-    return `<div class="px-fcards" role="radiogroup" aria-label="Who is this pair for">${FOR.map(([k, b, s, ph]) => `<button type="button" class="px-fc k-${k}" role="radio" data-pxfor="${k}" aria-checked="${m === k}"><img src="${esc(asset(ph))}" alt="" loading="lazy" decoding="async"><span class="fc-t"><b>${b}</b><small>${s}</small></span><i class="fc-ok">${ic('check')}</i></button>`).join('')}</div>`;
+    return `<div class="px-fcards" role="radiogroup" aria-label="Who is this pair for">${FOR.map(([k, b, s, ph]) => `<button type="button" class="px-fc k-${k}${k === 'me' ? '' : ' il'}" role="radio" data-pxfor="${k}" aria-checked="${m === k}"><img src="${esc(asset(ph))}" alt="" loading="lazy" decoding="async"><span class="fc-t"><b>${b}</b><small>${s}</small></span><i class="fc-ok">${ic('check')}</i></button>`).join('')}</div>`;
   }
   function forPanel(p, v) {
     const m = st().mode || 'me';
