@@ -169,3 +169,4 @@ html.m-on .ck .ck-b .btn:first-child{background:#172C27!important;color:#F9F7F2!
 /* desktop bag page: payment cards as a full grid, not a clipped scroller */
 @media (min-width:901px){html.m-on #mApp .xb-pcs:has(.pc2){display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))!important;gap:24px!important;overflow:visible!important;margin:0!important;padding:2px 0 6px!important;scroll-snap-type:none!important;grid-column:1/-1}
 html.m-on #mApp .xb-pcs .pc2{width:100%!important;max-width:460px;justify-self:stretch!important;min-width:0}}
+@media (max-width:900px){html.m-on #mApp .m-gf .hx-il .hx-art::after,html.m-on #mApp .hx-il .hx-art::after{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:72%!important;background:linear-gradient(0deg,#172C27 0%,#172C27 10%,#172C27f2 20%,#172C27d1 32%,#172C27a3 44%,#172C2770 56%,#172C2742 68%,#172C271f 80%,#172C270a 90%,transparent 100%)!important}}
