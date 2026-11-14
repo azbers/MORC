@@ -34,3 +34,5 @@ html.m-on .sh-intro{margin:2px 0 12px;font-size:15px;line-height:1.5;color:#3f4f
 html.m-on .sh-intro:empty{display:none}
 html.m-on details.pg-sec{scroll-margin-top:118px}
 @media (max-width:860px){html.m-on details.pg-sec{scroll-margin-top:78px}}
+html.m-on #mView h2[id],html.m-on #mView h3[id]{scroll-margin-top:118px}
+@media (max-width:860px){html.m-on #mView h2[id],html.m-on #mView h3[id]{scroll-margin-top:78px}}
