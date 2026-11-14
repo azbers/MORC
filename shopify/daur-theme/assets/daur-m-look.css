@@ -141,3 +141,15 @@ html.m-on #mApp .r5-hero .pg-sk,html.m-on #mApp .pg-hero .pg-sk{right:-4px;top:8
 @media (min-width:901px){html.m-on #mApp .m-pg .pg-hero .pg-sk{right:max(48px,calc(50vw - 640px));top:50%;transform:translateY(-50%)!important;width:260px;height:260px;max-width:34%}}
 html.m-on #mApp .pg-hero .pg-sk::before{content:"";position:absolute;inset:12% 6% 4%;border-radius:50%;background:radial-gradient(circle,#F1EBDD26,transparent 70%);z-index:-1}
 html.m-on #mApp .pg-hero.v-crm .pg-sk::before{background:radial-gradient(circle,#EE412914,transparent 70%)}
+/* page heroes stay plain: no pictures */
+html.m-on #mApp .pg-hero .pg-cut,html.m-on #mApp .pg-hero .pg-blob{display:none!important}
+/* payment accounts page: both cards fully shown, no scroller */
+html.m-on #mApp .m-pg>.pay-acc{grid-column:1/-1}
+html.m-on #mApp .pay-acc{width:100%;max-width:1000px;margin:24px auto 8px;padding:0 20px}
+html.m-on #mApp .pay-acc .xb-pcs{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:24px!important;overflow:visible!important;margin:0!important;padding:0 0 4px!important;scroll-snap-type:none}
+html.m-on #mApp .pay-acc .pc2{flex:none;width:100%;max-width:470px;justify-self:center}
+/* product page: price stays on every photo, on a soft plate so it reads over any picture */
+html.m-on #mApp .px-stage.on-ph .px-ui{opacity:1!important;transform:none!important}
+html.m-on #mApp .px-stage.on-ph .px-ui button{pointer-events:auto!important}
+html.m-on #mApp .px-stage .px-price{padding:8px 12px;border-radius:14px;background:#fffffff0;box-shadow:0 6px 18px #172c271f;z-index:5}
+@media (min-width:901px){html.m-on #mApp .px-l.has-th>.px-thumbs{height:min(666px,calc(100vh - 132px));max-height:min(666px,calc(100vh - 132px));overflow-y:auto;overscroll-behavior:contain}}
