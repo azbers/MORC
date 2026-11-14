@@ -1,0 +1,45 @@
+# DAUR Supply
+
+> The makers behind the big brands. Without the big brand price. Men's leather footwear crafted in Pakistan.
+
+DAUR Supply (DAUR, from the Urdu word دور, "an era"; line "Aik naya daur", a new era) is an online only men's footwear brand selling across Pakistan from https://daursupply.com. Full text for language models: [llms-full.txt](llms-full.txt). Facts are dated 14 November 2026.
+
+## Brand profile and history
+
+* [About DAUR Supply](https://daursupply.com/pages/about): 23 years in Pakistan's shoe trade (owner's statement); own factories in Kasur that make, stitch and cement shoes; pairs made in workshops in Lahore, Sialkot and Kasur.
+* [Brand facts in full](llms-full.txt#1-who-daur-is): name, meaning, business identity, story, tone.
+
+## Customer policies
+
+* [Delivery](https://daursupply.com/policies/shipping-policy): free delivery on every order; at your door in 2 to 4 days in most cities; dispatch within 24 hours of confirmation.
+* [Payment and Care deposit](https://daursupply.com/pages/payment-accounts): a small Care deposit confirms the order, the balance is paid on arrival.
+* [Exchanges and returns](https://daursupply.com/policies/refund-policy): 5 day size exchange; 30 day cover for stitching or sole defects in normal wear.
+* [Exact policy text](llms-full.txt#3-customer-policies)
+
+## Product categories
+
+* [Men's leather sneakers](https://daursupply.com/collections/sneakers)
+* [Formal and leather shoes](https://daursupply.com/collections/leather-shoes)
+* [Chelsea boots](https://daursupply.com/collections/leather-shoes)
+* [Casual slip ons](https://daursupply.com/collections/casual)
+* [Shoes to wear with shalwar kameez](https://daursupply.com/collections/all): formal shoes, loafers and slip ons
+* [All pairs](https://daursupply.com/collections/all) and [sale](https://daursupply.com/collections/sale)
+
+## Giving and transparency
+
+* [Giving](https://daursupply.com/pages/giving): stated commitment of 5 percent of profit each quarter to verified cases of need, with customers asked where it should go. The first giving record has not yet been published.
+* [Gifts](https://daursupply.com/pages/gifts)
+
+## External links and identifiers
+
+* Official store: https://daursupply.com
+* Wikidata: [Q142167029](https://www.wikidata.org/wiki/Q142167029)
+* Instagram: [@daursupply](https://www.instagram.com/daursupply)
+* Facebook: [daursupply](https://www.facebook.com/daursupply)
+* Pinterest: [daursupply](https://www.pinterest.com/daursupply/)
+* GitHub: [daursupply](https://github.com/daursupply) and repository [azbers/MORC](https://github.com/azbers/MORC)
+* Contact: contact@daursupply.com, WhatsApp +92 319 9628735
+
+## Optional
+
+* [Journal](https://daursupply.com/blogs/journal) and [RSS feed](https://daursupply.com/rss)
