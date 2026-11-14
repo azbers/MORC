@@ -198,3 +198,6 @@ html.m-on #mApp .m-pill.sale:not([aria-pressed=true]){color:#B02A16!important}
 html.m-on #mApp .il-h svg{animation:none!important}
 html.dv-m #mApp .il-h{display:none}
 html.m-on .ck{animation:none!important}
+
+/* Phones: content shows at once with no decorative motion; only the footer van moves */
+html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body),html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::before,html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::after{animation:none!important}
