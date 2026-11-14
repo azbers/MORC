@@ -28,3 +28,7 @@ html.m-on #mApp #mView a.m-link,html.m-on #mApp #mView .m-row .m-link{color:#7a6
 html.m-on .r10-k{color:#7a6443!important}
 html.m-on .r10-card .r10-t em{color:#5f4d33!important}
 html.m-on .m-pills .m-pill:not(.on):last-child{color:#56603f}
+
+/* Collection introduction */
+html.m-on .sh-intro{margin:2px 0 12px;font-size:15px;line-height:1.5;color:#3f4f4a;max-width:640px}
+html.m-on .sh-intro:empty{display:none}
