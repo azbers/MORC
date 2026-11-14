@@ -436,7 +436,8 @@ ${e.customer.name}, ${e.address.address}, ${e.address.area}, ${e.address.city}`}
 
     <section class="sheet x ab-intro" id="hero"><div class="hero-light"></div><div class="wrap ab-grid">
       <div class="ab-copy rv"><span class="eyebrow">Who we are</span>
-        <p class="big">DAUR Supply is a Pakistani footwear brand for men. We select finished pairs from skilled workshops in Lahore, Sialkot and Kasur, check every one by hand and give it a distinctive DAUR finish.</p>
+        <p class="big">DAUR Supply is a Pakistani footwear brand for men, started by people who have made shoes for 23 years.</p>
+        <p>In our own factories in Kasur we make, stitch and cement shoes, and for most of those years we sold them wholesale. Well known brands buy pairs from makers like us, add their name and sell them at a much higher price. DAUR Supply sells under our own name, directly to you, without that brand margin. A pair from another maker is listed only after our own team has inspected it.</p>
         <p>Thick matte black cotton laces, an engraved metal lace tag and the DAUR seal: that is how you know a pair is ours. The leather does the rest.</p>
         <div class="hero-cta"><a class="btn volt" href="${b("shop")}">Explore the collection <span class="arr">&rarr;</span></a><a class="btn ghost" href="${b("manifesto")}">Read our story</a></div></div>
       <div class="hero-stage ab-stage" id="stage" aria-label="${o(e.name)}, move over the pair to see its construction">
@@ -449,6 +450,7 @@ ${e.customer.name}, ${e.address.address}, ${e.address.area}, ${e.address.city}`}
     <section class="sheet x"><div class="wrap ab-plain rv">
       <span class="eyebrow">The short version</span>
       <p class="ab-line">DAUR Supply is a Pakistani footwear brand for men, sold online at daursupply.com. We choose finished pairs in the workshops of Lahore, Sialkot and Kasur, check each one by hand and send it from Islamabad within 24 hours of confirming your order with you. ${l.advance.deposits()?"You reserve a pair with "+f(l.advance.one)+" and pay the rest at your door. ":""}A full price pair can be swapped for size within 5 days, and a manufacturing defect is covered for 30 days.</p>
+      <p class="ab-line" style="margin-top:18px;font-size:15px">Business name: DAUR Supply. Registered address: 740, Faisal Hills C Block, Taxila, Rawalpindi. Registered with the Federal Board of Revenue for income tax since 11 December 2023.</p>
     </div></section>
 
     <section class="sheet x"><div class="wrap"><div class="signup closer">
