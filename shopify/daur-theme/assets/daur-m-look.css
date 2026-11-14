@@ -186,3 +186,9 @@ html.dv-m #mApp .lk-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
 html.dv-m #mApp .lk-cats a{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border:1px solid #c7b09080;border-radius:999px;color:#f1ebdd;font-size:13px;font-weight:600;text-decoration:none}
 html.dv-m #mApp .lk-hero .lk-cta{margin-bottom:16px}
 html.dv-m #mApp .lk-hero .lk-facts b{font-size:22px!important}
+/* van: loops without rest; quicker pass on phones */
+html.dv-m .df-van .dv-vs{animation-duration:16s!important}
+html.lite .df-van .dv-vs{animation-duration:16s!important;animation-iteration-count:infinite!important}
+/* phone hero paints at once: no entrance animation, shorter heading */
+html.dv-m #mApp .lk-hero,html.dv-m #mApp .lk-hero *{animation:none!important;opacity:1}
+html.dv-m.m-on #mApp .lk-hero h1{font-size:clamp(28px,7.8vw,34px)!important}
