@@ -20,8 +20,8 @@
 <div class="wrap daur-plain"{% if template.name == 'search' %} data-terms="{{ search.terms | escape }}"{% endif %}>
 {%- case template.name -%}
   {%- when 'index' -%}
-    <h1>Same local craft. Zero retail markup.</h1>
-    <p>Men's shoes, crafted in Pakistan. DAUR Supply is a Pakistani footwear brand for men. Leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Kasur and finished with our own hardware. Packed by hand in Islamabad and at your door in 2 to 4 days, in any city in Pakistan. Rs 1,000 holds your pair in your name and the rest is paid when it reaches you. Bag rewards: Rs 200 off from Rs 5,500, Rs 400 off from Rs 9,000, and Rs 100 more off when you pay in full.</p>
+    <h1>The makers behind the big brands. Without the big brand price.</h1>
+    <p>Men's shoes, crafted in Pakistan. For 23 years our factories in Kasur have made men's leather shoes and sneakers that well known brands sell under their own names. DAUR Supply is our own brand, sold direct to you. Leather sneakers, full grain formal shoes, chelsea boots and casual slip ons, crafted in workshops in Lahore, Sialkot and Kasur and finished with our own hardware. Packed by hand in Islamabad and at your door in 2 to 4 days, in any city in Pakistan. Rs 1,000 holds your pair in your name and the rest is paid when it reaches you. Bag rewards: Rs 200 off from Rs 5,500, Rs 400 off from Rs 9,000, and Rs 100 more off when you pay in full.</p>
     {{ style_links }}
     <ul class="daur-results">{% for p in collections.all.products limit: 24 %}<li><a href="{{ p.url }}">{{ p.title }}</a> {{ p.price | money }}</li>{% endfor %}</ul>
   {%- when 'product' -%}

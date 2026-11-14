@@ -40,6 +40,15 @@ window.DAUR_STATUSES = [
 {%- endfor -%}
 {%- endcapture -%}
 window.DAUR_FITNOTES = [{{ fitnotes | strip | remove_last: ',' }}];
+{%- if theme.role != 'main' and settings.test_photos %}
+/* Review theme only: sample review wording so the layout can be judged. The live theme never runs this. */
+(function(){var N=["Hamza R.","Bilal A.","Usman K.","Ahmed S.","Saad M.","Zain T.","Faisal J.","Omar N."],
+T=["Fits as the size guide says","Checked it at my door","Good for daily office wear","Arrived in three days"],
+B=["Ordered my usual size and the fit was right from the first wear. The stitching is even and the sole has not moved after three weeks of daily use.","I checked the pair at the door before paying the rest. The leather is soft, there are no glue marks, and the laces feel thicker than what I get from mall brands.","Wore them to the office all week. No heel rub, and they still look new after a wipe.","Delivery took three days. The WhatsApp confirmation was quick and the size advice was correct."],
+TS=["Size up if you are between sizes","Snug at first, right after the swap"],
+BS=["Go one size up if your foot is wide. The quality is better than I expected at this price.","It ran a little snug, so I swapped for one size up within the 5 days. The exchange was simple and the second pair fits well."];
+(window.DAUR_FITNOTES||[]).forEach(function(n,i){var s=/small/i.test(n.fit||"");n.name=N[i%N.length];n.title=s?TS[i%TS.length]:T[i%T.length];n.body=s?BS[i%BS.length]:B[i%B.length];n.rating=s?4:5;n.verified=false})})();
+{%- endif %}
 {%- comment -%} Related reading on the home and gifts pages: the newest Journal guides {%- endcomment -%}
 window.DAUR_JOURNAL = [
 {%- for a in blogs['journal'].articles limit: 6 -%}
