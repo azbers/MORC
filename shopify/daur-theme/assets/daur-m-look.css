@@ -158,3 +158,14 @@ html.m-on #mApp .lk-facts b{color:var(--lk-brass2)}
 html.m-on #mApp .px-stage .px-price{padding:0;border-radius:0;background:none;box-shadow:none}
 html.m-on #mApp .hx-il .hx-art::after{height:72%;background:linear-gradient(0deg,#172C27 0%,#172C27 12%,#172C27f2 22%,#172C27d1 34%,#172C27a3 46%,#172C2770 58%,#172C2742 70%,#172C271f 82%,#172C270a 92%,transparent 100%)}
 html.m-on #mApp .m-gf .hx-il .hx-art::after{width:72%;height:auto;background:linear-gradient(90deg,#172C27 0%,#172C27 12%,#172C27f2 22%,#172C27d1 34%,#172C27a3 46%,#172C2770 58%,#172C2742 70%,#172C271f 82%,#172C270a 92%,transparent 100%)}
+/* 2026-11-14 cookie notice as a top notification card on phones (styles.css is not loaded there) */
+@media (max-width:900px){html.m-on .ck{position:fixed!important;z-index:2147483000!important;top:calc(10px + env(safe-area-inset-top,0px))!important;bottom:auto!important;left:10px!important;right:10px!important;max-width:520px!important;margin-inline:auto!important;display:flex!important;flex-direction:column;gap:10px!important;padding:12px 14px!important;background:#fffffff7!important;color:#111917!important;border:1px solid #172c271f!important;border-radius:16px!important;box-shadow:0 12px 32px #172c2733!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transform:none!important;opacity:1!important;visibility:visible!important;animation:ckIn .35s ease both}
+html.m-on .ck .ck-t{color:#111917!important;font-size:13px!important;line-height:1.4!important}
+html.m-on .ck .ck-t b,html.m-on .ck .ck-t a{color:#172C27!important}
+html.m-on .ck .ck-b{display:flex!important;gap:8px!important}
+html.m-on .ck .ck-b .btn{flex:1;min-height:38px!important;border-radius:999px!important;font-weight:700;font-size:13px!important;border:1px solid #172C27!important;background:#fff!important;color:#172C27!important}
+html.m-on .ck .ck-b .btn:first-child{background:#172C27!important;color:#F9F7F2!important}
+@keyframes ckIn{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}}
+/* desktop bag page: payment cards as a full grid, not a clipped scroller */
+@media (min-width:901px){html.m-on #mApp .xb-pcs:has(.pc2){display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))!important;gap:24px!important;overflow:visible!important;margin:0!important;padding:2px 0 6px!important;scroll-snap-type:none!important;grid-column:1/-1}
+html.m-on #mApp .xb-pcs .pc2{width:auto!important;max-width:440px}}
