@@ -192,3 +192,4 @@ html.lite .df-van .dv-vs{animation-duration:16s!important;animation-iteration-co
 /* phone hero paints at once: no entrance animation, shorter heading */
 html.dv-m #mApp .lk-hero,html.dv-m #mApp .lk-hero *{animation:none!important;opacity:1}
 html.dv-m.m-on #mApp .lk-hero h1{font-size:clamp(28px,7.8vw,34px)!important}
+html.dv-m #mApp .m-tab,html.dv-m #mApp .m-top:not(.clear){background:#fff!important}
