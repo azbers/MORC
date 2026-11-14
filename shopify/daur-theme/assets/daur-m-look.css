@@ -153,3 +153,8 @@ html.m-on #mApp .px-stage.on-ph .px-ui{opacity:1!important;transform:none!import
 html.m-on #mApp .px-stage.on-ph .px-ui button{pointer-events:auto!important}
 html.m-on #mApp .px-stage .px-price{padding:8px 12px;border-radius:14px;background:#fffffff0;box-shadow:0 6px 18px #172c271f;z-index:5}
 @media (min-width:901px){html.m-on #mApp .px-l.has-th>.px-thumbs{height:min(666px,calc(100vh - 132px));max-height:min(666px,calc(100vh - 132px));overflow-y:auto;overscroll-behavior:contain}}
+/* 2026-11-14 owner fixes */
+html.m-on #mApp .lk-facts b{color:var(--lk-brass2)}
+html.m-on #mApp .px-stage .px-price{padding:0;border-radius:0;background:none;box-shadow:none}
+html.m-on #mApp .hx-il .hx-art::after{height:72%;background:linear-gradient(0deg,#172C27 0%,#172C27 12%,#172C27f2 22%,#172C27d1 34%,#172C27a3 46%,#172C2770 58%,#172C2742 70%,#172C271f 82%,#172C270a 92%,transparent 100%)}
+html.m-on #mApp .m-gf .hx-il .hx-art::after{width:72%;height:auto;background:linear-gradient(90deg,#172C27 0%,#172C27 12%,#172C27f2 22%,#172C27d1 34%,#172C27a3 46%,#172C2770 58%,#172C2742 70%,#172C271f 82%,#172C270a 92%,transparent 100%)}

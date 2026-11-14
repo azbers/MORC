@@ -62,3 +62,10 @@
 #mApp .pc2-nfc{display:none!important}
 #mApp .pay-acc .pc2-i{display:none}
 #mApp .pc2-front .pc2-chip{top:22%!important;width:34px!important;height:26px!important}
+/* 2026-11-14 flat QR swap: no 3D, fixes mirrored front on iOS and hidden back on desktop */
+#mApp .pc2 .pc2-in,#mApp .pc2.flip .pc2-in{transform:none!important;transform-style:flat!important;-webkit-transform-style:flat!important}
+#mApp .pc2 .pc2-face{-webkit-backface-visibility:visible;backface-visibility:visible;transition:opacity .25s ease,visibility .25s}
+#mApp .pc2 .pc2-back{transform:none!important;opacity:0;visibility:hidden;z-index:2}
+#mApp .pc2 .pc2-front{opacity:1;visibility:visible}
+#mApp .pc2.flip .pc2-front{opacity:0;visibility:hidden}
+#mApp .pc2.flip .pc2-back{opacity:1;visibility:visible}
