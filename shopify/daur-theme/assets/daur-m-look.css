@@ -200,4 +200,4 @@ html.dv-m #mApp .il-h{display:none}
 html.m-on .ck{animation:none!important}
 
 /* Phones: content shows at once with no decorative motion; only the footer van moves */
-html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body),html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::before,html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::after{animation:none!important}
+html.m-on:not(.dv-d) #mApp *:not(.dv-vs):not(.dv-wheel):not(.dv-body),html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body),html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::before,html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::after{animation:none!important}
