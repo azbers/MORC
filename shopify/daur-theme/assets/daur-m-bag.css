@@ -51,4 +51,4 @@
 #mApp .pc2-back-b{align-self:flex-start;margin-top:6px;min-height:36px;padding:0 14px;border-radius:999px;background:#fff;color:#111917;font-weight:700;font-size:13px}
 #mApp .pc2-i{display:block;text-align:center;margin-top:8px;font-size:12px;color:#6F6351}
 @media (prefers-reduced-motion:reduce){#mApp .pc2-in{transition:none}}
-@container (max-width:360px){#mApp .pc2-chip{top:4.4cqw;left:auto;right:27cqw;width:8cqw;height:6cqw}#mApp .pc2-nfc{display:none}}
+@container (max-width:360px){#mApp .pc2-chip{top:5cqw;left:38cqw;width:8cqw;height:6cqw}#mApp .pc2-nfc{display:none}}
