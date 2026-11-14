@@ -193,3 +193,8 @@ html.lite .df-van .dv-vs{animation-duration:16s!important;animation-iteration-co
 html.dv-m #mApp .lk-hero,html.dv-m #mApp .lk-hero *{animation:none!important;opacity:1}
 html.dv-m.m-on #mApp .lk-hero h1{font-size:clamp(28px,7.8vw,34px)!important}
 html.dv-m #mApp .m-tab,html.dv-m #mApp .m-top:not(.clear){background:#fff!important}
+/* report fixes: sale pill text contrast 4.5 to 1 or better; no non composited animations */
+html.m-on #mApp .m-pill.sale:not([aria-pressed=true]){color:#B02A16!important}
+html.m-on #mApp .il-h svg{animation:none!important}
+html.dv-m #mApp .il-h{display:none}
+html.m-on .ck{animation:none!important}
