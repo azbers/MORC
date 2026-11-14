@@ -24,7 +24,7 @@ html.m-on .dz-sg,html.m-on .lb-sg,html.m-on .r9-whyl,html.m-on .lb-shop,html.m-o
 html.m-on body>.dj{display:none}
 .dj.dj-last{padding-bottom:calc(132px + env(safe-area-inset-bottom,0px))}
 /* Text contrast of at least 4.5 to 1 (accessibility recheck) */
-html.m-on .m-row .m-link{color:#7a6443!important}
+html.m-on #mApp #mView a.m-link,html.m-on #mApp #mView .m-row .m-link{color:#7a6443!important}
 html.m-on .r10-k{color:#7a6443!important}
 html.m-on .r10-card .r10-t em{color:#5f4d33!important}
 html.m-on .m-pills .m-pill:not(.on):last-child{color:#56603f}
