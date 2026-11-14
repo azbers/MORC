@@ -34,7 +34,14 @@
     "img_casual": "shopify://shop_images/photo-1616406432452-07bc5938759d.jpg",
     "img_leather": "shopify://shop_images/photo-1603191659812-ee978eeeef76.jpg",
     "img_bench": "shopify://shop_images/photo-1768550996860-2d8666f4c0bb.jpg",
-    "img_tools": "shopify://shop_images/photo-1758812820631-ce2d8dc3e5ac.jpg"
+    "img_tools": "shopify://shop_images/photo-1758812820631-ce2d8dc3e5ac.jpg",
+    "pay_bank_name": "Bank transfer",
+    "pay_bank_title": "DAUR Supply",
+    "pay_bank_number": "0319 9628735",
+    "pay_ep_number": "0319 9628735",
+    "pay_ep_title": "DAUR Supply",
+    "pay_jc_number": "0319 9628735",
+    "pay_jc_title": "DAUR Supply"
   },
   "presets": {},
   "platform_customizations": {

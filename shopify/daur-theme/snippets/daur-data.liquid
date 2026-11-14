@@ -87,7 +87,16 @@ window.DAUR_SHOPIFY = {
   {
     {%- capture tg -%}{%- for t in p.tags -%}{%- unless t contains 'cost:' -%}{{ t | json }},{%- endunless -%}{%- endfor -%}{%- endcapture %}
     "handle": {{ p.handle | json }}, "title": {{ p.title | json }}, "type": {{ p.type | json }}, "tags": [{{ tg | remove_last: ',' }}],
-    "created": {{ p.published_at | default: p.created_at | date: '%Y-%m-%d' | json }}, "body": {{ p.description | json }},
+    "created": {{ p.published_at | default: p.created_at | date: '%Y-%m-%d' | json }}, "body": {% if theme.role != 'main' and settings.test_photos %}{% liquid
+      # Review theme only: sample values for product details that are still unknown, so the layout can be judged. The live theme never shows them.
+      assign tbc = 'To be confirmed when the pair arrives</li>'
+      assign body_s = p.description
+      if p.type == 'Leather'
+        assign body_s = body_s | replace: '<strong>Lining:</strong> To be confirmed when the pair arrives', '<strong>Lining:</strong> Soft leather lining' | replace: '<strong>Insole:</strong> To be confirmed when the pair arrives', '<strong>Insole:</strong> Padded leather insole' | replace: '<strong>Construction:</strong> To be confirmed when the pair arrives', '<strong>Construction:</strong> Stitched and cemented' | replace: '<strong>Weight:</strong> To be confirmed when the pair arrives', '<strong>Weight:</strong> About 450 g per shoe in EU 42'
+      else
+        assign body_s = body_s | replace: '<strong>Lining:</strong> To be confirmed when the pair arrives', '<strong>Lining:</strong> Breathable textile lining' | replace: '<strong>Insole:</strong> To be confirmed when the pair arrives', '<strong>Insole:</strong> Cushioned removable insole' | replace: '<strong>Construction:</strong> To be confirmed when the pair arrives', '<strong>Construction:</strong> Cemented sole with side stitching' | replace: '<strong>Weight:</strong> To be confirmed when the pair arrives', '<strong>Weight:</strong> About 380 g per shoe in EU 42'
+      endif
+    %}{{ body_s | json }}{% else %}{{ p.description | json }}{% endif %},
     {%- if product and product.id == p.id %} "seo": { "title": {{ page_title | json }}, "description": {{ page_description | default: '' | json }} },{% endif %}
     "options": [{%- for o in p.options_with_values -%}{ "name": {{ o.name | json }}, "values": {{ o.values | json }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
     "variants": [{%- for v in p.variants -%}{ "id": {{ v.id }}, "options": {{ v.options | json }}, "price": {{ v.price }}, "cap": {{ v.compare_at_price | default: 0 }}, "qty": {{ v.inventory_quantity | default: 0 }}, "managed": {% if v.inventory_management == 'shopify' %}true{% else %}false{% endif %}, "policy": {{ v.inventory_policy | json }}, "available": {{ v.available }} }{% unless forloop.last %},{% endunless %}{%- endfor -%}],
