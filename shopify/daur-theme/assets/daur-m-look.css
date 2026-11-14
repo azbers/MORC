@@ -109,3 +109,4 @@ html.m-on #mApp .m-van .dv-vs{width:140px}
 html.m-on #mApp .m-van .dv-sp{stroke:#A58A64}
 @media (min-width:1024px){html.m-on #mApp .m-van{display:none}}
 @media (prefers-reduced-motion:reduce){html.m-on .df-van .dv-vs{animation:none;left:50%;margin-left:-85px}html.m-on .df-van .dv-wheel,html.m-on .df-van .dv-body{animation:none}}
+html.m-on #mApp .pay-acc{max-width:980px;margin:18px auto 8px}
