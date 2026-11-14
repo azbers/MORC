@@ -82,7 +82,7 @@
       </aside>
       <div class="modal" id="search" role="dialog" aria-label="Search"><div class="panel">
         <div class="field-label"><span>Search DAUR</span><button class="x-btn" data-close>Close</button></div>
-        <div class="inline-field"><input id="q" type="search" placeholder="Try black, derby, chelsea, sale" autocomplete="off"><button data-close>Esc</button></div>
+        <div class="inline-field"><input id="q" aria-label="Search the shop" type="search" placeholder="Try black, derby, chelsea, sale" autocomplete="off"><button data-close>Esc</button></div>
         <div id="qres" class="mini-items" style="border:0"></div></div></div>
       <div class="modal" id="sizeGuide" role="dialog" aria-label="Size guide"><div class="panel">
         <div class="field-label"><span>Size guide</span><button class="x-btn" data-close>Close</button></div>${Xa()}
@@ -264,7 +264,7 @@
         <div class="shop">
           <aside class="fpanel" id="fpanel" aria-label="Filters">
             <div class="fsheet-h"><span class="fsheet-grab" aria-hidden="true"></span><b>Filters</b><button class="fsheet-x" id="fClose" type="button" aria-label="Close filters">${A("close")}</button></div>
-            <div class="fgrp"><span class="field-label"><span>${A("search")}Search</span></span><input class="finput" id="fq" type="search" placeholder="Name, colour, style"></div>
+            <div class="fgrp"><span class="field-label"><span>${A("search")}Search</span></span><input class="finput" id="fq" aria-label="Filter pairs" type="search" placeholder="Name, colour, style"></div>
             <div class="fgrp" id="gGroup"></div>
             <div class="fgrp fg-style"><span class="field-label"><span>${A("tag")}Style</span></span><div class="filters">${["All",...aa].map(u=>`<button class="fbtn" data-cat="${u}" aria-pressed="${u===t.cat}">${u==="All"?"All":fe(u)}</button>`).join("")}</div></div>
             <div class="fgrp"><span class="field-label"><span>${A("spark")}Colour</span></span><div class="filters cols">${m.map(u=>`<button class="fbtn col-chip" data-col="${o(u)}" aria-pressed="false" style="--c:${o($(u))}"><span class="cc-i">${window.DAUR_KICKS?window.DAUR_KICKS.svg("runner",window.DAUR_KICKS.colorsFor($(u))):""}</span>${o(u)}</button>`).join("")}</div></div>
