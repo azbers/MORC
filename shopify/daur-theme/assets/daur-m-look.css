@@ -110,3 +110,27 @@ html.m-on #mApp .m-van .dv-sp{stroke:#A58A64}
 @media (min-width:1024px){html.m-on #mApp .m-van{display:none}}
 @media (prefers-reduced-motion:reduce){html.m-on .df-van .dv-vs{animation:none;left:50%;margin-left:-85px}html.m-on .df-van .dv-wheel,html.m-on .df-van .dv-body{animation:none}}
 html.m-on #mApp .pay-acc{max-width:980px;margin:18px auto 8px}
+/* Gifts and giving heroes: the picture melts into the forest side instead of a hard cut */
+html.m-on #mApp .hx-il{background:radial-gradient(120% 90% at 0% 100%,#24433b 0%,transparent 60%),radial-gradient(80% 70% at 100% 0%,#2a4a41 0%,transparent 65%),#172C27}
+html.m-on #mApp .hx-il .hx-art{position:relative}
+html.m-on #mApp .hx-il .hx-art::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;z-index:2;pointer-events:none;background:linear-gradient(0deg,#172C27 0%,#172C27d9 18%,#172C2780 45%,#172C2726 75%,transparent 100%)}
+html.m-on #mApp .hx-il .hx-art::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(70% 60% at 60% 40%,#fff7e64d,transparent 70%)}
+@media (min-width:1024px){
+html.m-on #mApp .m-gf .hx-il .hx-art::after{top:0;bottom:0;left:0;right:auto;width:42%;height:auto;background:linear-gradient(90deg,#172C27 0%,#172C27e6 14%,#172C27a6 34%,#172C2747 62%,#172C2712 84%,transparent 100%)}
+html.m-on #mApp .m-gf .hx-il .hx-t{position:relative;z-index:3}
+}
+/* the hanging tag becomes a gift message notification from DAUR */
+html.m-on #mApp .hx-tag.hx-note{transform:rotate(0);animation:hx-pop .6s cubic-bezier(.2,.9,.3,1.2) .5s both;top:16px!important;right:16px;width:min(300px,calc(100% - 32px));display:block;padding:10px 12px 12px;border-radius:18px;background:#fffffff2;color:#172C27;box-shadow:0 18px 36px #0f1e1a40,inset 0 0 0 1px #ffffffb3;text-align:left;z-index:4}
+html.m-on #mApp .hx-n-h{display:flex;align-items:center;gap:8px;font-size:12px}
+html.m-on #mApp .hx-n-ic{width:24px;height:24px;border-radius:7px;background:#172C27;color:#F1EBDD;display:grid;place-items:center}
+html.m-on #mApp .hx-n-ic svg{width:15px;height:15px}
+html.m-on #mApp .hx-n-h b{font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+html.m-on #mApp .hx-n-h small{margin-left:auto;color:#6F6351;font-size:12px}
+html.m-on #mApp .hx-n-b{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+html.m-on #mApp .hx-n-b>b{font-size:14px}
+html.m-on #mApp .hx-n-bub{position:relative;align-self:flex-start;max-width:100%;padding:8px 44px 8px 11px;border-radius:12px 12px 12px 4px;background:#DCF3D5;font-family:Georgia,serif;font-style:italic;font-size:14px;line-height:1.35;color:#16302a}
+html.m-on #mApp .hx-n-bub i{position:absolute;right:9px;bottom:6px;font:600 12px/1 "DAUR Sans",Arial,sans-serif;font-style:normal;color:#4b7a63}
+html.m-on #mApp .hx-n-b>small{font-size:12px;color:#D9361F;font-weight:700}
+@keyframes hx-pop{from{opacity:0;transform:translateY(-14px) scale(.96)}to{opacity:1;transform:none}}
+@media (min-width:1024px){html.m-on #mApp .m-gf .hx-tag.hx-note{top:28px!important;right:28px}}
+@media (prefers-reduced-motion:reduce){html.m-on #mApp .hx-tag.hx-note{animation:none}}
