@@ -134,3 +134,11 @@ html.m-on #mApp .hx-n-b>small{font-size:12px;color:#D9361F;font-weight:700}
 @keyframes hx-pop{from{opacity:0;transform:translateY(-14px) scale(.96)}to{opacity:1;transform:none}}
 @media (min-width:1024px){html.m-on #mApp .m-gf .hx-tag.hx-note{top:28px!important;right:28px}}
 @media (prefers-reduced-motion:reduce){html.m-on #mApp .hx-tag.hx-note{animation:none}}
+/* page heroes: original vector sketches in place of photos */
+html.m-on #mApp .pg-hero .pg-sk{display:block;object-fit:unset;filter:drop-shadow(0 14px 18px #0000002e)!important;transform:none!important;animation:none!important}
+html.m-on #mApp .pg-hero .pg-sk .pg-svg{width:100%;height:100%;display:block}
+html.m-on #mApp .r5-hero .pg-sk,html.m-on #mApp .pg-hero .pg-sk{right:-4px;top:8px;width:150px;height:150px;max-width:none}
+html.m-on #mApp .pg-hero:has(.pg-sk)>h1{max-width:calc(100% - 120px)}
+@media (min-width:901px){html.m-on #mApp .m-pg .pg-hero .pg-sk{right:max(48px,calc(50vw - 640px));top:50%;transform:translateY(-50%)!important;width:260px;height:260px;max-width:34%}html.m-on #mApp .pg-hero:has(.pg-sk)>h1{max-width:none}}
+html.m-on #mApp .pg-hero .pg-sk::before{content:"";position:absolute;inset:12% 6% 4%;border-radius:50%;background:radial-gradient(circle,#F1EBDD26,transparent 70%);z-index:-1}
+html.m-on #mApp .pg-hero.v-crm .pg-sk::before{background:radial-gradient(circle,#EE412914,transparent 70%)}
