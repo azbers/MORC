@@ -7,7 +7,7 @@
 #mApp .pc2.flip .pc2-in{transform:rotateY(180deg)}
 #mApp .pc2-face{position:absolute;inset:0;border-radius:4.4cqw;border-radius:14px;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;color:#F4F1EA;container-type:inline-size;box-shadow:0 18px 34px #0000003d,inset 0 0 0 1px #ffffff14}
 #mApp .pc2-front{display:grid;grid-template-rows:auto 1fr auto auto auto;padding:5.2cqw 5.6cqw 4.4cqw;background:#0d0d0f}
-#mApp .pc2-back{transform:rotateY(180deg);display:grid;grid-template-columns:auto 1fr;align-items:center;gap:5cqw;padding:5cqw;background:#0d0d0f}
+#mApp .pc2-back{transform:rotateY(180deg);display:grid;grid-template-columns:53cqw minmax(0,1fr);align-items:center;gap:5cqw;padding:5cqw;background:#0d0d0f}
 #mApp .pc2-art{position:absolute;inset:0;pointer-events:none;z-index:0}
 #mApp .pc2-face>*:not(.pc2-art){position:relative;z-index:1}
 /* JazzCash style: carbon weave with diagonal light bands */
@@ -44,11 +44,11 @@
 #mApp .pc2-qrb{position:absolute!important;right:5.6cqw;top:4.6cqw;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:999px;background:#EE4129;color:#fff;font-weight:700;font-size:12px;box-shadow:0 6px 14px #ee41294d}
 #mApp .pc2-qrb svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2}
 #mApp .pc2:has(.pc2-qrb) .pc2-kind{display:none}
-#mApp .pc2-qr{height:100%;aspect-ratio:1;background:#fff;border-radius:10px;padding:6px;display:flex}
+#mApp .pc2-qr{width:53cqw;height:53cqw;background:#fff;border-radius:10px;padding:1.6cqw;display:flex;flex:none}
 #mApp .pc2-qr img{width:100%;height:100%;image-rendering:pixelated}
 #mApp .pc2-bt{display:flex;flex-direction:column;gap:6px;min-width:0}
-#mApp .pc2-bt b{font-size:18px}
+#mApp .pc2-bt b{font-size:clamp(15px,5cqw,20px)}#mApp .pc2-bt small{font-size:12px}
 #mApp .pc2-back-b{align-self:flex-start;margin-top:6px;min-height:36px;padding:0 14px;border-radius:999px;background:#fff;color:#111917;font-weight:700;font-size:13px}
 #mApp .pc2-i{display:block;text-align:center;margin-top:8px;font-size:12px;color:#6F6351}
 @media (prefers-reduced-motion:reduce){#mApp .pc2-in{transition:none}}
-@container (max-width:330px){#mApp .pc2-chip,#mApp .pc2-nfc{display:none}}
+@container (max-width:360px){#mApp .pc2-chip{top:4.4cqw;left:auto;right:27cqw;width:8cqw;height:6cqw}#mApp .pc2-nfc{display:none}}

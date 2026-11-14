@@ -83,3 +83,4 @@ html.m-on #mApp .px.dkx .px-pager,html.m-on #mApp .px.dkx .px-stage.on-ph .px-pa
 html.m-on #mApp .px-spec div{display:grid;grid-template-columns:minmax(104px,32%) minmax(0,1fr);gap:16px;align-items:baseline}
 html.m-on #mApp .px-spec dt{white-space:nowrap}
 html.m-on #mApp .px-spec dd{text-align:left;line-height:1.5}
+html.m-on #mApp a.r9-no,html.m-on a.r9-no{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
