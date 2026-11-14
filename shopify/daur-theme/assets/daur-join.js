@@ -3,7 +3,7 @@
   var j=document.getElementById("daurJoin");if(!j)return;
   var done=/[?&]customer_posted=true/.test(location.search)||j.hasAttribute("data-msg");
   function show(){var p=location.pathname;j.hidden=/\/(products|cart|search|checkouts?|account)(\/|$)/.test(p)}
-  function place(){var f=document.getElementById("mFoot");if(!f||!f.parentNode)return false;if(f.previousElementSibling!==j)f.parentNode.insertBefore(j,f);show();j.classList.toggle("dj-last",getComputedStyle(f).display==="none");return true}
+  function place(){var f=document.getElementById("mFoot");if(!f||!f.parentNode)return false;if(f.previousElementSibling!==j)f.parentNode.insertBefore(j,f);show();requestAnimationFrame(function(){setTimeout(function(){j.classList.toggle("dj-last",getComputedStyle(f).display==="none")},0)});return true}
   addEventListener("resize",function(){place()},{passive:true});
   var n=0,t=setInterval(function(){if(place()||++n>40){clearInterval(t);watch()}},250);
   function watch(){var v=document.getElementById("mView");if(!v||!("MutationObserver"in window))return;var q=0;new MutationObserver(function(){q||(q=requestAnimationFrame(function(){q=0;place()}))}).observe(v,{childList:true});
@@ -31,5 +31,5 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){var t=e.targ
 function scan(){document.getAnimations().forEach(function(a){var f=a.effect,t=f&&f.target;if(!t||a.__dg||!f.getComputedTiming)return;if(f.getComputedTiming().iterations!==Infinity)return;if(keep.test(a.animationName||""))return;a.__dg=1;
  if(small&&!keep.test(a.animationName||"")){try{f.updateTiming({iterations:2})}catch(x){}}
  (t.__da=t.__da||[]).push(a);if(t.__dv===false)a.pause();io.observe(t)})}
-var q;function later(){clearTimeout(q);q=setTimeout(scan,250)}
+var q,ric=window.requestIdleCallback||function(c){return setTimeout(c,1)};function later(){clearTimeout(q);q=setTimeout(function(){ric(scan,{timeout:2000})},400)}
 new MutationObserver(later).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["class"]});later()})();

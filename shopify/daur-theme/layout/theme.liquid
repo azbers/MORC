@@ -153,43 +153,6 @@
 {%- comment -%} the three brand fonts are served from the theme itself (no Google Fonts round trips); the heading font is fetched first {%- endcomment -%}
 <link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-600.woff2' | asset_url }}" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-400.woff2' | asset_url }}" crossorigin>
-{%- if template.name == 'product' -%}
-{%- liquid
-  assign pl_opts = product.selected_or_first_available_variant.options | join: ' ' | handleize
-  case product.handle
-    when 'moc-runner-v1'
-      assign pl_cut = 'moc-runner'
-      if pl_opts contains 'oxblood'
-        assign pl_cut = 'moc-oxblood'
-      endif
-    when 'ward-chelsea'
-      assign pl_cut = 'ward-black'
-      if pl_opts contains 'brown'
-        assign pl_cut = 'ward-brown'
-      endif
-    when 'saddle-tassel'
-      assign pl_cut = 'saddle'
-      if pl_opts contains 'black'
-        assign pl_cut = 'saddle-black'
-      endif
-    when 'phantom-trainer'
-      assign pl_cut = 'phantom'
-    when 'grid-court-low'
-      assign pl_cut = 'grid'
-    when 'unit-derby-02'
-      assign pl_cut = 'derby'
-    when 'concrete-mid'
-      assign pl_cut = 'concrete'
-    when 'volt-signal'
-      assign pl_cut = 'volt'
-    when 'sector-slip'
-      assign pl_cut = 'sector'
-    else
-      assign pl_cut = ''
-  endcase
--%}
-{%- if pl_cut != '' and settings.m_cutouts != false %}<link rel="preload" as="image" fetchpriority="high" href="{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first }}m-{{ pl_cut }}.webp">{% endif %}
-{%- endif %}
 {%- comment -%} the desktop stylesheet blocks the first paint only on desktop; phones draw from daur-m.css first and take it in once it has arrived {%- endcomment -%}
 {%- comment -%} the desktop stylesheet draws the wide screen runway only; phones never download it {%- endcomment -%}
 <script>try{(function(d,n){var u=n.userAgent||'',t=(n.maxTouchPoints||0)>1,big=Math.max(screen.width,screen.height)>=1024,ph=/iPhone|iPod|Android.+Mobile|Mobile Safari|IEMobile|Opera Mini|BlackBerry/i.test(u),tab=/iPad|Android/i.test(u)||(/Macintosh/.test(u)&&t);d.classList.add(ph?'dv-m':tab?(big?'dv-d':'dv-m'):'dv-d')})(document.documentElement,navigator)}catch(e){document.documentElement.classList.add('dv-d')}</script><script>(function(){var u={{ 'styles.css' | asset_url | json }},d=document,on=0;function add(){if(on)return;on=1;var l=d.createElement('link');l.rel='stylesheet';l.href=u;d.head.appendChild(l)}try{if(d.documentElement.classList.contains('dv-d')||/[?&]view=classic/.test(location.search))add()}catch(e){add()}})();</script><noscript><link rel="stylesheet" href="{{ 'styles.css' | asset_url }}"></noscript>
