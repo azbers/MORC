@@ -1,0 +1,31 @@
+{%- layout none -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>{{ shop.name | escape }}: {{ blog.title | escape }}</title>
+<link>{{ shop.url }}{{ blog.url }}</link>
+<description>{{ blog.title | escape }} from {{ shop.name | escape }}. Guides on men's shoes, sizing, care and ordering in Pakistan.</description>
+<language>en</language>
+<atom:link href="{{ shop.url }}{{ blog.url }}?view=rss" rel="self" type="application/rss+xml"/>
+{%- paginate blog.articles by 50 -%}
+{%- for article in blog.articles -%}
+{%- if forloop.first %}
+<lastBuildDate>{{ article.published_at | date: "%a, %d %b %Y %H:%M:%S %z" }}</lastBuildDate>
+{%- endif %}
+{%- assign d = article.excerpt | default: article.content | strip_html | strip_newlines | strip | truncate: 400 %}
+<item>
+<title>{{ article.title | strip_html | escape }}</title>
+<link>{{ shop.url }}{{ article.url }}</link>
+<guid isPermaLink="true">{{ shop.url }}{{ article.url }}</guid>
+<pubDate>{{ article.published_at | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+<description>{{ d | escape }}</description>
+{%- if article.image %}
+{%- assign img = article.image | image_url: width: 1200 | prepend: "https:" | escape %}
+<enclosure url="{{ img }}" length="0" type="image/jpeg"/>
+<media:content url="{{ img }}" medium="image" type="image/jpeg"/>
+{%- endif %}
+</item>
+{%- endfor -%}
+{%- endpaginate %}
+</channel>
+</rss>
