@@ -177,3 +177,12 @@ html.dv-m *,html.dv-m *:before,html.dv-m *:after{-webkit-backdrop-filter:none!im
 html.dv-m #mApp [class*="blur"],html.dv-m #mApp .lk-ghost{filter:none!important}
 /* low end phones (4 GB memory or less, 4 cores or less, data saver, 2G or 3G): no paint heavy effects */
 html.lite *,html.lite *:before,html.lite *:after{filter:none!important;box-shadow:none!important;text-shadow:none!important;animation-duration:0s!important;animation-iteration-count:1!important;transition-duration:0s!important}
+/* 2026-11-14 phone home hero: keyword first, one screen, text only so it paints at once */
+html.dv-m #mApp .lk-hero .lk-hero-in{padding:26px 22px 22px!important}
+html.dv-m #mApp .lk-hero .lk-eye{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--lk-brass2);margin-bottom:12px}
+html.dv-m #mApp .lk-hero h1{font-size:clamp(30px,8.6vw,38px)!important;line-height:1.04!important;margin:0 0 14px!important}
+html.dv-m #mApp .lk-hero p{font-size:15px!important;line-height:1.5!important;margin:0 0 16px!important;color:#e9e3d6!important;max-width:34ch}
+html.dv-m #mApp .lk-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+html.dv-m #mApp .lk-cats a{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border:1px solid #c7b09080;border-radius:999px;color:#f1ebdd;font-size:13px;font-weight:600;text-decoration:none}
+html.dv-m #mApp .lk-hero .lk-cta{margin-bottom:16px}
+html.dv-m #mApp .lk-hero .lk-facts b{font-size:22px!important}
