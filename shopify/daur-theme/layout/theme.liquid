@@ -154,7 +154,8 @@
 <link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-600.woff2' | asset_url }}" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="{{ 'm-outfit-400.woff2' | asset_url }}" crossorigin>
 {%- comment -%} the desktop stylesheet blocks the first paint only on desktop; phones draw from daur-m.css first and take it in once it has arrived {%- endcomment -%}
-<link rel="stylesheet" href="{{ 'styles.css' | asset_url }}" media="(min-width: 901px)" onload="this.media='all'"><noscript><link rel="stylesheet" href="{{ 'styles.css' | asset_url }}"></noscript>
+{%- comment -%} the desktop stylesheet draws the wide screen runway only; phones never download it {%- endcomment -%}
+<script>(function(){var u={{ 'styles.css' | asset_url | json }},d=document,on=0;function add(){if(on)return;on=1;var l=d.createElement('link');l.rel='stylesheet';l.href=u;d.head.appendChild(l)}try{var m=matchMedia('(min-width: 901px)');if(m.matches||/[?&]view=classic/.test(location.search))add();else if(m.addEventListener)m.addEventListener('change',function(e){e.matches&&add()})}catch(e){add()}})();</script><noscript><link rel="stylesheet" href="{{ 'styles.css' | asset_url }}"></noscript>
 {%- if settings.m_app != false %}
 {%- comment -%} Phones and tablets open the store as an app (assets/daur-m.js). Desktop never loads it. ?view=classic shows the full website. {%- endcomment -%}
 <script>try{if(!/[?&]view=classic/.test(location.search))document.documentElement.classList.add('m-on')}catch(e){}</script>
@@ -208,10 +209,10 @@
 <script src="{{ 'shoe.js' | asset_url }}" defer></script>
 <script src="{{ 'icons.js' | asset_url }}" defer></script>
 <script src="{{ 'kicks.js' | asset_url }}" defer></script>
-<script src="{{ 'pile.js' | asset_url }}" defer></script>
 {%- if daur_page == 'policies' or daur_page == 'contact' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'social.js' | asset_url }}" defer></script>
-<script src="{{ 'alive.js' | asset_url }}" defer></script>
+{%- comment -%} alive.js and pile.js serve only the classic view (?view=classic); the app view never runs them {%- endcomment -%}
+<script>if(!document.documentElement.classList.contains('m-on')){['{{ 'pile.js' | asset_url }}','{{ 'alive.js' | asset_url }}'].forEach(function(u){var s=document.createElement('script');s.src=u;s.async=false;document.head.appendChild(s)})}</script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
 {%- if settings.m_app != false %}
 <script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:{% if settings.m_splash == false %}false{% else %}true{% endif %},splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %},bank:window.DAUR_PAY};</script>

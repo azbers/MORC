@@ -24,3 +24,12 @@
   if(window.MutationObserver){var v=document.getElementById('mView');if(v)new MutationObserver(later).observe(v,{childList:true});var a=document.getElementById('app');if(a)new MutationObserver(later).observe(a,{childList:true,subtree:true});}
   if(document.readyState==='complete')later();else window.addEventListener('load',later);
 })();
+/* Motion governor: endless decorative loops pause when out of view, and on phones they play twice and then rest, so the processor is free for scrolling and taps */
+(function(){if(window.__dgov||!document.getAnimations||!window.IntersectionObserver)return;window.__dgov=1;
+var small=matchMedia("(max-width:900px)").matches||document.documentElement.classList.contains("lite"),keep=/^(m-tick|m-sk|dv-van|dv-road|dv-wheel)$/;
+var io=new IntersectionObserver(function(es){es.forEach(function(e){var t=e.target;t.__dv=e.isIntersecting;(t.__da||[]).forEach(function(a){try{if(a.playState==="finished")return;e.isIntersecting?a.play():a.pause()}catch(x){}})})},{rootMargin:"60px"});
+function scan(){document.getAnimations().forEach(function(a){var f=a.effect,t=f&&f.target;if(!t||a.__dg||!f.getComputedTiming)return;if(f.getComputedTiming().iterations!==Infinity)return;a.__dg=1;
+ if(small&&!keep.test(a.animationName||"")){try{f.updateTiming({iterations:2})}catch(x){}}
+ (t.__da=t.__da||[]).push(a);if(t.__dv===false)a.pause();io.observe(t)})}
+var q;function later(){clearTimeout(q);q=setTimeout(scan,250)}
+new MutationObserver(later).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["class"]});later()})();

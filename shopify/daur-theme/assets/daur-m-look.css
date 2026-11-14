@@ -36,3 +36,5 @@ html.m-on details.pg-sec{scroll-margin-top:118px}
 @media (max-width:860px){html.m-on details.pg-sec{scroll-margin-top:78px}}
 html.m-on #mView h2[id],html.m-on #mView h3[id]{scroll-margin-top:118px}
 @media (max-width:860px){html.m-on #mView h2[id],html.m-on #mView h3[id]{scroll-margin-top:78px}}
+html.m-on .f-review{background:#172C27;color:#F1EBDD;font:500 11.5px/1.4 "DAUR Sans","DAUR Body Fallback",Arial,sans-serif;text-align:center;padding:6px 16px}
+@media (max-width:900px){html.m-on *,html.m-on *::before,html.m-on *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;will-change:auto!important}}
