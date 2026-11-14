@@ -2,7 +2,7 @@
 /* Payment cards at real card proportions (85.6 by 54 mm). Original artwork in the style of each wallet's own card; no third party logos */
 #mApp .pc2{flex:0 0 min(92%,440px);scroll-snap-align:center;position:relative;perspective:1200px;min-width:0}
 #mApp .xb-pcs:has(.pc2:only-child) .pc2{flex-basis:min(100%,440px)}
-@media (min-width:901px){#mApp .xb-pcs:has(.pc2){display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));overflow:visible;margin:0;padding:2px 0 6px}#mApp .xb-pcs .pc2{flex:none}}
+html.dv-d #mApp .xb-pcs:has(.pc2){display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));overflow:visible;margin:0;padding:2px 0 6px}html.dv-d #mApp .xb-pcs .pc2{flex:none}
 #mApp .pc2-in{position:relative;aspect-ratio:85.6/54;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 #mApp .pc2.flip .pc2-in{transform:rotateY(180deg)}
 #mApp .pc2-face{position:absolute;inset:0;border-radius:4.4cqw;border-radius:14px;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;color:#F4F1EA;container-type:inline-size;box-shadow:0 18px 34px #0000003d,inset 0 0 0 1px #ffffff14}

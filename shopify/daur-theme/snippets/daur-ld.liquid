@@ -22,13 +22,13 @@
   The brand entity. One Organization (an OnlineStore, since DAUR sells online
   only and has no shop front) with a fixed @id, so the home page, About and
   Contact all describe the same brand. sameAs lists only profiles that exist:
-  Instagram and Facebook, plus any line in Theme settings > Search > Other
+  Instagram, Facebook, Pinterest, GitHub and the Wikidata entity Q142167029 (owner supplied, 14 Nov 2026), plus any line in Theme settings > Search > Other
   official profiles. The address is the dispatch city only (Islamabad, owner confirmed 2 Nov 2026); no street address.
 {%- endcomment -%}
 {%- liquid
   assign org_id = root | append: '/#organization'
   assign site_id = root | append: '/#website'
-  assign same = 'https://www.instagram.com/daursupply,https://www.facebook.com/daursupply'
+  assign same = 'https://www.instagram.com/daursupply,https://www.facebook.com/daursupply,https://www.pinterest.com/daursupply/,https://www.wikidata.org/wiki/Q142167029,https://github.com/daursupply'
   assign extra_lines = settings.same_as_extra | default: '' | newline_to_br | split: '<br />'
   for l in extra_lines
     assign u = l | strip
