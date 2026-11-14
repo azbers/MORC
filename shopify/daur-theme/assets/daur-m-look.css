@@ -171,3 +171,9 @@ html.dv-d.m-on #mApp .xb-pcs:has(.pc2){display:grid!important;grid-template-colu
 html.dv-d.m-on #mApp .xb-pcs .pc2{width:100%!important;max-width:460px;justify-self:stretch!important;min-width:0}
 html:not(.dv-d).m-on #mApp .m-gf .hx-il .hx-art::after,html:not(.dv-d).m-on #mApp .hx-il .hx-art::after{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:72%!important;background:linear-gradient(0deg,#172C27 0%,#172C27 10%,#172C27f2 20%,#172C27d1 32%,#172C27a3 44%,#172C2770 56%,#172C2742 68%,#172C271f 80%,#172C270a 90%,transparent 100%)!important}
 html.dv-d body{min-width:1024px}
+/* 2026-11-14 phone rendering cost: the hero noise texture (an SVG turbulence filter) was the LCP image and is costly to paint */
+#mApp .lk-hero:before{display:none!important}
+html.dv-m *,html.dv-m *:before,html.dv-m *:after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;mix-blend-mode:normal!important}
+html.dv-m #mApp [class*="blur"],html.dv-m #mApp .lk-ghost{filter:none!important}
+/* low end phones (4 GB memory or less, 4 cores or less, data saver, 2G or 3G): no paint heavy effects */
+html.lite *,html.lite *:before,html.lite *:after{filter:none!important;box-shadow:none!important;text-shadow:none!important;animation-duration:0s!important;animation-iteration-count:1!important;transition-duration:0s!important}

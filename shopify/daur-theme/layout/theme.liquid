@@ -90,7 +90,7 @@
 -%}
 {%- if daur_noindex %}<meta name="robots" content="noindex">{% endif %}
 <meta name="theme-color" content="#F1EBDD">
-<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&n.connection.saveData))d.classList.add('lite')}catch(e){}</script>
+<script>try{var d=document.documentElement,n=navigator;if(localStorage.getItem('daur.theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('daur.grid')==='1')d.classList.add('grid-1')}catch(e){}try{if(/Android/i.test(n.userAgent)&&((n.deviceMemory||8)<=4||(n.hardwareConcurrency||8)<=4)||(n.connection&&(n.connection.saveData||/2g|3g/.test(n.connection.effectiveType||''))))d.classList.add('lite')}catch(e){}</script>
 {%- comment -%} Link previews (WhatsApp, Facebook, Instagram DMs, X): every page gets a title, a description and a 1200 x 630 image. Image order: product photo, article photo, the page's own social image, the Social sharing image in Online Store > Preferences, the theme share image setting, then assets/daur-share.jpg. {%- endcomment -%}
 {%- liquid
   assign og_desc = daur_desc | default: shop.description | default: settings.seo_home_description | strip_html | strip_newlines | truncate: 200
