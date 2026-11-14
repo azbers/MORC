@@ -69,3 +69,4 @@
 #mApp .pc2 .pc2-front{opacity:1;visibility:visible}
 #mApp .pc2.flip .pc2-front{opacity:0;visibility:hidden}
 #mApp .pc2.flip .pc2-back{opacity:1;visibility:visible}
+#mApp .pc2 .pc2-in{container-type:inline-size}
