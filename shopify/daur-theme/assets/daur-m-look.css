@@ -38,3 +38,32 @@ html.m-on #mView h2[id],html.m-on #mView h3[id]{scroll-margin-top:118px}
 @media (max-width:860px){html.m-on #mView h2[id],html.m-on #mView h3[id]{scroll-margin-top:78px}}
 html.m-on .f-review{background:#172C27;color:#F1EBDD;font:500 11.5px/1.4 "DAUR Sans","DAUR Body Fallback",Arial,sans-serif;text-align:center;padding:6px 16px}
 @media (max-width:900px){html.m-on *,html.m-on *::before,html.m-on *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;will-change:auto!important}}
+/* Palette 60 / 30 / 10: bone main, forest second, tomato as the loud accent. #EE4129 for large marks and surfaces, #D9361F wherever white text sits on it (4.67 to 1) */
+html.m-on{--t-tomato:#EE4129;--t-red:#D9361F;--t-red2:#B92D18;--m-red:#D9361F;--m-urg:#D9361F;--m-urg2:#B92D18;--r5-red:#D9361F}
+html.m-on #mApp .m-badge{background:var(--t-red)!important;color:#fff!important;font-weight:800;letter-spacing:.02em;box-shadow:0 4px 10px #b92d1838}
+html.m-on #mApp .c-p s,html.m-on #mApp .px-price s{color:#8a7f72}
+html.m-on .dk-nav a.sale,html.m-on #mApp .dk-nav a.sale{color:var(--t-red)!important;font-weight:700}
+html.m-on #mApp .m-pill.sale:not([aria-pressed=true]){color:var(--t-red)!important;box-shadow:inset 0 0 0 1.5px #d9361f59!important;background:#fff6f3!important}
+html.m-on #mApp .m-pill.sale[aria-pressed=true]{background:var(--t-red)!important;color:#fff!important}
+html.m-on #mApp .m-mtiles .sale{background:#fde9e4;color:var(--t-red2)}
+html.m-on #mApp .m-tab .t-n{background:var(--t-red)}
+html.m-on #mApp .lk-btn{background:var(--t-red)!important;color:#fff!important;box-shadow:0 8px 20px #d9361f40!important}
+html.m-on #mApp .lk-btn svg{color:#fff!important}
+html.m-on #mApp .lk-eye i{background:var(--t-tomato)!important}
+html.m-on #mApp .lk-facts b{color:var(--t-tomato)}
+/* price cut cards in the offers slider */
+#mApp .dv.dv-sale{--dv-redA:#F25A3F;--dv-red:#E03A22;--dv-redB:#B92D18;--dv-amt:#D9361F;--dv-tagb:#D9361F;--dv-tagc:#fff;--dv-c0:#EE4129;--dv-c1:#F3A08F;--dv-ray:rgba(238,65,41,.07);--dv-sd:#8E2412;--dv-st:#6E1C0E;--dv-sbk:#F6C2B6}
+/* listing cards: one photo, given the room down to the name; rating and badge sit on the photo */
+html.m-on #mApp :is(.m-tile,.m-card){transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s}
+html.m-on #mApp :is(.m-tile,.m-card)>.c-img{display:block;width:calc(100% + 24px);max-width:none;margin:-10px -12px 0;height:196px;object-fit:contain;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+html.m-on #mApp :is(.m-tile,.m-card)>.c-img.blend{height:196px;width:calc(100% + 24px);margin:-10px -12px 0;border-radius:18px 18px 0 0;object-fit:cover}
+html.m-on #mApp .v-home .m-car>.m-card>.c-img{height:200px}
+html.m-on #mApp :is(.m-tile,.m-card)>.c-r{position:absolute;left:10px;top:162px;z-index:3;margin:0;padding:3px 8px;border-radius:999px;background:#fffffff0;box-shadow:0 2px 8px #172c271f}
+html.m-on #mApp :is(.m-tile,.m-card)>.c-r+.c-n,html.m-on #mApp :is(.m-tile,.m-card)>.c-img+.c-n{margin-top:10px}
+html.m-on #mApp :is(.m-tile,.m-card) .m-badge{top:10px;left:10px;right:auto}
+html.m-on #mApp :is(.m-tile,.m-card) .m-heart{top:6px;right:6px;left:auto}
+@media (min-width:901px){html.m-on #mApp :is(.m-tile,.m-card)>.c-img,html.m-on #mApp :is(.m-tile,.m-card)>.c-img.blend{height:250px}html.m-on #mApp :is(.m-tile,.m-card)>.c-r{top:214px}}
+@media (hover:hover) and (pointer:fine){html.m-on #mApp :is(.m-tile,.m-card):hover{transform:translateY(-4px);box-shadow:0 18px 34px #172c271f}html.m-on #mApp :is(.m-tile,.m-card):hover>.c-img:not(.blend){transform:rotate(-6deg) scale(1.06) translateY(-4px)}html.m-on #mApp :is(.m-tile,.m-card):hover>.c-img.blend{transform:scale(1.04)}}
+html.m-on #mApp :is(.m-tile,.m-card):active{transform:scale(.98)}
+html.m-on #mApp :is(.m-tile,.m-card):active>.c-img:not(.blend){transform:rotate(-6deg) scale(1.04)}
+@media (prefers-reduced-motion:reduce){html.m-on #mApp :is(.m-tile,.m-card),html.m-on #mApp :is(.m-tile,.m-card)>.c-img{transition:none!important;transform:none!important}}
