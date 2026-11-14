@@ -165,8 +165,19 @@
 <style>#mBoot{display:none}html.m-on:not(.m-css) body>*:not(#mBoot){visibility:hidden!important}html.m-on:not(.m-css) #mBoot{display:block;position:fixed;inset:0;z-index:2147483000;background:#fff;overflow:hidden}#mBoot .mb-h{height:64px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ECEAE4}#mBoot .mb-h img{height:38px;width:auto}#mBoot .mb-hero{margin:12px;height:56vh;border-radius:26px;background:linear-gradient(160deg,#172C27,#2E4A42);animation:mbp 1.4s ease-in-out infinite}body[data-page=product] #mBoot .mb-hero{background:linear-gradient(180deg,#FAF7F0,#ECE4D2)}#mBoot .mb-row{display:flex;gap:10px;margin:0 12px}#mBoot .mb-row i{flex:1;height:84px;border-radius:18px;background:#F1EBDD;animation:mbp 1.4s ease-in-out infinite}#mBoot .mb-tab{position:fixed;left:12px;right:12px;bottom:12px;height:62px;border-radius:22px;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.08)}@keyframes mbp{50%{opacity:.72}}#mBoot .mb-lk{display:none}html.dv-m #mBoot .mb-lk{display:block;padding:26px 10px;color:#F8F5EE;font-family:Arial,Helvetica,system-ui,sans-serif}html.dv-m body[data-page] #mBoot .mb-hero:has(.mb-lk),html.dv-m #mBoot .mb-hero:has(.mb-lk){animation:none;background:#172C27}#mBoot .mb-eye{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#C7B090;margin-bottom:12px}#mBoot .mb-h1{display:block;font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(31px,8.7vw,37px);line-height:1.08;margin:0 0 16px}#mBoot .mb-h1 span{color:#C7B090;text-transform:none}#mBoot .mb-p{display:block;font-style:normal;text-transform:none;font-family:Arial,Helvetica,system-ui,sans-serif;font-weight:400;font-size:15px;line-height:1.5;color:#e9e3d6;margin-top:16px;letter-spacing:0}#mBoot .mb-cats{display:flex;flex-wrap:wrap;gap:8px}#mBoot .mb-cats i{font-style:normal;min-height:34px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid #c7b09080;border-radius:999px;font-size:13px;font-weight:600}@media (prefers-reduced-motion:reduce){#mBoot *{animation:none!important}}</style><script>setTimeout(function(){document.documentElement.classList.add('m-css')},20000)</script>
 <link rel="preload" as="style" data-mcss href="{{ 'daur-m.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">
 {%- comment -%} the product page and bag styles hold up the first paint only on the page that opens with them; elsewhere they load alongside and are ready long before a tap opens a pair or the bag {%- endcomment -%}
-{%- if template.name == 'product' %}<link rel="preload" as="style"{% if template.name == 'product' %} data-mcss{% endif %} href="{{ 'daur-m-pdp.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">{% else %}<link rel="stylesheet" href="{{ 'daur-m-pdp.css' | asset_url }}" media="print" onload="this.media='all'">{% endif %}
-{%- if template.name == 'cart' %}<link rel="preload" as="style"{% if template.name == 'cart' %} data-mcss{% endif %} href="{{ 'daur-m-bag.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">{% else %}<link rel="stylesheet" href="{{ 'daur-m-bag.css' | asset_url }}" media="print" onload="this.media='all'">{% endif %}
+{%- liquid
+  assign pdp_now = false
+  assign bag_now = false
+  if template.name == 'product'
+    assign pdp_now = true
+  endif
+  if template.name == 'cart' or page.handle == 'payment-accounts'
+    assign bag_now = true
+  endif
+-%}
+{%- comment -%} product page and bag code load at the start only on their own pages; elsewhere they load after the page has finished, see the loader near the end {%- endcomment -%}
+{%- if pdp_now %}<link rel="preload" as="style" data-mcss href="{{ 'daur-m-pdp.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">{% endif %}
+{%- if bag_now %}<link rel="preload" as="style"{% if template.name == 'cart' %} data-mcss{% endif %} href="{{ 'daur-m-bag.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">{% endif %}
 <link rel="preload" as="style" data-mcss href="{{ 'daur-m-vouchers.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" as="style" data-mcss href="{{ 'daur-m-look.css' | asset_url }}" media="all" onload="this.onload=null;this.rel='stylesheet'">
 <meta name="mobile-web-app-capable" content="yes">
@@ -217,8 +228,15 @@
 {%- if settings.m_app != false %}
 <script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:false,splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %},bank:window.DAUR_PAY};</script>
 <script src="{{ 'daur-m.js' | asset_url }}" defer></script>
-<script src="{{ 'daur-m-pdp.js' | asset_url }}" defer></script>
-<script src="{{ 'daur-m-bag.js' | asset_url }}" defer></script>
+{%- if pdp_now %}<script src="{{ 'daur-m-pdp.js' | asset_url }}" defer></script>{% endif %}
+{%- if bag_now %}<script src="{{ 'daur-m-bag.js' | asset_url }}" defer></script>{% endif %}
+{%- unless pdp_now and bag_now %}
+<script>(function(){var c=[{% unless pdp_now %}{{ 'daur-m-pdp.css' | asset_url | json }},{% endunless %}{% unless bag_now %}{{ 'daur-m-bag.css' | asset_url | json }}{% endunless %}],j=[{% unless pdp_now %}{{ 'daur-m-pdp.js' | asset_url | json }},{% endunless %}{% unless bag_now %}{{ 'daur-m-bag.js' | asset_url | json }}{% endunless %}],d=document,done=0;
+function run(){if(done)return;done=1;c.forEach(function(u){if(!u)return;var l=d.createElement('link');l.rel='stylesheet';l.href=u;d.head.appendChild(l)});var n=0,t=j.filter(Boolean);t.forEach(function(u){var s=d.createElement('script');s.src=u;s.async=false;s.onload=s.onerror=function(){if(++n===t.length){try{var m=window.DAUR_MX,v=m&&m.cur&&m.cur.v;if(v==='product'||v==='bag')m.render()}catch(e){}}};d.head.appendChild(s)})}
+function soon(){(window.requestIdleCallback||function(f){setTimeout(f,200)})(run,{timeout:2500})}
+d.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="/products/"],a[href*="/cart"],[data-m-tab],.m-tab a,button');if(a)run()},{capture:true,passive:true});
+if(d.readyState==='complete')soon();else addEventListener('load',soon)})();</script>
+{%- endunless %}
 <script src="{{ 'daur-m-vouchers.js' | asset_url }}" defer></script>
 <script src="{{ 'daur-m-look.js' | asset_url }}" defer></script>
 <script src="{{ 'daur-join.js' | asset_url }}" defer></script>
