@@ -166,8 +166,6 @@ html.dv-m #mApp .lk-hero .lk-hero-in{padding:26px 22px 22px!important}
 html.dv-m #mApp .lk-hero .lk-eye{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--lk-brass2);margin-bottom:12px}
 html.dv-m #mApp .lk-hero h1{font-size:clamp(30px,8.6vw,38px)!important;line-height:1.04!important;margin:0 0 14px!important}
 html.dv-m #mApp .lk-hero p{font-size:15px!important;line-height:1.5!important;margin:0 0 16px!important;color:#e9e3d6!important;max-width:34ch}
-html.dv-m #mApp .lk-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
-html.dv-m #mApp .lk-cats a{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border:1px solid #c7b09080;border-radius:999px;color:#f1ebdd;font-size:13px;font-weight:600;text-decoration:none}
 html.dv-m #mApp .lk-hero .lk-cta{margin-bottom:16px}
 html.dv-m #mApp .lk-hero .lk-facts b{font-size:22px!important}
 /* phone hero paints at once: no entrance animation, shorter heading */
@@ -263,3 +261,28 @@ html.dv-m .dk-foot .df-pay{padding:0 20px 16px}
 html.dv-m .dk-foot .df-pay small{display:none}
 html.dv-m .df-base{display:flex;flex-direction:column;gap:6px;padding:16px 20px calc(92px + env(safe-area-inset-bottom));border-top:1px solid rgba(241,235,221,.12);font-size:12.5px}
 html.dv-m .df-base span:last-child{letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:#a58a64}
+/* Goal 4: phone home sections after the text hero: featured pair, shop by type, pairs to start with, our story */
+html.dv-m #mApp .r7-intro h1{display:none}
+html.dv-m #mApp .hm-main{margin:18px 0 6px}
+html.dv-m #mApp .hm-mp{display:grid;grid-template-columns:44% 1fr;gap:14px;align-items:center;padding:12px;border-radius:16px;background:#fff;color:#172C27;text-decoration:none;box-shadow:inset 0 0 0 1px #172c271a}
+html.dv-m #mApp .hm-ph{display:block;aspect-ratio:1;border-radius:12px;background:#F1EBDD;overflow:hidden}
+html.dv-m #mApp .hm-img{width:100%;height:100%;object-fit:contain;display:block}
+html.dv-m #mApp .hm-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+html.dv-m #mApp .hm-tx small{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A58A64}
+html.dv-m #mApp .hm-tx b{font-size:18px;line-height:1.2}
+html.dv-m #mApp .hm-pr{font-size:15px;font-weight:700}
+html.dv-m #mApp .hm-tx ul{margin:4px 0 6px;padding:0 0 0 16px;font-size:12.5px;line-height:1.45;color:#3f4f4a}
+html.dv-m #mApp .hm-go{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:#D9361F}
+html.dv-m #mApp .hm-go svg{width:16px;height:16px}
+html.dv-m #mApp .hm-cats{margin:26px 0 8px}
+html.dv-m #mApp .hm-cats .m-h2,html.dv-m #mApp .r7-intro .m-h2{margin:0 0 12px}
+html.dv-m #mApp .hm-cg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+html.dv-m #mApp .hm-ct{display:flex;flex-direction:column;gap:2px;padding:10px 10px 12px;border-radius:14px;background:#F1EBDD;color:#172C27;text-decoration:none}
+html.dv-m #mApp .hm-ct.sale b{color:#B02A16}
+html.dv-m #mApp .hm-ci{display:block;aspect-ratio:4/3;margin-bottom:6px;border-radius:10px;background:#fff;overflow:hidden}
+html.dv-m #mApp .hm-cimg{width:100%;height:100%;object-fit:contain;display:block}
+html.dv-m #mApp .hm-ct b{font-size:15px}
+html.dv-m #mApp .hm-ct small{font-size:12.5px;color:#172c27b3}
+html.dv-m #mApp .hm-feat{margin:26px 0 8px}
+html.dv-m #mApp .hm-feat .m-row{align-items:baseline;justify-content:space-between;margin-bottom:12px}
+html.dv-m #mApp .hm-feat .m-h2{margin:0}
