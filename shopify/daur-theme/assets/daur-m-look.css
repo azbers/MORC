@@ -232,3 +232,27 @@ html.m-on .m-toast.ta button{min-height:38px;padding:0 10px;border:1px solid #F1
 html.m-on .m-toast.ta a{padding:0 12px;background:#D9361F;color:#fff!important}
 html.dv-d.m-on .m-toast.ta{left:auto;right:24px;bottom:24px;width:420px}
 @media (prefers-reduced-motion:reduce){html.m-on .cd,html.m-on .cd-s{transition:none}}
+
+/* Shared accordions: product details and category FAQ */
+html.m-on #mApp .dacc{border-top:1px solid #172c271f}
+html.m-on #mApp .dacc:last-child{border-bottom:1px solid #172c271f}
+html.m-on #mApp .dacc summary{display:flex;align-items:center;justify-content:space-between;min-height:52px;cursor:pointer;list-style:none;font-size:15px;font-weight:700;color:#172C27}
+html.m-on #mApp .dacc summary::-webkit-details-marker{display:none}
+html.m-on #mApp .dacc summary::after{content:"+";font-size:22px;font-weight:400;line-height:1}
+html.m-on #mApp .dacc[open] summary::after{content:"\2212"}
+html.m-on #mApp .dacc-b{padding:0 0 14px}
+html.m-on #mApp .dacc-b p{margin:0;font-size:14px;line-height:1.55;color:#172c27cc}
+html.m-on #mApp .dacc-b .px-spec{margin:0}
+/* Goal 5: minimal category band (breadcrumb, title, count), then SEO text and FAQ after the grid */
+html.m-on #mApp .v-shop>.sh-hd{flex-wrap:wrap;gap:6px 12px;margin:0;padding-top:16px;padding-bottom:4px;background:#172C27;color:#F1EBDD}
+html.dv-d.m-on #mApp .m-view.v-shop>.sh-hd{margin:0;padding-top:28px}
+html.m-on #mApp .v-shop>.sh-hd .m-h1{color:#F1EBDD;font-size:clamp(26px,7vw,40px);line-height:1.05}
+html.m-on #mApp .v-shop>.sh-hd .m-mute{color:#F1EBDDB3}
+html.m-on #mApp .v-shop>.sh-hd .sh-sb{background:#F1EBDD1f;color:#F1EBDD}
+html.m-on #mApp .sh-crumb{flex:0 0 100%;display:flex;gap:8px;font-size:12.5px;color:#F1EBDDB3}
+html.m-on #mApp .sh-crumb a{color:#F1EBDD;text-decoration:underline;text-underline-offset:3px}
+html.m-on #mApp .v-shop>.sh-intro{margin:0 0 14px;padding-top:4px;padding-bottom:18px;max-width:none;background:#172C27;color:#F1EBDDCC}
+html.m-on #mApp .sh-seo{max-width:760px;margin:36px auto 8px}
+html.m-on #mApp .sh-seo h2{margin:26px 0 10px;font-size:20px;line-height:1.2;color:#172C27}
+html.m-on #mApp .sh-seo>p{margin:0;font-size:15px;line-height:1.6;color:#3f4f4a}
+html.m-on #mApp .sh-seo:empty{display:none}
