@@ -307,16 +307,16 @@ html.m-on .fn-bg{display:grid;gap:10px}
 html.dv-d .fn-bg{grid-template-columns:repeat(3,1fr);gap:16px}
 html.m-on .fn-all{margin-top:14px;min-height:46px;padding:0 20px;border:1.5px solid #0E4777;border-radius:10px;background:transparent;color:#0F2540;font-size:14.5px;font-weight:700}
 /* Phone home, built to the reference page order: photo hero, shop by type, featured pairs rail, leather feature, our story band with figures, four promises; fit notes band and footer follow */
-html.dv-m #mApp .hx-hero{position:relative;display:flex;flex-direction:column;min-height:calc(100svh - 64px);margin:0;border-radius:0;padding:30px 20px 176px;background:radial-gradient(70% 42% at 50% 74%,#2F86DC59 0,#2F86DC00 70%),linear-gradient(180deg,#0B1B2F 0,#0E4777 58%,#115087 100%);color:#fff;overflow:hidden;isolation:isolate}html.dv-m #mApp .hx-hin{position:relative;z-index:2}
+html.dv-m #mApp .hx-hero{position:relative;display:flex;flex-direction:column;min-height:calc(100svh - 64px);margin:0;border-radius:0;padding:28px 20px 0;background:radial-gradient(70% 42% at 50% 74%,#2F86DC59 0,#2F86DC00 70%),linear-gradient(180deg,#0B1B2F 0,#0E4777 58%,#115087 100%);color:#fff;overflow:hidden;isolation:isolate}html.dv-m #mApp .hx-hin{position:relative;z-index:2;text-shadow:0 1px 14px #0B1B2F99}
 html.dv-m #mApp .hx-eye{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff}
 html.dv-m #mApp .hx-hero h1{margin:14px 0 0;font-size:clamp(28px,7.8vw,36px);line-height:1.06;text-transform:uppercase;color:#fff}
 html.dv-m #mApp .hx-hero h1 span{display:block;color:#81B2EB;text-transform:none}
 html.dv-m #mApp .hx-pts{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.45;color:#ffffffd9}
 html.dv-m #mApp .hx-pts li{position:relative;padding-left:16px}html.dv-m #mApp .hx-pts li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:#5B9BDC}
 html.dv-m #mApp .hx-pts b{color:#fff}
-html.dv-m #mApp .hx-hp{position:relative;z-index:1;flex:1;display:flex;align-items:flex-end;justify-content:center;min-height:220px;margin:10px 0 0}
-html.dv-m #mApp .hx-himg{width:min(80%,300px);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 22px 26px #0008)}
-html.dv-m #mApp .hx-shop{position:absolute;z-index:3;left:50%;bottom:104px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 28px;border-radius:999px;background:#ffffff2e;border:1px solid #ffffff59;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff!important;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap}
+html.dv-m #mApp .hx-hp{position:absolute;z-index:1;left:0;right:0;bottom:70px;display:flex;justify-content:center}
+html.dv-m #mApp .hx-himg{width:min(70%,270px);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 22px 26px #0008)}
+html.dv-m #mApp .hx-shop{position:absolute;z-index:3;left:50%;bottom:92px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 28px;border-radius:999px;background:#ffffff2e;border:1px solid #ffffff59;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff!important;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap}
 html.dv-m #mApp .hx-shop svg,html.dv-m #mApp .hx-more svg,html.dv-m #mApp .hx-fb svg,html.dv-m #mApp .hx-lbtn svg{width:18px;height:18px}
 html.dv-m #mApp .hx-sec{padding:40px 16px 8px}
 html.dv-m #mApp .hx-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
