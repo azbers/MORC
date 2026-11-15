@@ -315,7 +315,7 @@ html.dv-m #mApp .hx-pts{margin:16px 0 0;padding:0;list-style:none;display:grid;g
 html.dv-m #mApp .hx-pts li::before{content:"\2013  ";color:#C7B090}
 html.dv-m #mApp .hx-pts b{color:#F1EBDD}
 html.dv-m #mApp .hx-hp{flex:1;display:flex;align-items:center;justify-content:center;min-height:200px;margin:8px 0}
-html.dv-m #mApp .hx-himg{width:min(88%,360px);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 18px 24px #0006)}
+html.dv-m #mApp .hx-himg{width:min(72%,270px);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 18px 24px #0006)}
 html.dv-m #mApp .hx-shop{align-self:center;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 26px;border-radius:999px;background:#F1EBDD;color:#172C27!important;font-weight:700;font-size:15px;text-decoration:none}
 html.dv-m #mApp .hx-shop svg,html.dv-m #mApp .hx-more svg,html.dv-m #mApp .hx-fb svg,html.dv-m #mApp .hx-lbtn svg{width:18px;height:18px}
 html.dv-m #mApp .hx-sec{padding:40px 16px 8px}
