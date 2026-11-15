@@ -286,3 +286,48 @@ html.dv-m #mApp .hm-ct small{font-size:12.5px;color:#172c27b3}
 html.dv-m #mApp .hm-feat{margin:26px 0 8px}
 html.dv-m #mApp .hm-feat .m-row{align-items:baseline;justify-content:space-between;margin-bottom:12px}
 html.dv-m #mApp .hm-feat .m-h2{margin:0}
+
+/* Goal 3: Fit Notes side tab on every page and its panel (ratings, then photos and videos, then notes) */
+html.m-on #mApp .fn-tab{position:fixed;right:0;top:50%;z-index:60;display:flex;align-items:center;gap:8px;padding:14px 9px;border:0;border-radius:10px 0 0 10px;background:#172C27;color:#F1EBDD;font-size:13px;font-weight:700;letter-spacing:.04em;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);box-shadow:-4px 0 14px #172c2733}
+html.m-on #mApp .fn-tab span{display:inline-flex;align-items:center;justify-content:center;min-width:20px;min-height:20px;padding:2px;border-radius:999px;background:#D9361F;color:#fff;font-size:11px;writing-mode:horizontal-tb;transform:rotate(180deg)}
+html.m-on .fn .fn-b{flex:1;min-height:0;overflow-y:auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom))}
+html.m-on .fn h3{margin:22px 0 10px;font-size:15px;font-weight:700}
+html.m-on .fn-sum{display:grid;gap:12px;padding:16px;border-radius:12px;background:#fff}
+html.m-on .fn-avg{display:flex;align-items:center;gap:10px}
+html.m-on .fn-avg>b{font-size:32px;line-height:1}
+html.m-on .fn-avg small{font-size:13px;color:#172c27b3}
+html.m-on .fn-bars{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+html.m-on .fn-bars li{display:grid;grid-template-columns:14px 1fr 22px;align-items:center;gap:8px;font-size:12.5px}
+html.m-on .fn-bars i{height:6px;border-radius:3px;background:#172c271a;overflow:hidden}
+html.m-on .fn-bars i b{display:block;height:100%;background:#172C27}
+html.m-on .fn-fit{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+html.m-on .fn-fit span{padding:5px 10px;border-radius:999px;background:#F1EBDD;font-size:12.5px;font-weight:600}
+html.m-on .fn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+html.m-on .fn-grid img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:8px;background:#fff}
+html.m-on .fn-l{display:grid;gap:10px}
+html.m-on .fn-l h3{margin-bottom:0}
+html.m-on .fn-hs{display:inline-flex;gap:2px}
+html.m-on .fn-hs i{width:12px;height:11px;background:#6b7550;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21S1 14 1 7a5.5 5.5 0 0 1 11-1 5.5 5.5 0 0 1 11 1c0 7-11 14-11 14z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21S1 14 1 7a5.5 5.5 0 0 1 11-1 5.5 5.5 0 0 1 11 1c0 7-11 14-11 14z'/%3E%3C/svg%3E") center/contain no-repeat}
+html.m-on .fn-hs i.off{background:#172c2726}
+html.m-on .fn-c{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:12px;background:#fff;color:#172C27;box-shadow:inset 0 0 0 1px #172c2714}
+html.m-on .fn-c header{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+html.m-on .fn-c header b{font-size:14.5px}
+html.m-on .fn-c header small{font-size:12px;color:#172c2799}
+html.m-on .fn-c h3{margin:2px 0 0;font-size:14px}
+html.m-on .fn-c p{margin:0;font-size:14px;line-height:1.5;color:#2f3f3a}
+html.m-on .fn-tags{display:flex;flex-wrap:wrap;gap:6px}
+html.m-on .fn-tags span{padding:3px 9px;border-radius:999px;background:#F1EBDD;font-size:12px;font-weight:600}
+html.m-on .fn-pl{font-size:13px;font-weight:700;color:#172C27;text-decoration:underline;text-underline-offset:3px}
+html.m-on .fn-grid video{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:#000}
+html.m-on .fn-none{margin:12px 0;font-size:14px;line-height:1.5}
+/* Fit notes band before the email sign up */
+html.m-on .fn-band{background:#F1EBDD;padding:36px 0 30px}
+html.m-on .fn-band[hidden]{display:none}
+html.m-on .fn-bi{max-width:1200px;margin:0 auto;padding:0 20px}
+html.m-on .fn-bh{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:14px}
+html.m-on .fn-bh h2{margin:0;font-size:24px;color:#172C27}
+html.m-on .fn-bh>span{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#172C27}
+html.m-on .fn-bh small{color:#172c27b3}
+html.m-on .fn-bg{display:grid;gap:10px}
+html.dv-d .fn-bg{grid-template-columns:repeat(3,1fr);gap:16px}
+html.m-on .fn-all{margin-top:14px;min-height:46px;padding:0 20px;border:1.5px solid #172C27;border-radius:10px;background:transparent;color:#172C27;font-size:14.5px;font-weight:700}
