@@ -26,7 +26,7 @@
 })();
 /* Motion governor: endless decorative loops pause when out of view, and on phones they play twice and then rest, so the processor is free for scrolling and taps */
 (function(){if(window.__dgov||!document.getAnimations||!window.IntersectionObserver)return;window.__dgov=1;
-var small=!document.documentElement.classList.contains("dv-d")||document.documentElement.classList.contains("lite"),keep=/^(m-tick|m-sk|dv-van|dv-road|dv-wheel)$/;
+var small=!document.documentElement.classList.contains("dv-d")||document.documentElement.classList.contains("lite"),keep=/^(m-tick|m-sk)$/;
 var io=new IntersectionObserver(function(es){es.forEach(function(e){var t=e.target;t.__dv=e.isIntersecting;(t.__da||[]).forEach(function(a){try{if(a.playState==="finished")return;e.isIntersecting?a.play():a.pause()}catch(x){}})})},{rootMargin:"60px"});
 function scan(){document.getAnimations().forEach(function(a){var f=a.effect,t=f&&f.target;if(!t||a.__dg||!f.getComputedTiming)return;if(f.getComputedTiming().iterations!==Infinity)return;if(keep.test(a.animationName||""))return;a.__dg=1;
  if(small&&!keep.test(a.animationName||"")){try{f.updateTiming({iterations:2})}catch(x){}}

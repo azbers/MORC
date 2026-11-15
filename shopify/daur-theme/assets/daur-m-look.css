@@ -94,21 +94,6 @@ html.m-on .dk-foot .df-pay small{flex:1;font-size:13px;color:#4a4237}
 html.m-on .dk-foot .df-pay svg{width:20px;height:20px;color:#D9361F;flex:none}
 html.m-on .dk-foot .df-pay a:hover{background:#fff}
 html.m-on #mApp .r5-rows a.r5-pay{box-shadow:inset 3px 0 0 #D9361F}
-/* delivery van at the very bottom */
-html.m-on .df-van{position:relative;height:96px;overflow:hidden;pointer-events:none}
-html.m-on .df-van::before{content:"";position:absolute;left:0;right:0;bottom:8px;height:2px;background:repeating-linear-gradient(90deg,#C7B09066 0 18px,transparent 18px 34px)}
-html.m-on .df-van .dv-vs{position:absolute;left:0;bottom:6px;width:170px;height:auto;animation:dv-van 30s linear infinite}
-html.m-on .df-van .dv-wheel{transform-box:fill-box;transform-origin:center;animation:dv-wheel .9s linear infinite}
-html.m-on .df-van .dv-body{animation:dv-road 1.8s ease-in-out infinite}
-@keyframes dv-van{from{transform:translateX(-190px)}to{transform:translateX(calc(100vw + 10px))}}
-@keyframes dv-wheel{to{transform:rotate(360deg)}}
-@keyframes dv-road{0%,100%{transform:none}50%{transform:translateY(-1px)}}
-html.m-on #mApp .m-van{height:84px;margin:8px 0 calc(88px + env(safe-area-inset-bottom));background:transparent}
-html.m-on #mApp .m-van::before{background:repeating-linear-gradient(90deg,#172C2733 0 18px,transparent 18px 34px)}
-html.m-on #mApp .m-van .dv-vs{width:140px}
-html.m-on #mApp .m-van .dv-sp{stroke:#A58A64}
-html.dv-d.m-on #mApp .m-van{display:none}
-@media (prefers-reduced-motion:reduce){html.m-on .df-van .dv-vs{animation:none;left:50%;margin-left:-85px}html.m-on .df-van .dv-wheel,html.m-on .df-van .dv-body{animation:none}}
 html.m-on #mApp .pay-acc{max-width:980px;margin:18px auto 8px}
 /* Gifts and giving heroes: the picture melts into the forest side instead of a hard cut */
 html.m-on #mApp .hx-il{background:radial-gradient(120% 90% at 0% 100%,#24433b 0%,transparent 60%),radial-gradient(80% 70% at 100% 0%,#2a4a41 0%,transparent 65%),#172C27}
@@ -186,9 +171,6 @@ html.dv-m #mApp .lk-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
 html.dv-m #mApp .lk-cats a{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border:1px solid #c7b09080;border-radius:999px;color:#f1ebdd;font-size:13px;font-weight:600;text-decoration:none}
 html.dv-m #mApp .lk-hero .lk-cta{margin-bottom:16px}
 html.dv-m #mApp .lk-hero .lk-facts b{font-size:22px!important}
-/* van: loops without rest; quicker pass on phones */
-html.dv-m .df-van .dv-vs{animation-duration:16s!important}
-html.lite .df-van .dv-vs{animation-duration:16s!important;animation-iteration-count:infinite!important}
 /* phone hero paints at once: no entrance animation, shorter heading */
 html.dv-m #mApp .lk-hero,html.dv-m #mApp .lk-hero *{animation:none!important;opacity:1}
 html.dv-m.m-on #mApp .lk-hero h1{font-size:clamp(28px,7.8vw,34px)!important}
@@ -199,5 +181,5 @@ html.m-on #mApp .il-h svg{animation:none!important}
 html.dv-m #mApp .il-h{display:none}
 html.m-on .ck{animation:none!important}
 
-/* Phones: content shows at once with no decorative motion; only the footer van moves */
-html.m-on:not(.dv-d) #mApp *:not(.dv-vs):not(.dv-wheel):not(.dv-body),html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body),html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::before,html.m-on:not(.dv-d) *:not(.dv-vs):not(.dv-wheel):not(.dv-body)::after{animation:none!important}
+/* Phones: content shows at once with no decorative motion */
+html.m-on:not(.dv-d) #mApp *,html.m-on:not(.dv-d) *,html.m-on:not(.dv-d) *::before,html.m-on:not(.dv-d) *::after{animation:none!important}
