@@ -314,8 +314,8 @@ html.dv-m #mApp .hx-hero h1 span{display:block;color:#81B2EB;text-transform:none
 html.dv-m #mApp .hx-pts{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.45;color:#ffffffd9}
 html.dv-m #mApp .hx-pts li{position:relative;padding-left:16px}html.dv-m #mApp .hx-pts li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:#5B9BDC}
 html.dv-m #mApp .hx-pts b{color:#fff}
-html.dv-m #mApp .hx-hp{position:absolute;z-index:1;left:0;right:0;bottom:56px;display:flex;justify-content:center}
-html.dv-m #mApp .hx-himg{width:min(70%,270px);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 22px 26px #0008)}
+html.dv-m #mApp .hx-hp{position:absolute;z-index:1;left:0;right:0;bottom:44px;display:flex;justify-content:center}
+html.dv-m #mApp .hx-himg{width:min(56%,210px);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 22px 26px #0008)}
 html.dv-m #mApp .hx-shop{position:absolute;z-index:3;left:50%;bottom:88px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 28px;border-radius:999px;background:#ffffff2e;border:1px solid #ffffff59;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff!important;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap}
 html.dv-m #mApp .hx-shop svg,html.dv-m #mApp .hx-more svg,html.dv-m #mApp .hx-fb svg,html.dv-m #mApp .hx-lbtn svg{width:18px;height:18px}
 html.dv-m #mApp .hx-sec{padding:40px 16px 8px}
