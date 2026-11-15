@@ -217,13 +217,13 @@
 {%- comment -%} placeholder account numbers are never shown to a shopper: the payment panel waits for real details {%- endcomment -%}
 <script>(function(p){if(!p)return;var z=function(v){return /^(PK00 BANK|0000 |0300 0000000)/.test(String(v||''))?'':v};p.number=z(p.number);p.iban=z(p.iban);(p.wallets||[]).forEach(function(w){w.number=z(w.number)})})(window.DAUR_PAY);</script>
 <script src="{{ 'daur-shopify.js' | asset_url }}" defer></script>
-<script src="{{ 'shoe.js' | asset_url }}" defer></script>
 {%- if daur_page == 'policies' or daur_page == 'contact' %}<script src="{{ 'polart.js' | asset_url }}" defer></script>{% endif %}
 <script src="{{ 'social.js' | asset_url }}" defer></script>
 {%- comment -%} alive.js and pile.js serve only the classic view (?view=classic); the app view never runs them {%- endcomment -%}
 <script>if(!document.documentElement.classList.contains('m-on')){['{{ 'pile.js' | asset_url }}','{{ 'alive.js' | asset_url }}'].forEach(function(u){var s=document.createElement('script');s.src=u;s.async=false;document.head.appendChild(s)})}</script>
 <script src="{{ 'icons.js' | asset_url }}" defer></script>
-<script src="{{ 'kicks.js' | asset_url }}" defer></script>
+{%- comment -%} shoe.js (drawn shoe fallback) and kicks.js (colour chip shoes) serve only desktop views {%- endcomment -%}
+<script>if(document.documentElement.classList.contains('dv-d')){['{{ 'shoe.js' | asset_url }}','{{ 'kicks.js' | asset_url }}'].forEach(function(u){var s=document.createElement('script');s.src=u;s.async=false;document.head.appendChild(s)})}</script>
 <script src="{{ 'app.js' | asset_url }}" defer></script>
 {%- if settings.m_app != false %}
 <script>window.DAUR_M={assets:{{ 'm-hero.webp' | asset_url | split: 'm-hero.webp' | first | json }},walletCode:{{ settings.m_wallet_code | default: '' | strip | json }},walletAmount:{{ settings.m_wallet_amount | default: 350 }},splash:false,splashTag:{{ settings.m_splash_tag | default: 'Drop 01 is live' | json }},cutouts:{% if settings.m_cutouts == false %}false{% else %}true{% endif %},bank:window.DAUR_PAY};</script>
